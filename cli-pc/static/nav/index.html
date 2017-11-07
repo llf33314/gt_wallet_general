@@ -89,18 +89,7 @@
             <div>
               <ul id="applyList">
                 <li class="index" data-url="dome">案例</li>
-                <li data-url="panorama3D">3D全景</li>
-                <li data-url="panorama360">360全景</li>
-                <li data-url="buoyFollow">浮标关注</li>
-                <li data-url="extensionPoster">推广海报</li>
-                <li data-url="microScene">微场景</li>
-                <li data-url="microWebsite">微官网</li>
-                <li data-url="microCard">微名片</li>
-                <li data-url="microChannel">微渠道</li>
-                <li data-url="invitation">邀请函</li>
-                <li data-url="staffCard">员工名片</li>
-                <li data-url="photoPrinter">照片打印机</li>
-                <li data-url="paymentPolite">支付有礼</li>
+                <li data-url="wallet">多粉钱包</li>
               </ul>
             </div>
           </div>
@@ -148,7 +137,7 @@
     </div>
 
     <div class="content">
-      <iframe id="gtIframe" name="gtIframe" class="content-ifr" src="http://localhost:8071/#/dome/index" frameborder="0"
+      <iframe id="gtIframe" name="gtIframe" class="content-ifr" src="http://localhost:8061/#/dome/index" frameborder="0"
         style="padding-top: 49px"></iframe>
       <div class="content-notice">
         <i class="iconfont icon-tongzhi2"></i>通知
@@ -165,7 +154,7 @@
     $(function () {
       $('body').find('#applyList li').on('click', function (e) {
         $(this).addClass('index').siblings('li').removeClass('index')
-        $('#gtIframe').attr('src', 'http://localhost:8071/#/' + e.currentTarget.dataset.url + '/index')
+        $('#gtIframe').attr('src', 'http://localhost:8061/#/' + e.currentTarget.dataset.url + '/index')
 
         if (e.currentTarget.dataset.el) {
           $('#gtIframe').attr('src', e.currentTarget.dataset.el)

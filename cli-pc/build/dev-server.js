@@ -76,7 +76,7 @@ devMiddleware.waitUntilValid(() => {
   // when env is testing, don't need open it
   if (autoOpenBrowser && process.env.NODE_ENV !== 'testing') {
     //opn(uri)
-    opn('http://localhost:8070/index.html')
+    opn('http://localhost:8060/index.html')
   }
   _resolve()
 })

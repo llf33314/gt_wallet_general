@@ -399,7 +399,7 @@ ul li {
  * @yanhuiting
  */
 .public-gray-region{
-  padding: 13px 30px;
+  padding: 13px 0;
   background-color: #f4f4f4;
 }
 /**
@@ -515,11 +515,7 @@ color: #fff;
  * element 视频按钮
  * @gzhidao
 */
-.gt-video-btn{
-  position: absolute;
-  right: 0;
-  z-index: 1;
-}
+
 .gt-video-btn .gt-play{
   padding-right: 5px;
   font-size: 13px
@@ -632,4 +628,27 @@ color: #fff;
 }
 .public-top20{
   margin-top:20px;
+}
+.public-c333{
+  color: #333333
+}
+.public-c666{
+  color: #666666
+}
+.public-c999{
+  color: #999999
+}
+.public-cb{
+  color: #20a0ff;
+  border-color: #20a0ff;
+}
+.public-cb:hover{
+  background-color: #20a0ff;
+  color: #fff;
+}
+.public-cgreen{
+  color: #34d063;
+}
+.public-cred{
+  color: #ff4949;
 }

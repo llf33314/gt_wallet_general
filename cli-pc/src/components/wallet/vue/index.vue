@@ -1,46 +1,222 @@
 <style lang="stylus">
+  .wallet-index {
+    .no-open {
+      padding-top: 70px;
+      text-align: center;
+      p {
+        font-size: 14px;
+        color: #333333;
+        padding: 27px 0 70px;
+      }
+      i {
+        color: #f7ba2a;
+        font-size: 35px;
+      }
+    }
+    .top-msg {
+      font-size: 14px;
+      border: 1px solid #eeeeee;
+      margin-top: 30px;
+      overflow: hidden;
+      .gray {
+        background-color: #f8f8f8;
+        padding: 27px 30px;
+        overflow: hidden;
+        .public-fr {
+          margin-top: 15px;
+        }
+      }
+      .row1 {
+        margin-bottom: 15px;
+      }
+      .title {
+        padding-right: 25px;
+      }
+    }
+    .data-msg {
+      position: relative;
+      padding: 15px 0;
+      overflow: hidden;
+      .num {
+        color: #20a0ff;
+        font-size: 24px;
+        padding-right: 10px;
+      }
+      .list {
+        width: 90%;
+        li {
+          float: left;
+          width: 33.33%;
+          box-sizing: border-box;
+          padding-left: 30px;
+          &:nth-of-type(2) {
+            border-left: 1px solid #eeeeee;
+            border-right: 1px solid #eeeeee;
+          }
+        }
+      }
+      .name {
+        margin-bottom: 10px;
+      }
+      .bts {
+        position: absolute;
+        top: 30px;
+        right: 25px;
+      }
+      .iconfont {
+        color: #d2d2d2;
+        cursor: pointer;
+        position: relative;
+      }
+      .item-tooltip {
+        color: #999999;
+        line-height: 30px;
+      }
+    }
+    .table-top-conent {
+      background-color: #f8f8f8;
+      padding: 15px 30px;
+      overflow: hidden;
+      font-size: 14px;
+      .title {
+        padding-right: 25px;
+      }
+      .row {
+        padding-bottom: 20px;
+      }
+      .select-title {
+        margin-right: 30px;
+        cursor: pointer;
+      }
+    }
+  }
 
+  .wallet-index-select-apply-dialog {
+    width: 640px;
+    .check-content {
+      overflow: hidden;
+      padding-left: 30px;
+    }
+    .check-list-item {
+      margin-bottom: 30px;
+      margin-left: 10px;
+      width: 100px;
+      float: left;
+    }
+    .tips {
+      font-size: 13px;
+      margin-bottom: 30px;
+    }
+    .el-dialog__body {
+      padding-top: 10px;
+    }
+  }
 
 </style>
 <template>
-  <section>
-    <el-breadcrumb separator="/" class="public-crumbs">
-      <el-breadcrumb-item :to="{ path: '/' }">推广吸粉</el-breadcrumb-item>
-      <el-breadcrumb-item>3D全景</el-breadcrumb-item>
-    </el-breadcrumb>
-    <div class="public-gray-region">
-      <el-button type="primary" @click="routerTo('/panorama3D/update')">新增</el-button>
-      <el-button type="warning" class="gt-video-btn" @click="linkToVideo">
-        <i class="iconfont gt-play"></i>视频教程
-      </el-button>
-    </div>
-    <div class="public-content">
-      <gt-null-data class="public-top20">您还没有授权人信息，
-        <span @click="add()">点击这里</span>添加授权人吧
-      </gt-null-data>
-      <div class="public-table-title">
-        666
+  <section class="wallet-index">
+    <!-- <div class="no-open">
+      <i class="el-icon-warning"></i>
+      <p>您尚未开通多粉钱包，点击下方按钮开通吧！</p>
+      <div class="bts">
+          <el-button type="primary">企业开通</el-button>
+          <el-button type="primary">个人开通</el-button>
       </div>
-      <el-table ref="multipleTable" :data="tableData3" border tooltip-effect="dark" style="width: 100%" @selection-change="handleSelectionChange">
-        <el-table-column type="selection" width="55">
-        </el-table-column>
-        <el-table-column label="日期" width="120">
+    </div> -->
+    <div class="public-content">
+      <div class="top-msg">
+        <div class="gray">
+          <div class="public-fl">
+            <div class="row1 public-c333">
+              <span class="title">姓名：</span>
+              <span>撒个</span>
+              <span class="title">认证类型：</span>
+              <span>个人认证</span>
+            </div>
+            <div class="row2 public-c666">
+              <span>请选择使用多粉钱包的应用</span>
+              <el-button @click="dialogFormVisible=true" class="public-cb" size="small" style="margin-left:27px;">选择</el-button>
+            </div>
+          </div>
+          <div class="public-fr">
+            <el-button type="primary">修改密码</el-button>
+          </div>
+        </div>
+        <div class="data-msg">
+          <ul class="public-fl public-c333 list">
+            <li>
+              <p class="name">资产总额
+                <el-tooltip effect="light" content="资产总额=待结算+可用提现余额" placement="right">
+                  <i class="iconfont gt-bangzhudisc"></i>
+                </el-tooltip>
+              </p>
+              <p>
+                <span class="num">0</span>元</p>
+            </li>
+            <li>
+              <p class="name">待结算(未入账)</p>
+              <p>
+                <span class="num">0</span>元</p>
+            </li>
+            <li>
+              <p class="name">可用余额</p>
+              <p>
+                <span class="num">0</span>元</p>
+            </li>
+          </ul>
+          <div class="bts">
+            <el-button type="primary">购买</el-button>
+            <el-button type="primary">提现</el-button>
+          </div>
+        </div>
+      </div>
+      <div class="public-table-title public-c666">近期交易记录</div>
+      <!-- <gt-null-data class="public-top20">您近期没有交易记录</gt-null-data> -->
+      <div class="table-top-conent">
+        <div class="row">
+          <span class="title public-c333">交易类型：</span>
+          <span @click="tType=0" class="select-title" style="color:#20a0ff;">消费</span>
+          <span @click="tType=1" class="select-title">提现</span>
+        </div>
+        <div>
+          <span class="title public-c333">时间范围：</span>
+          <el-date-picker v-model="value4" type="datetimerange" :picker-options="pickerOptions2" placeholder="选择时间范围" align="right">
+          </el-date-picker>
+          <span class="title public-c333" style="padding-left:30px;">来源：</span>
+          <el-select v-model="value" placeholder="请选择">
+            <el-option v-for="item in options" :key="item.value" :label="item.label" :value="item.value">
+            </el-option>
+          </el-select>
+        </div>
+        <div class="public-c666" style="line-height:1.8;margin-top:15px;">
+          <p>1.金额：是订单的交易金额（为扣除交易手续费的金额）</p>
+          <p>2.交易手续费用：是承担微信、支付宝、银行机构等“支付通道商”收取的0.6%交易手续费。</p>
+          <p>3.到账金额：是实际到多粉钱包的金额（到账金额=金额-交易手续费用）</p>
+        </div>
+      </div>
+      <el-table ref="multipleTable" :data="tableData3" class="public-top20" align="center" border tooltip-effect="dark" style="width: 100%"
+        @selection-change="handleSelectionChange">
+        <el-table-column label="创建时间" show-overflow-tooltip align="center">
           <template slot-scope="scope">{{ scope.row.date }}</template>
         </el-table-column>
-        <el-table-column prop="name" label="姓名" width="120">
+        <el-table-column prop="name" label="订单号" show-overflow-tooltip align="center">
         </el-table-column>
-        <el-table-column prop="address" label="操作" show-overflow-tooltip>
+        <el-table-column prop="name" label="金额(元)" show-overflow-tooltip align="center">
           <template slot-scope="scope">
-            <el-button @click="routerTo('/panorama3D/update')" size="small">编辑</el-button>
+            <span class="public-cgreen">+300.00</span>
           </template>
+        </el-table-column>
+        <el-table-column prop="name" label="交易手续费用" show-overflow-tooltip align="center">
+          <template slot-scope="scope">
+            <span class="public-cred">+300.00</span>
+          </template>
+        </el-table-column>
+        <el-table-column prop="name" label="到账金额" show-overflow-tooltip align="center">
+        </el-table-column>
+        <el-table-column prop="name" label="来源" show-overflow-tooltip align="center">
         </el-table-column>
       </el-table>
       <div class="public-top20">
-        <div class="public-fl">
-          <el-button @click="toggleSelection([tableData3[1], tableData3[2]])" size="small">全选</el-button>
-          <el-button @click="toggleSelection()" size="small">取消全选</el-button>
-          <el-button @click="toggleSelection()" size="small">批量删除</el-button>
-        </div>
         <div class="public-fr">
           <el-pagination @size-change="handleSizeChange" @current-change="handleCurrentChange" :current-page.sync="currentPage3" :page-size="100"
             layout="prev, pager, next, jumper" :total="1000">
@@ -48,22 +224,109 @@
         </div>
       </div>
     </div>
+    <el-dialog title="选择应用" :visible.sync="dialogFormVisible" custom-class="wallet-index-select-apply-dialog">
+      <div class="public-c999 tips">
+        点击 选择后，系统将该行业应用交易金额转入多粉钱包中
+        <br> 默认全选应用，如需取消勾选
+      </div>
+      <div class="check-content">
+        <el-checkbox-group v-model="checkList">
+          <div class="check-list-item">
+            <el-checkbox label="复"></el-checkbox>
+          </div>
+          <div class="check-list-item">
+            <el-checkbox label="复"></el-checkbox>
+          </div>
+          <div class="check-list-item">
+            <el-checkbox label="复"></el-checkbox>
+          </div>
+          <div class="check-list-item">
+            <el-checkbox label="复"></el-checkbox>
+          </div>
+          <div class="check-list-item">
+            <el-checkbox label="复"></el-checkbox>
+          </div>
+          <div class="check-list-item">
+            <el-checkbox label="复"></el-checkbox>
+          </div>
+          <div class="check-list-item">
+            <el-checkbox label="复"></el-checkbox>
+          </div>
+        </el-checkbox-group>
+      </div>
+      <div slot="footer" class="dialog-footer">
+        <el-button type="primary" @click="dialogFormVisible = false">保存</el-button>
+      </div>
+    </el-dialog>
   </section>
 </template>
 <script>
   export default {
     data() {
       return {
+        tType:0,
+        dialogFormVisible: false,
+        checkList: ['选中且禁用', '复选框 A'],
         tableData3: [{
           date: '2016-05-03',
           name: '王小虎',
           address: '上海市普陀区金沙江路 1518 弄'
         }],
-        multipleSelection: []
+        options: [{
+          value: '选项1',
+          label: '黄金糕'
+        }, {
+          value: '选项2',
+          label: '双皮奶'
+        }, {
+          value: '选项3',
+          label: '蚵仔煎'
+        }, {
+          value: '选项4',
+          label: '龙须面'
+        }, {
+          value: '选项5',
+          label: '北京烤鸭'
+        }],
+        value: '',
+        multipleSelection: [],
+        pickerOptions2: {
+          shortcuts: [{
+            text: '最近一周',
+            onClick(picker) {
+              const end = new Date();
+              const start = new Date();
+              start.setTime(start.getTime() - 3600 * 1000 * 24 * 7);
+              picker.$emit('pick', [start, end]);
+            }
+          }, {
+            text: '最近一个月',
+            onClick(picker) {
+              const end = new Date();
+              const start = new Date();
+              start.setTime(start.getTime() - 3600 * 1000 * 24 * 30);
+              picker.$emit('pick', [start, end]);
+            }
+          }, {
+            text: '最近三个月',
+            onClick(picker) {
+              const end = new Date();
+              const start = new Date();
+              start.setTime(start.getTime() - 3600 * 1000 * 24 * 90);
+              picker.$emit('pick', [start, end]);
+            }
+          }]
+        },
+        value3: [new Date(2000, 10, 10, 10, 10), new Date(2000, 10, 11, 10, 10)],
+        value4: ''
       }
     },
 
     methods: {
+      //选择应用
+      selectApply() {
+
+      },
       toggleSelection(rows) {
         if (rows) {
           rows.forEach(row => {
