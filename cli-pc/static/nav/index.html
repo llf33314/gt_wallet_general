@@ -1,0 +1,210 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <title>首页</title>
+  <link rel="stylesheet" href="css/base.css">
+  <link rel="stylesheet" href="css/iconfont.css">
+  <link rel="stylesheet" href="css/swiper.min.css">
+  <link rel="stylesheet" href="css/bb-base.css">
+  <style>
+    .content-layer-bg {
+      width: 191px;
+      height: 100%;
+      position: fixed;
+      top: 0;
+      left: 0;
+      opacity: .5;
+      background: #000;
+      z-index: 12;
+    }
+
+    .content-layer-bg-top {
+      width: 100%;
+      height: 50px;
+      position: fixed;
+      top: 0;
+      left: 191px;
+      opacity: .5;
+      background: #000;
+      z-index: 12;
+    }
+
+    .v-modal-enter {
+      animation: v-modal-in .2s ease;
+    }
+
+    .v-modal-leave {
+      animation: v-modal-out .2s ease forwards;
+    }
+
+    @keyframes v-modal-in {
+      0% {
+        opacity: 0;
+      }
+      100% {}
+    }
+
+    @keyframes v-modal-out {
+      0% {}
+      100% {
+        opacity: 0;
+      }
+    }
+
+  </style>
+</head>
+
+<body>
+  <!-- <div class="content-layer-bg"></div>
+  <div class="content-layer-bg-top"></div> -->
+  <div class="top-content">
+    <div class="nav">
+      <div class="nav-left swiper-container">
+        <div class="swiper-wrapper">
+          <div class="swiper-slide">
+            <div class="photo bgscov mg" style="background-image: url('images/111.png')"></div>
+            <div>
+              <ul>
+                <li>
+                  <i class="iconfont icon-tongji"></i>概况</li>
+                <li>
+                  <i class="iconfont icon-cshy-rmb"></i>收银</li>
+                <li>
+                  <i class="iconfont icon-40"></i>会员</li>
+                <li>
+                  <i class="iconfont icon-iconfontgouwuche2"></i>商城</li>
+                <li class="index">
+                  <i class="iconfont icon-shezhi"></i>应用</li>
+              </ul>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="nav-right swiper-container">
+        <div class="swiper-wrapper">
+          <div class="swiper-slide">
+            <div>
+              <ul id="applyList">
+                <li class="index" data-url="dome">案例</li>
+                <li data-url="panorama3D">3D全景</li>
+                <li data-url="panorama360">360全景</li>
+                <li data-url="buoyFollow">浮标关注</li>
+                <li data-url="extensionPoster">推广海报</li>
+                <li data-url="microScene">微场景</li>
+                <li data-url="microWebsite">微官网</li>
+                <li data-url="microCard">微名片</li>
+                <li data-url="microChannel">微渠道</li>
+                <li data-url="invitation">邀请函</li>
+                <li data-url="staffCard">员工名片</li>
+                <li data-url="photoPrinter">照片打印机</li>
+                <li data-url="paymentPolite">支付有礼</li>
+              </ul>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="header" style="border-bottom:1px solid #eee">
+        <!-- <div class="layer-bg" style="height: 50px;left: 191px;"></div> -->
+        <div class="recharge-tips">
+          <div class="recharge-tips-t">
+            <div class="fl-l">
+              <div>店铺处于免费试用期，逾期未续费套餐将停止使用，影响您的正常运营。</div>
+              <div>官方咨询电话：400 889 4522
+                <a>在线咨询：小多（唤起对话）</a>
+              </div>
+            </div>
+            <div class="fl-l btn">立即续费</div>
+          </div>
+          <div class="recharge-tips-b">温馨提示：您当前套餐为体验套餐，为保证您续费升级套餐后的流畅使用，以及数据的准确，您创建的数据将在升级套餐之后清零！</div>
+        </div>
+        <div class="logo">
+          <div class="fl-l">
+            <img src="images/rest_logo.jpg">
+          </div>
+          <div class="fl-r">
+            <div class="user">
+              <span>
+                <i class="bgscon" style="background-image: url('images/rest_user_icon.jpg')"></i>用户</span>
+              <div class="user-info-bra"></div>
+              <div class="user-layer-info">
+                <div class="user-info-dsj"></div>
+                <div class="user-info-photo"></div>
+                <div class="user-info-name">yangcaixia_106</div>
+                <div class="user-info-vip">普通版</div>
+                <div class="user-info-close">退出登录</div>
+              </div>
+            </div>
+            <div class="cur-p">
+              <i class="bgscon" style="background-image: url('images/rest_help_icon.jpg')"></i>帮助</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="layer-bg"></div>
+    </div>
+
+    <div class="content">
+      <iframe id="gtIframe" name="gtIframe" class="content-ifr" src="http://localhost:8071/#/dome/index" frameborder="0"
+        style="padding-top: 49px"></iframe>
+      <div class="content-notice">
+        <i class="iconfont icon-tongzhi2"></i>通知
+        <span>1</span>
+      </div>
+    </div>
+
+  </div>
+
+  <script src="js/layer.js"></script>
+  <script src="js/jquery.js"></script>
+  <script src="js/swiper.min.js"></script>
+  <script>
+    $(function () {
+      $('body').find('#applyList li').on('click', function (e) {
+        $(this).addClass('index').siblings('li').removeClass('index')
+        $('#gtIframe').attr('src', 'http://localhost:8071/#/' + e.currentTarget.dataset.url + '/index')
+
+        if (e.currentTarget.dataset.el) {
+          $('#gtIframe').attr('src', e.currentTarget.dataset.el)
+        }
+      })
+    })
+    //子类通知父类，开启遮罩哦
+    function openMask() {
+      $('body').append('<div id="contentLayerBg" class="v-modal-enter content-layer-bg"></div>')
+      $('body').append('<div id="contentLayerBgTop" class="v-modal-enter content-layer-bg-top"></div>')
+    }
+    //子类通知父类，要关闭遮罩哦
+    function closeMask() {
+      $('body').find('.v-modal-enter').removeClass('v-modal-enter').addClass('v-modal-leave')
+      setTimeout(function () {
+        $('body').find('#contentLayerBg').remove()
+        $('body').find('#contentLayerBgTop').remove()
+      }, 200)
+    }
+
+    window.addEventListener("message", function (event) {
+      // 把父窗口发送过来的数据显示在子窗口中
+      eval(event.data);
+      console.log(event)
+    }, false);
+    var swiper = new Swiper('.swiper-container', {
+      direction: 'vertical',
+      slidesPerView: 'auto',
+      mousewheelControl: true,
+      freeMode: true
+    });
+    var swiper = new Swiper('.swiper-container1', {
+      direction: 'vertical',
+      slidesPerView: 'auto',
+      mousewheelControl: true,
+      freeMode: true
+    });
+
+  </script>
+</body>
+
+</html>

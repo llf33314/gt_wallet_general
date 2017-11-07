@@ -1,0 +1,457 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <link rel="stylesheet" href="css/base.css">
+    <link rel="stylesheet" href="css/iconfont.css">
+    <link rel="stylesheet" href="css/bb-base.css">
+    <style type="text/css">
+        body{
+            background-color: #f5f5f5;
+            color: #333;
+        }
+        .color01{
+            color: #fa4c54;
+        }
+        .survey-left{
+            margin-right: 260px;
+        }
+        .survey-left .list{
+            margin: 0 20px;
+        }
+        .survey-left .title{
+            margin-top: 10px;
+            line-height: 43px;
+            font-size: 14px;
+        }
+        .survey-left .content{
+            overflow: hidden;
+        }
+        .survey-left .user .content>.fl-l{
+            width: 20%;
+            text-align: center;
+            font-size: 20px;
+            line-height: 20px;
+            padding: 33px 0 39px 0;
+            background-color: #fff;
+        }
+        .survey-left .user .content .box-b{
+            font-size: 12px;
+            line-height: 12px;
+            margin-top: 20px;
+        }
+        .survey-left .exam .content>.fl-l{
+            width: 25%;
+            font-size: 14px;
+            padding-right: 2px;
+            box-sizing: border-box;
+        }
+        .survey-left .exam .content>.fl-l:nth-last-child(1){
+            padding-right: 0px;
+        }
+        .survey-left .exam .content .exam-score .box-list{
+            height: 120px;
+            font-size: 12px;
+            line-height: 40px;
+        }
+        .survey-left .exam .content .box-list{
+            line-height: 59px;
+            padding: 0 20px;
+            background-color: #fff;
+            margin-bottom: 2px;
+        }
+        .survey-left .exam .content>.fl-l .box-list:nth-last-child(1){
+            margin-bottom: 0px;
+        }
+        .survey-left .exam .content .box-list .fl-r{
+            color: #999;
+        }
+        .survey-left .exam .content .box-list a.fl-r{
+            color: #20a0ff;
+            cursor: pointer;
+        }
+        .survey-left .exam .iconfont{
+            width: 24px;
+            height: 24px;
+            line-height: 24px;
+            text-align: center;
+            background-color: #20a0ff;
+            color: #fff;
+            display: inline-block;
+            border-radius: 1px;
+            vertical-align: middle;
+            margin-right: 10px;
+        }
+
+        .survey-left .marketing .content>.fl-l{
+            width: 25%;
+            padding-right: 9px;
+            box-sizing: border-box;
+            color: #fff;
+            text-align: center;
+        }
+        .survey-left .marketing .content>.fl-l:nth-last-child(1){
+            padding-right: 0;
+        }
+        .survey-left .marketing .content>.fl-l:nth-child(1)>div{
+            background-color: #8fcf8f;
+        }
+        .survey-left .marketing .content>.fl-l:nth-child(2)>div{
+            background-color: #fbb875;
+        }
+        .survey-left .marketing .content>.fl-l:nth-child(3)>div{
+            background-color: #f79898;
+        }
+        .survey-left .marketing .content>.fl-l:nth-child(4)>div{
+            background-color: #60cfef;
+        }
+        .survey-left .marketing .box-t{
+            font-size: 18px;
+            line-height: 18px;
+            padding: 32px 0 20px 0;
+        }
+        .survey-left .marketing .box-b{
+            font-size: 12px;
+            line-height: 12px;
+            padding-bottom: 38px;
+        }
+        .survey-left .increment .content>.fl-l{
+            width: 16.66%;
+            height: 150px;
+            text-align: center;
+            font-size: 14px;
+            line-height: 14px;
+            background-color: #fff;
+        }
+        .survey-left .increment .content>.fl-l img{
+            padding: 36px 0 16px 0;
+        }
+        /************************************************/
+        .survey-right{
+            width: 240px;
+            margin-right: 19px;
+            position: absolute;
+            right: 0;
+            top:0;
+            padding-top: 53px;
+            font-size: 12px;
+        }
+        .survey-right-box{
+            background-color: #fff;
+            margin-bottom: 15px;
+        }
+        .survey-right-box .iconfont{
+            font-size: 40px;
+            vertical-align: middle;
+            padding: 0 12px 0 20px;
+        }
+        .survey-right-box .icon-qq-copy{
+            color: #20a0ff;
+        }
+        .survey-right-box .icon-duofen{
+            color: #e72129;
+        }
+        .survey-right-box .icon-zixun{
+            color: #feae5e;
+        }
+        .survey-right-box .box-t{
+            font-size: 16px;
+            line-height: 16px;
+            margin-bottom: 10px;
+        }
+        .survey-right-box .box-b{
+            line-height: 12px;
+            color: #666;
+        }
+        .survey-right-box .survey-right-help{
+            padding: 26px 0;
+            vertical-align: middle;
+            display: inline-block;
+        }
+        .survey-right-box.information{
+            padding: 0 20px 11px 20px;
+        }
+        .survey-right-box.information li{
+            line-height: 32px;
+            overflow: hidden;
+            text-overflow:ellipsis;
+            white-space: nowrap;
+        }
+        .survey-right-box .survey-right-box-header{
+            font-size: 14px;
+            color: #333;
+            padding: 18px 0 11px 0;
+        }
+        .survey-right-box .survey-right-box-header a{
+            color: #20a0ff;
+            float: right;
+            cursor: pointer;
+        }
+    </style>
+</head>
+<body>
+    <div class="survey-left">
+        <div class="list user">
+            <div class="title"><b>账户信息</b></div>
+            <div class="content">
+                <div class="fl-l">
+                    <div class="box-t color01">923</div>
+                    <div class="box-b">剩余天数（天）</div>
+                </div>
+
+                <div class="fl-l">
+                    <div>2019-12-06</div>
+                    <div class="box-b">套餐到期日期</div>
+                </div>
+
+                <div class="fl-l">
+                    <div>923</div>
+                    <div class="box-b">账户余额（粉币）</div>
+                </div>
+
+                <div class="fl-l">
+                    <div>923</div>
+                    <div class="box-b">剩余短信（条）</div>
+                </div>
+
+                <div class="fl-l">
+                    <div>923</div>
+                    <div class="box-b">流量包</div>
+                </div>
+            </div>
+        </div>
+
+        <div class="list exam">
+            <div class="title"><b>体检中心</b></div>
+            <div class="content">
+                <div class="exam-score fl-l">
+                    <div class="box-list">
+                        <!--<canvas></canvas>-->
+                        <div>您尚未达到100分，请继续努力~</div>
+                    </div>
+                </div>
+                <div class="fl-l">
+                    <div class="box-list"><i class="iconfont icon-ERP"></i>ERP<span class="fl-r">未开通</span></div>
+                    <div class="box-list"><i class="iconfont icon-weixinzhifu"></i>微信支付<span class="fl-r">未开通</span></div>
+                </div>
+                <div class="fl-l">
+                    <div class="box-list"><i class="iconfont icon-xiaochengxu1"></i>小程序<span class="fl-r">未绑定</span></div>
+                    <div class="box-list"><i class="iconfont icon-xindiqiu"></i>商家联盟<span class="fl-r">未开通</span></div>
+                </div>
+                <div class="fl-l">
+                    <div class="box-list"><i class="iconfont icon-msnui-weixin"></i>微信公众号<span class="fl-r">未绑定</span></div>
+                    <div class="box-list"><i class="iconfont icon-gengduo1"></i>更多<a class="fl-r">查看更多</a></div>
+                </div>
+
+            </div>
+        </div>
+
+        <div class="list marketing">
+            <div class="title"><b>营销应用</b></div>
+            <div class="content">
+                <div class="fl-l">
+                    <div class="box-t">微信应用</div>
+                    <div class="box-b">连接微信，玩转多粉生态</div>
+                </div>
+                <div class="fl-l">
+                    <div class="box-t">优惠券</div>
+                    <div class="box-b">通过优惠提升客户留存率</div>
+                </div>
+                <div class="fl-l">
+                    <div class="box-t">互动游戏</div>
+                    <div class="box-b">一键生成多元化游戏互动</div>
+                </div>
+                <div class="fl-l">
+                    <div class="box-t">推广</div>
+                    <div class="box-b">发现你的最佳推广方案</div>
+                </div>
+            </div>
+        </div>
+
+        <div class="list increment">
+            <div class="title"><b>增值服务</b></div>
+            <div class="content">
+                <div class="fl-l">
+                    <div class="box-t"><img src="images/home_icon_01.jpg"></div>
+                    <div class="box-b">小馋猫</div>
+                </div>
+                <div class="fl-l">
+                    <div class="box-t"><img src="images/home_icon_02.jpg"></div>
+                    <div class="box-b">外卖</div>
+                </div>
+                <div class="fl-l">
+                    <div class="box-t"><img src="images/home_icon_03.jpg"></div>
+                    <div class="box-b">排队</div>
+                </div>
+                <div class="fl-l">
+                    <div class="box-t"><img src="images/home_icon_04.jpg"></div>
+                    <div class="box-b">无线打印</div>
+                </div>
+                <div class="fl-l">
+                    <div class="box-t"><img src="images/home_icon_05.jpg"></div>
+                    <div class="box-b">优惠买单</div>
+                </div>
+                <div class="fl-l">
+                    <div class="box-t"><img src="images/home_icon_06.jpg"></div>
+                    <div class="box-b">支付有礼</div>
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+    <div class="survey-right fl-l">
+
+        <div class="survey-right-box qq">
+            <i class="iconfont icon-qq-copy"></i>
+            <div class="survey-right-help">
+                <div class="box-t">有问题请咨询</div>
+                <div class="box-b">以贴心的服务解决问题</div>
+            </div>
+        </div>
+
+        <div class="survey-right-box duofen">
+            <i class="iconfont icon-duofen"></i>
+            <div class="survey-right-help">
+                <div class="box-t">多粉微信公众号</div>
+                <div class="box-b">扫码关注，更多惊喜~</div>
+            </div>
+        </div>
+
+        <div class="survey-right-box phone">
+            <i class="iconfont icon-zixun"></i>
+            <div class="survey-right-help">
+                <div class="box-t">400 889 4522</div>
+                <div class="box-b">24h服务热线</div>
+            </div>
+        </div>
+
+        <div class="survey-right-box information">
+            <div class="survey-right-box-header">多粉支持<a>查看全部</a></div>
+            <ul>
+                <li>【多粉学堂】学习如何创建店铺</li>
+                <li>【多粉学堂】学习如何发布菜品</li>
+                <li>【多粉咨询】7-11多粉小馋猫将进...</li>
+                <li>【多粉学堂】学习如何设置排队功能</li>
+            </ul>
+            <div class="survey-right-box-header">交流分享<a>查看全部</a></div>
+            <ul>
+                <li>【你问我答】怎么开通外卖功能？</li>
+                <li>【你问我答】怎么使用自有的打印机？</li>
+                <li>【运营分享】日销1500单，他是如何...</li>
+                <li>【运营分享】丽日集团携手多粉，玩..</li>
+            </ul>
+        </div>
+
+    </div>
+
+
+    <style type="text/css">
+        .layer{
+            width: 100%;
+            height: 100%;
+            position: fixed;
+            background-color: rgba(0,0,0,.4);
+            z-index: 9999;
+            top: 0;
+            left: 0;
+            color: #333;
+
+            /* Center slide text vertically */
+            display: -webkit-box;
+            display: -ms-flexbox;
+            display: -webkit-flex;
+            display: flex;
+            -webkit-box-pack: center;
+            -ms-flex-pack: center;
+            -webkit-justify-content: center;
+            justify-content: center;
+            -webkit-box-align: center;
+            -ms-flex-align: center;
+            -webkit-align-items: center;
+            align-items: center;
+        }
+        .layer-box{
+            background-color: #fff;
+            margin: 0 auto;
+            border-radius: 4px;
+            display: inline-block;
+        }
+        .layer-box .layer-title{
+            line-height: 50px;
+            font-size: 14px;
+            padding-left: 28px;
+            border-bottom: 1px solid #eeeeee;
+        }
+        .layer-btn {
+            text-align: right;
+            padding-right: 29px;
+            padding-bottom: 30px;
+        }
+        .layer-btn .confirm,.layer-btn .cancel{
+            height: 32px;
+            line-height: 32px;
+            display: inline-block;
+            padding: 0px 16px;
+            border-radius: 3px;
+            font-size: 13px;
+            box-sizing: border-box;
+            vertical-align: top;
+            cursor: pointer;
+        }
+        .layer-btn .confirm{
+            background-color: #20a0ff;
+            color: #fff;
+        }
+        .layer-btn .cancel{
+            border:1px solid #bbb;
+            color: #333;
+            margin-left: 7px;
+        }
+        .layer-type-02{
+            width: 558px;
+            height: 226px;
+            padding-top: 40px;
+            padding-left: 30px;
+            box-sizing: border-box;
+        }
+        .layer-type-02 .iconfont{
+            font-size: 34px;
+            margin-right: 15px;
+            color: #34d063;
+        }
+        .layer-type-02>div{
+            display: inline-block;
+            line-height: 14px;
+            font-size: 14px;
+            vertical-align: top;
+            color: #666;
+        }
+        .layer-type-02-top{
+            color: #333;
+            margin-bottom: 12px;
+        }
+    </style>
+    <div class="layer">
+        <div class="layer-box">
+            <div class="layer-title">提示</div>
+            <div class="layer-content">
+                <div class="layer-type-02">
+                    <i class="iconfont icon-70chenggong"></i>
+                    <div>
+                        <div class="layer-type-02-top">新建商品页模板成功</div>
+                        <div>3秒后返回“商品页模板管理”...</div>
+                    </div>
+                </div>
+            </div>
+            <div class="layer-btn">
+                <div class="confirm">确定</div>
+                <div class="cancel">取消</div>
+            </div>
+        </div>
+    </div>
+<!--<script src="js/jquery.js"></script>-->
+<!--<script src="js/layer.js"></script>-->
+</body>
+</html>
