@@ -115,14 +115,14 @@
 </style>
 <template>
   <section class="wallet-index">
-    <!-- <div class="no-open">
+    <div class="no-open">
       <i class="el-icon-warning"></i>
       <p>您尚未开通多粉钱包，点击下方按钮开通吧！</p>
       <div class="bts">
-          <el-button type="primary">企业开通</el-button>
-          <el-button type="primary">个人开通</el-button>
+          <el-button @click="routerTo('/wallet/companyOpen')" type="primary">企业开通</el-button>
+          <el-button @click="routerTo('/wallet/personalOpen')"  type="primary">个人开通</el-button>
       </div>
-    </div> -->
+    </div>
     <div class="public-content">
       <div class="top-msg">
         <div class="gray">
@@ -139,7 +139,7 @@
             </div>
           </div>
           <div class="public-fr">
-            <el-button type="primary">修改密码</el-button>
+            <el-button @click="dialogEditPassword=true" type="primary">修改密码</el-button>
           </div>
         </div>
         <div class="data-msg">
@@ -166,7 +166,7 @@
           </ul>
           <div class="bts">
             <el-button type="primary">购买</el-button>
-            <el-button type="primary">提现</el-button>
+            <el-button @click="goToDrawCash" type="primary">提现</el-button>
           </div>
         </div>
       </div>
@@ -175,20 +175,22 @@
       <div class="table-top-conent">
         <div class="row">
           <span class="title public-c333">交易类型：</span>
-          <span @click="tType=0" class="select-title" style="color:#20a0ff;">消费</span>
-          <span @click="tType=1" class="select-title">提现</span>
+          <span @click="tType=0" class="select-title" :style="tType==0?'color:#20a0ff;':''">消费</span>
+          <span @click="tType=1" class="select-title" :style="tType==1?'color:#20a0ff;':''">提现</span>
         </div>
         <div>
           <span class="title public-c333">时间范围：</span>
           <el-date-picker v-model="value4" type="datetimerange" :picker-options="pickerOptions2" placeholder="选择时间范围" align="right">
           </el-date-picker>
-          <span class="title public-c333" style="padding-left:30px;">来源：</span>
-          <el-select v-model="value" placeholder="请选择">
-            <el-option v-for="item in options" :key="item.value" :label="item.label" :value="item.value">
-            </el-option>
-          </el-select>
+          <div v-show="tType==0" style="display:inline-block;">
+            <span class="title public-c333" style="padding-left:30px;">来源：</span>
+            <el-select v-model="value" placeholder="请选择">
+              <el-option v-for="item in options" :key="item.value" :label="item.label" :value="item.value">
+              </el-option>
+            </el-select>
+          </div>
         </div>
-        <div class="public-c666" style="line-height:1.8;margin-top:15px;">
+        <div v-show="tType==0" class="public-c666" style="line-height:1.8;margin-top:15px;">
           <p>1.金额：是订单的交易金额（为扣除交易手续费的金额）</p>
           <p>2.交易手续费用：是承担微信、支付宝、银行机构等“支付通道商”收取的0.6%交易手续费。</p>
           <p>3.到账金额：是实际到多粉钱包的金额（到账金额=金额-交易手续费用）</p>
@@ -224,6 +226,27 @@
         </div>
       </div>
     </div>
+    <el-dialog title="修改密码" :visible.sync="dialogEditPassword" custom-class="wallet-index-select-apply-dialog">
+      <el-form :model="ruleForm" :rules="rules" ref="ruleForm" label-width="155px" class="demo-ruleForm">
+        <el-form-item label="安全手机：">
+          158450***46
+        </el-form-item>
+        <el-form-item label="验证码：" prop="name">
+          <el-input v-model="ruleForm.name" placeholder="请输入6位验证码" style="width:250px;"></el-input>
+          <el-button type="primary">获取验证码</el-button>
+        </el-form-item>
+        <el-form-item label="设置新钱包密码：" prop="name">
+          <el-input v-model="ruleForm.name" placeholder="请输入您的新交易密码" style="width:250px;"></el-input>
+        </el-form-item>
+        <el-form-item label="确认新钱包密码：" prop="name">
+          <el-input v-model="ruleForm.name" placeholder="请再次输入您的新交易密码" style="width:250px;"></el-input>
+        </el-form-item>
+        <el-form-item style="text-align: right;">
+          <el-button type="primary" @click="submitForm('ruleForm')">确定</el-button>
+          <el-button @click="resetForm('ruleForm')">取消</el-button>
+        </el-form-item>
+      </el-form>
+    </el-dialog>
     <el-dialog title="选择应用" :visible.sync="dialogFormVisible" custom-class="wallet-index-select-apply-dialog">
       <div class="public-c999 tips">
         点击 选择后，系统将该行业应用交易金额转入多粉钱包中
@@ -264,7 +287,25 @@
   export default {
     data() {
       return {
-        tType:0,
+        ruleForm: {
+          name: '',
+        },
+        rules: {
+          name: [{
+              required: true,
+              message: '请输入活动名称',
+              trigger: 'blur'
+            },
+            {
+              min: 3,
+              max: 5,
+              message: '长度在 3 到 5 个字符',
+              trigger: 'blur'
+            }
+          ],
+        },
+        dialogEditPassword: false,
+        tType: 0,
         dialogFormVisible: false,
         checkList: ['选中且禁用', '复选框 A'],
         tableData3: [{
@@ -323,9 +364,28 @@
     },
 
     methods: {
+      submitForm(formName) {
+        this.$refs[formName].validate((valid) => {
+          if (valid) {
+            alert('submit!');
+          } else {
+            console.log('error submit!!');
+            return false;
+          }
+        });
+      },
+      resetForm(formName) {
+        this.$refs[formName].resetFields();
+      },
       //选择应用
       selectApply() {
 
+      },
+      //提现
+      goToDrawCash(){
+        this.$router.push({
+          path: '/wallet/drawcash'
+        })
       },
       toggleSelection(rows) {
         if (rows) {
@@ -340,10 +400,12 @@
         this.multipleSelection = val;
       },
       routerTo(path) {
+        console.log(path)
         this.$router.push({
           path: path
         })
-      }
+      },
+      
     }
   }
 
