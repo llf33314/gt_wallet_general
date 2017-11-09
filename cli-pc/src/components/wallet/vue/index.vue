@@ -165,7 +165,6 @@
             </li>
           </ul>
           <div class="bts">
-            <el-button type="primary">购买</el-button>
             <el-button @click="goToDrawCash" type="primary">提现</el-button>
           </div>
         </div>
