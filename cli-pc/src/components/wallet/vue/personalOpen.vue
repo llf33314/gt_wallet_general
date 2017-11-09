@@ -4,18 +4,16 @@
       width: 250px;
     }
     .dome-img {
-      display: inline-block;
-      float: left;
-      position: relative;
       padding-left: 50px;
-      margin-top:-5px;
+      float: left;
+      span {
+        float: left;
+      }
       img {
-        padding: 5px;
-        border-radius: 5px;
         vertical-align: text-top;
-        border: 1px solid #c0ccda;
-        height: 135px;
+        height: 140px;
         margin-left: 20px;
+        float: left;
       }
     }
   }
@@ -42,14 +40,14 @@
           <gt-material class="public-fl" prop="url" :url="url" v-on:getChangeUrl="getChangeUrl" width="220" height="140"></gt-material>
           <div class="dome-img public-c333">
             <span>示例：</span>
-            <img src="./../img/1.jpg" alt="">
+            <img src="./../img/c1.jpg" alt="">
           </div>
         </el-form-item>
         <el-form-item label="身份证背面：" prop="name">
           <gt-material class="public-fl" prop="url" :url="url" v-on:getChangeUrl="getChangeUrl" width="220" height="140"></gt-material>
           <div class="dome-img public-c333">
             <span>示例：</span>
-            <img src="./../img/2.jpg" alt="">
+            <img src="./../img/c2.jpg" alt="">
           </div>
         </el-form-item>
         <el-form-item label="个人账户：" prop="name">
