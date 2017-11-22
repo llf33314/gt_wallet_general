@@ -17,8 +17,8 @@ import org.springframework.web.servlet.ModelAndView;
 import com.gt.api.bean.session.BusUser;
 import com.gt.api.bean.session.Member;
 import com.gt.api.util.SessionUtils;
-import com.gt.wallet.config.WalletWebConfig;
 import com.gt.wallet.utils.CommonUtil;
+import com.gt.wallet.utils.WalletWebConfig;
 
 import lombok.extern.slf4j.Slf4j;
 import net.sf.json.JSONObject;

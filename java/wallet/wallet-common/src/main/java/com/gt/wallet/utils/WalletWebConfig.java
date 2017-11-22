@@ -1,4 +1,4 @@
-package com.gt.wallet.config;
+package com.gt.wallet.utils;
 
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.stereotype.Component;

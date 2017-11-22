@@ -8,11 +8,11 @@ import java.security.interfaces.RSAPublicKey;
 import org.json.JSONObject;
 
 import com.gt.api.util.httpclient.JsonUtil;
-import com.gt.wallet.config.WalletWebConfig;
 import com.gt.wallet.data.wallet.request.WalletIndividualAdd;
 import com.gt.wallet.dto.ServerResponse;
 import com.gt.wallet.enums.WalletResponseEnums;
 import com.gt.wallet.utils.CommonUtil;
+import com.gt.wallet.utils.WalletWebConfig;
 
 import ime.service.client.SOAClient;
 import ime.service.util.RSAUtil;

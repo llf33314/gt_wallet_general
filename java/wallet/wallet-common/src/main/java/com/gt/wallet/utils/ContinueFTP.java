@@ -17,8 +17,6 @@ import org.apache.commons.net.ftp.FTPFile;
 import org.apache.commons.net.ftp.FTPReply;
 import org.apache.log4j.Logger;
 
-import com.gt.wallet.config.WalletWebConfig;
-
 
 /**
  * 支持断点续传的FTP实用类

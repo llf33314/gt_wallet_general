@@ -6,7 +6,6 @@ import java.io.FileOutputStream;
 import org.springframework.web.multipart.MultipartFile;
 
 import com.gt.api.bean.session.BusUser;
-import com.gt.wallet.config.WalletWebConfig;
 import com.gt.wallet.dto.ServerResponse;
 import com.gt.wallet.enums.WalletResponseEnums;
 import com.gt.wallet.exception.BusinessException;
