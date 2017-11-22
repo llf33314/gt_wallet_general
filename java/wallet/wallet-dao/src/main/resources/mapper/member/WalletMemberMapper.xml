@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.gt.wallet.mapper.member.WalletMemberMapper">
+
+	<!-- 通用查询映射结果 -->
+	<resultMap id="BaseResultMap" type="com.gt.wallet.entity.WalletMember">
+		<id column="id" property="id" />
+		<result column="member_id" property="memberId" />
+		<result column="member_type" property="memberType" />
+		<result column="member_num" property="memberNum" />
+		<result column="external_num" property="externalNum" />
+		<result column="pay_pass" property="payPass" />
+		<result column="phone" property="phone" />
+		<result column="is_binding_phone" property="isBindingPhone" />
+		<result column="ctime" property="ctime" />
+		<result column="status" property="status" />
+		<result column="memberinfo_json" property="memberinfoJson" />
+		<result column="member_class" property="memberClass" />
+		<result column="set_pay_pwd" property="setPayPwd" />
+		<result column="registerIp" property="registerIp" />
+	</resultMap>
+
+    <!-- 通用查询结果列 -->
+    <sql id="Base_Column_List">
+        id, member_id AS memberId, member_type AS memberType, member_num AS memberNum, external_num AS externalNum,
+         pay_pass AS payPass, phone, is_binding_phone AS isBindingPhone, ctime, status, memberinfo_json AS memberinfoJson, 
+         member_class AS memberClass,set_pay_pwd AS setPayPwd,registerIp AS registerIp
+    </sql>
+</mapper>

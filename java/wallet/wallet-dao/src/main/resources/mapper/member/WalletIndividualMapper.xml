@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.gt.wallet.mapper.member.WalletIndividualMapper">
+
+	<!-- 通用查询映射结果 -->
+	<resultMap id="BaseResultMap" type="com.gt.wallet.entity.WalletIndividual">
+		<id column="id" property="id" />
+		<result column="w_member_id" property="wMemberId" />
+		<result column="member_num" property="memberNum" />
+		<result column="name" property="name" />
+		<result column="address" property="address" />
+		<result column="country" property="country" />
+		<result column="province" property="province" />
+		<result column="area" property="area" />
+		<result column="identity_checked" property="identityChecked" />
+		<result column="identityCardNo" property="identityCardNo" />
+		<result column="pay_fail_amount" property="payFailAmount" />
+		<result column="realNameTime" property="realNameTime" />
+		<result column="remark" property="remark" />
+		<result column="source" property="source" />
+		<result column="identitycard_url_1" property="identitycardUrl1" />
+		<result column="identitycard_url_2" property="identitycardUrl2" />
+	</resultMap>
+
+    <!-- 通用查询结果列 -->
+    <sql id="Base_Column_List">
+        id, w_member_id AS wMemberId, member_num AS memberNum, name, address, country, province, area, identity_checked AS identityChecked, identityCardNo, pay_fail_amount AS payFailAmount, realNameTime, remark,
+         source,identitycard_url_1 AS identitycardUrl1,identitycard_url_2 AS identitycardUrl2
+    </sql>
+
+</mapper>

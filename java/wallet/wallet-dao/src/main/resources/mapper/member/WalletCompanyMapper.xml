@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.gt.wallet.mapper.member.WalletCompanyMapper">
+
+	<!-- 通用查询映射结果 -->
+	<resultMap id="BaseResultMap" type="com.gt.wallet.entity.WalletCompany">
+		<id column="id" property="id" />
+		<result column="w_member_id" property="wMemberId" />
+		<result column="member_num" property="memberNum" />
+		<result column="do_business_url" property="doBusinessUrl" />
+		<result column="license_url" property="licenseUrl" />
+		<result column="identitycard_url_1" property="identitycardUrl1" />
+		<result column="identitycard_url_2" property="identitycardUrl2" />
+		<result column="company_name" property="companyName" />
+		<result column="company_address" property="companyAddress" />
+		<result column="business_license" property="businessLicense" />
+		<result column="organization_code" property="organizationCode" />
+		<result column="telephone" property="telephone" />
+		<result column="legal_name" property="legalName" />
+		<result column="identity_type" property="identityType" />
+		<result column="legalIds" property="legalIds" />
+		<result column="account_no" property="accountNo" />
+		<result column="parent_bank_name" property="parentBankName" />
+		<result column="bank_ctiy_no" property="bankCtiyNo" />
+		<result column="bank_name" property="bankName" />
+		<result column="union_bank" property="unionBank" />
+		<result column="country" property="country" />
+		<result column="province" property="province" />
+		<result column="area" property="area" />
+	</resultMap>
+
+    <!-- 通用查询结果列 -->
+    <sql id="Base_Column_List">
+        id, w_member_id AS wMemberId, member_num AS memberNum, do_business_url AS doBusinessUrl, license_url AS licenseUrl, identitycard_url_1 AS identitycardUrl1, identitycard_url_2 AS identitycardUrl2, company_name AS companyName, company_address AS companyAddress, business_license AS businessLicense, organization_code AS organizationCode, telephone, legal_name AS legalName, identity_type AS identityType, legalIds,
+        account_no AS accountNo, parent_bank_name AS parentBankName,
+         bank_ctiy_no AS bankCtiyNo, bank_name AS bankName,
+          union_bank AS unionBank, country, province, area
+    </sql>
+
+</mapper>

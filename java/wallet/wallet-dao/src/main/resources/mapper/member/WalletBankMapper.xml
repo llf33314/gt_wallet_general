@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.gt.wallet.mapper.member.WalletBankMapper">
+
+	<!-- 通用查询映射结果 -->
+	<resultMap id="BaseResultMap" type="com.gt.wallet.entity.WalletBank">
+		<id column="id" property="id" />
+		<result column="w_member_id" property="wMemberId" />
+		<result column="member_num" property="memberNum" />
+		<result column="cardNo" property="cardNo" />
+		<result column="phone" property="phone" />
+		<result column="card_check" property="cardCheck" />
+		<result column="identityType" property="identityType" />
+		<result column="identityNo" property="identityNo" />
+		<result column="validate" property="validate" />
+		<result column="cvv2" property="cvv2" />
+		<result column="is_safe_card" property="isSafeCard" />
+		<result column="union_bank" property="unionBank" />
+		<result column="tranceNum" property="tranceNum" />
+		<result column="transDate" property="transDate" />
+		<result column="bank_name" property="bankName" />
+		<result column="bank_code" property="bankCode" />
+		<result column="card_type" property="cardType" />
+		<result column="card_class" property="cardClass" />
+		<result column="card_lenth" property="cardLenth" />
+		<result column="card_state" property="cardState" />
+		<result column="name" property="name" />
+	</resultMap>
+
+    <!-- 通用查询结果列 -->
+    <sql id="Base_Column_List">
+        id, w_member_id AS wMemberId, member_num AS memberNum, cardNo, phone, card_check AS cardCheck, 
+        identityType, identityNo, validate, cvv2, is_safe_card AS isSafeCard, union_bank AS unionBank, tranceNum,
+         transDate, bank_name AS bankName, bank_code AS bankCode, card_type AS cardType, card_class AS cardClass, 
+         card_lenth AS cardLenth, card_state AS cardState,name
+    </sql>
+
+</mapper>

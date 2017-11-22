@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.gt.wallet.mapper.WalletQuotaMapper">
+
+	<!-- 通用查询映射结果 -->
+	<resultMap id="BaseResultMap" type="com.gt.wallet.entity.WalletQuota">
+		<id column="id" property="id" />
+		<result column="w_member_id" property="wMemberId" />
+		<result column="quota_value" property="quotaValue" />
+		<result column="quota_desc" property="quotaDesc" />
+		<result column="ctime" property="ctime" />
+		<result column="status" property="status" />
+		<result column="fail_reason" property="failReason" />
+	</resultMap>
+
+    <!-- 通用查询结果列 -->
+    <sql id="Base_Column_List">
+        id, w_member_id AS wMemberId, quota_value AS quotaValue, quota_desc AS quotaDesc, ctime, status, fail_reason AS failReason
+    </sql>
+
+</mapper>

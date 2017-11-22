@@ -1,0 +1,70 @@
+2017-11-18 10:40:29.620 [restartedMain] INFO  com.gt.wallet.WalletApplication - Starting WalletApplication on DfenSZSer01 with PID 4580 (D:\workspace-sts-3.7.3.RELEASE\wallet\target\classes started by Administrator in D:\workspace-sts-3.7.3.RELEASE\wallet)
+2017-11-18 10:40:29.625 [restartedMain] DEBUG com.gt.wallet.WalletApplication - Running with Spring Boot v1.5.8.RELEASE, Spring v4.3.12.RELEASE
+2017-11-18 10:40:29.625 [restartedMain] INFO  com.gt.wallet.WalletApplication - The following profiles are active: dev
+2017-11-18 10:40:32.975 [localhost-startStop-1] DEBUG c.g.w.c.m.DruidDataSourceConfig - Druid 白名单IP：127.0.0.1,192.168.2.16 , 黑名单IP：192.168.2.150 , 登录账号/密码：admin/123456 , 是否开启重置数据：false 
+2017-11-18 10:40:33.149 [localhost-startStop-1] DEBUG c.g.wallet.config.RedisSessionConfig -  domainName:.yifriend.net,cookieName:WXMPJSESSIONID,cookiePath:/ 
+2017-11-18 10:40:36.962 [restartedMain] DEBUG c.gt.wallet.config.RedisCacheConfig - 注入StringRedisTemplate
+2017-11-18 10:40:39.202 [restartedMain] INFO  com.gt.wallet.WalletApplication - Started WalletApplication in 9.945 seconds (JVM running for 10.523)
+2017-11-18 10:40:39.202 [restartedMain] INFO  com.gt.wallet.WalletApplication - SpringBoot Start Success!
+2017-11-18 10:45:11.759 [restartedMain] INFO  com.gt.wallet.WalletApplication - Starting WalletApplication on DfenSZSer01 with PID 3312 (D:\workspace-sts-3.7.3.RELEASE\wallet\target\classes started by Administrator in D:\workspace-sts-3.7.3.RELEASE\wallet)
+2017-11-18 10:45:11.760 [restartedMain] DEBUG com.gt.wallet.WalletApplication - Running with Spring Boot v1.5.8.RELEASE, Spring v4.3.12.RELEASE
+2017-11-18 10:45:11.760 [restartedMain] INFO  com.gt.wallet.WalletApplication - The following profiles are active: dev
+2017-11-18 10:45:15.107 [localhost-startStop-1] DEBUG c.g.w.c.m.DruidDataSourceConfig - Druid 白名单IP：127.0.0.1,192.168.2.16 , 黑名单IP：192.168.2.150 , 登录账号/密码：admin/123456 , 是否开启重置数据：false 
+2017-11-18 10:45:15.274 [localhost-startStop-1] DEBUG c.g.wallet.config.RedisSessionConfig -  domainName:.yifriend.net,cookieName:WXMPJSESSIONID,cookiePath:/ 
+2017-11-18 10:45:19.009 [restartedMain] DEBUG c.gt.wallet.config.RedisCacheConfig - 注入StringRedisTemplate
+2017-11-18 10:45:21.189 [restartedMain] INFO  com.gt.wallet.WalletApplication - Started WalletApplication in 9.78 seconds (JVM running for 10.249)
+2017-11-18 10:45:21.189 [restartedMain] INFO  com.gt.wallet.WalletApplication - SpringBoot Start Success!
+2017-11-18 10:46:05.322 [http-nio-8888-exec-2] INFO  c.g.w.c.interceptor.MyInterceptor - >>>MyInterceptor>>>>>>>在请求处理之前进行调用（Controller方法调用之前）
+2017-11-18 10:46:05.324 [http-nio-8888-exec-2] INFO  c.g.w.c.interceptor.MyInterceptor - basePath = http://wallet.yifriend.net:8888/swagger-resources/configuration/ui
+2017-11-18 10:46:05.572 [http-nio-8888-exec-2] ERROR c.g.w.c.interceptor.MyInterceptor - 方法:springfox.documentation.swagger.web.ApiResourceController@7824d158.uiConfiguration  ；  请求参数：[Lorg.springframework.core.MethodParameter;@3de8ab0d
+2017-11-18 10:46:05.572 [http-nio-8888-exec-2] ERROR c.g.w.c.interceptor.MyInterceptor - 访问的执行时间 : 248ms
+2017-11-18 10:46:05.599 [http-nio-8888-exec-4] INFO  c.g.w.c.interceptor.MyInterceptor - >>>MyInterceptor>>>>>>>在请求处理之前进行调用（Controller方法调用之前）
+2017-11-18 10:46:05.600 [http-nio-8888-exec-4] INFO  c.g.w.c.interceptor.MyInterceptor - basePath = http://wallet.yifriend.net:8888/swagger-resources
+2017-11-18 10:46:05.713 [http-nio-8888-exec-4] ERROR c.g.w.c.interceptor.MyInterceptor - 方法:springfox.documentation.swagger.web.ApiResourceController@7824d158.swaggerResources  ；  请求参数：[Lorg.springframework.core.MethodParameter;@2d695814
+2017-11-18 10:46:05.713 [http-nio-8888-exec-4] ERROR c.g.w.c.interceptor.MyInterceptor - 访问的执行时间 : 113ms
+2017-11-18 10:46:05.742 [http-nio-8888-exec-3] INFO  c.g.w.c.interceptor.MyInterceptor - >>>MyInterceptor>>>>>>>在请求处理之前进行调用（Controller方法调用之前）
+2017-11-18 10:46:05.742 [http-nio-8888-exec-3] INFO  c.g.w.c.interceptor.MyInterceptor - basePath = http://wallet.yifriend.net:8888/v2/api-docs
+2017-11-18 10:46:05.969 [http-nio-8888-exec-3] ERROR c.g.w.c.interceptor.MyInterceptor - 方法:springfox.documentation.swagger2.web.Swagger2Controller@609e3a01.getDocumentation  ；  请求参数：[Lorg.springframework.core.MethodParameter;@569ce876
+2017-11-18 10:46:05.969 [http-nio-8888-exec-3] ERROR c.g.w.c.interceptor.MyInterceptor - 访问的执行时间 : 227ms
+2017-11-18 10:46:06.140 [http-nio-8888-exec-5] INFO  c.g.w.c.interceptor.MyInterceptor - >>>MyInterceptor>>>>>>>在请求处理之前进行调用（Controller方法调用之前）
+2017-11-18 10:46:06.140 [http-nio-8888-exec-5] INFO  c.g.w.c.interceptor.MyInterceptor - basePath = http://wallet.yifriend.net:8888/swagger-resources/configuration/security
+2017-11-18 10:46:06.275 [http-nio-8888-exec-5] ERROR c.g.w.c.interceptor.MyInterceptor - 方法:springfox.documentation.swagger.web.ApiResourceController@7824d158.securityConfiguration  ；  请求参数：[Lorg.springframework.core.MethodParameter;@3d1b7f93
+2017-11-18 10:46:06.275 [http-nio-8888-exec-5] ERROR c.g.w.c.interceptor.MyInterceptor - 访问的执行时间 : 135ms
+2017-11-18 10:46:09.245 [http-nio-8888-exec-10] INFO  c.g.w.c.interceptor.MyInterceptor - >>>MyInterceptor>>>>>>>在请求处理之前进行调用（Controller方法调用之前）
+2017-11-18 10:46:09.245 [http-nio-8888-exec-10] INFO  c.g.w.c.interceptor.MyInterceptor - basePath = http://wallet.yifriend.net:8888/register
+2017-11-18 10:46:09.247 [http-nio-8888-exec-10] INFO  c.g.w.web.WalletMemberController - 触发开通会员接口,参数null
+2017-11-18 10:46:09.251 [http-nio-8888-exec-10] INFO  c.g.w.s.i.m.WalletMemberServiceImpl - biz接口:开通会员,请求参数:null192.168.2.1742
+2017-11-18 10:46:09.254 [http-nio-8888-exec-10] INFO  c.g.w.config.mybatis.DataSourceAop - dataSource切换到：Read
+2017-11-18 10:46:09.259 [http-nio-8888-exec-10] ERROR c.g.w.web.WalletMemberController - 开通会员接口异常：1000,系統异常
+2017-11-18 10:46:46.834 [http-nio-8888-exec-1] INFO  c.g.w.c.interceptor.MyInterceptor - >>>MyInterceptor>>>>>>>在请求处理之前进行调用（Controller方法调用之前）
+2017-11-18 10:46:46.834 [http-nio-8888-exec-1] INFO  c.g.w.c.interceptor.MyInterceptor - basePath = http://wallet.yifriend.net:8888/register
+2017-11-18 10:46:46.835 [http-nio-8888-exec-1] INFO  c.g.w.web.WalletMemberController - 触发开通会员接口,参数null
+2017-11-18 10:46:46.835 [http-nio-8888-exec-1] INFO  c.g.w.s.i.m.WalletMemberServiceImpl - biz接口:开通会员,请求参数:null192.168.2.1742
+2017-11-18 10:46:46.835 [http-nio-8888-exec-1] INFO  c.g.w.config.mybatis.DataSourceAop - dataSource切换到：Read
+2017-11-18 10:46:46.838 [http-nio-8888-exec-1] ERROR c.g.w.web.WalletMemberController - 开通会员接口异常：1000,系統异常
+2017-11-18 10:47:03.554 [http-nio-8888-exec-9] INFO  c.g.w.c.interceptor.MyInterceptor - >>>MyInterceptor>>>>>>>在请求处理之前进行调用（Controller方法调用之前）
+2017-11-18 10:47:03.554 [http-nio-8888-exec-9] INFO  c.g.w.c.interceptor.MyInterceptor - basePath = http://wallet.yifriend.net:8888/register
+2017-11-18 10:47:03.554 [http-nio-8888-exec-9] INFO  c.g.w.web.WalletMemberController - 触发开通会员接口,参数null
+2017-11-18 10:47:03.555 [http-nio-8888-exec-9] INFO  c.g.w.s.i.m.WalletMemberServiceImpl - biz接口:开通会员,请求参数:null192.168.2.1742
+2017-11-18 10:47:19.614 [http-nio-8888-exec-9] INFO  c.g.w.config.mybatis.DataSourceAop - dataSource切换到：Read
+2017-11-18 10:47:19.616 [http-nio-8888-exec-9] ERROR c.g.w.web.WalletMemberController - 开通会员接口异常：1000,系統异常
+2017-11-18 10:47:24.303 [http-nio-8888-exec-5] INFO  c.g.w.c.interceptor.MyInterceptor - >>>MyInterceptor>>>>>>>在请求处理之前进行调用（Controller方法调用之前）
+2017-11-18 10:47:24.304 [http-nio-8888-exec-5] INFO  c.g.w.c.interceptor.MyInterceptor - basePath = http://wallet.yifriend.net:8888/swagger-resources/configuration/ui
+2017-11-18 10:47:24.453 [http-nio-8888-exec-5] ERROR c.g.w.c.interceptor.MyInterceptor - 方法:springfox.documentation.swagger.web.ApiResourceController@7824d158.uiConfiguration  ；  请求参数：[Lorg.springframework.core.MethodParameter;@3de8ab0d
+2017-11-18 10:47:24.453 [http-nio-8888-exec-5] ERROR c.g.w.c.interceptor.MyInterceptor - 访问的执行时间 : 149ms
+2017-11-18 10:47:24.486 [http-nio-8888-exec-7] INFO  c.g.w.c.interceptor.MyInterceptor - >>>MyInterceptor>>>>>>>在请求处理之前进行调用（Controller方法调用之前）
+2017-11-18 10:47:24.486 [http-nio-8888-exec-7] INFO  c.g.w.c.interceptor.MyInterceptor - basePath = http://wallet.yifriend.net:8888/swagger-resources
+2017-11-18 10:47:24.634 [http-nio-8888-exec-7] ERROR c.g.w.c.interceptor.MyInterceptor - 方法:springfox.documentation.swagger.web.ApiResourceController@7824d158.swaggerResources  ；  请求参数：[Lorg.springframework.core.MethodParameter;@2d695814
+2017-11-18 10:47:24.634 [http-nio-8888-exec-7] ERROR c.g.w.c.interceptor.MyInterceptor - 访问的执行时间 : 147ms
+2017-11-18 10:47:24.668 [http-nio-8888-exec-8] INFO  c.g.w.c.interceptor.MyInterceptor - >>>MyInterceptor>>>>>>>在请求处理之前进行调用（Controller方法调用之前）
+2017-11-18 10:47:24.668 [http-nio-8888-exec-8] INFO  c.g.w.c.interceptor.MyInterceptor - basePath = http://wallet.yifriend.net:8888/v2/api-docs
+2017-11-18 10:47:24.819 [http-nio-8888-exec-8] ERROR c.g.w.c.interceptor.MyInterceptor - 方法:springfox.documentation.swagger2.web.Swagger2Controller@609e3a01.getDocumentation  ；  请求参数：[Lorg.springframework.core.MethodParameter;@569ce876
+2017-11-18 10:47:24.819 [http-nio-8888-exec-8] ERROR c.g.w.c.interceptor.MyInterceptor - 访问的执行时间 : 151ms
+2017-11-18 10:47:24.999 [http-nio-8888-exec-3] INFO  c.g.w.c.interceptor.MyInterceptor - >>>MyInterceptor>>>>>>>在请求处理之前进行调用（Controller方法调用之前）
+2017-11-18 10:47:24.999 [http-nio-8888-exec-3] INFO  c.g.w.c.interceptor.MyInterceptor - basePath = http://wallet.yifriend.net:8888/swagger-resources/configuration/security
+2017-11-18 10:47:25.129 [http-nio-8888-exec-3] ERROR c.g.w.c.interceptor.MyInterceptor - 方法:springfox.documentation.swagger.web.ApiResourceController@7824d158.securityConfiguration  ；  请求参数：[Lorg.springframework.core.MethodParameter;@3d1b7f93
+2017-11-18 10:47:25.129 [http-nio-8888-exec-3] ERROR c.g.w.c.interceptor.MyInterceptor - 访问的执行时间 : 130ms
+2017-11-18 10:47:30.788 [http-nio-8888-exec-1] INFO  c.g.w.c.interceptor.MyInterceptor - >>>MyInterceptor>>>>>>>在请求处理之前进行调用（Controller方法调用之前）
+2017-11-18 10:47:30.789 [http-nio-8888-exec-1] INFO  c.g.w.c.interceptor.MyInterceptor - basePath = http://wallet.yifriend.net:8888/register
+2017-11-18 10:47:30.789 [http-nio-8888-exec-1] INFO  c.g.w.web.WalletMemberController - 触发开通会员接口,参数null
+2017-11-18 10:47:30.794 [http-nio-8888-exec-1] INFO  c.g.w.s.i.m.WalletMemberServiceImpl - biz接口:开通会员,请求参数:null192.168.2.1742

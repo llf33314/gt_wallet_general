@@ -1,0 +1,17 @@
+2017-11-08 20:31:37.696 [main] INFO  com.gt.wallet.EmailTest - Starting EmailTest on DfenSZSer01 with PID 3080 (started by Administrator in D:\workspace-sts-3.7.3.RELEASE\wallet\wallet-web)
+2017-11-08 20:31:37.696 [main] DEBUG com.gt.wallet.EmailTest - Running with Spring Boot v1.5.8.RELEASE, Spring v4.3.12.RELEASE
+2017-11-08 20:31:37.696 [main] INFO  com.gt.wallet.EmailTest - The following profiles are active: dev
+2017-11-08 20:31:44.120 [main] DEBUG c.g.w.c.m.DruidDataSourceConfig - Druid 白名单IP：127.0.0.1,192.168.2.16 , 黑名单IP：192.168.2.150 , 登录账号/密码：admin/123456 , 是否开启重置数据：false 
+2017-11-08 20:31:44.218 [main] DEBUG c.gt.wallet.config.RedisCacheConfig - 注入StringRedisTemplate
+2017-11-08 20:31:44.308 [main] DEBUG c.g.wallet.config.RedisSessionConfig -  domainName:.yifriend.net,cookieName:WXMPJSESSIONID,cookiePath:/ 
+2017-11-08 20:31:46.788 [main] INFO  com.gt.wallet.EmailTest - Started EmailTest in 9.514 seconds (JVM running for 10.161)
+2017-11-08 20:31:46.825 [main] INFO  com.gt.wallet.BasicTest - =======================================  单元测试Start =======================================
+2017-11-08 20:31:47.645 [main] INFO  com.gt.wallet.BasicTest - 执行结束，方法执行 820 毫秒
+2017-11-08 20:31:47.645 [main] INFO  com.gt.wallet.BasicTest - =======================================  单元测试End =======================================
+2017-11-08 20:43:29.703 [main] INFO  com.gt.wallet.EmailTest - Starting EmailTest on DfenSZSer01 with PID 3076 (started by Administrator in D:\workspace-sts-3.7.3.RELEASE\wallet\wallet-web)
+2017-11-08 20:43:29.703 [main] DEBUG com.gt.wallet.EmailTest - Running with Spring Boot v1.5.8.RELEASE, Spring v4.3.12.RELEASE
+2017-11-08 20:43:29.703 [main] INFO  com.gt.wallet.EmailTest - The following profiles are active: dev
+2017-11-08 20:43:36.162 [main] DEBUG c.g.w.c.m.DruidDataSourceConfig - Druid 白名单IP：127.0.0.1,192.168.2.16 , 黑名单IP：192.168.2.150 , 登录账号/密码：admin/123456 , 是否开启重置数据：false 
+2017-11-08 20:43:36.257 [main] DEBUG c.gt.wallet.config.RedisCacheConfig - 注入StringRedisTemplate
+2017-11-08 20:43:36.347 [main] DEBUG c.g.wallet.config.RedisSessionConfig -  domainName:.yifriend.net,cookieName:WXMPJSESSIONID,cookiePath:/ 
+2017-11-08 20:43:38.954 [main] INFO  com.gt.wallet.EmailTest - Started EmailTest in 9.634 seconds (JVM running for 10.213)
