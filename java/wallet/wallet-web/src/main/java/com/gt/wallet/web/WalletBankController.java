@@ -83,7 +83,7 @@ public class WalletBankController extends BaseController {
 	 @ApiOperation(value="确认绑定银行卡", notes="确认绑定银行卡")
 	@ApiImplicitParams({
         @ApiImplicitParam(name = "id",value = "银行卡主键",paramType = "form",dataType = "int",required=true,example="银行卡主键"),
-        @ApiImplicitParam(name = "id",value = "verificationCode",paramType = "form",dataType = "int",required=true,example="verificationCode")
+        @ApiImplicitParam(name = "verificationCode",value = "验证码",paramType = "form",dataType = "int",required=true,example="verificationCode")
         // path, query, body, header, form
 	})
 	public ServerResponse<?> bindBankCard(HttpServletRequest request,Integer id, String verificationCode 
