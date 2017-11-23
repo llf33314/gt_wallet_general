@@ -5,7 +5,7 @@
 
 	<groupId>com.gt.wallet</groupId>
 	<artifactId>parent</artifactId>
-	<version>0.0.1</version>
+	<version>1.1-SNAPSHOT</version>
 	<modules>
 		<module>wallet-common</module>
 		<module>wallet-web</module>
@@ -49,6 +49,11 @@
 	</properties>
 
 	<dependencies>
+
+		<dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-tomcat</artifactId>
+        </dependency>
 
 		<dependency>
 			<groupId>org.apache.tomcat.embed</groupId>
@@ -311,8 +316,18 @@
 					<skip>true</skip>
 				</configuration>
 			</plugin>
+			
 		</plugins>
 	</build>
-
+	<distributionManagement>
+		<repository>
+			<id>gt-releases</id>
+			<url>http://nexus.duofee.com/nexus/content/repositories/releases/</url>
+		</repository>
+		<snapshotRepository>
+			<id>gt-snapshots</id>
+			<url>http://nexus.duofee.com/nexus/content/repositories/snapshots/</url>
+		</snapshotRepository>
+	</distributionManagement>
 
 </project>
