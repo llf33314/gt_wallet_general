@@ -13,8 +13,8 @@ Object.keys(filters).forEach(key => {
 /*
 * 加载全局组件
 * */
-const ElementUI = ()=>import('gt-pc-ui')
-import 'gt-pc-ui/lib/theme-default/index.css'
+const ElementUI = ()=>import('element-ui')
+import 'element-ui/lib/theme-default/index.css'
 const GtNullData = ()=>import('./components/PublicVue/null-data/nullData')
 const GtCopyUrl = ()=>import('./components/PublicVue/copy-url/copy-url')
 const GtMaterial = ()=>import('./components/PublicVue/material/material')

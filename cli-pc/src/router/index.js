@@ -9,6 +9,7 @@ import {wallet} from '@/components/wallet/router.js'
 
 Vue.use(Router)
 var routes = [
+  wallet
 ]
 // 合并多个路由的数组
 routes = routes.concat(domeRouter)
