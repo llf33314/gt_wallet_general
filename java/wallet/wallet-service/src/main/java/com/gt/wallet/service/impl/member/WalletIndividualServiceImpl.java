@@ -9,6 +9,7 @@ import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
+import com.alibaba.fastjson.JSONObject;
 import com.baomidou.mybatisplus.mapper.EntityWrapper;
 import com.baomidou.mybatisplus.mapper.Wrapper;
 import com.gt.api.bean.session.BusUser;
@@ -28,6 +29,7 @@ import com.gt.wallet.service.member.WalletBankService;
 import com.gt.wallet.service.member.WalletIndividualService;
 import com.gt.wallet.utils.AttachmentUtil;
 import com.gt.wallet.utils.CommonUtil;
+import com.gt.wallet.utils.DateTimeKit;
 import com.gt.wallet.utils.yun.YunSoaMemberUtil;
 
 import lombok.extern.slf4j.Slf4j;
@@ -101,10 +103,23 @@ public class WalletIndividualServiceImpl extends BaseServiceImpl<WalletIndividua
 		String indeMi=YunSoaMemberUtil.rsaEncrypt(walletIndividualAdd.getIdentityNo());
 		walletIndividual.setIdentityCardNo(indeMi);
 		walletIndividual.setSource(1);
-//		walletIndividual.setRealNameTime(DateTimeKit.getDateTime(DateTimeKit.getNow(), DateTimeKit.DEFAULT_DATETIME_FORMAT));
-//		walletIndividual.setAddress(address);
-//		walletIndividual.setCountry(country);
-//		walletIndividual.setRemark(remark);
+		try {
+			ServerResponse<JSONObject> serverResponseGetMemberInfo=YunSoaMemberUtil.getMemberInfo(walletMember.getMemberNum());
+			if(serverResponseGetMemberInfo.getCode()==0){
+				JSONObject jsonObject=serverResponseGetMemberInfo.getData();
+				String value = jsonObject.getString("memberInfo");
+				JSONObject json=JsonUtil.parseObject(value, com.alibaba.fastjson.JSONObject.class);
+				log.info(CommonUtil.format("个人信息：%s", value));
+				walletIndividual.setRealNameTime(json.getString("realNameTime"));
+				walletIndividual.setAddress(json.getString("address"));
+				walletIndividual.setCountry(json.getString("country"));
+				walletIndividual.setProvince(json.getString("province"));
+				walletIndividual.setArea(json.getString("province"));
+				walletIndividual.setRemark(json.getString("realNameTime"));
+			}
+		} catch (Exception e) {
+			// TODO: handle exception
+		}
 		if(CommonUtil.isEmpty(walletIndividual.getId())||walletIndividual.getId()==0){
 			walletMember.setStatus(3);
 			walletIndividualMapper.insert(walletIndividual);
@@ -117,8 +132,12 @@ public class WalletIndividualServiceImpl extends BaseServiceImpl<WalletIndividua
 		/*********************************银行卡******************************************/
 		try {
 			serverResponse=walletBankService.add(walletIndividualAdd);
+		}catch(BusinessException ex){
+			log.error("银行卡接口异常:"+ex.getMessage());
+			serverResponse=ServerResponse.createByErrorMessage(ex.getMessage());
 		} catch (Exception e) {
 			e.printStackTrace();
+			log.error("绑定银行卡接口异常");
 			serverResponse=ServerResponse.createByErrorMessage("绑定银行卡接口异常");
 		}
 		/*********************************银行卡******************************************/
