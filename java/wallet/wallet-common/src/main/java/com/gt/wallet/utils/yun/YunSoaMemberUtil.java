@@ -417,7 +417,7 @@ public class YunSoaMemberUtil {
 			param.put("phone", walletIndividualAdd.getPhone());
 			param.put("name", walletIndividualAdd.getBankName());
 			param.put("cardType", cardType);
-			param.put("bankCode",bankCode);
+//			param.put("bankCode",bankCode);
 			param.put("identityType", 1);
 			param.put("isSafeCard", isSafeCard);
 			param.put("identityNo", rsaEncrypt(walletIndividualAdd.getIdentityNo()));
