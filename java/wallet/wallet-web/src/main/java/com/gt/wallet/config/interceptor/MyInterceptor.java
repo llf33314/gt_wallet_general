@@ -86,10 +86,10 @@ public class MyInterceptor implements HandlerInterceptor {
      
         //商城登陆拦截
         if (urlwx.equals("79B4DE7C") || url.contains("79B4DE7C")) {//移动端
-            Member member = SessionUtils.getLoginMember(request);
-            if (CommonUtil.isNotEmpty(member)) {
-                request.setAttribute("member", member);
-            }
+//            Member member = SessionUtils.getLoginMember(request);
+//            if (CommonUtil.isNotEmpty(member)) {
+//                request.setAttribute("member", member);
+//            }
             return true;
         } else if (passSuffixs(url) || passUrl(url) || passIntercepto(url)) {
             return true;// 只有返回true才会继续向下执行，返回false取消当前请求
