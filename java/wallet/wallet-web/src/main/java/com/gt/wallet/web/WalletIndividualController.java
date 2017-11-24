@@ -38,7 +38,8 @@ import lombok.extern.slf4j.Slf4j;
  * @author lifengxi
  * @since 2017-10-23
  */
-@RestController("/walletIndividual")
+@RestController
+@RequestMapping("/walletIndividual")
 @Api(value = "walletIndividual",description="个人会员")
 @Slf4j
 public class WalletIndividualController extends BaseController {
