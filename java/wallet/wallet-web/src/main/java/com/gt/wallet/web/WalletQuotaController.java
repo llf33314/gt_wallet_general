@@ -4,6 +4,7 @@ package com.gt.wallet.web;
 import javax.servlet.http.HttpServletRequest;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
@@ -36,7 +37,8 @@ import lombok.extern.slf4j.Slf4j;
  * @author lifengxi(gt_sky@qq.com)
  * @since 2017-11-20
  */
-@RestController("/walletQuota")
+@RequestMapping("/walletQuota")
+@RestController
 @Api(value = "walletQuota",description="额度申请 ")
 @Slf4j
 public class WalletQuotaController extends BaseController {
@@ -58,7 +60,7 @@ public class WalletQuotaController extends BaseController {
         @ApiImplicitParam(name = "quotaDesc",value = "申请描述",paramType = "form",dataType = "string",required=true,example="申请描述")
         // path, query, body, header, form
 	})
-	public ServerResponse<?> add(HttpServletRequest request,WalletQuota walletQuota){
+	public ServerResponse<?> add(HttpServletRequest request,@RequestBody  WalletQuota walletQuota){
 		log.info(CommonUtil.format("触发提升额度申请接口 %s",JsonUtil.toJSONString(walletQuota)));
 		try {
 			ServerResponse<?> serverResponse=null;
