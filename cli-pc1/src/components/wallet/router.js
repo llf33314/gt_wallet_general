@@ -1,4 +1,4 @@
-const wallet = {
+export const wallet = {
   path: '/wallet/index',
   name: 'index',
   title: '多粉钱包',
@@ -7,7 +7,6 @@ const wallet = {
   },
   children: []
 }
-export default wallet
 // //首页
 // const index = () =>
 //   import ('@/components/wallet/vue/index')
