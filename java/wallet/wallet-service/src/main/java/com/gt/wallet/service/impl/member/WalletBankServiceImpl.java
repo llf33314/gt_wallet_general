@@ -4,6 +4,9 @@ import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Isolation;
+import org.springframework.transaction.annotation.Propagation;
+import org.springframework.transaction.annotation.Transactional;
 
 import com.alibaba.fastjson.JSONObject;
 import com.baomidou.mybatisplus.mapper.EntityWrapper;
@@ -58,7 +61,7 @@ public class WalletBankServiceImpl extends BaseServiceImpl<WalletBankMapper, Wal
 		}
 	}
 
-
+	@Transactional(propagation = Propagation.REQUIRED,isolation = Isolation.DEFAULT,timeout=36000,rollbackFor=Exception.class)
 	@Override
 	public ServerResponse<Integer> add(WalletIndividualAdd walletIndividualAdd)throws Exception {
 		log.info(CommonUtil.format("biz接口:绑定银行卡,请求参数:%s", JsonUtil.toJSONString(walletIndividualAdd)));
@@ -129,7 +132,7 @@ public class WalletBankServiceImpl extends BaseServiceImpl<WalletBankMapper, Wal
 		return response;
 	}
 	
-	
+	@Transactional(propagation = Propagation.REQUIRED,isolation = Isolation.DEFAULT,timeout=36000,rollbackFor=Exception.class)
 	@Override
 	public ServerResponse<?> bindBankCard(Integer busId,Integer id,String verificationCode) throws Exception {
 		log.info(CommonUtil.format("biz接口:获取会员银行卡:%s",id));
@@ -141,9 +144,12 @@ public class WalletBankServiceImpl extends BaseServiceImpl<WalletBankMapper, Wal
 		if(walletMember.getMemberClass()==1&&walletMember.getMemberId()!=busId){
 			throw new BusinessException("操作异常，此钱包会员不属于当前登录商家");
 		}
-		YunSoaMemberUtil.bindBankCard(walletMember.getMemberNum(), walletBank.getTranceNum(), walletBank.getTransDate(), walletBank.getPhone(), verificationCode);
-		ServerResponse<?> response=	ServerResponse.createBySuccess();
-		log.info("biz接口:确认绑定银行卡:"+JsonUtil.toJSONString(response));
-		return null;
+		ServerResponse<?> serverResponse=	YunSoaMemberUtil.bindBankCard(walletMember.getMemberNum(), walletBank.getTranceNum(), walletBank.getTransDate(), walletBank.getPhone(), verificationCode);
+		if(serverResponse.getCode()==0){
+			walletBank.setCardState(2);
+			walletBankMapper.updateById(walletBank);
+		}
+		log.info("biz接口:确认绑定银行卡:"+JsonUtil.toJSONString(serverResponse));
+		return serverResponse;
 	}
 }

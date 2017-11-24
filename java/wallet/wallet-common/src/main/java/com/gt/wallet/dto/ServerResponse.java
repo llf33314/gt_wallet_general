@@ -140,6 +140,15 @@ public class ServerResponse< T> implements Serializable {
     }
 
     /**
+     * 判断是否是返回成功
+     * @param serverResponse
+     * @return
+     */
+    public static boolean judgeSuccess(ServerResponse serverResponse){
+    	return serverResponse.getCode()==0?true:false;
+    }
+    
+    /**
      * 创建响应失败
      *
      * @param errorCode    状态码

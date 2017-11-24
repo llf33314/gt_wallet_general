@@ -24,18 +24,18 @@ public class WalletSet {
 	private Integer wmemberId;
 	
 	
-	/**
-	 * 密码
-	 */
-	@ApiModelProperty(name="pwd",notes="密码",required=true)
-	private String pwd;
-	
-	/**
-	 * 确认密码
-	 */
-	@ApiModelProperty(name="confirm",notes="确认密码",required=true)
-	private String confirm;
-	
+//	/**
+//	 * 密码
+//	 */
+//	@ApiModelProperty(name="pwd",notes="密码",required=true)
+//	private String pwd;
+//	
+//	/**
+//	 * 确认密码
+//	 */
+//	@ApiModelProperty(name="confirm",notes="确认密码",required=true)
+//	private String confirm;
+//	
 	
 	
 	/**

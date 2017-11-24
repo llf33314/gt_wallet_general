@@ -19,6 +19,7 @@ import com.gt.wallet.dto.ServerResponse;
 import com.gt.wallet.enums.WalletResponseEnums;
 import com.gt.wallet.exception.BusinessException;
 import com.gt.wallet.exception.ResponseEntityException;
+import com.gt.wallet.service.member.WalletBankService;
 import com.gt.wallet.service.member.WalletIndividualService;
 import com.gt.wallet.utils.CommonUtil;
 
@@ -46,6 +47,9 @@ public class WalletIndividualController extends BaseController {
 	@Autowired
 	private WalletIndividualService walletIndividualService;
 	
+	@Autowired
+	private WalletBankService walletBankService;
+	
 	/**
 	 * 新增个人会员信息
 	 * @return
@@ -70,12 +74,16 @@ public class WalletIndividualController extends BaseController {
         // path, query, body, header, form
 	})
 	public ServerResponse<Integer> saveIndividual(HttpServletRequest request,WalletIndividualAdd walletIndividualAdd,
-			@ApiParam(required=true,name="identitycardUrl1File" ,value="身份证正面")@RequestParam("identitycardUrl1File") MultipartFile identitycardUrl1File,
-			@ApiParam(required=true,name="identitycardUrl2File" ,value="身份证反面") @RequestParam("identitycardUrl2File") MultipartFile identitycardUrl2File){
+			@ApiParam(required=true,name="identitycardUrl1File" ,value="身份证正面") MultipartFile identitycardUrl1File,
+			@ApiParam(required=true,name="identitycardUrl2File" ,value="身份证反面")  MultipartFile identitycardUrl2File){
 		log.info(CommonUtil.format("触发保存个人会员信息接口,walletIndividualAdd:%s",JsonUtil.toJSONString(walletIndividualAdd)));
 		try {
 			ServerResponse<Integer> serverResponse=null;
 			serverResponse=walletIndividualService.add(walletIndividualAdd,identitycardUrl1File,identitycardUrl2File,CommonUtil.getLoginUser(request));
+			if(serverResponse.getCode()==0){
+				
+				serverResponse=walletBankService.add(walletIndividualAdd);
+			}
 			log.info(CommonUtil.format("serverResponse:%s",JsonUtil.toJSONString(serverResponse)));
 			return serverResponse;
 			} catch ( BusinessException e) {
