@@ -4,6 +4,7 @@ package com.gt.wallet.web;
 import javax.servlet.http.HttpServletRequest;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -74,7 +75,7 @@ public class WalletIndividualController extends BaseController {
 //        @ApiImplicitParam(name = "code",value = "短信验证码",paramType = "form",dataType = "string",required=true)
         // path, query, body, header, form
 	})
-	public ServerResponse<Integer> saveIndividual(HttpServletRequest request,WalletIndividualAdd walletIndividualAdd,
+	public ServerResponse<Integer> saveIndividual(HttpServletRequest request,@RequestBody WalletIndividualAdd walletIndividualAdd,
 			@ApiParam(required=true,name="identitycardUrl1File" ,value="身份证正面") MultipartFile identitycardUrl1File,
 			@ApiParam(required=true,name="identitycardUrl2File" ,value="身份证反面")  MultipartFile identitycardUrl2File){
 		log.info(CommonUtil.format("触发保存个人会员信息接口,walletIndividualAdd:%s",JsonUtil.toJSONString(walletIndividualAdd)));

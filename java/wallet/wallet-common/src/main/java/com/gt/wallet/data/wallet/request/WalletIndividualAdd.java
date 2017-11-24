@@ -1,7 +1,10 @@
 package com.gt.wallet.data.wallet.request;
 
+import org.springframework.web.multipart.MultipartFile;
+
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
+import io.swagger.annotations.ApiParam;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.experimental.Accessors;
@@ -62,8 +65,14 @@ public class WalletIndividualAdd {
 	 */
 	@ApiModelProperty(name="支付行号",notes="支付行号")
 	private String unionBank; 
-	
-	
+////	 
+//	@ApiModelProperty(name="身份证正面",notes="身份证正面")
+//	private MultipartFile identitycardUrl1File;
+//	
+//	@ApiModelProperty(name="身份证正面",notes="身份证正面")
+//	private MultipartFile identitycardUrl2File;
+////	
+////	
 	
 	/**
 	 * 短信验证码
