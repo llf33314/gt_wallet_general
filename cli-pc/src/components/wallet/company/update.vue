@@ -1,4 +1,4 @@
-<style lang="stylus">
+<style lang="less">
 
 
 </style>

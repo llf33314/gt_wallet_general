@@ -1,4 +1,4 @@
-<style lang="stylus">
+<style lang="less">
 .wallet-index{
   .no-open{
     padding-top:70px;

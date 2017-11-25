@@ -1,128 +1,9 @@
 <style lang="less">
-  .wallet-index {
-    .no-open {
-      padding-top: 70px;
-      text-align: center;
-      p {
-        font-size: 14px;
-        color: #333333;
-        padding: 27px 0 70px;
-      }
-      i {
-        color: #f7ba2a;
-        font-size: 35px;
-      }
-    }
-    .top-msg {
-      font-size: 14px;
-      border: 1px solid #eeeeee;
-      margin-top: 30px;
-      overflow: hidden;
-      .gray {
-        background-color: #f8f8f8;
-        padding: 27px 30px;
-        overflow: hidden;
-        .public-fr {
-          margin-top: 15px;
-        }
-      }
-      .row1 {
-        margin-bottom: 15px;
-      }
-      .title {
-        padding-right: 25px;
-      }
-    }
-    .data-msg {
-      position: relative;
-      padding: 15px 0;
-      overflow: hidden;
-      .num {
-        color: #20a0ff;
-        font-size: 24px;
-        padding-right: 10px;
-      }
-      .list {
-        width: 90%;
-        li {
-          float: left;
-          width: 33.33%;
-          box-sizing: border-box;
-          padding-left: 30px;
-          &:nth-of-type(2) {
-            border-left: 1px solid #eeeeee;
-            border-right: 1px solid #eeeeee;
-          }
-        }
-      }
-      .name {
-        margin-bottom: 10px;
-      }
-      .bts {
-        position: absolute;
-        top: 30px;
-        right: 25px;
-      }
-      .iconfont {
-        color: #d2d2d2;
-        cursor: pointer;
-        position: relative;
-      }
-      .item-tooltip {
-        color: #999999;
-        line-height: 30px;
-      }
-    }
-    .table-top-conent {
-      background-color: #f8f8f8;
-      padding: 15px 30px;
-      overflow: hidden;
-      font-size: 14px;
-      .title {
-        padding-right: 25px;
-      }
-      .row {
-        padding-bottom: 20px;
-      }
-      .select-title {
-        margin-right: 30px;
-        cursor: pointer;
-      }
-    }
-  }
 
-  .wallet-index-select-apply-dialog {
-    width: 640px;
-    .check-content {
-      overflow: hidden;
-      padding-left: 30px;
-    }
-    .check-list-item {
-      margin-bottom: 30px;
-      margin-left: 10px;
-      width: 100px;
-      float: left;
-    }
-    .tips {
-      font-size: 13px;
-      margin-bottom: 30px;
-    }
-    .el-dialog__body {
-      padding-top: 10px;
-    }
-  }
 
 </style>
 <template>
   <section class="wallet-index">
-    <div class="no-open">
-      <i class="el-icon-warning"></i>
-      <p>您尚未开通多粉钱包，点击下方按钮开通吧！</p>
-      <div class="bts">
-          <el-button @click="routerTo('/wallet/companyOpen')" type="primary">企业开通</el-button>
-          <el-button @click="routerTo('/wallet/personalOpen')"  type="primary">个人开通</el-button>
-      </div>
-    </div>
     <div class="public-content">
       <div class="top-msg">
         <div class="gray">
@@ -219,7 +100,7 @@
       </el-table>
       <div class="public-top20">
         <div class="public-fr">
-          <el-pagination @size-change="handleSizeChange" @current-change="handleCurrentChange" :current-page.sync="currentPage3" :page-size="100"
+          <el-pagination @size-change="handleSizeChange" @current-change="handleCurrentChange" current-page.sync="100" :page-size="100"
             layout="prev, pager, next, jumper" :total="1000">
           </el-pagination>
         </div>
@@ -381,7 +262,7 @@
 
       },
       //提现
-      goToDrawCash(){
+      goToDrawCash() {
         this.$router.push({
           path: '/wallet/drawcash'
         })
@@ -404,7 +285,13 @@
           path: path
         })
       },
-      
+      handleSizeChange(val) {
+        console.log(`每页 ${val} 条`);
+      },
+      handleCurrentChange(val) {
+        console.log(`当前页: ${val}`);
+      }
+
     }
   }
 

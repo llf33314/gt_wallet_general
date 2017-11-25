@@ -1,4 +1,4 @@
-<style lang="stylus">
+<style lang="less">
   .wallet-company-open {
     .public-f13 {
       font-weight: 500;

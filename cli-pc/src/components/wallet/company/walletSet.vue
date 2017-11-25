@@ -1,4 +1,4 @@
-<style lang="stylus">
+<style lang="less">
   .wallet-wallet-set {
     .input-width {
       width: 250px;

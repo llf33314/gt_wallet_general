@@ -1,13 +1,37 @@
-const wallet = {
+export const wallet = {
   path: '/wallet/index',
   name: 'index',
   title: '多粉钱包',
   component: resolve => {
     require(['@/components/wallet/index'], resolve)
   },
-  children: []
+  children: [
+    {
+      path: '/wallet/noOpen',
+      name: 'noOpen',
+      title: '未开通',
+      component: resolve => {
+        require(['@/components/wallet/template/noOpen'], resolve)
+      }
+    },
+    {
+      path: '/wallet/individual/open',
+      name: 'open',
+      title: '个人开通',
+      component: resolve => {
+        require(['@/components/wallet/individual/open'], resolve)
+      }
+    },
+    {
+      path: '/wallet/individual/index',
+      name: 'open',
+      title: '个人主页',
+      component: resolve => {
+        require(['@/components/wallet/individual/index'], resolve)
+      }
+    },
+  ]
 }
-export default wallet
 // //首页
 // const index = () =>
 //   import ('@/components/wallet/vue/index')

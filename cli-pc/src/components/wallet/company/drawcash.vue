@@ -1,4 +1,4 @@
-<style lang="stylus">
+<style lang="less">
   .wallet-drawcash {
     .top-msg {
       font-size: 14px;

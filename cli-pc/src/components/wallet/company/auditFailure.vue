@@ -1,4 +1,4 @@
-<style lang="stylus">
+<style lang="less">
   .wallet-audit-failure {
     text-align: center;
     font-size: 14px;
