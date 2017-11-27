@@ -2,6 +2,7 @@ package com.gt.wallet.utils;
 
 import java.io.File;
 import java.io.FileOutputStream;
+import java.util.Map;
 
 import org.springframework.web.multipart.MultipartFile;
 
@@ -47,7 +48,8 @@ public class AttachmentUtil {
 	        out.write(multipartFile.getBytes());
 	        out.flush();
 	        out.close();
-		myFtp.upload(path);
+	    Map<String, Object> obj=myFtp.upload(path);
+	    
 		result=ServerResponse.createBySuccessCodeData(path);
 		return result;
 	}
