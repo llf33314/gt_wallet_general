@@ -35,8 +35,8 @@ public class AttachmentUtil {
 			throw new BusinessException(WalletResponseEnums.ATTACHMENT_NULL_ERROR);
 		}
 		String format=multipartFile.getOriginalFilename().substring(multipartFile.getOriginalFilename().lastIndexOf(".")+1, multipartFile.getOriginalFilename().length());
-		String path = WalletWebConfig.getPathImage() + "2/attachment/" + busUser.getName() +"/"+System.currentTimeMillis()+"."+format;
-		File file = new File( WalletWebConfig.getPathImage() + "2/attachment/" + busUser.getName());
+		String path = WalletWebConfig.getPathImage() + "2/wallet/" + busUser.getName() +"/"+System.currentTimeMillis()+"."+format;
+		File file = new File( WalletWebConfig.getPathImage() + "2/wallet/" + busUser.getName());
 		if (!file.exists() && !file.isDirectory()) {
 			file.mkdirs();
 		}

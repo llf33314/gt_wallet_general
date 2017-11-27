@@ -17,7 +17,7 @@ import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
 @RunWith( SpringJUnit4ClassRunner.class )
 @SpringBootTest
-public class EmailTest  {
+public class EmailTest extends BasicTest {
 	@Autowired
     private JavaMailSender mailSender; //自动注入的Bean
 //

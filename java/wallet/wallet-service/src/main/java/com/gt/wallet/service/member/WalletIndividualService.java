@@ -25,7 +25,7 @@ public interface WalletIndividualService extends BaseService<WalletIndividual> {
 	 * @param walletIndividual 会员信息
 	 * @return
 	 */
-	public ServerResponse<Integer> add(WalletIndividualAdd walletIndividualAdd ,MultipartFile identitycardUrl1File, MultipartFile identitycardUrl2File,BusUser busUser) throws Exception;
+	public ServerResponse<Integer> add(WalletIndividualAdd walletIndividualAdd ,BusUser busUser) throws Exception;
 	
 	
 	

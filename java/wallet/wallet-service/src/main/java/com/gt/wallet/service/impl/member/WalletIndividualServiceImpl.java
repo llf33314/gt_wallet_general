@@ -7,13 +7,11 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Isolation;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.web.multipart.MultipartFile;
 
 import com.alibaba.fastjson.JSONObject;
 import com.baomidou.mybatisplus.mapper.EntityWrapper;
 import com.baomidou.mybatisplus.mapper.Wrapper;
 import com.gt.api.bean.session.BusUser;
-import com.gt.api.util.MD5Utils;
 import com.gt.api.util.httpclient.JsonUtil;
 import com.gt.wallet.base.BaseServiceImpl;
 import com.gt.wallet.data.wallet.request.WalletIndividualAdd;
@@ -26,7 +24,6 @@ import com.gt.wallet.exception.BusinessException;
 import com.gt.wallet.mapper.member.WalletIndividualMapper;
 import com.gt.wallet.mapper.member.WalletMemberMapper;
 import com.gt.wallet.service.member.WalletIndividualService;
-import com.gt.wallet.utils.AttachmentUtil;
 import com.gt.wallet.utils.CommonUtil;
 import com.gt.wallet.utils.WalletKeyUtil;
 import com.gt.wallet.utils.yun.YunSoaMemberUtil;
@@ -62,7 +59,7 @@ public class WalletIndividualServiceImpl extends BaseServiceImpl<WalletIndividua
 	 * rollbackFor：指定事务回滚异常类型
 	 */
 	@Transactional(propagation = Propagation.REQUIRED,isolation = Isolation.DEFAULT,timeout=36000,rollbackFor=Exception.class)
-	public ServerResponse<Integer> add(WalletIndividualAdd walletIndividualAdd, MultipartFile identitycardUrl1File, MultipartFile identitycardUrl2File,BusUser busUser) throws Exception{
+	public ServerResponse<Integer> add(WalletIndividualAdd walletIndividualAdd,BusUser busUser) throws Exception{
 		log.info(CommonUtil.format("biz接口:保存个人会员信息,请求参数:%s", JsonUtil.toJSONString(walletIndividualAdd)));
 		//TODO 调用实名认证api、调用绑定银行卡api
 		WalletMember walletMember=walletMemberMapper.selectById(walletIndividualAdd.getMemberId());
@@ -89,15 +86,11 @@ public class WalletIndividualServiceImpl extends BaseServiceImpl<WalletIndividua
 			}
 		}
 		
-		ServerResponse<String> serverResponse1=AttachmentUtil.uploadAttachment(identitycardUrl1File, busUser);
-		if(serverResponse1.getCode()==0){
-			String identitycard_url_1=serverResponse1.getData();
-			walletIndividual.setIdentitycardUrl1(identitycard_url_1.split("upload/")[1]);
+		if(CommonUtil.isNotEmpty(walletIndividualAdd.getIdentitycardUrl1File())){
+			walletIndividual.setIdentitycardUrl1(walletIndividualAdd.getIdentitycardUrl1File().split("upload/")[1]);
 		}
-		ServerResponse<String> serverResponse2=AttachmentUtil.uploadAttachment(identitycardUrl2File, busUser);
-		if(serverResponse2.getCode()==0){
-			String identitycard_url_2=serverResponse2.getData();
-			walletIndividual.setIdentitycardUrl2(identitycard_url_2.split("upload/")[1]);
+		if(CommonUtil.isNotEmpty(walletIndividualAdd.getIdentitycardUrl2File())){
+			walletIndividual.setIdentitycardUrl2(walletIndividualAdd.getIdentitycardUrl2File().split("upload/")[1]);
 		}
 		walletIndividual.setName(walletIndividualAdd.getName());
 		walletIndividual.setWMemberId(walletIndividualAdd.getMemberId());

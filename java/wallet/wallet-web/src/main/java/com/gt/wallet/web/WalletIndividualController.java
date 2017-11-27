@@ -70,18 +70,19 @@ public class WalletIndividualController extends BaseController {
         @ApiImplicitParam(name = "phone",value = "银行预留手机",paramType = "form",dataType = "string",required=true,example="13888888888")
         ,
         @ApiImplicitParam(name = "bankName",value = "银行卡开户人姓名(必须与注册人姓名一致)",paramType = "form",dataType = "string",required=true),
-        @ApiImplicitParam(name = "unionBank",value = "支付行号",paramType = "form",dataType = "string",required=false)
+        @ApiImplicitParam(name = "unionBank",value = "支付行号",paramType = "form",dataType = "string",required=false),
+        @ApiImplicitParam(required=true,name="identitycardUrl1File" ,value="身份证正面",paramType = "form",dataType = "string"),
+        @ApiImplicitParam(required=true,name="identitycardUrl2File" ,value="身份证反面",paramType = "form",dataType = "string") 
 //        ,
 //        @ApiImplicitParam(name = "code",value = "短信验证码",paramType = "form",dataType = "string",required=true)
         // path, query, body, header, form
 	})
-	public ServerResponse<Integer> saveIndividual(HttpServletRequest request,@RequestBody WalletIndividualAdd walletIndividualAdd,
-			@ApiParam(required=true,name="identitycardUrl1File" ,value="身份证正面") MultipartFile identitycardUrl1File,
-			@ApiParam(required=true,name="identitycardUrl2File" ,value="身份证反面")  MultipartFile identitycardUrl2File){
+	public ServerResponse<Integer> saveIndividual(HttpServletRequest request,@RequestBody WalletIndividualAdd walletIndividualAdd
+			){
 		log.info(CommonUtil.format("触发保存个人会员信息接口,walletIndividualAdd:%s",JsonUtil.toJSONString(walletIndividualAdd)));
 		try {
 			ServerResponse<Integer> serverResponse=null;
-			serverResponse=walletIndividualService.add(walletIndividualAdd,identitycardUrl1File,identitycardUrl2File,CommonUtil.getLoginUser(request));
+			serverResponse=walletIndividualService.add(walletIndividualAdd,CommonUtil.getLoginUser(request));
 			if(serverResponse.getCode()==0){
 				
 				serverResponse=walletBankService.add(walletIndividualAdd);

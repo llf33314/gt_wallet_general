@@ -65,14 +65,12 @@ public class WalletIndividualAdd {
 	 */
 	@ApiModelProperty(name="支付行号",notes="支付行号")
 	private String unionBank; 
-////	 
-//	@ApiModelProperty(name="身份证正面",notes="身份证正面")
-//	private MultipartFile identitycardUrl1File;
-//	
-//	@ApiModelProperty(name="身份证正面",notes="身份证正面")
-//	private MultipartFile identitycardUrl2File;
-////	
-////	
+//	 
+	@ApiModelProperty(name="身份证正面",notes="身份证正面")
+	private String identitycardUrl1File;
+	
+	@ApiModelProperty(name="身份证正面",notes="身份证正面")
+	private String identitycardUrl2File;
 	
 	/**
 	 * 短信验证码
