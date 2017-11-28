@@ -1,6 +1,6 @@
-# cli-pc1
+# cli-pc2
 
-> 多粉钱包
+> 多粉
 
 ## Build Setup
 

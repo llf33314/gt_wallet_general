@@ -70,24 +70,27 @@
           <el-input v-model="ruleForm.identityNo" placeholder="请输入身份证号" class="input-width"></el-input>
         </el-form-item>
         <el-form-item label="身份证正面：" prop="identitycardUrl1File">
-          <!-- <el-upload class="avatar-uploader" action="https://jsonplaceholder.typicode.com/posts/" :show-file-list="false" :on-success="handleAvatarSuccess"
-            :before-upload="beforeAvatarUpload">
-            <img v-if="imageUrl" :src="imageUrl" class="avatar">
-            <i v-else class="el-icon-plus avatar-uploader-icon"></i>
-          </el-upload> -->
-          <input class="public-fl identitycardUrl1File" type="file">
+          <el-upload :action="DFPAYDOMAIN+'/wcommon/upload'" list-type="picture-card" class="public-fl" :on-preview="handlePictureCardPreview"
+            :on-remove="handleRemove">
+            <i class="el-icon-plus"></i>
+          </el-upload>
+          <el-dialog :visible.sync="dialogVisible" width="50%">
+            <img width="100%" :src="dialogImageUrl" alt="">
+          </el-dialog>
+          <!-- <input class="public-fl identitycardUrl1File" type="file"> -->
           <div class="dome-img public-c333">
             <span>示例：</span>
             <img src="./../img/c1.jpg" alt="">
           </div>
         </el-form-item>
         <el-form-item label="身份证背面：" prop="identitycardUrl2File">
-          <!-- <el-upload class="avatar-uploader" action="https://jsonplaceholder.typicode.com/posts/" :show-file-list="false" :on-success="handleAvatarSuccess"
-            :before-upload="beforeAvatarUpload">
-            <img v-if="imageUrl" :src="imageUrl" class="avatar">
-            <i v-else class="el-icon-plus avatar-uploader-icon"></i>
-          </el-upload> -->
-          <input class="public-fl identitycardUrl2File" type="file">
+            <el-upload :action="DFPAYDOMAIN+'/wcommon/upload'" list-type="picture-card" class="public-fl" :on-preview="handlePictureCardPreview"
+            :on-remove="handleRemove">
+            <i class="el-icon-plus"></i>
+          </el-upload>
+          <el-dialog :visible.sync="dialogVisible" width="50%">
+            <img width="100%" :src="dialogImageUrl" alt="">
+          </el-dialog>
           <div class="dome-img public-c333">
             <span>示例：</span>
             <img src="./../img/c2.jpg" alt="">
@@ -122,15 +125,17 @@
   } from './../api'
   import DrawCash from "./../template/drawcash.vue";
   export default {
-    components:{
+    components: {
       DrawCash
     },
     data() {
       return {
+        dialogImageUrl: '',
+        dialogVisible: false,
         imageUrl: '',
         ruleForm: {
-          identitycardUrl1File:'',
-          identitycardUrl2File:'',
+          identitycardUrl1File: '',
+          identitycardUrl2File: '',
           // identitycardUrl1File: function(){return document.querySelectorAll('.identitycardUrl1File')[0].value}, //身份证正面
           // identitycardUrl2File: function(){return document.querySelectorAll('.identitycardUrl2File')[0].value}, //身份证反面
           memberId: '',
@@ -188,13 +193,20 @@
         wallet.register({
           memberType: 3
         }).then(res => {
-          console.log(res.data,'会员id')
+          console.log(res.data, '会员id')
           if (res.code != 0) {
             this.$message.error(res.msg);
           } else {
             this.ruleForm.memberId = res.data
           }
         })
+      },
+      handleRemove(file, fileList) {
+        console.log(file, fileList);
+      },
+      handlePictureCardPreview(file) {
+        this.dialogImageUrl = file.url;
+        this.dialogVisible = true;
       },
       submitForm(formName) {
         console.log(document.querySelectorAll('.identitycardUrl1File')[0].value)

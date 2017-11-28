@@ -33,7 +33,7 @@
             if (res.data == 0) {
               this.$router.push({
                 //path: '/wallet/noOpen'
-                path: '/wallet/individual/index'
+                //path: '/wallet/individual/index'
               })
             }
             
