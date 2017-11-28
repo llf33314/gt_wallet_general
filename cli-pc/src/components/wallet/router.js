@@ -8,7 +8,7 @@ export const wallet = {
   children: [
     {
       path: '/wallet/noOpen',
-      name: 'noOpen',
+      name: 'walletNoOpen',
       title: '未开通',
       component: resolve => {
         require(['@/components/wallet/template/noOpen'], resolve)
@@ -16,7 +16,7 @@ export const wallet = {
     },
     {
       path: '/wallet/individual/open',
-      name: 'open',
+      name: 'individualOpen',
       title: '个人开通',
       component: resolve => {
         require(['@/components/wallet/individual/open'], resolve)
@@ -24,7 +24,7 @@ export const wallet = {
     },
     {
       path: '/wallet/individual/index',
-      name: 'open',
+      name: 'individualIndex',
       title: '个人主页',
       component: resolve => {
         require(['@/components/wallet/individual/index'], resolve)
