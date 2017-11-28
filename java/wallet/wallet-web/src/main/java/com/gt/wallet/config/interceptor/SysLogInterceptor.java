@@ -27,9 +27,9 @@ public class SysLogInterceptor extends HandlerInterceptorAdapter {
     public void postHandle( HttpServletRequest request,
 		    HttpServletResponse response, Object handler,
 		    ModelAndView modelAndView ) throws Exception {
-    	HandlerMethod handlerMethod = (HandlerMethod) handler;
-    	SysLogAnnotation annotation = handlerMethod.getMethodAnnotation( SysLogAnnotation.class );
-    	if ( annotation != null ) {
+//    	HandlerMethod handlerMethod = (HandlerMethod) handler;
+//    	SysLogAnnotation annotation = handlerMethod.getMethodAnnotation( SysLogAnnotation.class );
+//    	if ( annotation != null ) {
     		//todo 调用陈丹日志接口
     		/*DaoUtil daoUtil= CommonUtil.getApplicationContext().getBean(DaoUtil.class);
 		Map<String, Object> logObj=new HashMap<String, Object>();
@@ -49,7 +49,7 @@ public class SysLogInterceptor extends HandlerInterceptorAdapter {
 		logObj.put("opt_paramers",des.getEncString(JSONObject.toJSONString(getParamers(request))));
 		String date= DateTimeKit.getDateTime(DateTimeKit.DEFAULT_DATE_FORMAT_YYYYMM);
 		daoUtil.saveObjectByMap("", "t_bus_log_"+date, logObj);*/
-    	}
+//    	}
     	super.postHandle( request, response, handler, modelAndView );
     }
 
