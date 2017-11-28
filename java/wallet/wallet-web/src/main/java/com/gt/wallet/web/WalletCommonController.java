@@ -5,6 +5,7 @@ import javax.servlet.http.HttpServletRequest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -42,7 +43,7 @@ public class WalletCommonController {
 	@RequestMapping(value="upload",method=RequestMethod.POST)
 	 @ApiOperation(value="文件上传", notes="文件上传")
 	public ServerResponse<String> upload(HttpServletRequest request,
-			@ApiParam(required=true,name="file" ,value="文件") MultipartFile file){
+			@ApiParam(required=true,name="file" ,value="文件")@RequestParam(value = "file", required = true) MultipartFile file){
 		log.info(CommonUtil.format("触发文件上传接口,file:%s",file.getSize()));
 		try {
 			ServerResponse<String> serverResponse=null;
