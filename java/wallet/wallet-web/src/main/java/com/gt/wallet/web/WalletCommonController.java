@@ -45,21 +45,19 @@ public class WalletCommonController {
 	@RequestMapping(value="upload",method=RequestMethod.POST)
 	 @ApiOperation(value="文件上传", notes="文件上传")
 	public ServerResponse<String> upload(HttpServletRequest request,
-			@ApiParam(required=true,name="file" ,value="文件")MultipartFile file){
+			MultipartFile file){
 		log.info(CommonUtil.format("触发文件上传接口,file:%s",file.getSize()));
 		try {
 			boolean isMultipart = ServletFileUpload.isMultipartContent(request);
 			if(isMultipart){
-				MultipartHttpServletRequest multipartRequest = (MultipartHttpServletRequest) request;
-				MultipartFile file1 = multipartRequest.getFile("file");
 				log.info(CommonUtil.format("触发文件上传接口,file:%s",file.getSize()));
 				ServerResponse<String> serverResponse=null;
-				serverResponse=fileService.upload(file1,CommonUtil.getLoginUser(request));
+				serverResponse=fileService.upload(file,CommonUtil.getLoginUser(request));
 				
 				log.info(CommonUtil.format("serverResponse:%s",JsonUtil.toJSONString(serverResponse)));
 				return serverResponse;
 			}else{
-				throw new ResponseEntityException("请上传");
+				throw new ResponseEntityException("请上传文件");
 			}
 			} catch ( BusinessException e) {
 				throw new ResponseEntityException(e.getCode(),e.getMessage());
