@@ -80,6 +80,10 @@
             <img src="./../img/c1.jpg" alt="">
           </div>
         </el-form-item>
+        <!-- <form :action="DFPAYDOMAIN+'/wcommon/upload'" method="post" enctype="multipart/form-data"> -->
+          <input type="file" name="file" id="file">
+          <input type="button" value="submit" @click="submit">
+        <!-- </form> -->
         <el-form-item label="身份证背面：" prop="identitycardUrl2File">
           <el-upload class="avatar-uploader" :action="DFPAYDOMAIN+'/wcommon/upload'" :show-file-list="false" :on-success="handleAvatarSuccess2"
           :before-upload="beforeAvatarUpload">
@@ -180,6 +184,20 @@
       this.getVipNum()
     },
     methods: {
+      submit(){
+        let formData = new FormData()
+        var tt = document.querySelectorAll('#file')[0].files[0]
+        console.log(tt)
+        formData.append('file',tt)
+        let config = {
+          headers:{
+            "Content-Type":"multipart/form-data"
+          }
+        }
+        this.axios(this.DFPAYDOMAIN+'/wcommon/upload',formData,config).then(res=>{
+          console.log(res.data,'res')
+        })
+      },
       handleAvatarSuccess(res, file) {
         console.log(res, file)
         this.ruleForm.identitycardUrl1File = URL.createObjectURL(file.raw);
