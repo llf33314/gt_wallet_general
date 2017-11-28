@@ -70,7 +70,7 @@
           <el-input v-model="ruleForm.identityNo" placeholder="请输入身份证号" class="input-width"></el-input>
         </el-form-item>
         <el-form-item label="身份证正面：" prop="identitycardUrl1File">
-          <el-upload class="avatar-uploader" :action="DFPAYDOMAIN+'/wcommon/upload'" :show-file-list="false" :on-success="handleAvatarSuccess"
+          <el-upload class="avatar-uploader" ref="identitycardUrl1File" action="" :multiple="true" :show-file-list="false" :http-request="uploadImg"
             :before-upload="beforeAvatarUpload">
             <img v-if="ruleForm.identitycardUrl1File" :src="ruleForm.identitycardUrl1File" class="avatar">
             <i v-else class="el-icon-plus avatar-uploader-icon"></i>
@@ -80,16 +80,12 @@
             <img src="./../img/c1.jpg" alt="">
           </div>
         </el-form-item>
-        <!-- <form :action="DFPAYDOMAIN+'/wcommon/upload'" method="post" enctype="multipart/form-data"> -->
-          <input type="file" name="file" id="file">
-          <input type="button" value="submit" @click="submit">
-        <!-- </form> -->
         <el-form-item label="身份证背面：" prop="identitycardUrl2File">
-          <el-upload class="avatar-uploader" :action="DFPAYDOMAIN+'/wcommon/upload'" :show-file-list="false" :on-success="handleAvatarSuccess2"
-          :before-upload="beforeAvatarUpload">
-          <img v-if="ruleForm.identitycardUrl2File" :src="ruleForm.identitycardUrl2File" class="avatar">
-          <i v-else class="el-icon-plus avatar-uploader-icon"></i>
-        </el-upload>
+          <el-upload class="avatar-uploader" ref="identitycardUrl2File" action="" :show-file-list="false" :http-request="uploadImg2"
+            :before-upload="beforeAvatarUpload">
+            <img v-if="ruleForm.identitycardUrl2File" :src="ruleForm.identitycardUrl2File" class="avatar">
+            <i v-else class="el-icon-plus avatar-uploader-icon"></i>
+          </el-upload>
           <div class="dome-img public-c333">
             <span>示例：</span>
             <img src="./../img/c2.jpg" alt="">
@@ -123,6 +119,7 @@
     wallet
   } from './../api'
   import DrawCash from "./../template/drawcash.vue";
+  import axios from 'axios'
   export default {
     components: {
       DrawCash
@@ -130,8 +127,8 @@
     data() {
       return {
         ruleForm: {
-          identitycardUrl1File: '',
-          identitycardUrl2File: '',
+          identitycardUrl1File: 'http://113.106.202.53:14884/upload/image/2/wallet/null/1511871076687.png',
+          identitycardUrl2File: 'http://113.106.202.53:14884/upload/image/2/wallet/null/1511871076687.png',
           memberId: '',
           name: '李小强', //注册人姓名
           identityNo: '441621199011164018', //身份证号码
@@ -184,39 +181,26 @@
       this.getVipNum()
     },
     methods: {
-      submit(){
-        let formData = new FormData()
-        var tt = document.querySelectorAll('#file')[0].files[0]
-        console.log(tt)
-        formData.append('file',tt)
-        let config = {
-          headers:{
-            "Content-Type":"multipart/form-data"
-          }
-        }
-        this.axios(this.DFPAYDOMAIN+'/wcommon/upload',formData,config).then(res=>{
-          console.log(res.data,'res')
+      uploadImg(e) {
+        wallet.upload(e.file).then(res => {
+          this.ruleForm.identitycardUrl1File = res.data
         })
       },
-      handleAvatarSuccess(res, file) {
-        console.log(res, file)
-        this.ruleForm.identitycardUrl1File = URL.createObjectURL(file.raw);
-      },
-      handleAvatarSuccess2(res, file) {
-        console.log(res, file)
-        this.ruleForm.identitycardUrl2File = URL.createObjectURL(file.raw);
+      uploadImg2(e) {
+        wallet.upload(e.file).then(res => {
+          this.ruleForm.identitycardUrl2File = res.data
+        })
       },
       beforeAvatarUpload(file) {
-        const isJPG = file.type === 'image/jpeg'||file.type === 'image/png';
-        const isLt2M = file.size / 1024 / 1024 < 2;
-
+        const isJPG = file.type === 'image/jpeg' || file.type === 'image/png';
+        const isLt5M = file.size / 1024 / 1024 < 5;
         if (!isJPG) {
-          this.$message.error('上传头像图片只能是 JPG/PNG 格式!');
+          this.$message.error('上传图片只能是 JPG/PNG 格式!');
         }
-        if (!isLt2M) {
-          this.$message.error('上传头像图片大小不能超过 2MB!');
+        if (!isLt5M) {
+          this.$message.error('上传图片大小不能超过 5MB!');
         }
-        return isJPG && isLt2M;
+        return isJPG && isLt5M;
       },
       //获取会员id
       getVipNum() {
@@ -231,17 +215,10 @@
           }
         })
       },
-      handleRemove(file, fileList) {
-        console.log(file, fileList);
-      },
-      handlePictureCardPreview(file) {
-        this.dialogImageUrl = file.url;
-        this.dialogVisible = true;
-      },
       submitForm(formName) {
         this.$refs[formName].validate((valid) => {
           if (valid) {
-            console.log(this.ruleForm,'this.ruleForm')
+            console.log(this.ruleForm, 'this.ruleForm')
             wallet.saveIndividual(this.ruleForm).then(res => {
               console.log(res, 'res')
               console.log(this.ruleForm)
