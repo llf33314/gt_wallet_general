@@ -2,12 +2,14 @@ package com.gt.wallet.web;
 
 import javax.servlet.http.HttpServletRequest;
 
+import org.apache.tomcat.util.http.fileupload.servlet.ServletFileUpload;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
+import org.springframework.web.multipart.MultipartHttpServletRequest;
 
 import com.gt.api.util.httpclient.JsonUtil;
 import com.gt.wallet.dto.ServerResponse;
@@ -18,6 +20,7 @@ import com.gt.wallet.service.common.FileService;
 import com.gt.wallet.utils.CommonUtil;
 
 import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiImplicitParam;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
 import lombok.extern.slf4j.Slf4j;
@@ -42,14 +45,22 @@ public class WalletCommonController {
 	 */
 	@RequestMapping(value="upload",method=RequestMethod.POST)
 	 @ApiOperation(value="文件上传", notes="文件上传")
-	public ServerResponse<String> upload(HttpServletRequest request,
-			@ApiParam(required=true,name="file" ,value="文件")@RequestParam(value = "file", required = true) MultipartFile file){
-		log.info(CommonUtil.format("触发文件上传接口,file:%s",file.getSize()));
+	 @ApiImplicitParam(name = "file",value = "文件",paramType = "form",dataType = "int",required=true,example="文件")
+	public ServerResponse<String> upload(HttpServletRequest request){
 		try {
-			ServerResponse<String> serverResponse=null;
-			serverResponse=fileService.upload(file,CommonUtil.getLoginUser(request));
-			log.info(CommonUtil.format("serverResponse:%s",JsonUtil.toJSONString(serverResponse)));
-			return serverResponse;
+			boolean isMultipart = ServletFileUpload.isMultipartContent(request);
+			if(isMultipart){
+				MultipartHttpServletRequest multipartRequest = (MultipartHttpServletRequest) request;
+				MultipartFile file = multipartRequest.getFile("file");
+				log.info(CommonUtil.format("触发文件上传接口,file:%s",file.getSize()));
+				ServerResponse<String> serverResponse=null;
+				serverResponse=fileService.upload(file,CommonUtil.getLoginUser(request));
+				
+				log.info(CommonUtil.format("serverResponse:%s",JsonUtil.toJSONString(serverResponse)));
+				return serverResponse;
+			}else{
+				throw new ResponseEntityException("请上传文件");
+			}
 			} catch ( BusinessException e) {
 				throw new ResponseEntityException(e.getCode(),e.getMessage());
 			} catch ( Exception e) {
