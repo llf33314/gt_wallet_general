@@ -3,7 +3,8 @@ import Promise from 'promise'
 const Axios = axios.create({
   //baseURL: "http://192.168.3.98:7072",
   timeout: 10000,
-  responseType: "json",
+  // headers: {'Content-Type': 'multipart/form-data'}
+  // responseType: "json",
   // withCredentials: true, // 是否允许带cookie这些
 })
 
@@ -11,9 +12,10 @@ const Axios = axios.create({
 Axios.interceptors.request.use(
   config => {
     // return window.JSON.stringify(config)
-    console.log(config.method,'method')
+
     if(config.method == 'post') return window.JSON.stringify(config)
     else  return config
+    
     
   },
   err => {
