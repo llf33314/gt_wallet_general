@@ -10,7 +10,12 @@ import org.apache.http.entity.ContentType;
 import org.apache.http.entity.StringEntity;
 import org.apache.http.message.BasicHeader;
 
+import com.gt.api.bean.sign.SignBean;
+import com.gt.api.dto.ResponseUtils;
+import com.gt.api.util.KeysUtil;
+import com.gt.api.util.RequestUtils;
 import com.gt.api.util.httpclient.LocalHttpClient;
+import com.gt.api.util.sign.SignUtils;
 
 /** 
 * @author lifengxi(gt_sky@qq.com)
@@ -55,11 +60,56 @@ public class WalletHttpClienUtil {
 		return LocalHttpClient.executeJsonResultUTF8(httpUriRequest,clazz);
 	}
 	
-	  
+	/**
+	 * post请求(返回乱码)
+	 * @param messageJson
+	 * @return
+	 */
+	/**
+	 * post请求(返回乱码)
+	 * @param messageJson
+	 * @return
+	 */
+	public static  <T> T reqPostUTF8(String messageJson ,String url,Class<T> clazz,String signKey){
+		SignBean signBean = null;
+		try {
+			String newMsg = messageJson;
+			signBean = sign(signKey, newMsg);
+		}catch (Exception e){
+			e.printStackTrace();
+		}
+		HttpUriRequest httpUriRequest = RequestBuilder.post()
+										.setHeader(jsonHeader)
+										.setHeader("sign",com.alibaba.fastjson.JSONObject.toJSONString(signBean))
+										.setUri(url)
+										.setEntity(new StringEntity(messageJson,Charset.forName("utf-8")))
+										.build();
+		return LocalHttpClient.executeJsonResultUTF8(httpUriRequest,clazz);
+	}
+	
+	/**
+     * 签名
+     * @param signKey 签名密钥
+     * @return SignBean 签名类JavaBean
+	 * @throws Exception 
+     */
+    public static SignBean sign(String signKey, String param) throws Exception{
+    	KeysUtil keysUtil=new KeysUtil();
+        String timeStamp = String.valueOf(System.currentTimeMillis());
+        String randNum = String.valueOf((int)((Math.random()*9+1)*10000));
+        String sign = keysUtil.getEncString(signKey + timeStamp + randNum + param);
+        SignBean signBean = new SignBean(sign, timeStamp, randNum);
+        return signBean;
+    }
 	
 	public static void main(String arg[]) throws Exception{
-//		Map responseUtils=WalletHttpClienUtil.reqPostUTF8( com.alibaba.fastjson.JSONObject.toJSONString(params),url,Map.class);
-
+		RequestUtils<Integer> baseParam=new RequestUtils<Integer>();
+		
+		baseParam.setReqdata(36);
+		String ss=com.alibaba.fastjson.JSONObject.toJSONString(baseParam);
+		System.out.println(ss);
+		ResponseUtils map=reqPostUTF8( ss,"http://127.0.0.1:8440/8A5DA52E/shopapi/6F6D9AD2/79B4DE7C/queryWxShopByBusId.do",ResponseUtils.class,"WXMP2017");
+		System.out.println(com.alibaba.fastjson.JSONObject.toJSONString(map));
 		
 		}
 }

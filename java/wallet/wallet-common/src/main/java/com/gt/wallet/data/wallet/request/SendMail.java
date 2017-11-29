@@ -34,4 +34,18 @@ public class SendMail {
 	private List<String> files;
 	
 	
+	
+	public SendMail(){
+		super();
+	}
+
+
+
+	public SendMail(String title, String content, List<String> files) {
+		super();
+		this.title = title;
+		this.content = content;
+		this.files = files;
+	}
+	
 }

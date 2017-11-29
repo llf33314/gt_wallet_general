@@ -93,6 +93,12 @@ public class WalletWebConfig {
 	private static String yunApiAlias;
 	
 	
+	/**
+	 * wxmp 签名KEY
+	 */
+	private static String wxmpKey;
+	
+	
 //	 // 注入配置属性 根据环境配置切换
 	public static String getDomain() {
 		return domain;
@@ -212,6 +218,14 @@ public class WalletWebConfig {
 
 	public static void setYunApiAlias(String yunApiAlias) {
 		WalletWebConfig.yunApiAlias = yunApiAlias;
+	}
+
+	public static String getWxmpKey() {
+		return wxmpKey;
+	}
+
+	public static void setWxmpKey(String wxmpKey) {
+		WalletWebConfig.wxmpKey = wxmpKey;
 	}
 
 

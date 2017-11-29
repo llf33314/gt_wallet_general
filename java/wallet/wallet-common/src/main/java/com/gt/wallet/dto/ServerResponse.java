@@ -7,6 +7,7 @@ import java.io.Serializable;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import com.gt.wallet.enums.WalletResponseEnums;
+import com.gt.wallet.utils.CommonUtil;
 
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
@@ -145,7 +146,7 @@ public class ServerResponse< T> implements Serializable {
      * @return
      */
     public static boolean judgeSuccess(ServerResponse serverResponse){
-    	return serverResponse.getCode()==0?true:false;
+    	return (CommonUtil.isNotEmpty(serverResponse)&&serverResponse.getCode()==0)?true:false;
     }
     
     /**

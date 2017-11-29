@@ -1,333 +1,313 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
-    <modelVersion>4.0.0</modelVersion>
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+	<modelVersion>4.0.0</modelVersion>
 
-    <groupId>com.gt.wallet</groupId>
-    <artifactId>parent</artifactId>
-    <version>1.1-SNAPSHOT</version>
-    <modules>
-        <module>wallet-common</module>
-        <module>wallet-web</module>
-        <module>wallet-dao</module>
-        <module>wallet-service</module>
-        <module>wallet-entity</module>
-        <module>wallet-generator</module>
-    </modules>
-    <name>parent</name>
-    <packaging>pom</packaging>
-    <description>多粉钱包</description>
+	<groupId>com.gt.wallet</groupId>
+	<artifactId>parent</artifactId>
+	<version>0.0.1</version>
+	<modules>
+		<module>wallet-common</module>
+		<module>wallet-web</module>
+		<module>wallet-dao</module>
+		<module>wallet-service</module>
+		<module>wallet-entity</module>
+		<module>wallet-generator</module>
+		<module>wallet-web</module>
+	</modules>
+	<name>parent</name>
+	<packaging>pom</packaging>
+	<description>多粉钱包</description>
 
-    <parent>
-        <groupId>org.springframework.boot</groupId>
-        <artifactId>spring-boot-starter-parent</artifactId>
-        <version>1.5.8.RELEASE</version>
-        <relativePath/> <!-- lookup parent from repository -->
-    </parent>
+	<parent>
+		<groupId>org.springframework.boot</groupId>
+		<artifactId>spring-boot-starter-parent</artifactId>
+		<version>1.5.8.RELEASE</version>
+		<relativePath /> <!-- lookup parent from repository -->
+	</parent>
 
-    <properties>
-        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-        <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
-        <java.version>1.7</java.version>
-        <dev.lib.swagger2>2.6.0</dev.lib.swagger2>
-        <dev.lib.mybatis>1.1.1</dev.lib.mybatis>
-        <dev.lib.druid>1.0.31</dev.lib.druid>
-        <dev.lib.mysql>5.0.5</dev.lib.mysql>
-        <dev.lib.mybatis-plus>2.1-gamma</dev.lib.mybatis-plus>
-        <dev.lib.velocity>1.7</dev.lib.velocity>
-        <dev.lib.commons-lang3>3.5</dev.lib.commons-lang3>
-        <dev.lib.nekohtml>1.9.22</dev.lib.nekohtml>
-        <dev.lib.vue>2.1.3</dev.lib.vue>
-        <dev.lib.fastjson>1.2.33</dev.lib.fastjson>
-        <dev.lib.jjwt>0.7.0</dev.lib.jjwt>
-        <!-- Mybatis Generator -->
-        <!--<entity.target.dir>src/main/java/</entity.target.dir> -->
-        <!--<com.gt.matel.dao.resources.dir>src/main/resources/</com.gt.matel.dao.resources.dir> -->
-        <dev.lib.lombok>1.16.18</dev.lib.lombok>
-        <tomcat.version>7.0.68</tomcat.version>
-    </properties>
+	<properties>
+		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+		<project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
+		<java.version>1.7</java.version>
+		<dev.lib.swagger2>2.6.0</dev.lib.swagger2>
+		<dev.lib.mybatis>1.1.1</dev.lib.mybatis>
+		<dev.lib.druid>1.0.31</dev.lib.druid>
+		<dev.lib.mysql>5.0.5</dev.lib.mysql>
+		<dev.lib.mybatis-plus>2.1-gamma</dev.lib.mybatis-plus>
+		<dev.lib.velocity>1.7</dev.lib.velocity>
+		<dev.lib.commons-lang3>3.5</dev.lib.commons-lang3>
+		<dev.lib.nekohtml>1.9.22</dev.lib.nekohtml>
+		<dev.lib.vue>2.1.3</dev.lib.vue>
+		<dev.lib.fastjson>1.2.33</dev.lib.fastjson>
+		<dev.lib.jjwt>0.7.0</dev.lib.jjwt>
+		<!-- Mybatis Generator -->
+		<!--<entity.target.dir>src/main/java/</entity.target.dir> -->
+		<!--<com.gt.matel.dao.resources.dir>src/main/resources/</com.gt.matel.dao.resources.dir> -->
+		<dev.lib.lombok>1.16.18</dev.lib.lombok>
+		<tomcat.version>7.0.68</tomcat.version>
+	</properties>
 
-    <dependencies>
+	<dependencies>
 
-        <dependency>
-            <groupId>org.springframework.boot</groupId>
-            <artifactId>spring-boot-starter-tomcat</artifactId>
-        </dependency>
+		<dependency>
+			<groupId>org.apache.tomcat.embed</groupId>
+			<artifactId>tomcat-embed-jasper</artifactId>
+			<scope>provided</scope>
+		</dependency>
 
-        <dependency>
-            <groupId>org.apache.tomcat.embed</groupId>
-            <artifactId>tomcat-embed-jasper</artifactId>
-            <scope>provided</scope>
-        </dependency>
+		<!--servlet 依赖. -->
+		<dependency>
+			<groupId>javax.servlet</groupId>
+			<artifactId>javax.servlet-api</artifactId>
+			<scope>provided</scope>
+		</dependency>
 
-        <!--servlet 依赖. -->
-        <dependency>
-            <groupId>javax.servlet</groupId>
-            <artifactId>javax.servlet-api</artifactId>
-            <scope>provided</scope>
-        </dependency>
+		<!-- Springboot -->
+		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter-web</artifactId>
+		</dependency>
 
-        <!-- Springboot -->
-        <dependency>
-            <groupId>org.springframework.boot</groupId>
-            <artifactId>spring-boot-starter-web</artifactId>
-        </dependency>
+		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter-jdbc</artifactId>
+		</dependency>
 
-        <dependency>
-            <groupId>org.springframework.boot</groupId>
-            <artifactId>spring-boot-starter-jdbc</artifactId>
-        </dependency>
+		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter-aop</artifactId>
+		</dependency>
 
-        <dependency>
-            <groupId>org.springframework.boot</groupId>
-            <artifactId>spring-boot-starter-aop</artifactId>
-        </dependency>
-
-        <!-- Spring Boot Reids 依赖 -->
-        <dependency>
-            <groupId>org.springframework.boot</groupId>
-            <artifactId>spring-boot-starter-data-redis</artifactId>
-        </dependency>
-        <!-- Spring Session Redis 方式共享sessoin 依赖包 -->
-        <dependency>
-            <groupId>org.springframework.session</groupId>
-            <artifactId>spring-session-data-redis</artifactId>
-        </dependency>
+		<!-- Spring Boot Reids 依赖 -->
+		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter-data-redis</artifactId>
+		</dependency>
+		<!-- Spring Session Redis 方式共享sessoin 依赖包 -->
+		<dependency>
+			<groupId>org.springframework.session</groupId>
+			<artifactId>spring-session-data-redis</artifactId>
+		</dependency>
 
 
-        <dependency>
-            <groupId>org.springframework.session</groupId>
-            <artifactId>spring-session</artifactId>
-        </dependency>
+		<dependency>
+			<groupId>org.springframework.session</groupId>
+			<artifactId>spring-session</artifactId>
+		</dependency>
 
-        <!-- @Configuration注解建议引入 -->
-        <dependency>
-            <groupId>org.springframework.boot</groupId>
-            <artifactId>spring-boot-configuration-processor</artifactId>
-            <optional>true</optional>
-        </dependency>
+		<!-- @Configuration注解建议引入 -->
+		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-configuration-processor</artifactId>
+			<optional>true</optional>
+		</dependency>
 
-        <!-- Springboot 热部署 -->
-        <dependency>
-            <groupId>org.springframework.boot</groupId>
-            <artifactId>spring-boot-devtools</artifactId>
-            <optional>true</optional>
-        </dependency>
+		<!-- Springboot 热部署 -->
+		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-devtools</artifactId>
+			<optional>true</optional>
+		</dependency>
 
-        <!-- Swagger API文档 -->
-        <dependency>
-            <groupId>io.springfox</groupId>
-            <artifactId>springfox-swagger-ui</artifactId>
-            <version>${dev.lib.swagger2}</version>
-        </dependency>
-        <dependency>
-            <groupId>io.springfox</groupId>
-            <artifactId>springfox-swagger2</artifactId>
-            <version>${dev.lib.swagger2}</version>
-        </dependency>
-        <!-- Mybatis -->
-        <!-- <dependency> <groupId>org.mybatis.spring.boot</groupId> <artifactId>mybatis-spring-boot-starter</artifactId>
-            <version>${dev.lib.mybatis}</version> <exclusions> <exclusion> <artifactId>mybatis</artifactId>
-            <groupId>org.mybatis</groupId> </exclusion> <exclusion> <artifactId>mybatis-spring</artifactId>
-            <groupId>org.mybatis</groupId> </exclusion> </exclusions> </dependency> -->
+		<!-- Swagger API文档 -->
+		<dependency>
+			<groupId>io.springfox</groupId>
+			<artifactId>springfox-swagger-ui</artifactId>
+			<version>${dev.lib.swagger2}</version>
+		</dependency>
+		<dependency>
+			<groupId>io.springfox</groupId>
+			<artifactId>springfox-swagger2</artifactId>
+			<version>${dev.lib.swagger2}</version>
+		</dependency>
+		<!-- Mybatis -->
+		<!-- <dependency> <groupId>org.mybatis.spring.boot</groupId> <artifactId>mybatis-spring-boot-starter</artifactId> 
+			<version>${dev.lib.mybatis}</version> <exclusions> <exclusion> <artifactId>mybatis</artifactId> 
+			<groupId>org.mybatis</groupId> </exclusion> <exclusion> <artifactId>mybatis-spring</artifactId> 
+			<groupId>org.mybatis</groupId> </exclusion> </exclusions> </dependency> -->
 
-        <dependency>
-            <groupId>com.baomidou</groupId>
-            <artifactId>mybatisplus-spring-boot-starter</artifactId>
-            <version>1.0.4</version>
-        </dependency>
-
-
-        <!-- mybatisPlus代码生成模板引擎 -->
-        <dependency>
-            <groupId>org.apache.velocity</groupId>
-            <artifactId>velocity</artifactId>
-            <version>${dev.lib.velocity}</version>
-        </dependency>
-
-        <!-- MP 核心库 -->
-        <dependency>
-            <groupId>com.baomidou</groupId>
-            <artifactId>mybatis-plus</artifactId>
-            <version>${dev.lib.mybatis-plus}</version>
-        </dependency>
-
-        <!-- druid阿里巴巴数据库连接池 -->
-        <dependency>
-            <groupId>com.alibaba</groupId>
-            <artifactId>druid</artifactId>
-            <version>${dev.lib.druid}</version>
-        </dependency>
-        <!-- MySql数据库驱动 -->
-        <dependency>
-            <groupId>mysql</groupId>
-            <artifactId>mysql-connector-java</artifactId>
-            <version>${dev.lib.mysql}</version>
-            <scope>runtime</scope>
-        </dependency>
-
-        <dependency>
-            <groupId>org.aspectj</groupId>
-            <artifactId>aspectjweaver</artifactId>
-        </dependency>
-
-        <!-- apache 工具包 -->
-        <dependency>
-            <groupId>org.apache.commons</groupId>
-            <artifactId>commons-lang3</artifactId>
-            <version>${dev.lib.commons-lang3}</version>
-        </dependency>
-        <dependency>
-            <groupId>org.springframework.boot</groupId>
-            <artifactId>spring-boot-starter-test</artifactId>
-            <!--<scope>test</scope> -->
-        </dependency>
-
-        <dependency>
-            <groupId>net.sf.json-lib</groupId>
-            <artifactId>json-lib</artifactId>
-            <version>2.4</version>
-            <classifier>jdk15</classifier>
-        </dependency>
-
-        <!-- https://mvnrepository.com/artifact/commons-net/commons-net -->
-        <dependency>
-            <groupId>commons-net</groupId>
-            <artifactId>commons-net</artifactId>
-            <version>3.6</version>
-        </dependency>
+		<dependency>
+			<groupId>com.baomidou</groupId>
+			<artifactId>mybatisplus-spring-boot-starter</artifactId>
+			<version>1.0.4</version>
+		</dependency>
 
 
-        <!-- json 包 -->
-        <dependency>
-            <groupId>com.alibaba</groupId>
-            <artifactId>fastjson</artifactId>
-            <version>${dev.lib.fastjson}</version>
-        </dependency>
+		<!-- mybatisPlus代码生成模板引擎 -->
+		<dependency>
+			<groupId>org.apache.velocity</groupId>
+			<artifactId>velocity</artifactId>
+			<version>${dev.lib.velocity}</version>
+		</dependency>
 
-        <!-- 生产setter getter工具类 -->
-        <dependency>
-            <groupId>org.projectlombok</groupId>
-            <artifactId>lombok</artifactId>
-            <version>${dev.lib.lombok}</version>
-        </dependency>
+		<!-- MP 核心库 -->
+		<dependency>
+			<groupId>com.baomidou</groupId>
+			<artifactId>mybatis-plus</artifactId>
+			<version>${dev.lib.mybatis-plus}</version>
+		</dependency>
 
+		<!-- druid阿里巴巴数据库连接池 -->
+		<dependency>
+			<groupId>com.alibaba</groupId>
+			<artifactId>druid</artifactId>
+			<version>${dev.lib.druid}</version>
+		</dependency>
+		<!-- MySql数据库驱动 -->
+		<dependency>
+			<groupId>mysql</groupId>
+			<artifactId>mysql-connector-java</artifactId>
+			<version>${dev.lib.mysql}</version>
+			<scope>runtime</scope>
+		</dependency>
 
-        <dependency>
-            <groupId>javax.servlet</groupId>
-            <artifactId>jstl</artifactId>
-            <version>1.2</version>
-        </dependency>
+		<dependency>
+			<groupId>org.aspectj</groupId>
+			<artifactId>aspectjweaver</artifactId>
+		</dependency>
 
-        <!-- 基础工具类 -->
-        <dependency>
-            <groupId>com.gt.api</groupId>
-            <artifactId>gt_api</artifactId>
-            <version>1.3.20-SNAPSHOT</version>
-        </dependency>
+		<!-- apache 工具包 -->
+		<dependency>
+			<groupId>org.apache.commons</groupId>
+			<artifactId>commons-lang3</artifactId>
+			<version>${dev.lib.commons-lang3}</version>
+		</dependency>
+		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter-test</artifactId>
+			<!--<scope>test</scope> -->
+		</dependency>
 
-        <!-- 服务监控 -->
-        <dependency>
-            <groupId>org.springframework.boot</groupId>
-            <artifactId>spring-boot-starter-actuator</artifactId>
-        </dependency>
-        <!-- 日志模板 -->
-        <!-- <dependency> <groupId>org.springframework.boot</groupId> <artifactId>spring-boot-starter-thymeleaf</artifactId>
-            </dependency> -->
-        <dependency>
-            <groupId>org.springframework.boot</groupId>
-            <artifactId>spring-boot-starter-mail</artifactId>
-        </dependency>
+		<dependency>
+			<groupId>net.sf.json-lib</groupId>
+			<artifactId>json-lib</artifactId>
+			<version>2.4</version>
+			<classifier>jdk15</classifier>
+		</dependency>
 
-        <dependency>
-            <groupId>org.springframework.boot</groupId>
-            <artifactId>spring-boot-starter-jta-narayana</artifactId>
-        </dependency>
-
-        <!-- https://mvnrepository.com/artifact/org.apache.httpcomponents/httpclient -->
-        <dependency>
-            <groupId>org.apache.httpcomponents</groupId>
-            <artifactId>httpclient</artifactId>
-            <version>4.3.4</version>
-        </dependency>
-
-        <dependency>
-            <groupId>com.gt.wallet</groupId>
-            <artifactId>ime.service.client</artifactId>
-            <version>1.0.1</version>
-        </dependency>
-
-        <!-- https://mvnrepository.com/artifact/org.bouncycastle/bcprov-jdk15 -->
-        <dependency>
-            <groupId>org.bouncycastle</groupId>
-            <artifactId>bcprov-jdk15</artifactId>
-            <version>1.46</version>
-        </dependency>
+		<!-- https://mvnrepository.com/artifact/commons-net/commons-net -->
+		<dependency>
+			<groupId>commons-net</groupId>
+			<artifactId>commons-net</artifactId>
+			<version>3.6</version>
+		</dependency>
 
 
-    </dependencies>
+		<!-- json 包 -->
+		<dependency>
+			<groupId>com.alibaba</groupId>
+			<artifactId>fastjson</artifactId>
+			<version>${dev.lib.fastjson}</version>
+		</dependency>
 
-    <build>
-        <defaultGoal>package</defaultGoal>
-        <resources>
-            <!-- 导入的资源文件，该目录下的文件会copy到classpath根目录下 -->
-            <resource>
-                <directory>src/main/resources</directory>
-            </resource>
-            <resource>
-                <directory>src/main/java</directory>
-                <includes>
-                    <include>*.properties</include>
-                    <include>*.dtd</include>
-                    <include>*.yml</include>
-                    <include>*.xml</include>
-                </includes>
-                <filtering>false</filtering>
-            </resource>
-        </resources>
-        <plugins>
-            <plugin>
-                <groupId>org.springframework.boot</groupId>
-                <artifactId>spring-boot-maven-plugin</artifactId>
-            </plugin>
-            <plugin>
-                <artifactId>maven-compiler-plugin</artifactId>
-                <configuration>
-                    <source>${java.version}</source>
-                    <target>${java.version}</target>
-                </configuration>
-            </plugin>
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-war-plugin</artifactId>
-            </plugin>
-            <plugin>
-                <artifactId>maven-resources-plugin</artifactId>
-                <configuration>
-                    <encoding>${project.build.sourceEncoding}</encoding>
-                </configuration>
-            </plugin>
-            <!-- 去除单元测试 -->
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-surefire-plugin</artifactId>
-                <configuration>
-                    <skip>true</skip>
-                </configuration>
-            </plugin>
+		<!-- 生产setter getter工具类 -->
+		<dependency>
+			<groupId>org.projectlombok</groupId>
+			<artifactId>lombok</artifactId>
+			<version>${dev.lib.lombok}</version>
+		</dependency>
 
-        </plugins>
-    </build>
 
-    <distributionManagement>
-        <repository>
-            <id>gt-releases</id>
-            <url>http://nexus.duofee.com/nexus/content/repositories/releases/</url>
-        </repository>
-        <snapshotRepository>
-            <id>gt-snapshots</id>
-            <url>http://nexus.duofee.com/nexus/content/repositories/snapshots/</url>
-        </snapshotRepository>
-    </distributionManagement>
+		<dependency>
+			<groupId>javax.servlet</groupId>
+			<artifactId>jstl</artifactId>
+			<version>1.2</version>
+		</dependency>
+
+		<!-- 基础工具类 -->
+		<dependency>
+		  <groupId>com.gt.api</groupId>
+		  <artifactId>gt_api</artifactId>
+		  <version>1.3.22-SNAPSHOT</version>
+		</dependency>
+
+		
+
+
+		<!-- 服务监控 -->
+		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter-actuator</artifactId>
+		</dependency>
+		<!-- 日志模板 -->
+		<!-- <dependency> <groupId>org.springframework.boot</groupId> <artifactId>spring-boot-starter-thymeleaf</artifactId> 
+			</dependency> -->
+		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter-mail</artifactId>
+		</dependency>
+
+		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter-jta-narayana</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>com.gt.wallet</groupId>
+			<artifactId>ime.service.client</artifactId>
+			<version>1.0.1</version>
+		</dependency>
+
+		<!-- https://mvnrepository.com/artifact/org.bouncycastle/bcprov-jdk15 -->
+		<dependency>
+			<groupId>org.bouncycastle</groupId>
+			<artifactId>bcprov-jdk15</artifactId>
+			<version>1.46</version>
+		</dependency>
+
+
+	</dependencies>
+
+	<build>
+		<defaultGoal>package</defaultGoal>
+		<resources>
+			<!-- 导入的资源文件，该目录下的文件会copy到classpath根目录下 -->
+			<resource>
+				<directory>src/main/resources</directory>
+			</resource>
+			<resource>
+				<directory>src/main/java</directory>
+				<includes>
+					<include>*.properties</include>
+					<include>*.dtd</include>
+					<include>*.yml</include>
+					<include>*.xml</include>
+				</includes>
+				<filtering>false</filtering>
+			</resource>
+		</resources>
+		<plugins>
+			<plugin>
+				<groupId>org.springframework.boot</groupId>
+				<artifactId>spring-boot-maven-plugin</artifactId>
+			</plugin>
+			<plugin>
+				<artifactId>maven-compiler-plugin</artifactId>
+				<configuration>
+					<source>${java.version}</source>
+					<target>${java.version}</target>
+				</configuration>
+			</plugin>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-war-plugin</artifactId>
+			</plugin>
+			<plugin>
+				<artifactId>maven-resources-plugin</artifactId>
+				<configuration>
+					<encoding>${project.build.sourceEncoding}</encoding>
+				</configuration>
+			</plugin>
+			<!-- 去除单元测试 -->
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-surefire-plugin</artifactId>
+				<configuration>
+					<skip>true</skip>
+				</configuration>
+			</plugin>
+		</plugins>
+	</build>
+
 
 </project>
