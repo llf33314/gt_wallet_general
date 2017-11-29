@@ -70,27 +70,22 @@
           <el-input v-model="ruleForm.identityNo" placeholder="请输入身份证号" class="input-width"></el-input>
         </el-form-item>
         <el-form-item label="身份证正面：" prop="identitycardUrl1File">
-          <el-upload :action="DFPAYDOMAIN+'/wcommon/upload'" list-type="picture-card" class="public-fl" :on-preview="handlePictureCardPreview"
-            :on-remove="handleRemove">
-            <i class="el-icon-plus"></i>
+          <el-upload class="avatar-uploader" ref="identitycardUrl1File" action="" :multiple="true" :show-file-list="false" :http-request="uploadImg"
+            :before-upload="beforeAvatarUpload">
+            <img v-if="ruleForm.identitycardUrl1File" :src="ruleForm.identitycardUrl1File" class="avatar">
+            <i v-else class="el-icon-plus avatar-uploader-icon"></i>
           </el-upload>
-          <el-dialog :visible.sync="dialogVisible" width="50%">
-            <img width="100%" :src="dialogImageUrl" alt="">
-          </el-dialog>
-          <!-- <input class="public-fl identitycardUrl1File" type="file"> -->
           <div class="dome-img public-c333">
             <span>示例：</span>
             <img src="./../img/c1.jpg" alt="">
           </div>
         </el-form-item>
         <el-form-item label="身份证背面：" prop="identitycardUrl2File">
-            <el-upload :action="DFPAYDOMAIN+'/wcommon/upload'" list-type="picture-card" class="public-fl" :on-preview="handlePictureCardPreview"
-            :on-remove="handleRemove">
-            <i class="el-icon-plus"></i>
+          <el-upload class="avatar-uploader" ref="identitycardUrl2File" action="" :show-file-list="false" :http-request="uploadImg2"
+            :before-upload="beforeAvatarUpload">
+            <img v-if="ruleForm.identitycardUrl2File" :src="ruleForm.identitycardUrl2File" class="avatar">
+            <i v-else class="el-icon-plus avatar-uploader-icon"></i>
           </el-upload>
-          <el-dialog :visible.sync="dialogVisible" width="50%">
-            <img width="100%" :src="dialogImageUrl" alt="">
-          </el-dialog>
           <div class="dome-img public-c333">
             <span>示例：</span>
             <img src="./../img/c2.jpg" alt="">
@@ -124,27 +119,23 @@
     wallet
   } from './../api'
   import DrawCash from "./../template/drawcash.vue";
+  import axios from 'axios'
   export default {
     components: {
       DrawCash
     },
     data() {
       return {
-        dialogImageUrl: '',
-        dialogVisible: false,
-        imageUrl: '',
         ruleForm: {
-          identitycardUrl1File: '',
-          identitycardUrl2File: '',
-          // identitycardUrl1File: function(){return document.querySelectorAll('.identitycardUrl1File')[0].value}, //身份证正面
-          // identitycardUrl2File: function(){return document.querySelectorAll('.identitycardUrl2File')[0].value}, //身份证反面
+          identitycardUrl1File: 'http://113.106.202.53:14884/upload/image/2/wallet/null/1511871076687.png',
+          identitycardUrl2File: 'http://113.106.202.53:14884/upload/image/2/wallet/null/1511871076687.png',
           memberId: '',
           name: '李小强', //注册人姓名
           identityNo: '441621199011164018', //身份证号码
-          cardNo: '99967484641657486', //银行卡号
+          cardNo: '6217212008009165086', //银行卡号
           phone: '15902042654', //银行预留手机
           bankName: '李小强', //银行卡开户人姓名(必须与注册人姓名一致)
-          unionBank: '99967484641657486' //支付行号
+          unionBank: '' //支付行号
         },
         rules: {
           name: [{
@@ -158,14 +149,16 @@
               trigger: 'blur'
             }
           ],
-          // identitycardUrl1File: [{
-          //   message: '请上传身份证正面',
-          //   trigger: 'change'
-          // }],
-          // identitycardUrl2File: [{
-          //   message: '请上传身份证背面',
-          //   trigger: 'change'
-          // }],
+          identitycardUrl1File: [{
+            required: true,
+            message: '请上传身份证正面',
+            trigger: 'change'
+          }],
+          identitycardUrl2File: [{
+            required: true,
+            message: '请上传身份证背面',
+            trigger: 'change'
+          }],
           identityNo: [{
             required: true,
             message: '请输入身份证号',
@@ -188,6 +181,27 @@
       this.getVipNum()
     },
     methods: {
+      uploadImg(e) {
+        wallet.upload(e.file).then(res => {
+          this.ruleForm.identitycardUrl1File = res.data
+        })
+      },
+      uploadImg2(e) {
+        wallet.upload(e.file).then(res => {
+          this.ruleForm.identitycardUrl2File = res.data
+        })
+      },
+      beforeAvatarUpload(file) {
+        const isJPG = file.type === 'image/jpeg' || file.type === 'image/png';
+        const isLt5M = file.size / 1024 / 1024 < 5;
+        if (!isJPG) {
+          this.$message.error('上传图片只能是 JPG/PNG 格式!');
+        }
+        if (!isLt5M) {
+          this.$message.error('上传图片大小不能超过 5MB!');
+        }
+        return isJPG && isLt5M;
+      },
       //获取会员id
       getVipNum() {
         wallet.register({
@@ -201,17 +215,10 @@
           }
         })
       },
-      handleRemove(file, fileList) {
-        console.log(file, fileList);
-      },
-      handlePictureCardPreview(file) {
-        this.dialogImageUrl = file.url;
-        this.dialogVisible = true;
-      },
       submitForm(formName) {
-        console.log(document.querySelectorAll('.identitycardUrl1File')[0].value)
         this.$refs[formName].validate((valid) => {
           if (valid) {
+            console.log(this.ruleForm, 'this.ruleForm')
             wallet.saveIndividual(this.ruleForm).then(res => {
               console.log(res, 'res')
               console.log(this.ruleForm)
