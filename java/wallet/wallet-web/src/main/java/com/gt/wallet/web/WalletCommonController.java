@@ -42,7 +42,7 @@ public class WalletCommonController {
 	 * 文件上传
 	 * @return
 	 */
-	@RequestMapping(value="upload",method=RequestMethod.POST)
+	@RequestMapping(value="upload")
 	 @ApiOperation(value="文件上传", notes="文件上传")
 	public ServerResponse<String> upload(HttpServletRequest request,
 			MultipartFile file){
