@@ -9,13 +9,13 @@ import lombok.experimental.Accessors;
 /** 
 * @author lifengxi(gt_sky@qq.com)
 * @version 创建时间：2017年11月17日 下午6:04:58 
-* 新增个人会员请求参数类说明 
+* 新增银行卡请求参数类说明 
 */
 @Data
 @Accessors(chain = true)
 @EqualsAndHashCode(callSuper=false)
-@ApiModel(description="个人会员新增")
-public class WalletIndividualAdd {
+@ApiModel(description="新增银行卡")
+public class WalletBankAdd {
 	
 	
 	/**
@@ -23,19 +23,6 @@ public class WalletIndividualAdd {
 	 */
 	@ApiModelProperty(name="会员id",notes="会员id",required=true)
 	private Integer memberId;
-	
-	/**
-	 * 姓名
-	 */
-	@ApiModelProperty(name="注册人姓名",notes="注册人姓名",required=true)
-	private String name;
-	
-	/**
-	 *身份证
-	 */
-	@ApiModelProperty(name="身份证号码",notes="身份证号码",required=true)
-	private String identityNo;
-	
 	
 	/**
 	 * 银行卡号
@@ -58,20 +45,14 @@ public class WalletIndividualAdd {
 	
 	
 	/**
-	 * 支付行号
+	 * 支付行号(非直连银行卡)
 	 */
-	@ApiModelProperty(name="支付行号",notes="支付行号")
+	@ApiModelProperty(name="支付行号",notes="支付行号",required=false)
 	private String unionBank; 
-//	 
-	@ApiModelProperty(name="身份证正面",notes="身份证正面")
-	private String identitycardUrl1File;
-	
-	@ApiModelProperty(name="身份证正面",notes="身份证正面")
-	private String identitycardUrl2File;
 	
 	/**
-	 * 短信验证码
+	 * 是否为安全卡 0：是 1：否
 	 */
-//	@ApiModelProperty(name="短信验证码",notes="短信验证码",required=true)
-//	private String code;
+	@ApiModelProperty(name="是否为安全卡",notes="是否为安全卡 0：是 1：否",required=false)
+	private Integer isSafeCard;
 }

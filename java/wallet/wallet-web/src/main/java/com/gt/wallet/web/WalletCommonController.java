@@ -42,11 +42,10 @@ public class WalletCommonController {
 	 * 文件上传
 	 * @return
 	 */
-	@RequestMapping(value="upload",method=RequestMethod.POST)
+	@RequestMapping(value="upload")
 	 @ApiOperation(value="文件上传", notes="文件上传")
 	public ServerResponse<String> upload(HttpServletRequest request,
 			MultipartFile file){
-		log.info(CommonUtil.format("触发文件上传接口,file:%s",file.getSize()));
 		try {
 			boolean isMultipart = ServletFileUpload.isMultipartContent(request);
 			if(isMultipart){

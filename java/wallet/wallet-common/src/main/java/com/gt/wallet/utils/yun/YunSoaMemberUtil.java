@@ -8,6 +8,7 @@ import java.security.interfaces.RSAPublicKey;
 import org.json.JSONObject;
 
 import com.gt.api.util.httpclient.JsonUtil;
+import com.gt.wallet.data.wallet.request.WalletCompanyAdd;
 import com.gt.wallet.data.wallet.request.WalletIndividualAdd;
 import com.gt.wallet.dto.ServerResponse;
 import com.gt.wallet.enums.WalletResponseEnums;
@@ -253,26 +254,27 @@ public class YunSoaMemberUtil {
 	 * 设置企业会员信息 ok
 	 * @return
 	 */
-	public static ServerResponse<?> setCompanyInfo(){
+	public static ServerResponse<?> setCompanyInfo(WalletCompanyAdd walletCompany,String bizUserId){
 		try{
 			log.info("setCompanyInfo start");
 
 			JSONObject param = new JSONObject();
 
 			JSONObject companyBasicInfo = new JSONObject();
-			companyBasicInfo.put("companyName", "");
-			companyBasicInfo.put("companyAddress", "");
-			companyBasicInfo.put("businessLicense", "");
-			companyBasicInfo.put("organizationCode", "");
-			companyBasicInfo.put("telephone", "");
-			companyBasicInfo.put("legalName", "");
+			companyBasicInfo.put("companyName", walletCompany.getCompanyName());
+			companyBasicInfo.put("companyAddress",walletCompany.getCompanyAddress());
+			companyBasicInfo.put("businessLicense",walletCompany.getBusinessLicense());
+//			companyBasicInfo.put("organizationCode", walletCompany.getOrganizationCode());
+			companyBasicInfo.put("telephone", walletCompany.getTelephone());
+			companyBasicInfo.put("legalName", walletCompany.getLegalName());
 			companyBasicInfo.put("identityType", 1);
-			companyBasicInfo.put("legalIds", rsaEncrypt(""));
-			companyBasicInfo.put("legalPhone", "");
-			companyBasicInfo.put("accountNo", rsaEncrypt(""));
-			companyBasicInfo.put("parentBankName", "");
-			companyBasicInfo.put("bankCityNo", "");
-			companyBasicInfo.put("bankName", "");
+			companyBasicInfo.put("legalIds", rsaEncrypt(walletCompany.getLegalIds()));
+			companyBasicInfo.put("legalPhone", walletCompany.getLegalPhone());
+			companyBasicInfo.put("accountNo", rsaEncrypt(walletCompany.getAccountNo()));
+			
+			companyBasicInfo.put("parentBankName", walletCompany.getParentBankName());
+//			companyBasicInfo.put("bankCityNo", walletCompany.getBankCityNo());
+			companyBasicInfo.put("bankName",walletCompany.getBankName());
 
 			param.put("bizUserId", bizUserId);
 			param.put("companyBasicInfo", companyBasicInfo);
@@ -292,6 +294,8 @@ public class YunSoaMemberUtil {
 					return ServerResponse.createByErrorMessage(CommonUtil.format("审核失败,失败原因%s,", json.getString("failReason")));
 
 				}
+			}else if(CommonUtil.isNotEmpty(response)&&response.get("status").equals("error")&&response.getString("errorCode").equals("30003")){
+				return ServerResponse.createBySuccess();
 			}else{
 				log.info("setCompanyInfo end");
 				return ServerResponse.createByErrorMessage(CommonUtil.format("第三方接口异常,错误代码 : %s,描述:%s", response.getString("errorCode"), response.getString("message")));

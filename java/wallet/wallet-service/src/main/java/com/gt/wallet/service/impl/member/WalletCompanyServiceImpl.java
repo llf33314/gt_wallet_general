@@ -1,19 +1,37 @@
 package com.gt.wallet.service.impl.member;
 
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
+
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Isolation;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.baomidou.mybatisplus.mapper.EntityWrapper;
+import com.baomidou.mybatisplus.mapper.Wrapper;
+import com.gt.api.bean.session.BusUser;
+import com.gt.api.dto.ResponseUtils;
+import com.gt.api.util.HttpClienUtils;
+import com.gt.api.util.RequestUtils;
 import com.gt.api.util.httpclient.JsonUtil;
 import com.gt.wallet.base.BaseServiceImpl;
+import com.gt.wallet.data.wallet.request.SendMail;
+import com.gt.wallet.data.wallet.request.WalletCompanyAdd;
 import com.gt.wallet.dto.ServerResponse;
 import com.gt.wallet.entity.WalletCompany;
+import com.gt.wallet.entity.WalletMember;
 import com.gt.wallet.enums.WalletResponseEnums;
 import com.gt.wallet.exception.BusinessException;
 import com.gt.wallet.mapper.member.WalletCompanyMapper;
+import com.gt.wallet.service.mail.MailService;
 import com.gt.wallet.service.member.WalletCompanyService;
+import com.gt.wallet.service.member.WalletMemberService;
 import com.gt.wallet.utils.CommonUtil;
+import com.gt.wallet.utils.WalletWebConfig;
+import com.gt.wallet.utils.yun.YunSoaMemberUtil;
 
 import lombok.extern.slf4j.Slf4j;
 
@@ -29,7 +47,15 @@ import lombok.extern.slf4j.Slf4j;
 @Slf4j
 public class WalletCompanyServiceImpl extends BaseServiceImpl<WalletCompanyMapper, WalletCompany> implements WalletCompanyService {
 	
+	@Autowired
 	private WalletCompanyMapper walletCompanyMapper;
+	
+	@Autowired
+	private WalletMemberService walletMemberService;
+	
+	@Autowired
+	private MailService mailService;
+	
 
 	/**
 	 * 使用事务控制
@@ -38,21 +64,102 @@ public class WalletCompanyServiceImpl extends BaseServiceImpl<WalletCompanyMappe
 	 * timeout
 	 * rollbackFor：指定事务回滚异常类型
 	 */
+	@SuppressWarnings("unchecked")
 	@Transactional(propagation = Propagation.REQUIRED,isolation = Isolation.DEFAULT,timeout=36000,rollbackFor=Exception.class)
 	@Override
-	public ServerResponse<Integer> save(WalletCompany walletCompany) throws Exception {
-		log.info(CommonUtil.format("biz接口:保存会员,请求参数:%s", JsonUtil.toJSONString(walletCompany)));
+	public ServerResponse<?> save(WalletCompanyAdd walletCompanyAdd,BusUser busUser) throws Exception {
+		log.info(CommonUtil.format("biz接口:save ,params:%s", JsonUtil.toJSONString(walletCompanyAdd)));
 		ServerResponse<Integer> serverResponse=null;
-		if(CommonUtil.isEmpty(walletCompany)){
+		if(CommonUtil.isEmpty(walletCompanyAdd)){
 			throw new BusinessException(WalletResponseEnums.NULL_ERROR);
 		}
+		
+		
+		/*******************************拼接地址**************************************/
+		Wrapper<WalletCompany> wrapper=new EntityWrapper<>();
+		wrapper.where("w_member_id={0}", walletCompanyAdd.getMemberId());
+		String address="";
+		RequestUtils<String> requestUtils=new RequestUtils<>();
+		requestUtils.setReqdata(walletCompanyAdd.getProvince());
+		String path=WalletWebConfig.getHomeUrl()+"8A5DA52E/shopapi/6F6D9AD2/79B4DE7C/queryBasisByCodes.do";
+		String key=WalletWebConfig.getWxmpKey();
+		
+		ResponseUtils<List<Map<String, Object>>> province=HttpClienUtils.reqPostUTF8(JsonUtil.toJSONString(requestUtils), path, ResponseUtils.class, key);
+		if(CommonUtil.isEmpty(province)||province.getCode()!=0||CommonUtil.isEmpty(province.getData())||province.getData().size()!=1){
+			throw new BusinessException("获取地址api异常,请联系管理员");
+		}
+//		String pro=homeUrl+"8A5DA52E/shopapi/6F6D9AD2/79B4DE7C/queryBasisByCodes.do";
+//		ResponseUtils<List<Map<String, Object>>> province=HttpClienUtils.reqGetUTF8(JsonUtil.toJSONString(requestUtils),pro, ResponseUtils.class, key);
+		log.info(CommonUtil.format("province:%s", JsonUtil.toJSONString(province)));
+		requestUtils=new RequestUtils<>();
+		requestUtils.setReqdata(walletCompanyAdd.getArea());
+		ResponseUtils<List<Map<String, Object>>> city=HttpClienUtils.reqPostUTF8(JsonUtil.toJSONString(requestUtils),path, ResponseUtils.class,key);
+		if(CommonUtil.isEmpty(city)||city.getCode()!=0||CommonUtil.isEmpty(city.getData())||city.getData().size()!=1){
+			throw new BusinessException("获取地址api异常,请联系管理员");
+		}
+		address=CommonUtil.toString(province.getData().get(0).get("city_name"))+CommonUtil.toString(city.getData().get(0).get("city_name"))+walletCompanyAdd.getCompanyAddress();
+		/*******************************拼接地址**************************************/
+		/*******************************判断db记录是否异常**************************************/
+		List<WalletCompany> walletCompanies=walletCompanyMapper.selectList(wrapper);
+		if(CommonUtil.isEmpty(walletCompanies)||walletCompanies.size()>1){
+			throw new BusinessException("数据异常，请联系管理员");
+		}
+		WalletCompany walletCompany=null;
+		if(walletCompanies.size()==0){
+			walletCompany=new WalletCompany();
+		}else{
+			walletCompany=walletCompanies.get(0);
+		}
+		WalletMember walletMember=walletMemberService.selectById(walletCompanyAdd.getMemberId());
+		/*******************************判断db记录是否异常**************************************/
+		/*******************************发送邮件**************************************/
+		List<String> files=new ArrayList<>();
+		files.add(WalletWebConfig.getPathImage()+walletCompanyAdd.getDoBusinessUrl().split("image/")[1]);
+		files.add(WalletWebConfig.getPathImage()+walletCompanyAdd.getIdentitycardUrl1().split("image/")[1]);
+		files.add(WalletWebConfig.getPathImage()+walletCompanyAdd.getIdentitycardUrl2().split("image/")[1]);
+		files.add(WalletWebConfig.getPathImage()+walletCompanyAdd.getLicenseUrl().split("image/")[1]);
+		SendMail sendMail=new SendMail("企业信息设置:"+busUser.getName(),"企业信息设置",files);
+		ServerResponse<?>	mailServerResponse=mailService.sendAttachmentsMail(sendMail);
+		log.info(CommonUtil.format("mailServerResponse:%s", JsonUtil.toJSONString(mailServerResponse)));
+		if(!ServerResponse.judgeSuccess(mailServerResponse)){
+			throw new BusinessException(mailServerResponse.getCode(),mailServerResponse.getMsg());
+		}
+		/*******************************发送邮件**************************************/
+		/*******************************调用设置企业信息api**************************************/
+		ServerResponse<?> response=YunSoaMemberUtil.setCompanyInfo(walletCompanyAdd, walletMember.getMemberNum());
+ 		log.info(CommonUtil.format("设置企业信息api结果:%s", JsonUtil.toJSONString(response)));
+		if(!ServerResponse.judgeSuccess(response)){//返回异常
+			throw new BusinessException(WalletResponseEnums.API_ERROR);
+		}
+		/*******************************调用设置企业信息api**************************************/
+		walletCompany.setAccountNo(YunSoaMemberUtil.rsaEncrypt(walletCompanyAdd.getAccountNo()));
+		walletCompany.setCompanyAddress(address);
+		walletCompany.setArea(walletCompanyAdd.getArea());
+		//walletCompany.setBankCtiyNo(bankCtiyNo);
+//		walletCompany.setOrganizationCode(organizationCode)
+		walletCompany.setBankName(walletCompanyAdd.getBankName());
+		walletCompany.setBusinessLicense(walletCompanyAdd.getBusinessLicense());
+		walletCompany.setCompanyName(walletCompanyAdd.getCompanyName());
+		walletCompany.setDoBusinessUrl(walletCompanyAdd.getDoBusinessUrl());
+		walletCompany.setIdentitycardUrl1(walletCompanyAdd.getIdentitycardUrl1());
+		walletCompany.setIdentitycardUrl2(walletCompanyAdd.getIdentitycardUrl2());
+		walletCompany.setLicenseUrl(walletCompanyAdd.getLicenseUrl());
+		walletCompany.setIdentityType(1);
+		walletCompany.setLegalIds(YunSoaMemberUtil.rsaEncrypt(walletCompanyAdd.getLegalIds()));
+		walletCompany.setLegalName(walletCompanyAdd.getLegalName());
+		walletCompany.setMemberNum(walletMember.getMemberNum());
+		walletCompany.setParentBankName(walletCompanyAdd.getParentBankName());
+		walletCompany.setProvince(walletCompanyAdd.getProvince());
+		walletCompany.setTelephone(walletCompanyAdd.getTelephone());
+		walletCompany.setUnionBank(walletCompanyAdd.getUnionBank());
+		walletCompany.setWMemberId(walletMember.getId());
 		if(CommonUtil.isEmpty(walletCompany.getId())){//新增
 			walletCompanyMapper.insert(walletCompany);
 		}else{//修改
 			walletCompanyMapper.updateById(walletCompany);
 		}
 		serverResponse=ServerResponse.createBySuccess();
-		log.info(CommonUtil.format("serverResponse:%s", JsonUtil.toJSONString(serverResponse)));
+		log.info(CommonUtil.format("biz接口:save serverResponse:%s", JsonUtil.toJSONString(serverResponse)));
 		return serverResponse=ServerResponse.createBySuccess();
 	}
 }

@@ -132,12 +132,11 @@ public class WalletCompany extends Model<WalletCompany> {
 	@ApiModelProperty(name="法人证件号码",notes="法人证件号码,,如非业务需要不传")
 	private String legalIds;
 	
-//	/**
-//	 * 法人手机号码
-//	 */
-//	@ApiModelProperty(name="法人手机号码",notes="法人手机号码,隐藏中间账号")
-//	@TableField("legal_phone")
-//	private String legalPhone;
+	/**
+	 * 法人手机号码
+	 */
+	@ApiModelProperty(name="法人手机号码",notes="法人手机号码,隐藏中间账号")
+	private String legalPhone;
 	
 	/**
 	 * 企业对公账户
@@ -176,8 +175,8 @@ public class WalletCompany extends Model<WalletCompany> {
 	private String unionBank;
 	
 	
-	@ApiModelProperty(name="地址",notes="地址")
-	private String address;
+//	@ApiModelProperty(name="地址",notes="地址")
+//	private String address;
     /**
      * 国家
      */

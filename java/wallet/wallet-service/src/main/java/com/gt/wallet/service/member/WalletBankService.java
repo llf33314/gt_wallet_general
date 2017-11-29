@@ -1,12 +1,12 @@
 package com.gt.wallet.service.member;
 
-import com.gt.wallet.entity.WalletBank;
-
 import java.util.List;
 
 import com.gt.wallet.base.BaseService;
+import com.gt.wallet.data.wallet.request.WalletCompanyAdd;
 import com.gt.wallet.data.wallet.request.WalletIndividualAdd;
 import com.gt.wallet.dto.ServerResponse;
+import com.gt.wallet.entity.WalletBank;
 
 /**
  * <p>
@@ -30,11 +30,22 @@ public interface WalletBankService extends BaseService<WalletBank> {
 	
 	/**
 	 * 绑定银行卡
+	 * @param walletIndividualAdd 银行卡信息
+	 * @param isSafeCard 是否为安全卡 0：是 1：否
+	 * @return
+	 * @throws Exception
+	 */
+	ServerResponse<Integer> add(WalletIndividualAdd walletIndividualAdd,Integer isSafeCard)throws Exception;
+	
+	/**
+	 * 绑定银行卡(对公账号)
 	 * @param walletIndividualAdd
 	 * @return
 	 * @throws Exception
 	 */
-	ServerResponse<Integer> add(WalletIndividualAdd walletIndividualAdd)throws Exception;
+	ServerResponse<Integer> addPublic(WalletCompanyAdd walletCompanyAdd)throws Exception;
+	
+	
 	
 	
 	/**

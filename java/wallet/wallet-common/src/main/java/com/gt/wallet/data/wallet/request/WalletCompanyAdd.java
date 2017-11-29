@@ -30,6 +30,15 @@ public class WalletCompanyAdd {
 	@ApiModelProperty(name="companyName",notes="公司名称",required=true)
 	private String companyName;
 	
+	
+	/**
+	 * 企业地址
+	 */
+	@ApiModelProperty(name="companyAddress",notes="企业地址",required=true)
+	private String companyAddress;
+	
+	
+	
 	/**
 	 * 营业执照号
 	 */
@@ -39,49 +48,145 @@ public class WalletCompanyAdd {
 	//private 
 	
 	/**
-	 * 姓名
+	 * 组织机构代码 
 	 */
-	@ApiModelProperty(name="注册人姓名",notes="注册人姓名",required=true)
-	private String name;
+//	@ApiModelProperty(name="组织机构代码 ",notes="组织机构代码 ",required=true)
+//	private String organizationCode;
 	
 	/**
-	 *身份证
+	 *联系电话
 	 */
-	@ApiModelProperty(name="身份证号码",notes="身份证号码",required=true)
-	private String identityNo;
-	
-	
-	/**
-	 * 银行卡号
-	 */
-	@ApiModelProperty(name="银行卡号",notes="银行卡号",required=true)
-	private String cardNo;
-	
-	/**
-	 * 银行预留手机
-	 */
-	@ApiModelProperty(name="银行预留手机",notes="银行预留手机",required=true)
-	private String phone;
+	@ApiModelProperty(name="联系电话",notes="联系电话",required=true)
+	private String telephone;
 	
 	
 	/**
-	 * 银行卡开户人姓名
+	 * 法人姓名
 	 */
-	@ApiModelProperty(name="银行卡开户人姓名",notes="必须与注册人姓名一致",required=true)
-	private String bankName; 
+	@ApiModelProperty(name="法人姓名",notes="法人姓名",required=true)
+	private String legalName;
+	
+//	/**
+//	 * 法人证件类型
+//	 */
+//	@ApiModelProperty(name="法人证件类型",notes="法人证件类型",required=true)
+//	private String identityType;
+	
+	
+	/**
+	 * 法人证件号码
+	 */
+	@ApiModelProperty(name="法人证件号码",notes="法人证件号码",required=true)
+	private String legalIds; 
+	
+	
+	/**
+	 * 法人手机号码
+	 */
+	@ApiModelProperty(name="法人手机号码",notes="法人手机号码")
+	private String legalPhone; 
+	
+	
+	/**
+     * 省份
+     */
+	@ApiModelProperty(name="省份",notes="省份code")
+	private String province;
+	
+	
+    /**
+     * 县市
+     */
+	@ApiModelProperty(name="县市",notes="县市code")
+	private String area;
+	
+	
+	
+	/**
+	 * 企业对公账户
+	 */
+	@ApiModelProperty(name="企业对公账户",notes="企业对公账户",required=true)
+	private String accountNo;
+	
+	
+	/**
+	 * 开户银行名称
+	 */
+	@ApiModelProperty(name="开户银行名称",notes="开户银行名称",required=true)
+	private String parentBankName;
+	
+	
+	
+//	/**
+//	 * 开户行地区代码
+//	 */
+//	@ApiModelProperty(name="开户行地区代码",notes="开户行地区代码",required=true)
+//	private String bankCityNo;
+	
+	
+	
+	/**
+	 * 开户行支行名称
+	 */
+	@ApiModelProperty(name="开户行支行名称",notes="开户行支行名称",required=true)
+	private String bankName;
+	
+	
+	
 	
 	
 	/**
 	 * 支付行号
 	 */
-	@ApiModelProperty(name="支付行号",notes="支付行号")
-	private String unionBank; 
+	@ApiModelProperty(name="支付行号",notes="支付行号",required=true)
+	private String unionBank;
 	
 	
 	
 	/**
-	 * 短信验证码
+	 * 营业执照url
 	 */
-//	@ApiModelProperty(name="短信验证码",notes="短信验证码",required=true)
-//	private String code;
+	@ApiModelProperty(name="营业执照url",notes="营业执照url",required=true)
+	private String doBusinessUrl;
+	
+	/**
+	 * 身份证正面
+	 */
+	@ApiModelProperty(name="身份证正面",notes="身份证正面",required=true)
+	private String identitycardUrl1;
+	
+	/**
+	 * 身份证反面
+	 */
+	@ApiModelProperty(name="身份证反面",notes="身份证反面",required=true)
+	private String identitycardUrl2;
+	
+	/**
+	 * 许可证url
+	 */
+	@ApiModelProperty(name="许可证url",notes="许可证url",required=true)
+	private String licenseUrl;
+
+
+	public WalletCompanyAdd(Integer memberId, String companyName, String companyAddress, String businessLicense, String telephone, String legalName, String legalIds,
+			String legalPhone, String accountNo, String parentBankName,
+			String bankName, String unionBank) {
+		super();
+		this.memberId = memberId;
+		this.companyName = companyName;
+		this.companyAddress = companyAddress;
+		this.businessLicense = businessLicense;
+		this.telephone = telephone;
+		this.legalName = legalName;
+		this.legalIds = legalIds;
+		this.legalPhone = legalPhone;
+		this.accountNo = accountNo;
+		this.parentBankName = parentBankName;
+		this.bankName = bankName;
+		this.unionBank = unionBank;
+	}
+	
+	public WalletCompanyAdd() {
+		super();
+	}
 }

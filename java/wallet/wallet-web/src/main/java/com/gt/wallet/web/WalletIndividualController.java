@@ -85,7 +85,7 @@ public class WalletIndividualController extends BaseController {
 			serverResponse=walletIndividualService.add(walletIndividualAdd,CommonUtil.getLoginUser(request));
 			if(serverResponse.getCode()==0){
 				
-				serverResponse=walletBankService.add(walletIndividualAdd);
+				serverResponse=walletBankService.add(walletIndividualAdd,0);
 			}
 			log.info(CommonUtil.format("serverResponse:%s",JsonUtil.toJSONString(serverResponse)));
 			return serverResponse;
@@ -93,7 +93,7 @@ public class WalletIndividualController extends BaseController {
 				throw new ResponseEntityException(e.getCode(),e.getMessage());
 			} catch ( Exception e) {
 				e.printStackTrace();
-				log.error(CommonUtil.format("钱包设置(个人会员)接口异常：%s,%s",WalletResponseEnums.SYSTEM_ERROR.getCode(),WalletResponseEnums.SYSTEM_ERROR.getDesc()));
+				log.error(CommonUtil.format("保存个人会员信息接口异常：%s,%s",WalletResponseEnums.SYSTEM_ERROR.getCode(),WalletResponseEnums.SYSTEM_ERROR.getDesc()));
 				throw new ResponseEntityException(WalletResponseEnums.SYSTEM_ERROR);
 			}
 	}

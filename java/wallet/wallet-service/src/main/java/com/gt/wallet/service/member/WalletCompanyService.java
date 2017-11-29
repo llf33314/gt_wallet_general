@@ -1,6 +1,8 @@
 package com.gt.wallet.service.member;
 
+import com.gt.api.bean.session.BusUser;
 import com.gt.wallet.base.BaseService;
+import com.gt.wallet.data.wallet.request.WalletCompanyAdd;
 import com.gt.wallet.dto.ServerResponse;
 import com.gt.wallet.entity.WalletCompany;
 
@@ -17,9 +19,11 @@ public interface WalletCompanyService extends BaseService<WalletCompany> {
 	
 	/**
 	 * 保存企业会员
-	 * @param walletIndividual 企业会员
+	 * @param walletCompany 企业信息
+	 * @param busUser 商家信息
 	 * @return
+	 * @throws Exception
 	 */
-	public ServerResponse<Integer> save(WalletCompany walletCompany) throws Exception;
+	public ServerResponse<?> save(WalletCompanyAdd walletCompany,BusUser busUser) throws Exception;
 	
 }
