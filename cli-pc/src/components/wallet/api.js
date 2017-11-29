@@ -18,16 +18,15 @@ export const wallet = {
   },
   //个人开通
   saveIndividual(param) {
-    return axios
-      .post(`${base}/walletIndividual/saveIndividual`, param,{
-        headers: {
-          'Content-Type': 'multipart/form-data'
-        }
-      }).then(res => res.data)
+    return axios.post(`${base}/walletIndividual/saveIndividual`,  window.JSON.stringify(param),{
+      headers: {
+        'Content-Type': 'application/json;charset=UTF-8'
+      }
+    }).then(res => res.data)
   },
   //额度申请
   addDrawCash(param) {
-    return axios.post(`${base}/walletQuota/add`, param).then(res => res.data)
+    return axios.post(`${base}/walletQuota/add`,param).then(res => res.data)
   },
   // 上传图片
   upload(param) {
