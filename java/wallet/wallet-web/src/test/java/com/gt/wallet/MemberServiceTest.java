@@ -20,7 +20,7 @@ import lombok.extern.slf4j.Slf4j;
 * 类说明 
 */
 @Slf4j
-public class YunSoaMemberUtilTest extends BasicTest {
+public class MemberServiceTest extends BasicTest {
 	
 	@Autowired
 	private WalletMemberService walletMemberService;
@@ -75,4 +75,8 @@ public class YunSoaMemberUtilTest extends BasicTest {
 		log.info(" end test setCompanyInfo api");
 	}
 
+	
+	
+	
+	
 }
