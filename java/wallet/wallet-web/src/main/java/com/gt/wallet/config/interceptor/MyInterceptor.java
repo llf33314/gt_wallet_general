@@ -72,7 +72,9 @@ public class MyInterceptor implements HandlerInterceptor {
 //
         long startTime = System.currentTimeMillis();
         request.setAttribute("runStartTime", startTime);
-
+        BusUser busUser=new BusUser();
+        busUser.setId(33);
+        SessionUtils.setLoginUser(request,busUser);
         // 获得在下面代码中要用的request,response,session对象
         String homeUrl=WalletWebConfig.getHomeUrl();
         BusUser user = SessionUtils.getLoginUser(request);
@@ -123,11 +125,11 @@ public class MyInterceptor implements HandlerInterceptor {
         long endTime = System.currentTimeMillis();
 
         long executeTime = endTime - startTime;
-
-        HandlerMethod handlerMethod = (HandlerMethod) handler;
-        Method method = handlerMethod.getMethod();
+//
+//        HandlerMethod handlerMethod = (HandlerMethod) handler;
+//        Method method = handlerMethod.getMethod();
 	/*if ( log.isDebugEnabled() ) {*/
-        log.error("方法:" + handlerMethod.getBean() + "." + method.getName() + "  ；  请求参数：" + handlerMethod.getMethodParameters());
+//        log.error("方法:" + handlerMethod.getBean() + "." + method.getName() + "  ；  请求参数：" + handlerMethod.getMethodParameters());
         log.error("访问的执行时间 : " + executeTime + "ms");
 	/*}*/
 
