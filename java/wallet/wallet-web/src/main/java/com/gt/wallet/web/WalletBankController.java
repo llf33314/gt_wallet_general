@@ -6,6 +6,7 @@ import java.util.List;
 import javax.servlet.http.HttpServletRequest;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
@@ -14,6 +15,8 @@ import org.springframework.web.bind.annotation.RestController;
 import com.gt.api.bean.session.BusUser;
 import com.gt.api.util.httpclient.JsonUtil;
 import com.gt.wallet.base.BaseController;
+import com.gt.wallet.data.wallet.request.WalletBankAdd;
+import com.gt.wallet.data.wallet.request.WalletIndividualAdd;
 import com.gt.wallet.dto.ServerResponse;
 import com.gt.wallet.entity.WalletBank;
 import com.gt.wallet.enums.WalletResponseEnums;
@@ -55,7 +58,7 @@ public class WalletBankController extends BaseController {
 	@RequestMapping(value="getWalletBanksByMemberId",method=RequestMethod.GET)
 	 @ApiOperation(value="获取会员银行卡列表", notes="获取会员银行卡列表")
 	public ServerResponse<List<WalletBank>> getWalletBanksByMemberId(HttpServletRequest request,Integer wmemberId){
-		log.info(CommonUtil.format("触发获取会员银行卡列表接口"));
+		log.info(CommonUtil.format("触发getWalletBanksByMemberId api"));
 		try {
 				ServerResponse<List<WalletBank>> serverResponse=walletBankService.getWalletBanksByMemberId(wmemberId);
 				
@@ -65,11 +68,11 @@ public class WalletBankController extends BaseController {
 				log.info("serverResponse:%s",JsonUtil.toJSONString(serverResponse));
 				return serverResponse;
 			} catch ( BusinessException e) {
-				log.error(CommonUtil.format("获取会员银行卡列表接口异常：%s,%s",e.getCode(),e.getMessage()));
+				log.error(CommonUtil.format("getWalletBanksByMemberId api异常：%s,%s",e.getCode(),e.getMessage()));
 				throw new ResponseEntityException(e.getCode(),e.getMessage());
 			} catch ( Exception e) {
 				e.printStackTrace();
-				log.error(CommonUtil.format("获取会员银行卡列表接口异常：%s,%s",WalletResponseEnums.SYSTEM_ERROR.getCode(),WalletResponseEnums.SYSTEM_ERROR.getDesc()));
+				log.error(CommonUtil.format("getWalletBanksByMemberId api异常：%s,%s",WalletResponseEnums.SYSTEM_ERROR.getCode(),WalletResponseEnums.SYSTEM_ERROR.getDesc()));
 				throw new ResponseEntityException(WalletResponseEnums.SYSTEM_ERROR);
 			}
 	}
@@ -88,7 +91,7 @@ public class WalletBankController extends BaseController {
 	})
 	public ServerResponse<?> bindBankCard(HttpServletRequest request,Integer id, String verificationCode 
 		){
-		log.info(CommonUtil.format("触发确认绑定银行卡接口,参数:%s%s",id,verificationCode));
+		log.info(CommonUtil.format("触发bindBankCard api,参数:%s%s",id,verificationCode));
 		try {
 			BusUser busUser=CommonUtil.getLoginUser(request);
 			ServerResponse<?> serverResponse=null;
@@ -96,14 +99,57 @@ public class WalletBankController extends BaseController {
 			log.info(CommonUtil.format("serverResponse:%s",JsonUtil.toJSONString(serverResponse)));
 			return serverResponse;
 			} catch ( BusinessException e) {
-				log.error(CommonUtil.format("确认绑定银行卡接口异常：%s,%s",e.getCode(),e.getMessage()));
+				log.error(CommonUtil.format("bindBankCard api异常：%s,%s",e.getCode(),e.getMessage()));
 				throw new ResponseEntityException(e.getCode(),e.getMessage());
 			} catch ( Exception e) {
 				e.printStackTrace();
-				log.error(CommonUtil.format("确认绑定银行卡接口异常：%s,%s",WalletResponseEnums.SYSTEM_ERROR.getCode(),WalletResponseEnums.SYSTEM_ERROR.getDesc()));
+				log.error(CommonUtil.format("bindBankCard api异常：%s,%s",WalletResponseEnums.SYSTEM_ERROR.getCode(),WalletResponseEnums.SYSTEM_ERROR.getDesc()));
 				throw new ResponseEntityException(WalletResponseEnums.SYSTEM_ERROR);
 			}
 	} 
 	
 	
+	
+	/**
+	 * 新增个人银行卡
+	 * @return
+	 */
+	@ResponseBody
+	@RequestMapping(value="addBank",method=RequestMethod.POST)
+	 @ApiOperation(value="新增个人银行卡", notes="新增个人银行卡")
+	@ApiImplicitParams({
+        @ApiImplicitParam(name = "memberId",value = "会员id(调用开通会员接口有返回)",paramType = "form",dataType = "int",required=true,example="调用开通会员接口有返回"),
+        @ApiImplicitParam(name = "cardNo",value = "银行卡号",paramType = "form",dataType = "string",required=true,example="1234567891234567")
+        ,
+        @ApiImplicitParam(name = "phone",value = "银行预留手机",paramType = "form",dataType = "string",required=true,example="13888888888")
+        ,
+        @ApiImplicitParam(name = "bankName",value = "银行卡开户人姓名(必须与注册人姓名一致)",paramType = "form",dataType = "string",required=true),
+        @ApiImplicitParam(name = "unionBank",value = "支付行号",paramType = "form",dataType = "string",required=false),
+        @ApiImplicitParam(name = "isSafeCard",value = "是否为安全卡 0：是 1：否",paramType = "form",dataType = "string",required=false)
+//        ,
+//        @ApiImplicitParam(name = "code",value = "短信验证码",paramType = "form",dataType = "string",required=true)
+        // path, query, body, header, form
+	})
+	public ServerResponse<Integer> addBank(HttpServletRequest request,@RequestBody WalletBankAdd walletBankAdd
+			){
+		log.info(CommonUtil.format("触发addBank api:%s",JsonUtil.toJSONString(walletBankAdd)));
+		try {
+			ServerResponse<Integer> serverResponse=null;
+			WalletIndividualAdd walletIndividualAdd=new WalletIndividualAdd();
+			walletIndividualAdd.setMemberId(walletBankAdd.getMemberId());
+			walletIndividualAdd.setBankName(walletBankAdd.getBankName());
+			walletIndividualAdd.setCardNo(walletBankAdd.getCardNo());
+			walletIndividualAdd.setPhone(walletBankAdd.getPhone());
+			walletIndividualAdd.setUnionBank(walletBankAdd.getUnionBank());
+			serverResponse=walletBankService.add(walletIndividualAdd,walletBankAdd.getIsSafeCard());
+			log.info(CommonUtil.format("serverResponse:%s",JsonUtil.toJSONString(serverResponse)));
+			return serverResponse;
+			} catch ( BusinessException e) {
+				throw new ResponseEntityException(e.getCode(),e.getMessage());
+			} catch ( Exception e) {
+				e.printStackTrace();
+				log.error(CommonUtil.format("addBank api异常：%s,%s",WalletResponseEnums.SYSTEM_ERROR.getCode(),WalletResponseEnums.SYSTEM_ERROR.getDesc()));
+				throw new ResponseEntityException(WalletResponseEnums.SYSTEM_ERROR);
+			}
+	}
 }

@@ -9,8 +9,10 @@ import com.gt.wallet.data.wallet.request.WalletCompanyAdd;
 import com.gt.wallet.dto.ServerResponse;
 import com.gt.wallet.service.member.WalletBankService;
 import com.gt.wallet.service.member.WalletCompanyService;
+import com.gt.wallet.service.member.WalletIndividualService;
 import com.gt.wallet.service.member.WalletMemberService;
 import com.gt.wallet.utils.CommonUtil;
+import com.gt.wallet.utils.yun.YunSoaMemberUtil;
 
 import lombok.extern.slf4j.Slf4j;
 
@@ -27,6 +29,10 @@ public class MemberServiceTest extends BasicTest {
 	
 	@Autowired
 	private WalletCompanyService walletCompanyService; 
+	
+	
+	@Autowired
+	private WalletIndividualService walletIndividualService;
 	
 	
 	@Autowired
@@ -51,6 +57,7 @@ public class MemberServiceTest extends BasicTest {
 	 */
 	@Test
 	public void setCompanyInfo(){
+		log.info(" start test setCompanyInfo api");
 		WalletCompanyAdd walletCompanyAdd=new WalletCompanyAdd(10, "广东谷通科技有限公司", "惠城区惠州大道20号赛格大厦10层07号", "91440300335398348T", "13528307867", "盖茨", "1", "13528307867", "6228481139158261672", "中国农业银行", "", "");
 		walletCompanyAdd.setDoBusinessUrl("http://maint.deeptel.com.cn/upload/image/2/wallet/null/1511838821858.png");
 		walletCompanyAdd.setIdentitycardUrl1("http://maint.deeptel.com.cn/upload/image/2/wallet/null/1511838821858.png");
@@ -58,7 +65,6 @@ public class MemberServiceTest extends BasicTest {
 		walletCompanyAdd.setLicenseUrl("http://maint.deeptel.com.cn/upload/image/2/wallet/null/1511838821858.png");
 		walletCompanyAdd.setProvince("440000");
 		walletCompanyAdd.setArea("441300");
-		log.info(" start test setCompanyInfo api");
 		BusUser busUser=new BusUser();
 		busUser.setId(35);
 		busUser.setName("gt123");
@@ -76,7 +82,20 @@ public class MemberServiceTest extends BasicTest {
 	}
 
 	
-	
-	
+	/**
+	 * 调取api获取会员信息
+	 */
+	@Test
+	public void getMemberInfo(){
+		log.info(" start test getMemberInfo api");
+		try {
+			ServerResponse<?> serverResponse=YunSoaMemberUtil.getMemberInfo("dfw1511774649223");
+			log.info(CommonUtil.format("serverResponse:%s", JsonUtil.toJSONString(serverResponse)));
+		} catch (Exception e) {
+			e.printStackTrace();
+			log.error("test getMemberInfo api error");
+		}
+		log.info(" end test getMemberInfo api");
+	}
 	
 }

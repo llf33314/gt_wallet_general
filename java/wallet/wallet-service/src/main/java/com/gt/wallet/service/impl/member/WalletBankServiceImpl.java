@@ -16,10 +16,14 @@ import com.gt.wallet.data.wallet.request.WalletCompanyAdd;
 import com.gt.wallet.data.wallet.request.WalletIndividualAdd;
 import com.gt.wallet.dto.ServerResponse;
 import com.gt.wallet.entity.WalletBank;
+import com.gt.wallet.entity.WalletCompany;
+import com.gt.wallet.entity.WalletIndividual;
 import com.gt.wallet.entity.WalletMember;
 import com.gt.wallet.enums.WalletResponseEnums;
 import com.gt.wallet.exception.BusinessException;
 import com.gt.wallet.mapper.member.WalletBankMapper;
+import com.gt.wallet.mapper.member.WalletCompanyMapper;
+import com.gt.wallet.mapper.member.WalletIndividualMapper;
 import com.gt.wallet.mapper.member.WalletMemberMapper;
 import com.gt.wallet.service.member.WalletBankService;
 import com.gt.wallet.utils.CommonUtil;
@@ -45,6 +49,12 @@ public class WalletBankServiceImpl extends BaseServiceImpl<WalletBankMapper, Wal
 	@Autowired
 	private WalletMemberMapper walletMemberMapper;
 	
+	@Autowired
+	private WalletCompanyMapper walletCompanyMapper;
+	
+	@Autowired
+	private WalletIndividualMapper walletIndividualMapper;
+	
 	@Override
 	public ServerResponse<List<WalletBank>> getWalletBanksByMemberId(Integer wmemberId) {
 		if(CommonUtil.isEmpty(wmemberId)){
@@ -64,15 +74,44 @@ public class WalletBankServiceImpl extends BaseServiceImpl<WalletBankMapper, Wal
 
 	@Transactional(propagation = Propagation.REQUIRED,isolation = Isolation.DEFAULT,timeout=36000,rollbackFor=Exception.class)
 	@Override
-	public ServerResponse<Integer> add(WalletIndividualAdd walletIndividualAdd)throws Exception {
+	public ServerResponse<Integer> add(WalletIndividualAdd walletIndividualAdd,Integer isSafeCard)throws Exception {
 		log.info(CommonUtil.format("biz接口:绑定银行卡,请求参数:%s", JsonUtil.toJSONString(walletIndividualAdd)));
 		/****************************************银行卡操作********************************************/
+		WalletMember walletMember=walletMemberMapper.selectById(walletIndividualAdd.getMemberId());
+		String carNoMi=YunSoaMemberUtil.rsaEncrypt(walletIndividualAdd.getCardNo());
+		if(isSafeCard==0){//设置为安全卡
+			WalletBank entity=new WalletBank();
+			entity.setWMemberId(walletIndividualAdd.getMemberId());
+			entity.setIsSafeCard(0);
+			WalletBank walletBank=walletBankMapper.selectOne(entity);
+			if(CommonUtil.isNotEmpty(walletBank)&&!walletBank.getCardNo().equals(carNoMi)){//
+				log.error(CommonUtil.format("已设置安全卡,只能添加非安全卡"));
+				throw new BusinessException("已设置安全卡,只能添加非安全卡");
+			}
+		}
+		if(walletMember.getMemberType()==3){//个人会员
+			WalletIndividual params=new WalletIndividual();
+			params.setWMemberId(walletMember.getId());
+			WalletIndividual walletIndividual=	walletIndividualMapper.selectOne(params);
+			if(!walletIndividualAdd.getBankName().equals(walletIndividual.getName())){
+				log.error(CommonUtil.format("持卡人姓名与会员姓名不一致"));
+				throw new BusinessException("持卡人姓名与会员姓名不一致");
+			}
+			
+		}else{
+			WalletCompany params=new WalletCompany();
+			params.setWMemberId(walletMember.getId());
+			WalletCompany walletCompany=walletCompanyMapper.selectOne(params);
+			if(!walletIndividualAdd.getBankName().equals(walletCompany.getLegalName())){
+				log.error(CommonUtil.format("持卡人姓名与法人姓名不一致"));
+				throw new BusinessException("持卡人姓名与法人姓名不一致");
+			}
+		}
 		ServerResponse<com.alibaba.fastjson.JSONObject>  serverResponseBin=YunSoaMemberUtil.getBankCardBin(walletIndividualAdd.getCardNo());
 		JSONObject jsonObject=serverResponseBin.getData();
 		if(serverResponseBin.getCode()!=0){//
 			throw new BusinessException(serverResponseBin.getCode(),serverResponseBin.getMsg());
 		}
-		WalletMember walletMember=walletMemberMapper.selectById(walletIndividualAdd.getMemberId());
 		String bankCode ="";
 		Long cardType =0L;
 		Integer cardLenth =0;
@@ -81,7 +120,7 @@ public class WalletBankServiceImpl extends BaseServiceImpl<WalletBankMapper, Wal
 		cardType =jsonObject.getLong("cardType");
 		cardLenth =jsonObject.getInteger("cardLenth");
 		cardState =jsonObject.getInteger("cardState");
-		
+		walletIndividualAdd.getMemberId();
 		if(cardType!=1){//
 			log.error("biz接口:银行卡类型异常,请填写借记卡");
 			throw new BusinessException("银行卡类型异常,请填写借记卡");
@@ -90,21 +129,27 @@ public class WalletBankServiceImpl extends BaseServiceImpl<WalletBankMapper, Wal
 			log.error("biz接口:银行卡类型异常,银行卡已失效");
 			throw new BusinessException("银行卡类型异常,银行卡已失效");
 		}
-		ServerResponse<com.alibaba.fastjson.JSONObject> serverResponseBind=YunSoaMemberUtil.applyBindBankCard(walletIndividualAdd, walletMember.getMemberNum(), true, bankCode, cardType);;
+		ServerResponse<com.alibaba.fastjson.JSONObject> serverResponseBind=YunSoaMemberUtil.applyBindBankCard(walletIndividualAdd, walletMember.getMemberNum(), true, bankCode, cardType);
+		log.info(CommonUtil.format("serverResponseBind:%s", JsonUtil.toJSONString(serverResponseBind)));
 		if(serverResponseBind.getCode()!=0){
 			log.error("biz接口:"+serverResponseBind.getMsg());
 			throw new BusinessException(serverResponseBind.getCode(),serverResponseBind.getMsg());
 		}
+		
 		String tranceNum=serverResponseBind.getData().getString("tranceNum");//流水号
 		String transDate=serverResponseBind.getData().getString("transDate");//申请时间
 		String bankName=serverResponseBind.getData().getString("bankName");//银行名称
 		/********************************新增银行卡*********************************/
-		WalletBank walletBank=new WalletBank();;
-	
+		WalletBank entity=new WalletBank();
+		entity.setWMemberId(walletIndividualAdd.getMemberId());
+		entity.setCardNo(carNoMi);
+		WalletBank walletBank=walletBankMapper.selectOne(entity);
+		if(CommonUtil.isEmpty(walletBank)){
+			walletBank=new WalletBank();
+		}
 		walletBank.setName(walletIndividualAdd.getBankName());
 		walletBank.setWMemberId(walletIndividualAdd.getMemberId());
 		walletBank.setMemberNum(walletMember.getMemberNum());
-		String carNoMi=YunSoaMemberUtil.rsaEncrypt(walletIndividualAdd.getCardNo());
 		walletBank.setBankCode(bankCode);
 		walletBank.setCardNo(carNoMi);
 		walletBank.setCardCheck(2);
@@ -136,7 +181,7 @@ public class WalletBankServiceImpl extends BaseServiceImpl<WalletBankMapper, Wal
 	@Transactional(propagation = Propagation.REQUIRED,isolation = Isolation.DEFAULT,timeout=36000,rollbackFor=Exception.class)
 	@Override
 	public ServerResponse<Integer> addPublic(WalletCompanyAdd walletCompanyAdd)throws Exception {
-		log.info(CommonUtil.format("biz接口:绑定银行卡,请求参数:%s", JsonUtil.toJSONString(walletCompanyAdd)));
+		log.info(CommonUtil.format("start addPublic api:%s", JsonUtil.toJSONString(walletCompanyAdd)));
 		/****************************************银行卡操作********************************************/
 		ServerResponse<com.alibaba.fastjson.JSONObject>  serverResponseBin=YunSoaMemberUtil.getBankCardBin(walletCompanyAdd.getAccountNo());
 		log.info(CommonUtil.format("serverResponseBin:%s", JsonUtil.toJSONString(serverResponseBin)));
@@ -195,29 +240,30 @@ public class WalletBankServiceImpl extends BaseServiceImpl<WalletBankMapper, Wal
 		/********************************新增银行卡*********************************/
 		/****************************************银行卡操作********************************************/
 		ServerResponse<Integer> response=	ServerResponse.createBySuccessCodeData(walletBank.getId());
-		log.info("biz接口:获取会员银行卡:"+JsonUtil.toJSONString(response));
-		
+		log.info("end addPublic api:%s"+JsonUtil.toJSONString(response));
 		return response;
 	}
 	
 	@Transactional(propagation = Propagation.REQUIRED,isolation = Isolation.DEFAULT,timeout=36000,rollbackFor=Exception.class)
 	@Override
 	public ServerResponse<?> bindBankCard(Integer busId,Integer id,String verificationCode) throws Exception {
-		log.info(CommonUtil.format("biz接口:获取会员银行卡:%s",id));
+		log.info(CommonUtil.format("start bindBankCard api:%s",id));
 		WalletBank walletBank=walletBankMapper.selectById(id);
 		if(CommonUtil.isEmpty(walletBank)){
 			throw new BusinessException("请先填写银行卡信息");
 		}
 		WalletMember walletMember=walletMemberMapper.selectById(walletBank.getWMemberId());
 		if(walletMember.getMemberClass()==1&&walletMember.getMemberId()!=busId){
+			log.error("操作异常，此钱包会员不属于当前登录商家");
 			throw new BusinessException("操作异常，此钱包会员不属于当前登录商家");
 		}
-		ServerResponse<?> serverResponse=	YunSoaMemberUtil.bindBankCard(walletMember.getMemberNum(), walletBank.getTranceNum(), walletBank.getTransDate(), walletBank.getPhone(), verificationCode);
+		ServerResponse<?> serverResponse=YunSoaMemberUtil.bindBankCard(walletMember.getMemberNum(), walletBank.getTranceNum(), walletBank.getTransDate(), walletBank.getPhone(), verificationCode);
+		log.info(CommonUtil.format("serverResponse:%s", JsonUtil.toJSONString(serverResponse)));
 		if(serverResponse.getCode()==0){
 			walletBank.setCardState(2);
 			walletBankMapper.updateById(walletBank);
 		}
-		log.info("biz接口:确认绑定银行卡:"+JsonUtil.toJSONString(serverResponse));
+		log.info("end bindBankCard api:%s"+JsonUtil.toJSONString(serverResponse));
 		return serverResponse;
 	}
 }

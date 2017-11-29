@@ -85,7 +85,7 @@ public class WalletIndividualController extends BaseController {
 			serverResponse=walletIndividualService.add(walletIndividualAdd,CommonUtil.getLoginUser(request));
 			if(serverResponse.getCode()==0){
 				
-				serverResponse=walletBankService.add(walletIndividualAdd);
+				serverResponse=walletBankService.add(walletIndividualAdd,0);
 			}
 			log.info(CommonUtil.format("serverResponse:%s",JsonUtil.toJSONString(serverResponse)));
 			return serverResponse;
