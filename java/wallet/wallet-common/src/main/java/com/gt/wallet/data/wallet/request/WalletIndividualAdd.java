@@ -4,6 +4,8 @@ import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
+import lombok.Getter;
+import lombok.Setter;
 import lombok.experimental.Accessors;
 
 /** 
@@ -11,9 +13,8 @@ import lombok.experimental.Accessors;
 * @version 创建时间：2017年11月17日 下午6:04:58 
 * 新增个人会员请求参数类说明 
 */
-@Data
-@Accessors(chain = true)
-@EqualsAndHashCode(callSuper=false)
+@Getter
+@Setter
 @ApiModel(description="个人会员新增")
 public class WalletIndividualAdd {
 	
