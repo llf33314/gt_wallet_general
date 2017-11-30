@@ -197,4 +197,63 @@ public class WalletMemberController extends BaseController {
 	
 	
 	
+	/**
+	 *  锁定用户
+	 * @param request
+	 * @param phone
+	 * @param wmemberId
+	 * @return
+	 */
+	@ResponseBody
+	@RequestMapping(value="79B4DE7C/lockMember",method=RequestMethod.POST)
+	@ApiOperation(value="锁定用户", notes="锁定用户")
+	public ServerResponse<?> lockMember(HttpServletRequest request,Integer wmemberId
+			){
+		log.info(CommonUtil.format("触发锁定用户接口,参数:%s",wmemberId));
+		try {
+			ServerResponse<?> serverResponse=null;
+			serverResponse=walletMemberService.lockMember(wmemberId);//YunSoaMemberUtil.sendVerificationCode(bizUserId, phone, verificationCodeType);
+			log.info(CommonUtil.format("serverResponse:%s",JsonUtil.toJSONString(serverResponse)));
+			return serverResponse;
+		} catch ( BusinessException e) {
+			log.error(CommonUtil.format("锁定用户接口异常：%s,%s",e.getCode(),e.getMessage()));
+			throw new ResponseEntityException(e.getCode(),e.getMessage());
+		} catch ( Exception e) {
+			e.printStackTrace();
+			log.error(CommonUtil.format("锁定用户接口异常：%s,%s",WalletResponseEnums.SYSTEM_ERROR.getCode(),WalletResponseEnums.SYSTEM_ERROR.getDesc()));
+			throw new ResponseEntityException(WalletResponseEnums.SYSTEM_ERROR);
+		}
+	} 
+	
+	
+	/**
+	 * 解锁用户
+	 * @param request
+	 * @param phone
+	 * @param wmemberId
+	 * @return
+	 */
+	@ResponseBody
+	@RequestMapping(value="79B4DE7C/unlockMember",method=RequestMethod.POST)
+	@ApiOperation(value="解锁用户", notes="解锁用户")
+	public ServerResponse<?> unlockMember(HttpServletRequest request,Integer wmemberId
+			){
+		log.info(CommonUtil.format("触发解锁用户接口,参数:%s",wmemberId));
+		try {
+			ServerResponse<?> serverResponse=null;
+			serverResponse=walletMemberService.unlockMember(wmemberId);
+			log.info(CommonUtil.format("serverResponse:%s",JsonUtil.toJSONString(serverResponse)));
+			return serverResponse;
+		} catch ( BusinessException e) {
+			log.error(CommonUtil.format("解锁用户接口异常：%s,%s",e.getCode(),e.getMessage()));
+			throw new ResponseEntityException(e.getCode(),e.getMessage());
+		} catch ( Exception e) {
+			e.printStackTrace();
+			log.error(CommonUtil.format("解锁用户接口异常：%s,%s",WalletResponseEnums.SYSTEM_ERROR.getCode(),WalletResponseEnums.SYSTEM_ERROR.getDesc()));
+			throw new ResponseEntityException(WalletResponseEnums.SYSTEM_ERROR);
+		}
+	} 
+	
+	
+	
 }

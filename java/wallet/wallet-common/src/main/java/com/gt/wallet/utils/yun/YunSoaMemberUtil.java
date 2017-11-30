@@ -27,12 +27,6 @@ public class YunSoaMemberUtil {
 
 	//soa服务名
 	private static String soaName = "MemberService";
-	//业务系统用户编号
-	private static String bizUserId = "";
-	//手机号码
-	private static String phone = "";
-	//更换的手机号码
-	private static String changePhone = "";
 	//借记卡卡号
 	static{
 		try {
@@ -308,7 +302,7 @@ public class YunSoaMemberUtil {
 	}
 
 	//设置个人会员信息 ok
-	public static void setMemberInfo(){
+	public static void setMemberInfo(String bizUserId){
 		try{
 			log.info("setMemberInfo start");
 
@@ -485,15 +479,19 @@ public class YunSoaMemberUtil {
 		}
 	}
 
-	//查询绑定银行卡
-	public static void testQueryBankCard(String cardNo){
+	/**
+	 * 查询绑定银行卡
+	 * @param cardNo 银行卡
+	 * @param bizUserId 会员账号
+	 */
+	public static ServerResponse<com.alibaba.fastjson.JSONArray> queryBankCard(String cardNo,String bizUserId){
 		try{
-			log.info("testQueryBankCard start");
+			log.info("queryBankCard start");
 
 			//查询单张卡
 			JSONObject param = new JSONObject();
 			param.put("bizUserId", bizUserId);
-			param.put("cardNo", rsaEncrypt(cardNo));
+			param.put("cardNo", cardNo);
 
 			//查询全部
 //			JSONObject param = new JSONObject();
@@ -502,16 +500,24 @@ public class YunSoaMemberUtil {
 			log.info("request:" + param);
 			JSONObject response = client.request(soaName, "queryBankCard", param);
 			log.info("response:" + response);
-
-			log.info("testQueryBankCard end");
+			if(CommonUtil.isNotEmpty(response)&&response.get("status").equals("OK")){
+				String value = response.getString("signedValue");
+				com.alibaba.fastjson.JSONObject json=	JsonUtil.parseObject(value, com.alibaba.fastjson.JSONObject.class);
+				com.alibaba.fastjson.JSONArray array=	json.getJSONArray("bindCardList");
+				log.info("queryBankCard end");
+				return ServerResponse.createBySuccessCodeData(array);
+			}else{
+				return ServerResponse.createByErrorMessage(CommonUtil.format("第三方接口异常,错误代码 : %s,描述:%s", response.getString("errorCode"), response.getString("message")));
+			}
 		}catch(Exception e){
-			log.error("testQueryBankCard error");
+			log.error("queryBankCard error");
 			e.printStackTrace();
+			return ServerResponse.createByErrorCode(WalletResponseEnums.API_ERROR);
 		}
 	}
 
 	//解绑绑定银行卡
-	public static void testUnbindBankCard(String cardNo){
+	public static void unbindBankCard(String bizUserId,String cardNo){
 		try{
 			log.info("testUnbindBankCard start");
 
@@ -531,7 +537,15 @@ public class YunSoaMemberUtil {
 	}
 
 	//更改绑定手机 ok
-	public static void testChangeBindPhone(){
+	/**
+	 * 
+	 * @param bizUserId 会员账号
+	 * @param phone 原手机
+	 * @param changePhone 需要变更手机
+	 * @param oldVerificationCode 原手机验证码
+	 * @param newVerificationCode 变更手机验证码
+	 */
+	public static void changeBindPhone(String bizUserId,String phone,String changePhone,String oldVerificationCode,String newVerificationCode){
 		try{
 			log.info("testChangeBindPhone start");
 
@@ -554,9 +568,9 @@ public class YunSoaMemberUtil {
 	}
 
 	//锁定用户 ok
-	public static void testLockMember(){
+	public static ServerResponse<?> lockMember(String bizUserId){
 		try{
-			log.info("testLockMember start");
+			log.info("lockMember start");
 
 			JSONObject param = new JSONObject();
 			param.put("bizUserId", bizUserId);
@@ -564,16 +578,26 @@ public class YunSoaMemberUtil {
 			log.info("request:" + param);
 			JSONObject response = client.request(soaName, "lockMember", param);
 			log.info("response:" + response);
+			if(CommonUtil.isNotEmpty(response)&&response.get("status").equals("OK")){
+				return ServerResponse.createBySuccess();
+			}else{
+				log.info("lockMember end");
+				return ServerResponse.createByErrorMessage(CommonUtil.format("第三方接口异常,错误代码 : %s,描述:%s", response.getString("errorCode"), response.getString("message")));
+			}
 
-			log.info("testLockMember end");
 		}catch(Exception e){
-			log.error("testLockMember error");
+			log.error("lockMember error");
 			e.printStackTrace();
+			return ServerResponse.createByErrorCode(WalletResponseEnums.API_ERROR);
 		}
 	}
 
-	//解锁用户 ok
-	public static void testUnlockMember(){
+	/**
+	 * 解锁用户 ok
+	 * @param bizUserId
+	 * @return
+	 */
+	public static ServerResponse<?> unlockMember(String bizUserId){
 		try{
 			log.info("testUnlockMember start");
 
@@ -583,11 +607,19 @@ public class YunSoaMemberUtil {
 			log.info("request:" + param);
 			JSONObject response = client.request(soaName, "unlockMember", param);
 			log.info("response:" + response);
-
-			log.info("testUnlockMember end");
+			if(CommonUtil.isNotEmpty(response)&&response.get("status").equals("OK")){
+				String value = response.getString("signedValue");
+				com.alibaba.fastjson.JSONObject json=	JsonUtil.parseObject(value, com.alibaba.fastjson.JSONObject.class);
+				log.info("unlockMember end");
+				return ServerResponse.createBySuccess();
+			}else{
+				log.info("unlockMember end");
+				return ServerResponse.createByErrorMessage(CommonUtil.format("第三方接口异常,错误代码 : %s,描述:%s", response.getString("errorCode"), response.getString("message")));
+			}
 		}catch(Exception e){
-			log.error("testUnlockMember error");
+			log.error("unlockMember error");
 			e.printStackTrace();
+			return ServerResponse.createByErrorCode(WalletResponseEnums.API_ERROR);
 		}
 	}
 

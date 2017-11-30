@@ -75,7 +75,20 @@ public interface WalletMemberService extends BaseService<WalletMember> {
 	
 	
 	
-
+	/**
+	 * 锁定用户
+	 * @param wmemberId
+	 * @return
+	 */
+	public ServerResponse<?> lockMember(Integer wmemberId)throws Exception;
 	
+	
+	
+	/**
+	 * 解锁用户 ok
+	 * @param wmemberId
+	 * @return
+	 */
+	public ServerResponse<?> unlockMember(Integer wmemberId)throws Exception;
 	
 }

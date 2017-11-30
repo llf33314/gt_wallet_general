@@ -57,4 +57,6 @@ public interface WalletBankService extends BaseService<WalletBank> {
 	 * @throws Exception
 	 */
 	public ServerResponse<?> bindBankCard(Integer busId, Integer id,String verificationCode) throws Exception;
+	
+	
 }
