@@ -1,0 +1,54 @@
+li {
+  list-style-type: none;
+}
+/**
+ * 主体内容容器
+ * @gzhidao
+ */
+.public-content {
+  padding: 0 70px 0 60px;
+}
+/**
+   * 顶部面包屑
+   * @yanhuiting
+   */
+.public-crumbs {
+  height: 50px;
+  line-height: 50px;
+  border-top: 1px solid #ededed;
+  border-bottom: 1px solid #ededed;
+  padding-left: 60px;
+}
+/* 
+  * table title
+  */
+.public-table-title {
+  border-bottom: 1px solid #ddd;
+  padding-bottom: 10px;
+  margin-top: 15px;
+  color: #000;
+  font-weight: 700;
+  font-size: 14px;
+  margin-bottom: 20px;
+}
+.public-fl {
+  float: left;
+}
+.public-fr {
+  float: right;
+}
+.public-page-top {
+  margin-top: 20px;
+}
+.public-top20 {
+  margin-top: 20px;
+}
+.public-c333 {
+  color: #333333;
+}
+.public-c666 {
+  color: #666666;
+}
+.public-c999 {
+  color: #999999;
+}

@@ -1,0 +1,109 @@
+.wallet-index .no-open {
+  padding-top: 70px;
+  text-align: center;
+}
+.wallet-index .no-open p {
+  font-size: 14px;
+  color: #333333;
+  padding: 27px 0 70px;
+}
+.wallet-index .no-open i {
+  color: #f7ba2a;
+  font-size: 35px;
+}
+.wallet-index .top-msg {
+  font-size: 14px;
+  border: 1px solid #eeeeee;
+  margin-top: 30px;
+  overflow: hidden;
+}
+.wallet-index .top-msg .gray {
+  background-color: #f8f8f8;
+  padding: 27px 30px;
+  overflow: hidden;
+}
+.wallet-index .top-msg .gray .public-fr {
+  margin-top: 15px;
+}
+.wallet-index .top-msg .row1 {
+  margin-bottom: 15px;
+}
+.wallet-index .top-msg .title {
+  padding-right: 25px;
+}
+.wallet-index .data-msg {
+  position: relative;
+  padding: 15px 0;
+  overflow: hidden;
+}
+.wallet-index .data-msg .num {
+  color: #20a0ff;
+  font-size: 24px;
+  padding-right: 10px;
+}
+.wallet-index .data-msg .list {
+  width: 90%;
+}
+.wallet-index .data-msg .list li {
+  float: left;
+  width: 33.33%;
+  box-sizing: border-box;
+  padding-left: 30px;
+}
+.wallet-index .data-msg .list li:nth-of-type(2) {
+  border-left: 1px solid #eeeeee;
+  border-right: 1px solid #eeeeee;
+}
+.wallet-index .data-msg .name {
+  margin-bottom: 10px;
+}
+.wallet-index .data-msg .bts {
+  position: absolute;
+  top: 30px;
+  right: 25px;
+}
+.wallet-index .data-msg .iconfont {
+  color: #d2d2d2;
+  cursor: pointer;
+  position: relative;
+}
+.wallet-index .data-msg .item-tooltip {
+  color: #999999;
+  line-height: 30px;
+}
+.wallet-index .table-top-conent {
+  background-color: #f8f8f8;
+  padding: 15px 30px;
+  overflow: hidden;
+  font-size: 14px;
+}
+.wallet-index .table-top-conent .title {
+  padding-right: 25px;
+}
+.wallet-index .table-top-conent .row {
+  padding-bottom: 20px;
+}
+.wallet-index .table-top-conent .select-title {
+  margin-right: 30px;
+  cursor: pointer;
+}
+.wallet-index-select-apply-dialog {
+  width: 640px;
+}
+.wallet-index-select-apply-dialog .check-content {
+  overflow: hidden;
+  padding-left: 30px;
+}
+.wallet-index-select-apply-dialog .check-list-item {
+  margin-bottom: 30px;
+  margin-left: 10px;
+  width: 100px;
+  float: left;
+}
+.wallet-index-select-apply-dialog .tips {
+  font-size: 13px;
+  margin-bottom: 30px;
+}
+.wallet-index-select-apply-dialog .el-dialog__body {
+  padding-top: 10px;
+}

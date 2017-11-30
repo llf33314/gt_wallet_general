@@ -20,7 +20,7 @@
             </div>
           </div>
           <div class="public-fr">
-            <el-button @click="dialogEditPassword=true" type="primary">修改密码</el-button>
+            <set-pwd></set-pwd>
           </div>
         </div>
         <div class="data-msg">
@@ -106,27 +106,7 @@
         </div>
       </div>
     </div>
-    <el-dialog title="修改密码" :visible.sync="dialogEditPassword" custom-class="wallet-index-select-apply-dialog">
-      <el-form :model="ruleForm" :rules="rules" ref="ruleForm" label-width="155px" class="demo-ruleForm">
-        <el-form-item label="安全手机：">
-          158450***46
-        </el-form-item>
-        <el-form-item label="验证码：" prop="name">
-          <el-input v-model="ruleForm.name" placeholder="请输入6位验证码" style="width:250px;"></el-input>
-          <el-button type="primary">获取验证码</el-button>
-        </el-form-item>
-        <el-form-item label="设置新钱包密码：" prop="name">
-          <el-input v-model="ruleForm.name" placeholder="请输入您的新交易密码" style="width:250px;"></el-input>
-        </el-form-item>
-        <el-form-item label="确认新钱包密码：" prop="name">
-          <el-input v-model="ruleForm.name" placeholder="请再次输入您的新交易密码" style="width:250px;"></el-input>
-        </el-form-item>
-        <el-form-item style="text-align: right;">
-          <el-button type="primary" @click="submitForm('ruleForm')">确定</el-button>
-          <el-button @click="resetForm('ruleForm')">取消</el-button>
-        </el-form-item>
-      </el-form>
-    </el-dialog>
+
     <el-dialog title="选择应用" :visible.sync="dialogFormVisible" custom-class="wallet-index-select-apply-dialog">
       <div class="public-c999 tips">
         点击 选择后，系统将该行业应用交易金额转入多粉钱包中
@@ -161,10 +141,17 @@
         <el-button type="primary" @click="dialogFormVisible = false">保存</el-button>
       </div>
     </el-dialog>
+    <draw-cash></draw-cash>
   </section>
 </template>
 <script>
+  import DrawCash from "./../template/drawcash.vue";
+  import SetPwd from "./../template/setPwd.vue";
   export default {
+    components: {
+      DrawCash,
+      SetPwd
+    },
     data() {
       return {
         ruleForm: {

@@ -26,7 +26,11 @@ export const wallet = {
   },
   //额度申请
   addDrawCash(param) {
-    return axios.post(`${base}/walletQuota/add`,param).then(res => res.data)
+    return axios.post(`${base}/walletQuota/add`,param,{
+      headers: {
+        'Content-Type': 'application/json;charset=UTF-8'
+      }
+    }).then(res => res.data)
   },
   // 上传图片
   upload(param) {
