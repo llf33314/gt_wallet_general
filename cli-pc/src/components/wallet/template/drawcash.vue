@@ -132,10 +132,10 @@
   export default {
     data() {
       return {
-        number:0,
+        number: 0,
         dialogApply: false,
         ruleForm: {
-          wMemberId: '0',
+          wMemberId: 9,
           quotaValue: '2222',
           quotaDesc: '34534534534'
         },
@@ -166,9 +166,27 @@
     methods: {
       //提交申请
       save() {
-        console.log(window.JSON.stringify(this.ruleForm))
-        wallet.addDrawCash(this.ruleForm).then(res => {
-          console.log(res, 'res')
+        wallet.addDrawCash(window.JSON.stringify(this.ruleForm)).then(res=>{
+          console.log(res,'///////////')
+        })
+
+        return
+        $.ajax({
+          url: this.DFPAYDOMAIN + '/walletQuota/add',
+          type: 'POST',
+          dataType:'json',
+          data: this.ruleForm,
+          success: (res) => {
+            if (res.code == 0) {
+              this.$message({
+                message: '提交成功',
+                type: 'success'
+              });
+              this.dialogApply = false
+            } else {
+              this.$message.error(res.msg);
+            }
+          }
         })
       },
       submitForm(formName) {
@@ -176,7 +194,6 @@
           if (valid) {
             this.save()
           } else {
-            console.log('error submit!!');
             return false;
           }
         });

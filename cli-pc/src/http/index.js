@@ -17,7 +17,7 @@ Axios.interceptors.request.use(
       return config
     }
     if (config.method == 'post') {
-      //return window.JSON.stringify(config)
+      return window.JSON.stringify(config)
     }
     return config
   },

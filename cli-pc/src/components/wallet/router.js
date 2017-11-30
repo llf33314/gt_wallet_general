@@ -1,37 +1,45 @@
-export const wallet = {
-  path: '/wallet/index',
-  name: 'index',
-  title: '多粉钱包',
-  component: resolve => {
-    require(['@/components/wallet/index'], resolve)
+export const wallet = [
+  {
+    path: '/wallet/index',
+    name: 'index',
+    title: '多粉钱包',
+    component: resolve => {
+      require(['@/components/wallet/index'], resolve)
+    }
   },
-  children: [
-    {
-      path: '/wallet/noOpen',
-      name: 'walletNoOpen',
-      title: '未开通',
-      component: resolve => {
-        require(['@/components/wallet/template/noOpen'], resolve)
-      }
-    },
-    {
-      path: '/wallet/individual/open',
-      name: 'individualOpen',
-      title: '个人开通',
-      component: resolve => {
-        require(['@/components/wallet/individual/open'], resolve)
-      }
-    },
-    {
-      path: '/wallet/individual/index',
-      name: 'individualIndex',
-      title: '个人主页',
-      component: resolve => {
-        require(['@/components/wallet/individual/index'], resolve)
-      }
-    },
-  ]
-}
+  {
+    path: '/wallet/individual/auditing',
+    name: 'auditing',
+    title: '个人审核中',
+    component: resolve => {
+      require(['@/components/wallet/individual/auditing'], resolve)
+    }
+  },
+  {
+    path: '/wallet/individual/open',
+    name: 'individualOpen',
+    title: '个人开通',
+    component: resolve => {
+      require(['@/components/wallet/individual/open'], resolve)
+    }
+  },
+  {
+    path: '/wallet/individual/index',
+    name: 'individualIndex',
+    title: '个人主页',
+    component: resolve => {
+      require(['@/components/wallet/individual/index'], resolve)
+    }
+  },
+  {
+    path: '/wallet/noOpen',
+    name: 'walletNoOpen',
+    title: '未开通',
+    component: resolve => {
+      require(['@/components/wallet/template/noOpen'], resolve)
+    }
+  }
+]
 // //首页
 // const index = () =>
 //   import ('@/components/wallet/vue/index')
