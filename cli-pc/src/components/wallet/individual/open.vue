@@ -58,7 +58,7 @@
       <el-breadcrumb-item :to="{ path: '/wallet/index' }">多粉钱包</el-breadcrumb-item>
       <el-breadcrumb-item>个人开通</el-breadcrumb-item>
     </el-breadcrumb>
-    <div class="public-content public-top20">
+    <div class="public-top20">
       <!-- <div class="public-table-title" style="margin-top: 35px;">
         个人信息
       </div> -->
@@ -102,15 +102,15 @@
         <el-form-item label="银行卡预留手机号：" prop="phone">
           <el-input v-model="ruleForm.phone" placeholder="请输入银行卡预留手机号" class="input-width"></el-input>
         </el-form-item>
-        <!-- <el-form-item label="短信验证：" prop="name">
+        <el-form-item label="短信验证：" prop="name">
           <el-input v-model="ruleForm.name" placeholder="请输入验证码" class="input-width"></el-input>
-          <el-button type="primary">获取验证码</el-button>
-        </el-form-item> -->
+          <el-button type="primary" @click="sendVerificationCode">获取验证码</el-button>
+        </el-form-item>
         <el-form-item>
           <el-button type="primary" @click="submitForm('ruleForm')">确认开通</el-button>
         </el-form-item>
       </el-form>
-      <draw-cash></draw-cash>
+     
     </div>
   </section>
 </template>
@@ -118,18 +118,16 @@
   import {
     wallet
   } from './../api'
-  import DrawCash from "./../template/drawcash.vue";
+
   import axios from 'axios'
   export default {
-    components: {
-      DrawCash
-    },
+    
     data() {
       return {
         ruleForm: {
           identitycardUrl1File: 'http://113.106.202.53:14884/upload/image/2/wallet/null/1511871076687.png',
           identitycardUrl2File: 'http://113.106.202.53:14884/upload/image/2/wallet/null/1511871076687.png',
-          memberId: '',
+          memberId: 9,
           name: '李小强', //注册人姓名
           identityNo: '441621199011164018', //身份证号码
           cardNo: '6217212008009165086', //银行卡号
@@ -175,17 +173,20 @@
             trigger: 'change'
           }],
         },
+        wmemberId: '',
       }
     },
     mounted() {
       this.getVipNum()
     },
     methods: {
+      // 选择正面
       uploadImg(e) {
         wallet.upload(e.file).then(res => {
           this.ruleForm.identitycardUrl1File = res.data
         })
       },
+      //选择反面
       uploadImg2(e) {
         wallet.upload(e.file).then(res => {
           this.ruleForm.identitycardUrl2File = res.data
@@ -211,20 +212,56 @@
           if (res.code != 0) {
             this.$message.error(res.msg);
           } else {
-            this.ruleForm.memberId = res.data
+            this.wmemberId = res.data
           }
         })
       },
+      //发送短信验证码
+      sendVerificationCode() {
+        $.ajax({
+          url: this.DFPAYDOMAIN + '/sendVerificationCode',
+          type: 'POST',
+          dataType: 'json',
+          data: {
+            phone: this.ruleForm.phone,
+            wmemberId: this.wmemberId
+          },
+          success: (res) => {
+            console.log(res, 'res')
+            if (res.code != 0) {
+              this.$message.error(res.msg);
+            } else {
+              this.$message({
+                message: '提交成功',
+                type: 'success'
+              });
+            }
+          }
+        })
+      },
+      //确认开通
       submitForm(formName) {
         this.$refs[formName].validate((valid) => {
           if (valid) {
             console.log(this.ruleForm, 'this.ruleForm')
-            wallet.saveIndividual(this.ruleForm).then(res => {
-              console.log(res, 'res')
-              console.log(this.ruleForm)
+            $.ajax({
+              url: this.DFPAYDOMAIN + '/walletIndividual/saveIndividual',
+              type: 'POST',
+              dataType: 'json',
+              data: this.ruleForm,
+              success: (res) => {
+                console.log(res, 'res')
+                if (res.code != 0) {
+                  this.$message.error(res.msg);
+                } else {
+                  this.$message({
+                    message: '提交成功',
+                    type: 'success'
+                  });
+                }
+              }
             })
           } else {
-            console.log('error submit!!');
             return false;
           }
         });

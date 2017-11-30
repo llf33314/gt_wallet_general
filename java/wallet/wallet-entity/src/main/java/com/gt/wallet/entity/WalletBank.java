@@ -166,6 +166,13 @@ public class WalletBank extends Model<WalletBank> {
 	@ApiModelProperty(name="卡的状态",notes="状态（1：有效；0：无效）")
 	@TableField("card_state")
 	private Integer cardState;
+	
+	/**
+	 * 状态0:绑定前，1:绑定 -1:解绑
+	 */
+	@ApiModelProperty(name="状态",notes="状态0:绑定前，1:绑定 -1:解绑")
+	@TableField("status")
+	private Integer status;
 
 
 	@Override

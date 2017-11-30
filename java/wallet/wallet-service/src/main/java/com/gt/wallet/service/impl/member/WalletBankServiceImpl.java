@@ -232,6 +232,7 @@ public class WalletBankServiceImpl extends BaseServiceImpl<WalletBankMapper, Wal
 //		walletBank.setUnionBank(unionBank);
 		walletBank.setCardLenth(cardLenth);
 		walletBank.setCardState(cardState);
+		walletBank.setStatus(1);
 		if(CommonUtil.isEmpty(walletBank.getId())||walletBank.getId()==0){
 			walletBankMapper.insert(walletBank);
 		}else{
@@ -260,7 +261,7 @@ public class WalletBankServiceImpl extends BaseServiceImpl<WalletBankMapper, Wal
 		ServerResponse<?> serverResponse=YunSoaMemberUtil.bindBankCard(walletMember.getMemberNum(), walletBank.getTranceNum(), walletBank.getTransDate(), walletBank.getPhone(), verificationCode);
 		log.info(CommonUtil.format("serverResponse:%s", JsonUtil.toJSONString(serverResponse)));
 		if(serverResponse.getCode()==0){
-			walletBank.setCardState(2);
+			walletBank.setStatus(1);
 			walletBankMapper.updateById(walletBank);
 		}
 		log.info("end bindBankCard api:%s"+JsonUtil.toJSONString(serverResponse));

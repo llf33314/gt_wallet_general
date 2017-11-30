@@ -137,7 +137,6 @@ public class WalletMemberServiceImpl extends BaseServiceImpl<WalletMemberMapper,
 		ServerResponse<Integer> serverResponse=null;
 		String memberNum="dfw"+System.currentTimeMillis();
 		Integer memberClass=1;
-		//TODO 调用第三方api
 		ServerResponse<String> response=YunSoaMemberUtil.createMember(memberNum, memberType, 2);
 		if(response.getCode()!=0){
 			throw new BusinessException(response.getMsg());
@@ -159,9 +158,9 @@ public class WalletMemberServiceImpl extends BaseServiceImpl<WalletMemberMapper,
 	}
 	
 	
+	@Transactional(propagation = Propagation.REQUIRED,isolation = Isolation.DEFAULT,timeout=36000,rollbackFor=Exception.class)
 	@Override
 	public ServerResponse<?> setpwd(WalletPasswordSet walletPasswordSet, BusUser busUser) throws Exception {
-		// TODO Auto-generated method stub
 		if(!walletPasswordSet.getCode().equals("8888")){
 			log.error(CommonUtil.format("biz接口:修改密码异常:%s",WalletResponseEnums.CODE_ERROR.getDesc()));
 			throw new BusinessException(WalletResponseEnums.CODE_ERROR);
@@ -185,6 +184,7 @@ public class WalletMemberServiceImpl extends BaseServiceImpl<WalletMemberMapper,
 	}
 
 
+	
 	@Override
 	public ServerResponse<?> sendVerificationCode(Integer budId,String phone,Integer wmemberId,Integer verificationCodeType) throws Exception {
 		WalletMember walletMember=walletMemberMapper.selectById(wmemberId);
@@ -195,6 +195,41 @@ public class WalletMemberServiceImpl extends BaseServiceImpl<WalletMemberMapper,
 			throw new BusinessException("账号异常");
 		}
 		return YunSoaMemberUtil.sendVerificationCode(walletMember.getMemberNum(), phone, verificationCodeType);
+	}
+
+
+	@Transactional(propagation = Propagation.REQUIRED,isolation = Isolation.DEFAULT,timeout=36000,rollbackFor=Exception.class)
+	@Override
+	public ServerResponse<?> lockMember(Integer wmemberId) {
+		log.info("biz:lockMember api:"+wmemberId);
+		WalletMember walletMember=	walletMemberMapper.selectById(wmemberId);
+		if(CommonUtil.isEmpty(walletMember)){
+			log.error("biz:lockMember api:"+WalletResponseEnums.DATA_NULL_ERROR.getDesc());
+			throw new BusinessException(WalletResponseEnums.DATA_NULL_ERROR);
+		}
+		ServerResponse<?> serverResponse=YunSoaMemberUtil.lockMember(walletMember.getMemberNum());
+		if(ServerResponse.judgeSuccess(serverResponse)){
+			walletMember.setStatus(-1);
+			walletMemberMapper.updateById(walletMember);
+		}
+		
+		return serverResponse;
+	}
+	@Transactional(propagation = Propagation.REQUIRED,isolation = Isolation.DEFAULT,timeout=36000,rollbackFor=Exception.class)
+	@Override
+	public ServerResponse<?> unlockMember(Integer wmemberId) {
+		log.info("biz:lockMember api:"+wmemberId);
+		WalletMember walletMember=	walletMemberMapper.selectById(wmemberId);
+		if(CommonUtil.isEmpty(walletMember)){
+			log.error("biz:lockMember api:"+WalletResponseEnums.DATA_NULL_ERROR.getDesc());
+			throw new BusinessException(WalletResponseEnums.DATA_NULL_ERROR);
+		}
+		ServerResponse<?> serverResponse=YunSoaMemberUtil.unlockMember(walletMember.getMemberNum());
+		if(ServerResponse.judgeSuccess(serverResponse)){
+			walletMember.setStatus(3);
+			walletMemberMapper.updateById(walletMember);
+		}
+		return serverResponse;
 	}
 
 

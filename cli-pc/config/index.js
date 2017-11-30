@@ -10,7 +10,14 @@ module.exports = {
     // Paths
     assetsSubDirectory: 'static',
     assetsPublicPath: '/',
-    proxyTable: {},
+    proxyTable: {
+      proxy: {
+        '/': {  //将www.exaple.com印射为/apis
+          target: 'http://dfpay.yifriend.net', // 接口域名
+          changeOrigin: true, //是否跨域
+        }
+     }
+    },
 
     // Various Dev Server settings
     host: 'qb.yifriend.net', // can be overwritten by process.env.HOST

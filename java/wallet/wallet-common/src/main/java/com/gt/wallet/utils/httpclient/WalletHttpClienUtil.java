@@ -1,6 +1,7 @@
 package com.gt.wallet.utils.httpclient;
 
 import java.nio.charset.Charset;
+import java.util.Map;
 
 import org.apache.http.Header;
 import org.apache.http.HttpHeaders;
@@ -11,11 +12,10 @@ import org.apache.http.entity.StringEntity;
 import org.apache.http.message.BasicHeader;
 
 import com.gt.api.bean.sign.SignBean;
-import com.gt.api.dto.ResponseUtils;
 import com.gt.api.util.KeysUtil;
-import com.gt.api.util.RequestUtils;
+import com.gt.api.util.httpclient.JsonUtil;
 import com.gt.api.util.httpclient.LocalHttpClient;
-import com.gt.api.util.sign.SignUtils;
+import com.gt.wallet.data.wallet.request.WalletIndividualAdd;
 
 /** 
 * @author lifengxi(gt_sky@qq.com)
@@ -103,13 +103,27 @@ public class WalletHttpClienUtil {
     }
 	
 	public static void main(String arg[]) throws Exception{
-		RequestUtils<Integer> baseParam=new RequestUtils<Integer>();
+//		RequestUtils<Integer> baseParam=new RequestUtils<Integer>();
+//		
+//		baseParam.setReqdata(36);
+//		String ss=com.alibaba.fastjson.JSONObject.toJSONString(baseParam);
+//		System.out.println(ss);
+//		ResponseUtils map=reqPostUTF8( ss,"http://127.0.0.1:8440/8A5DA52E/shopapi/6F6D9AD2/79B4DE7C/queryWxShopByBusId.do",ResponseUtils.class,"WXMP2017");
+//		System.out.println(com.alibaba.fastjson.JSONObject.toJSONString(map));
 		
-		baseParam.setReqdata(36);
-		String ss=com.alibaba.fastjson.JSONObject.toJSONString(baseParam);
-		System.out.println(ss);
-		ResponseUtils map=reqPostUTF8( ss,"http://127.0.0.1:8440/8A5DA52E/shopapi/6F6D9AD2/79B4DE7C/queryWxShopByBusId.do",ResponseUtils.class,"WXMP2017");
-		System.out.println(com.alibaba.fastjson.JSONObject.toJSONString(map));
+		String url="http://wallet.yifriend.net:8440/walletIndividual/saveIndividual";
+		WalletIndividualAdd walletIndividualAdd=new WalletIndividualAdd();
+		walletIndividualAdd.setBankName("1312");
+		walletIndividualAdd.setCardNo("12313");
+		walletIndividualAdd.setIdentitycardUrl1File("4113");
+		walletIndividualAdd.setIdentitycardUrl2File("131");
+		walletIndividualAdd.setIdentityNo("sfsf");
+		walletIndividualAdd.setMemberId(113);
+		walletIndividualAdd.setName("sf");
+		walletIndividualAdd.setPhone("sfsd");
+		walletIndividualAdd.setUnionBank("sfsd");
 		
+		Map s=reqPostUTF8(JsonUtil.toJSONString(walletIndividualAdd), url, Map.class);
+		System.out.println(s);
 		}
 }
