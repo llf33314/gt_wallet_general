@@ -64,6 +64,7 @@ public class WalletMemberController extends BaseController {
 			ServerResponse<WalletMember> serverResponse=null;
 			ServerResponse<List<WalletMember>> temp=walletMemberService.findMember(busUser.getId());
 			if(CommonUtil.isNotEmpty(temp)&&temp.getCode()==0&&CommonUtil.isNotEmpty(temp.getData())&&temp.getData().size()==1){
+				serverResponse=ServerResponse.createBySuccessCodeData(temp.getData().get(0));
 				return serverResponse;
 			}else{
 				throw new ResponseEntityException(WalletResponseEnums.SYSTEM_ERROR);
