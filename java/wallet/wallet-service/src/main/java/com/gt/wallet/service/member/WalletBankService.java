@@ -30,11 +30,12 @@ public interface WalletBankService extends BaseService<WalletBank> {
 	
 	/**
 	 * 绑定银行卡
-	 * @param walletIndividualAdd
+	 * @param walletIndividualAdd 银行卡信息
+	 * @param isSafeCard 是否为安全卡 0：是 1：否
 	 * @return
 	 * @throws Exception
 	 */
-	ServerResponse<Integer> add(WalletIndividualAdd walletIndividualAdd)throws Exception;
+	ServerResponse<Integer> add(WalletIndividualAdd walletIndividualAdd,Integer isSafeCard)throws Exception;
 	
 	/**
 	 * 绑定银行卡(对公账号)
@@ -43,6 +44,7 @@ public interface WalletBankService extends BaseService<WalletBank> {
 	 * @throws Exception
 	 */
 	ServerResponse<Integer> addPublic(WalletCompanyAdd walletCompanyAdd)throws Exception;
+	
 	
 	
 	
