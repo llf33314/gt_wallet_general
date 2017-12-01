@@ -166,17 +166,13 @@
     methods: {
       //提交申请
       save() {
-        wallet.addDrawCash(window.JSON.stringify(this.ruleForm)).then(res=>{
-          console.log(res,'///////////')
-        })
-
-        return
         $.ajax({
           url: this.DFPAYDOMAIN + '/walletQuota/add',
           type: 'POST',
           dataType:'json',
           data: this.ruleForm,
           success: (res) => {
+            console.log(res,'提交申请')
             if (res.code == 0) {
               this.$message({
                 message: '提交成功',

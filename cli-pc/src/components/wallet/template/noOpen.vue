@@ -19,7 +19,7 @@
     <i class="el-icon-warning"></i>
     <p>您尚未开通多粉钱包，点击下方按钮开通吧！</p>
     <div class="bts">
-      <el-button @click="routerTo('/wallet/companyOpen')" type="primary">企业开通</el-button>
+      <el-button @click="companyOpen" type="primary">企业开通</el-button>
       <el-button @click="individualOpen" type="primary">个人开通</el-button>
     </div>
   </div>
@@ -27,11 +27,16 @@
 <script>
   export default {
     methods: {
-        individualOpen(){
-            this.$router.push({
-                path: '/wallet/individual/open'
-            })
-        }
+      individualOpen() {
+        this.$router.push({
+          path: '/wallet/individual/open'
+        })
+      },
+      companyOpen() {
+        this.$router.push({
+          path: '/wallet/company/open'
+        })
+      }
     }
   }
 

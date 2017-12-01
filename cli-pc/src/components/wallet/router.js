@@ -1,12 +1,5 @@
-export const wallet = [
-  {
-    path: '/wallet/index',
-    name: 'index',
-    title: '多粉钱包',
-    component: resolve => {
-      require(['@/components/wallet/index'], resolve)
-    }
-  },
+//个人
+export const individual = [
   {
     path: '/wallet/individual/auditing',
     name: 'auditing',
@@ -30,6 +23,27 @@ export const wallet = [
     component: resolve => {
       require(['@/components/wallet/individual/index'], resolve)
     }
+  }
+]
+//企业
+export const company = [
+  {
+    path: '/wallet/company/open',
+    name: 'companyOpen',
+    title: '个人开通',
+    component: resolve => {
+      require(['@/components/wallet/company/open'], resolve)
+    }
+  }
+]
+export const wallet = [
+  {
+    path: '/wallet/index',
+    name: 'index',
+    title: '多粉钱包',
+    component: resolve => {
+      require(['@/components/wallet/index'], resolve)
+    }
   },
   {
     path: '/wallet/noOpen',
@@ -38,7 +52,9 @@ export const wallet = [
     component: resolve => {
       require(['@/components/wallet/template/noOpen'], resolve)
     }
-  }
+  },
+  ...individual,
+  ...company
 ]
 // //首页
 // const index = () =>
