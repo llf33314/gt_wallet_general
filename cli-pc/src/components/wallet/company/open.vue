@@ -5,7 +5,7 @@
       padding-left: 15px;
     }
     .public-table-title {
-      margin-top: 30px;
+      margin-top: 50px;
       margin-bottom: 30px;
     }
     .input-width {
@@ -37,6 +37,33 @@
       color: #666666;
       font-size: 14px;
       padding-top: 60px;
+    }
+    .avatar-uploader .el-upload {
+      border: 1px dashed #d9d9d9;
+      border-radius: 6px;
+      cursor: pointer;
+      position: relative;
+      overflow: hidden;
+      float: left;
+      width: 220px;
+      height: 137px;
+      background-color: #fbfdff;
+    }
+    .avatar-uploader .el-upload:hover {
+      border-color: #20a0ff;
+    }
+    .avatar-uploader-icon {
+      font-size: 28px;
+      color: #8c939d;
+      width: 220px;
+      height: 137px;
+      line-height: 137px;
+      text-align: center;
+    }
+    .avatar {
+      width: 220px;
+      height: 137px;
+      display: block;
     }
   }
 
@@ -108,84 +135,55 @@
           </el-form-item>
           <el-form-item label="支付行号：" prop="unionBank">
             <el-input v-model="ruleForm3.unionBank" placeholder="请输入支付行号" class="input-width"></el-input>
+            <el-tooltip placement="right" effect="light">
+              <div slot="content">如非以下银行，则需要填写支付行号。
+                <br/> （工商银行、农业银行、中国银行、建设银行、
+                <br/> 中信银行、广大银行、华夏银行、平安银行、
+                <br/> 招商银行、兴业银行、浦发银行、邮储银行、
+                <br/> 宁波银行、南京银行、农信湖南）
+              </div>
+              <i class="el-icon-question" style="position:relative;color:#666666"></i>
+            </el-tooltip>
           </el-form-item>
-
         </el-form>
         <div class="public-bottom-btns">
-          <el-button type="primary">下一步</el-button>
+          <el-button type="primary" @click="avtive1">下一步</el-button>
         </div>
       </div>
       <div v-show="active==2">
         <div class="public-table-title">
-          企业法人营业执照及组织机构代码证
+          企业法人营业执照
         </div>
-        <el-form :model="ruleForm" :rules="rules" ref="ruleForm" label-width="200px" class="demo-ruleForm">
-          <el-form-item label="上传单位证件照片：" prop="name">
-            <span class="public-cred">*</span>企业法人营业执照
+        <el-form :model="ruleForm4" :rules="rules4" ref="ruleForm4" label-width="170px" class="demo-ruleForm">
+          <el-form-item label="营业执照：" prop="doBusinessUrl">
+            <el-input v-model="ruleForm4.doBusinessUrl" placeholder="请输入营业执照" class="input-width"></el-input>
           </el-form-item>
-          <el-form-item label="" prop="name">
-            <gt-material class="public-fl" prop="url" :url="url" v-on:getChangeUrl="getChangeUrl" width="220" height="140"></gt-material>
-            <div class="dome-img public-c333">
-              <span>示例：</span>
-              <img src="./../img/z1.jpg" alt="">
-            </div>
+          <el-form-item label="开户许可证：" prop="licenseUrl">
+            <el-input v-model="ruleForm4.licenseUrl" placeholder="请输入开户许可证" class="input-width"></el-input>
           </el-form-item>
-          <el-form-item label="" prop="name">
-            组织机构代码证
-          </el-form-item>
-          <el-form-item label="" prop="name">
-            <gt-material class="public-fl" prop="url" :url="url" v-on:getChangeUrl="getChangeUrl" width="220" height="140"></gt-material>
-            <div class="dome-img public-c333">
-              <span>示例：</span>
-              <img src="./../img/z2.jpg" alt="">
-            </div>
-          </el-form-item>
-        </el-form>
-        <div class="public-table-title">
-          法定代表人钱多多的证件照片
-        </div>
-        <el-form :model="ruleForm" :rules="rules" ref="ruleForm" label-width="200px" class="demo-ruleForm">
-          <el-form-item label="身份证类型：" prop="name">
-            <el-radio-group v-model="radio2">
-              <el-radio :label="3">二代身份证</el-radio>
-              <el-radio :label="6">临时身份证</el-radio>
-            </el-radio-group>
-          </el-form-item>
-          <el-form-item label="上传法人身份证照片：" prop="name">
-            <span class="public-cred">*</span>个人信息页
-          </el-form-item>
-          <el-form-item label="" prop="name">
-            <gt-material class="public-fl" prop="url" :url="url" v-on:getChangeUrl="getChangeUrl" width="220" height="140"></gt-material>
+          <el-form-item label="身份证正面：" prop="identitycardUrl1">
+            <el-upload class="avatar-uploader" ref="identitycardUrl1" action="" style="float:left" :multiple="true" :show-file-list="false"
+              :http-request="uploadImg" :before-upload="beforeAvatarUpload">
+              <img v-if="ruleForm4.identitycardUrl1!=''" :src="ruleForm4.identitycardUrl1" class="avatar">
+              <i v-else class="el-icon-plus avatar-uploader-icon"></i>
+            </el-upload>
             <div class="dome-img public-c333">
               <span>示例：</span>
               <img src="./../img/c1.jpg" alt="">
             </div>
           </el-form-item>
-          <el-form-item label="" prop="name">
-            国徽页
-          </el-form-item>
-          <el-form-item label="" prop="name">
-            <gt-material class="public-fl" prop="url" :url="url" v-on:getChangeUrl="getChangeUrl" width="220" height="140"></gt-material>
+          <el-form-item label="身份证背面：" prop="identitycardUrl2">
+            <el-upload class="avatar-uploader" ref="identitycardUrl2" action="" style="float:left" :show-file-list="false" :http-request="uploadImg2"
+              :before-upload="beforeAvatarUpload">
+              <img v-if="ruleForm4.identitycardUrl2!=''" :src="ruleForm4.identitycardUrl2" class="avatar">
+              <i v-else class="el-icon-plus avatar-uploader-icon"></i>
+            </el-upload>
             <div class="dome-img public-c333">
               <span>示例：</span>
               <img src="./../img/c2.jpg" alt="">
             </div>
           </el-form-item>
-          <el-form-item label="证件照片：" prop="name">
-            <span class="public-cred">*</span>手持身份证
-          </el-form-item>
-          <el-form-item label="" prop="name">
-            <gt-material class="public-fl" prop="url" :url="url" v-on:getChangeUrl="getChangeUrl" width="220" height="140"></gt-material>
-            <div class="dome-img public-c333">
-              <span>示例：</span>
-              <img src="./../img/r1.jpg" alt="">
-            </div>
-          </el-form-item>
         </el-form>
-        <div class="public-bottom-btns">
-          <el-button>上一步</el-button>
-          <el-button type="primary">下一步</el-button>
-        </div>
       </div>
       <div v-show="active == 3">
         <div class="public-c666 active-last">
@@ -198,6 +196,10 @@
   </section>
 </template>
 <script>
+  import {
+    wallet
+  } from './../api'
+
   export default {
     data() {
       return {
@@ -220,8 +222,7 @@
               trigger: 'blur'
             }
           ],
-          companyAddress:[
-          {
+          companyAddress: [{
               required: true,
               message: '请输入企业地址',
               trigger: 'blur'
@@ -319,12 +320,29 @@
             }
           ],
         },
-
-
+        ruleForm4: {
+          doBusinessUrl: '',
+          identitycardUrl1: '',
+          identitycardUrl2: '',
+          licenseUrl: ''
+        },
+        rules4: {
+          identitycardUrl1: [{
+            required: true,
+            message: '请上传身份证正面',
+            trigger: 'change'
+          }],
+          identitycardUrl2: [{
+            required: true,
+            message: '请上传身份证背面',
+            trigger: 'change'
+          }],
+        },
+        activeFlag: {},
+        active: 1,
 
 
         // *************
-        active: 1,
         value1: true,
         radio2: 3,
         checked: true,
@@ -364,6 +382,51 @@
           ],
         },
       }
+    },
+    methods: {
+      avtive1() {
+        // this.active = 2
+        this.submitForm("ruleForm1", 'type1');
+        this.submitForm("ruleForm2", 'type2');
+        this.submitForm("ruleForm3", 'type3');
+
+        if (this.activeFlag.type1 && this.activeFlag.type2 && this.activeFlag.type3) {
+          this.active = 2
+        }
+        console.log(this.activeFlag, 'this.activeFlag')
+      },
+      //确认开通
+      submitForm(formName, flagType) {
+        this.$refs[formName].validate((valid) => {
+          if (valid) {
+            this.activeFlag[flagType] = true
+          } else {
+            this.activeFlag[flagType] = false
+          }
+        });
+      },
+      // 选择正面
+      uploadImg(e) {
+        wallet.upload(e.file).then(res => {
+          this.ruleForm4.identitycardUrl1 = res.data
+        })
+      },
+      uploadImg2(e) {
+        wallet.upload(e.file).then(res => {
+          this.ruleForm4.identitycardUrl2 = res.data
+        })
+      },
+      beforeAvatarUpload(file) {
+        const isJPG = file.type === 'image/jpeg' || file.type === 'image/png';
+        const isLt5M = file.size / 1024 / 1024 < 5;
+        if (!isJPG) {
+          this.$message.error('上传图片只能是 JPG/PNG 格式!');
+        }
+        if (!isLt5M) {
+          this.$message.error('上传图片大小不能超过 5MB!');
+        }
+        return isJPG && isLt5M;
+      },
     }
   }
 

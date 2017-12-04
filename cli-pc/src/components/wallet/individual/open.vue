@@ -129,7 +129,7 @@
           identitycardUrl2File: 'http://113.106.202.53:14884/upload/image/2/wallet/null/1511871076687.png',
           memberId: 9,
           name: '李小强', //注册人姓名
-          identityNo: '441621199011164018', //身份证号码
+          identityNo: '441621199011164013', //身份证号码
           cardNo: '6217212008009165086', //银行卡号
           phone: '15902042654', //银行预留手机
           bankName: '李小强', //银行卡开户人姓名(必须与注册人姓名一致)
