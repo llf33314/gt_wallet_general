@@ -91,7 +91,7 @@ public class WalletQuotaServiceImpl extends BaseServiceImpl<WalletQuotaMapper, W
 		
 		wrapper.orderBy("id", false);
 		Page<WalletQuota> page1=new Page<WalletQuota>();
-		page1.setCurrent(2);
+		page1.setCurrent(page.getCurrent());
 		page1.setRecords(walletQuotaMapper.selectPage(page1, wrapper));
 		MyPageUtil<WalletQuota> myPageUtil=new MyPageUtil<WalletQuota>(page.getCurrent(), page.getSize());
 		myPageUtil.setRecords(walletQuotaMapper.selectPage(myPageUtil,wrapper),total);

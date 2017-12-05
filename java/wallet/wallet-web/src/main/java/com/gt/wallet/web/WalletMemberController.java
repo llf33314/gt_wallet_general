@@ -12,6 +12,8 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.baomidou.mybatisplus.mapper.EntityWrapper;
+import com.baomidou.mybatisplus.plugins.Page;
 import com.gt.api.bean.session.BusUser;
 import com.gt.api.util.IPOrAddressUtils;
 import com.gt.api.util.httpclient.JsonUtil;
@@ -24,6 +26,7 @@ import com.gt.wallet.exception.BusinessException;
 import com.gt.wallet.exception.ResponseEntityException;
 import com.gt.wallet.service.member.WalletMemberService;
 import com.gt.wallet.utils.CommonUtil;
+import com.gt.wallet.utils.MyPageUtil;
 
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiImplicitParam;
@@ -255,5 +258,31 @@ public class WalletMemberController extends BaseController {
 	} 
 	
 	
+	/**
+	 * 会员列表分页
+	 * @param request
+	 * @param phone
+	 * @param wmemberId
+	 * @return
+	 */
+	@ResponseBody
+	@RequestMapping(value="79B4DE7C/memberListPage",method=RequestMethod.POST)
+	@ApiOperation(value="会员列表分页", notes="会员列表分页")
+	public ServerResponse<MyPageUtil<WalletMember>> memberListPage(HttpServletRequest request,Page<WalletMember> page
+			){
+		log.info(CommonUtil.format("触发会员列表分页接口,参数:%s",JsonUtil.toJSONString(page)));
+		try {
+			ServerResponse<MyPageUtil<WalletMember>>  serverResponse=walletMemberService.getPage(page);
+			log.info(CommonUtil.format("serverResponse:%s",JsonUtil.toJSONString(serverResponse)));
+			return serverResponse;
+		} catch ( BusinessException e) {
+			log.error(CommonUtil.format("会员列表分页接口异常：%s,%s",e.getCode(),e.getMessage()));
+			throw new ResponseEntityException(e.getCode(),e.getMessage());
+		} catch ( Exception e) {
+			e.printStackTrace();
+			log.error(CommonUtil.format("会员列表分页接口异常：%s,%s",WalletResponseEnums.SYSTEM_ERROR.getCode(),WalletResponseEnums.SYSTEM_ERROR.getDesc()));
+			throw new ResponseEntityException(WalletResponseEnums.SYSTEM_ERROR);
+		}
+	} 
 	
 }
