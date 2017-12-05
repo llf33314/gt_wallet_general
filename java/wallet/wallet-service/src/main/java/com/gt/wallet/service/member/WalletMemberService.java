@@ -2,11 +2,14 @@ package com.gt.wallet.service.member;
 
 import java.util.List;
 
+import com.baomidou.mybatisplus.plugins.Page;
 import com.gt.api.bean.session.BusUser;
 import com.gt.wallet.base.BaseService;
 import com.gt.wallet.data.wallet.request.WalletPasswordSet;
 import com.gt.wallet.dto.ServerResponse;
 import com.gt.wallet.entity.WalletMember;
+import com.gt.wallet.entity.WalletQuota;
+import com.gt.wallet.utils.MyPageUtil;
 
 /**
  * <p>
@@ -91,4 +94,12 @@ public interface WalletMemberService extends BaseService<WalletMember> {
 	 */
 	public ServerResponse<?> unlockMember(Integer wmemberId)throws Exception;
 	
+	
+	
+	/**
+	 * 分页查询
+	 * @param page
+	 * @return
+	 */
+	public ServerResponse<MyPageUtil<WalletMember>> getPage(Page<WalletMember> page);
 }

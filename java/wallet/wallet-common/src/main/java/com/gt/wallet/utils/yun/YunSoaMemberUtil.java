@@ -6,6 +6,7 @@ import java.security.interfaces.RSAPrivateKey;
 import java.security.interfaces.RSAPublicKey;
 
 import org.json.JSONObject;
+import org.junit.Test;
 
 import com.gt.api.util.httpclient.JsonUtil;
 import com.gt.wallet.data.wallet.request.WalletCompanyAdd;
@@ -679,4 +680,104 @@ public class YunSoaMemberUtil {
 			throw e;
 		}
 	}
+	
+	
+//	//充值申请
+//		@Test
+//		public void testApplyDeposit() {
+//			try{
+//				System.out.println("testApplyDeposit start");
+//
+//				//支付方式
+//				//快捷
+//				JSONObject quickPay = new JSONObject();
+//				quickPay.put("bankCardNo", rsaEncrypt(jjBankCardNo));
+//				quickPay.put("amount", 10);
+//
+//				//网关
+//				String frontUrl = "";
+//				JSONObject gatewayPay = new JSONObject();
+//				gatewayPay.put("bankCode", "vbank");  //虚拟银行，专门用于测试环境
+//				gatewayPay.put("payType", 1L);
+//				gatewayPay.put("amount", 10);
+//
+//				//代扣
+//				JSONObject daikouPay = new JSONObject();
+//				daikouPay.put("bankCardNo", rsaEncrypt(jjBankCardNo));
+//				daikouPay.put("amount", 10);
+//
+//				//组装支付方式
+//				JSONObject payMethod = new JSONObject();
+//				payMethod.put("QUICKPAY", quickPay);
+////				payMethod.put("GATEWAY", gatewayPay);
+////				payMethod.put("DAIKOU", daikouPay);
+//
+//				String bizOrderNo = System.currentTimeMillis() + "cz";
+//				String backUrl = "";
+//
+//				String extendInfo = "this is extendInfo";
+//
+//				JSONObject param = new JSONObject();
+//				param.put("bizUserId", bizUserId);
+//				param.put("bizOrderNo", bizOrderNo);
+//				param.put("accountSetNo", accountSetNo);
+//				param.put("amount", 10);
+//				param.put("fee", 0);
+//				param.put("frontUrl", frontUrl);
+//				param.put("backUrl", backUrl);
+////				param.put("ordErexpireDatetime", ordErexpireDatetime);
+//				param.put("payMethod", payMethod);
+//				param.put("industryCode", industryCode);
+//				param.put("industryName", industryName);
+//				param.put("source", 2);
+//				param.put("summary", "deposit");
+//				param.put("extendInfo", extendInfo);
+//
+//				System.out.println("request:" + param);
+//				JSONObject response = client.request(soaName, "depositApply", param);
+//				System.out.println("response:" + response);
+//
+//				System.out.println("testApplyDeposit end");
+//			}catch(Exception e){
+//				System.out.println("testApplyDeposit error");
+//				e.printStackTrace();
+//			}
+//		}
+	
+	
+	//提现申请
+		@Test
+		public void orderApplyWithdraw(String bizUserId,String accountSetNo) {
+			try{
+//				System.out.println("testApplyWithdraw start");
+//
+//				String bizOrderNo = System.currentTimeMillis() + "tx";
+//				String extendInfo = "this is withdraw.";
+//				String backUrl = "";
+//
+//				JSONObject param = new JSONObject();
+//				param.put("bizUserId", bizUserId);
+//				param.put("bizOrderNo", bizOrderNo);
+//				param.put("accountSetNo", accountSetNo);
+//				param.put("amount", 1);
+//				param.put("fee", 0);
+//				param.put("backUrl", backUrl);
+//				param.put("ordErexpireDatetime", ordErexpireDatetime);
+//				param.put("bankCardNo", rsaEncrypt(jjBankCardNo));
+//				param.put("industryCode", industryCode);
+//				param.put("industryName", industryName);
+//				param.put("source", 1L);
+//				param.put("summary", "withdraw");
+//				param.put("extendInfo", extendInfo);
+
+//				System.out.println("request:" + param);
+//				JSONObject response = client.request(soaName, "withdrawApply", param);
+//				System.out.println("response:" + response);
+
+				System.out.println("testApplyWithdraw end");
+			}catch(Exception e){
+				System.out.println("testApplyWithdraw error");
+				e.printStackTrace();
+			}
+		}
 }

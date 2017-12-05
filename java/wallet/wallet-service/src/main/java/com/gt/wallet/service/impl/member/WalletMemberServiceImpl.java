@@ -10,6 +10,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import com.baomidou.mybatisplus.mapper.EntityWrapper;
 import com.baomidou.mybatisplus.mapper.Wrapper;
+import com.baomidou.mybatisplus.plugins.Page;
 import com.gt.api.bean.session.BusUser;
 import com.gt.api.util.MD5Utils;
 import com.gt.api.util.httpclient.JsonUtil;
@@ -17,6 +18,7 @@ import com.gt.wallet.base.BaseServiceImpl;
 import com.gt.wallet.data.wallet.request.WalletPasswordSet;
 import com.gt.wallet.dto.ServerResponse;
 import com.gt.wallet.entity.WalletMember;
+import com.gt.wallet.entity.WalletQuota;
 import com.gt.wallet.enums.WalletResponseEnums;
 import com.gt.wallet.exception.BusinessException;
 import com.gt.wallet.mapper.member.WalletMemberMapper;
@@ -24,6 +26,7 @@ import com.gt.wallet.service.member.WalletMemberService;
 import com.gt.wallet.utils.BankUtil;
 import com.gt.wallet.utils.CommonUtil;
 import com.gt.wallet.utils.IdCardUtil;
+import com.gt.wallet.utils.MyPageUtil;
 import com.gt.wallet.utils.PhoneUtil;
 import com.gt.wallet.utils.WalletKeyUtil;
 import com.gt.wallet.utils.yun.YunSoaMemberUtil;
@@ -230,6 +233,30 @@ public class WalletMemberServiceImpl extends BaseServiceImpl<WalletMemberMapper,
 			walletMemberMapper.updateById(walletMember);
 		}
 		return serverResponse;
+	}
+
+
+	@Override
+	public ServerResponse<MyPageUtil<WalletMember>> getPage(Page<WalletMember> page) {
+		log.info(CommonUtil.format("biz接口:分页查询,请求参数:%s", JsonUtil.toJSONString(page)));
+		EntityWrapper<WalletMember> wrapper=new EntityWrapper<WalletMember>() ;
+//		if(CommonUtil.isNotEmpty(status)){
+//			wrapper.where("status={0}", status);			
+//		}
+		Integer total=walletMemberMapper.selectCount(wrapper);
+		if(CommonUtil.isEmpty(total)||total==0){
+			throw new BusinessException(WalletResponseEnums.DATA_NULL_ERROR);
+		}
+		
+		wrapper.orderBy("id", false);
+		Page<WalletMember> page1=new Page<WalletMember>();
+		page1.setCurrent(page.getCurrent());
+		page1.setRecords(walletMemberMapper.selectPage(page1, wrapper));
+		MyPageUtil<WalletMember> myPageUtil=new MyPageUtil<WalletMember>(page.getCurrent(), page.getSize());
+		myPageUtil.setRecords(walletMemberMapper.selectPage(myPageUtil,wrapper),total);
+//		MyPageUtil.getInit( page.getRecords().size(), page);
+		log.info(CommonUtil.format("page:%s", JsonUtil.toJSONString(page)));
+		return ServerResponse.createBySuccessCodeData(myPageUtil);
 	}
 
 
