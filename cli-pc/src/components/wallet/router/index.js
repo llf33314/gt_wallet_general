@@ -5,15 +5,15 @@ export const individual = [
     name: 'auditing',
     title: '个人审核中',
     component: resolve => {
-      require(['@/components/wallet/individual/auditing'], resolve)
+      require(['@/components/wallet/vue/individual/auditing'], resolve)
     }
   },
   {
-    path: '/wallet/individual/open',
+    path: '/wallet/individual/open/:memberId',
     name: 'individualOpen',
     title: '个人开通',
     component: resolve => {
-      require(['@/components/wallet/individual/open'], resolve)
+      require(['@/components/wallet/vue/individual/open'], resolve)
     }
   },
   {
@@ -21,18 +21,18 @@ export const individual = [
     name: 'individualIndex',
     title: '个人主页',
     component: resolve => {
-      require(['@/components/wallet/individual/index'], resolve)
+      require(['@/components/wallet/vue/individual/index'], resolve)
     }
   }
 ]
 //企业
 export const company = [
   {
-    path: '/wallet/company/open',
+    path: '/wallet/company/open/:memberId',
     name: 'companyOpen',
     title: '个人开通',
     component: resolve => {
-      require(['@/components/wallet/company/open'], resolve)
+      require(['@/components/wallet/vue/company/open'], resolve)
     }
   }
 ]
@@ -42,7 +42,7 @@ export const wallet = [
     name: 'index',
     title: '多粉钱包',
     component: resolve => {
-      require(['@/components/wallet/index'], resolve)
+      require(['@/components/wallet/vue/index'], resolve)
     }
   },
   {
@@ -50,7 +50,7 @@ export const wallet = [
     name: 'walletNoOpen',
     title: '未开通',
     component: resolve => {
-      require(['@/components/wallet/template/noOpen'], resolve)
+      require(['@/components/wallet/vue/template/noOpen'], resolve)
     }
   },
   ...individual,

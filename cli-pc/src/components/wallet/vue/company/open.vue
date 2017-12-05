@@ -153,37 +153,56 @@
       <div v-show="active==2">
         <div class="public-table-title">
           企业法人营业执照
-        </div>
+        </div> 
         <el-form :model="ruleForm4" :rules="rules4" ref="ruleForm4" label-width="170px" class="demo-ruleForm">
           <el-form-item label="营业执照：" prop="doBusinessUrl">
-            <el-input v-model="ruleForm4.doBusinessUrl" placeholder="请输入营业执照" class="input-width"></el-input>
+            <el-upload class="avatar-uploader" ref="identitycardUrl1" action="" style="float:left" :multiple="true" :show-file-list="false"
+              :http-request="uploadImgDoBusinessUrl" :before-upload="beforeAvatarUpload">
+              <img v-if="ruleForm4.doBusinessUrl!=''" :src="ruleForm4.doBusinessUrl" class="avatar">
+              <i v-else class="el-icon-plus avatar-uploader-icon"></i>
+            </el-upload>
+            <div class="dome-img public-c333">
+              <span>示例：</span>
+              <img src="./../../img/c1.jpg" alt="">
+            </div>
           </el-form-item>
           <el-form-item label="开户许可证：" prop="licenseUrl">
-            <el-input v-model="ruleForm4.licenseUrl" placeholder="请输入开户许可证" class="input-width"></el-input>
+            <el-upload class="avatar-uploader" ref="licenseUrl" action="" style="float:left" :multiple="true" :show-file-list="false"
+              :http-request="uploadImgLicenseUrl" :before-upload="beforeAvatarUpload">
+              <img v-if="ruleForm4.licenseUrl!=''" :src="ruleForm4.licenseUrl" class="avatar">
+              <i v-else class="el-icon-plus avatar-uploader-icon"></i>
+            </el-upload>
+            <div class="dome-img public-c333">
+              <span>示例：</span>
+              <img src="./../../img/c1.jpg" alt="">
+            </div>
           </el-form-item>
           <el-form-item label="身份证正面：" prop="identitycardUrl1">
             <el-upload class="avatar-uploader" ref="identitycardUrl1" action="" style="float:left" :multiple="true" :show-file-list="false"
-              :http-request="uploadImg" :before-upload="beforeAvatarUpload">
+              :http-request="uploadImgIdentitycardUrl1" :before-upload="beforeAvatarUpload">
               <img v-if="ruleForm4.identitycardUrl1!=''" :src="ruleForm4.identitycardUrl1" class="avatar">
               <i v-else class="el-icon-plus avatar-uploader-icon"></i>
             </el-upload>
             <div class="dome-img public-c333">
               <span>示例：</span>
-              <img src="./../img/c1.jpg" alt="">
+              <img src="./../../img/c1.jpg" alt="">
             </div>
           </el-form-item>
           <el-form-item label="身份证背面：" prop="identitycardUrl2">
-            <el-upload class="avatar-uploader" ref="identitycardUrl2" action="" style="float:left" :show-file-list="false" :http-request="uploadImg2"
+            <el-upload class="avatar-uploader" ref="identitycardUrl2" action="" style="float:left" :show-file-list="false" :http-request="uploadImgIdentitycardUrl2"
               :before-upload="beforeAvatarUpload">
               <img v-if="ruleForm4.identitycardUrl2!=''" :src="ruleForm4.identitycardUrl2" class="avatar">
               <i v-else class="el-icon-plus avatar-uploader-icon"></i>
             </el-upload>
             <div class="dome-img public-c333">
               <span>示例：</span>
-              <img src="./../img/c2.jpg" alt="">
+              <img src="./../../img/c2.jpg" alt="">
             </div>
           </el-form-item>
         </el-form>
+        <div class="public-bottom-btns">
+          <el-button type="primary" @click="avtive2('ruleForm4')">下一步</el-button>
+        </div>
       </div>
       <div v-show="active == 3">
         <div class="public-c666 active-last">
@@ -198,7 +217,7 @@
 <script>
   import {
     wallet
-  } from './../api'
+  } from './../../api/index'
 
   export default {
     data() {
@@ -322,11 +341,21 @@
         },
         ruleForm4: {
           doBusinessUrl: '',
+          licenseUrl: '',
           identitycardUrl1: '',
           identitycardUrl2: '',
-          licenseUrl: ''
         },
         rules4: {
+          doBusinessUrl: [{
+            required: true,
+            message: '请上传营业执照',
+            trigger: 'change'
+          }],
+          licenseUrl: [{
+            required: true,
+            message: '请上传开户许可证',
+            trigger: 'change'
+          }],
           identitycardUrl1: [{
             required: true,
             message: '请上传身份证正面',
@@ -339,9 +368,7 @@
           }],
         },
         activeFlag: {},
-        active: 1,
-
-
+        active: 2,
         // *************
         value1: true,
         radio2: 3,
@@ -395,6 +422,15 @@
         }
         console.log(this.activeFlag, 'this.activeFlag')
       },
+      avtive2(formName){
+        this.$refs[formName].validate((valid) => {
+          if (valid) {
+            console.log(66)
+          } else {
+            return false
+          }
+        });
+      },
       //确认开通
       submitForm(formName, flagType) {
         this.$refs[formName].validate((valid) => {
@@ -405,13 +441,22 @@
           }
         });
       },
-      // 选择正面
-      uploadImg(e) {
+      uploadImgDoBusinessUrl(e) {
+        wallet.upload(e.file).then(res => {
+          this.ruleForm4.doBusinessUrl = res.data
+        })
+      },
+      uploadImgLicenseUrl(e) {
+        wallet.upload(e.file).then(res => {
+          this.ruleForm4.licenseUrl = res.data
+        })
+      },
+      uploadImgIdentitycardUrl1(e) {
         wallet.upload(e.file).then(res => {
           this.ruleForm4.identitycardUrl1 = res.data
         })
       },
-      uploadImg2(e) {
+      uploadImgIdentitycardUrl2(e) {
         wallet.upload(e.file).then(res => {
           this.ruleForm4.identitycardUrl2 = res.data
         })

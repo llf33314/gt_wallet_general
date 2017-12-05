@@ -55,10 +55,10 @@
 <template>
   <section class="wallet-personal-open">
     <el-breadcrumb separator="/" class="public-crumbs">
-      <el-breadcrumb-item :to="{ path: '/wallet/index' }">多粉钱包</el-breadcrumb-item>
+      <el-breadcrumb-item>多粉钱包</el-breadcrumb-item>
       <el-breadcrumb-item>个人开通</el-breadcrumb-item>
     </el-breadcrumb>
-    <div class="public-top20">
+    <div class="public-top20" style="margin-left: 30px;">
       <!-- <div class="public-table-title" style="margin-top: 35px;">
         个人信息
       </div> -->
@@ -69,6 +69,17 @@
         <el-form-item label="身份证号：" prop="identityNo">
           <el-input v-model="ruleForm.identityNo" placeholder="请输入身份证号" class="input-width"></el-input>
         </el-form-item>
+
+        <el-form-item label="银行卡预留手机号：" prop="phone">
+          <el-input v-model="ruleForm.phone" placeholder="请输入银行卡预留手机号" class="input-width"></el-input>
+        </el-form-item>
+        <el-form-item label="银行卡开户人姓名：" prop="bankName">
+          <el-input v-model="ruleForm.bankName" placeholder="请输入银行卡开户人姓名" class="input-width"></el-input>
+        </el-form-item>
+        <el-form-item label="银行卡号：" prop="cardNo">
+          <el-input v-model="ruleForm.cardNo" placeholder="请输入银行卡号" class="input-width"></el-input>
+          <p class="public-c666">此为多粉钱包安全卡，绑定后不能直接修改。如需修改请联系：***-***</p>
+        </el-form-item>
         <el-form-item label="身份证正面：" prop="identitycardUrl1File">
           <el-upload class="avatar-uploader" ref="identitycardUrl1File" action="" :multiple="true" :show-file-list="false" :http-request="uploadImg"
             :before-upload="beforeAvatarUpload">
@@ -77,7 +88,7 @@
           </el-upload>
           <div class="dome-img public-c333">
             <span>示例：</span>
-            <img src="./../img/c1.jpg" alt="">
+            <img src="./../../img/c1.jpg" alt="">
           </div>
         </el-form-item>
         <el-form-item label="身份证背面：" prop="identitycardUrl2File">
@@ -88,40 +99,26 @@
           </el-upload>
           <div class="dome-img public-c333">
             <span>示例：</span>
-            <img src="./../img/c2.jpg" alt="">
+            <img src="./../../img/c2.jpg" alt="">
           </div>
         </el-form-item>
-        <el-form-item label="个人账户：" prop="cardNo">
-          <el-input v-model="ruleForm.cardNo" placeholder="请输入个人账户" class="input-width"></el-input>
-          <p class="public-c666">此为多粉钱包安全卡，绑定后不能直接修改。如需修改请联系：***-***</p>
-        </el-form-item>
-        <el-form-item label="开户人姓名：" prop="bankName">
-          <el-input v-model="ruleForm.bankName" placeholder="请输入个人账户" class="input-width"></el-input>
-          <p class="public-c666">必须与注册人姓名一致</p>
-        </el-form-item>
-        <el-form-item label="银行卡预留手机号：" prop="phone">
-          <el-input v-model="ruleForm.phone" placeholder="请输入银行卡预留手机号" class="input-width"></el-input>
-        </el-form-item>
-        <el-form-item label="短信验证：" prop="name">
+        <!-- <el-form-item label="短信验证：" prop="name">
           <el-input v-model="ruleForm.name" placeholder="请输入验证码" class="input-width"></el-input>
           <el-button type="primary" @click="sendVerificationCode">获取验证码</el-button>
-        </el-form-item>
+        </el-form-item> -->
         <el-form-item>
           <el-button type="primary" @click="submitForm('ruleForm')">确认开通</el-button>
         </el-form-item>
       </el-form>
-     
+
     </div>
   </section>
 </template>
 <script>
   import {
     wallet
-  } from './../api'
-
-  import axios from 'axios'
+  } from './../../api/index'
   export default {
-    
     data() {
       return {
         ruleForm: {
@@ -172,12 +169,17 @@
             message: '请输入银行预留手机',
             trigger: 'change'
           }],
+          bankName: [{
+            required: true,
+            message: '请输入银行卡开户人姓名',
+            trigger: 'change'
+          }],
         },
         wmemberId: '',
       }
     },
     mounted() {
-      this.getVipNum()
+
     },
     methods: {
       // 选择正面
@@ -202,19 +204,6 @@
           this.$message.error('上传图片大小不能超过 5MB!');
         }
         return isJPG && isLt5M;
-      },
-      //获取会员id
-      getVipNum() {
-        wallet.register({
-          memberType: 3
-        }).then(res => {
-          console.log(res.data, '会员id')
-          if (res.code != 0) {
-            this.$message.error(res.msg);
-          } else {
-            this.wmemberId = res.data
-          }
-        })
       },
       //发送短信验证码
       sendVerificationCode() {
@@ -241,8 +230,13 @@
       },
       //确认开通
       submitForm(formName) {
+        this.$router.push({
+          path: '/wallet/individual/index'
+        })
+
         this.$refs[formName].validate((valid) => {
           if (valid) {
+            this.ruleForm.memberId = this.$route.params.memberId
             console.log(this.ruleForm, 'this.ruleForm')
             $.ajax({
               url: this.DFPAYDOMAIN + '/walletIndividual/saveIndividual',
@@ -255,8 +249,14 @@
                   this.$message.error(res.msg);
                 } else {
                   this.$message({
-                    message: '提交成功',
-                    type: 'success'
+                    message: res.msg,
+                    type: 'success',
+                    duration: 2000,
+                    onClose: () => {
+                      this.$router.push({
+                        path: '/wallet/individual/index'
+                      })
+                    }
                   });
                 }
               }

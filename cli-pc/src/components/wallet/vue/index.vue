@@ -6,7 +6,7 @@
 <script>
   import {
     wallet
-  } from './api'
+  } from './../api/index'
   export default {
     mounted() {
       console.log('///////////////////')

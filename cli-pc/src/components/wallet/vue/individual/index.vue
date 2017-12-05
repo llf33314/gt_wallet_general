@@ -147,6 +147,9 @@
 <script>
   import DrawCash from "./../template/drawcash.vue";
   import SetPwd from "./../template/setPwd.vue";
+  import {
+    wallet
+  } from '../../api/index'
   export default {
     components: {
       DrawCash,
@@ -229,7 +232,11 @@
         value4: ''
       }
     },
-
+    mounted() {
+      wallet.findMember().then(res => {
+        console.log(res, '查询多粉会员信息')
+      })
+    },
     methods: {
       submitForm(formName) {
         this.$refs[formName].validate((valid) => {
