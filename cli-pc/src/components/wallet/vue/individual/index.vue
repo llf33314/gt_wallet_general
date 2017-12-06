@@ -47,6 +47,7 @@
           </ul>
           <div class="bts">
             <el-button @click="goToDrawCash" type="primary">提现</el-button>
+            <el-button @click="addBank" type="primary">新增个人银行卡</el-button>
           </div>
         </div>
       </div>
@@ -147,6 +148,9 @@
 <script>
   import DrawCash from "./../template/drawcash.vue";
   import SetPwd from "./../template/setPwd.vue";
+  import {
+    wallet
+  } from '../../api/index'
   export default {
     components: {
       DrawCash,
@@ -226,10 +230,16 @@
           }]
         },
         value3: [new Date(2000, 10, 10, 10, 10), new Date(2000, 10, 11, 10, 10)],
-        value4: ''
+        value4: '',
+        data:{}
       }
     },
-
+    mounted() {
+      wallet.findMember().then(res => {
+        console.log(res, '查询多粉会员信息')
+        this.data = res.data
+      })
+    },
     methods: {
       submitForm(formName) {
         this.$refs[formName].validate((valid) => {
@@ -277,6 +287,11 @@
       },
       handleCurrentChange(val) {
         console.log(`当前页: ${val}`);
+      },
+      addBank() {
+        this.$router.push({
+          path: '/wallet/individual/addBank/'+this.data.memberId
+        })
       }
 
     }
