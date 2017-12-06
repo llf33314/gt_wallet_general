@@ -85,7 +85,9 @@ public enum WalletResponseEnums {
      * 两次密码输入不一致
      */
     PWD_ERROR(1014, "两次密码输入不一致" ),
-    ;
+    
+	PAY_SUCCESS(1015, "支付异常，此订单已支付" )
+	;
 
     private final int    code;
     private final String desc;

@@ -8,6 +8,8 @@ import java.security.interfaces.RSAPublicKey;
 import org.json.JSONObject;
 
 import com.gt.api.util.httpclient.JsonUtil;
+import com.gt.wallet.constant.WalletConstants;
+import com.gt.wallet.data.api.tonglian.TCardBin;
 import com.gt.wallet.data.api.tonglian.TPayOrder;
 import com.gt.wallet.data.api.tonglian.TRefundOrder;
 import com.gt.wallet.data.api.tonglian.TWithdrawOrder;
@@ -371,7 +373,7 @@ public class YunSoaMemberUtil {
 	 * @param cardNo
 	 * @return
 	 */
-	public static ServerResponse<com.alibaba.fastjson.JSONObject>  getBankCardBin(String cardNo){
+	public static ServerResponse<TCardBin>  getBankCardBin(String cardNo){
 		try{
 			log.info("getBankCardBin start");
 
@@ -385,7 +387,7 @@ public class YunSoaMemberUtil {
 				String value = response.getString("signedValue");
 				com.alibaba.fastjson.JSONObject json=	JsonUtil.parseObject(value, com.alibaba.fastjson.JSONObject.class);
 				log.info("getBankCardBin end");
-				return ServerResponse.createBySuccessCodeData(JsonUtil.parseObject(json.getString("cardBinInfo"), com.alibaba.fastjson.JSONObject.class));
+				return ServerResponse.createBySuccessCodeData(JsonUtil.parseObject(json.getString("cardBinInfo"), TCardBin.class));
 			}else{
 				log.info("getMemberInfo end");
 				return ServerResponse.createByErrorMessage(CommonUtil.format("第三方接口异常,错误代码 : %s,描述:%s", response.getString("errorCode"), response.getString("message")));
@@ -726,8 +728,8 @@ public class YunSoaMemberUtil {
 			param.put("backUrl", backUrl);
 //			param.put("ordErexpireDatetime", ordErexpireDatetime);
 			param.put("payMethod", payMethod);
-			param.put("industryCode", "1916");
-			param.put("industryName", "便捷付");
+			param.put("industryCode", WalletConstants.INDUSTRYCODE);
+			param.put("industryName",WalletConstants.INDUSTRYNAME);
 			param.put("source", 1);
 			param.put("summary",payOrder.getDesc());
 //			param.put("extendInfo", extendInfo);
@@ -773,8 +775,8 @@ public class YunSoaMemberUtil {
 			param.put("backUrl", backUrl);
 		//	param.put("ordErexpireDatetime", ordErexpireDatetime);
 			param.put("bankCardNo", YunSoaMemberUtil.rsaEncrypt(consumeOrder.getBankCardNo()));
-			param.put("industryCode", "1916");
-			param.put("industryName", "便捷付");
+			param.put("industryCode", WalletConstants.INDUSTRYCODE);
+			param.put("industryName",WalletConstants.INDUSTRYNAME);
 			param.put("source", 1);
 			param.put("summary", consumeOrder.getDesc());
 			param.put("withdrawType", consumeOrder.getWithdrawType());

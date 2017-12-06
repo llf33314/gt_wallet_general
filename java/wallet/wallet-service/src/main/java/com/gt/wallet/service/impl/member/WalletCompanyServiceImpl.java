@@ -18,6 +18,7 @@ import com.gt.api.util.HttpClienUtils;
 import com.gt.api.util.RequestUtils;
 import com.gt.api.util.httpclient.JsonUtil;
 import com.gt.wallet.base.BaseServiceImpl;
+import com.gt.wallet.data.wallet.request.CompanyUploadFile;
 import com.gt.wallet.data.wallet.request.SendMail;
 import com.gt.wallet.data.wallet.request.WalletCompanyAdd;
 import com.gt.wallet.dto.ServerResponse;
@@ -112,19 +113,7 @@ public class WalletCompanyServiceImpl extends BaseServiceImpl<WalletCompanyMappe
 		}
 		WalletMember walletMember=walletMemberService.selectById(walletCompanyAdd.getMemberId());
 		/*******************************判断db记录是否异常**************************************/
-		/*******************************发送邮件**************************************/
-		List<String> files=new ArrayList<>();
-		files.add(WalletWebConfig.getPathImage()+walletCompanyAdd.getDoBusinessUrl().split("image/")[1]);
-		files.add(WalletWebConfig.getPathImage()+walletCompanyAdd.getIdentitycardUrl1().split("image/")[1]);
-		files.add(WalletWebConfig.getPathImage()+walletCompanyAdd.getIdentitycardUrl2().split("image/")[1]);
-		files.add(WalletWebConfig.getPathImage()+walletCompanyAdd.getLicenseUrl().split("image/")[1]);
-		SendMail sendMail=new SendMail("企业信息设置:"+busUser.getName(),"企业信息设置",files);
-		ServerResponse<?>	mailServerResponse=mailService.sendAttachmentsMail(sendMail);
-		log.info(CommonUtil.format("mailServerResponse:%s", JsonUtil.toJSONString(mailServerResponse)));
-		if(!ServerResponse.judgeSuccess(mailServerResponse)){
-			throw new BusinessException(mailServerResponse.getCode(),mailServerResponse.getMsg());
-		}
-		/*******************************发送邮件**************************************/
+		
 		/*******************************调用设置企业信息api**************************************/
 		ServerResponse<?> response=YunSoaMemberUtil.setCompanyInfo(walletCompanyAdd, walletMember.getMemberNum());
  		log.info(CommonUtil.format("设置企业信息api结果:%s", JsonUtil.toJSONString(response)));
@@ -140,10 +129,10 @@ public class WalletCompanyServiceImpl extends BaseServiceImpl<WalletCompanyMappe
 		walletCompany.setBankName(walletCompanyAdd.getBankName());
 		walletCompany.setBusinessLicense(walletCompanyAdd.getBusinessLicense());
 		walletCompany.setCompanyName(walletCompanyAdd.getCompanyName());
-		walletCompany.setDoBusinessUrl(walletCompanyAdd.getDoBusinessUrl());
-		walletCompany.setIdentitycardUrl1(walletCompanyAdd.getIdentitycardUrl1());
-		walletCompany.setIdentitycardUrl2(walletCompanyAdd.getIdentitycardUrl2());
-		walletCompany.setLicenseUrl(walletCompanyAdd.getLicenseUrl());
+//		walletCompany.setDoBusinessUrl(walletCompanyAdd.getDoBusinessUrl());
+//		walletCompany.setIdentitycardUrl1(walletCompanyAdd.getIdentitycardUrl1());
+//		walletCompany.setIdentitycardUrl2(walletCompanyAdd.getIdentitycardUrl2());
+//		walletCompany.setLicenseUrl(walletCompanyAdd.getLicenseUrl());
 		walletCompany.setIdentityType(1);
 		walletCompany.setLegalIds(YunSoaMemberUtil.rsaEncrypt(walletCompanyAdd.getLegalIds()));
 		walletCompany.setLegalName(walletCompanyAdd.getLegalName());
@@ -161,5 +150,41 @@ public class WalletCompanyServiceImpl extends BaseServiceImpl<WalletCompanyMappe
 		serverResponse=ServerResponse.createBySuccess();
 		log.info(CommonUtil.format("biz接口:save serverResponse:%s", JsonUtil.toJSONString(serverResponse)));
 		return serverResponse=ServerResponse.createBySuccess();
+	}
+
+
+	@Override
+	public ServerResponse<?> uploadFile(CompanyUploadFile companyUploadFile,BusUser busUser) throws Exception {
+		log.info(CommonUtil.format("uploadFile api ,companyUploadFile:%s", JsonUtil.toJSONString(companyUploadFile)));
+		/*******************************发送邮件**************************************/
+		Wrapper<WalletCompany> wrapper=new EntityWrapper<>();
+		wrapper.where("w_member_id={0}", companyUploadFile.getMemberId());
+		List<WalletCompany> walletCompanies=walletCompanyMapper.selectList(wrapper);
+		if(CommonUtil.isEmpty(walletCompanies)||walletCompanies.size()==0){
+			throw new BusinessException("请先注册会员");
+		}
+		WalletCompany walletCompany=walletCompanies.get(0);
+		walletCompany.setDoBusinessUrl(companyUploadFile.getDoBusinessUrl());
+		walletCompany.setIdentitycardUrl1(companyUploadFile.getIdentitycardUrl1());
+		walletCompany.setIdentitycardUrl2(companyUploadFile.getIdentitycardUrl2());
+		walletCompany.setLicenseUrl(companyUploadFile.getLicenseUrl());
+		int count=walletCompanyMapper.updateById(walletCompany);
+		if(count<1){
+			throw new BusinessException("上传失败,db操作异常");
+		}
+		List<String> files=new ArrayList<>();
+		files.add(WalletWebConfig.getPathImage()+companyUploadFile.getDoBusinessUrl().split("image/")[1]);
+		files.add(WalletWebConfig.getPathImage()+companyUploadFile.getIdentitycardUrl1().split("image/")[1]);
+		files.add(WalletWebConfig.getPathImage()+companyUploadFile.getIdentitycardUrl2().split("image/")[1]);
+		files.add(WalletWebConfig.getPathImage()+companyUploadFile.getLicenseUrl().split("image/")[1]);
+		SendMail sendMail=new SendMail("企业信息设置:"+busUser.getName(),"企业信息设置",files);
+		ServerResponse<?>	mailServerResponse=mailService.sendAttachmentsMail(sendMail);
+		log.info(CommonUtil.format("mailServerResponse:%s", JsonUtil.toJSONString(mailServerResponse)));
+		if(!ServerResponse.judgeSuccess(mailServerResponse)){
+			throw new BusinessException(mailServerResponse.getCode(),mailServerResponse.getMsg());
+		}
+		log.info(CommonUtil.format("uploadFile api serverResponse:%s", JsonUtil.toJSONString(mailServerResponse)));
+		/*******************************发送邮件**************************************/
+		return mailServerResponse;
 	}
 }

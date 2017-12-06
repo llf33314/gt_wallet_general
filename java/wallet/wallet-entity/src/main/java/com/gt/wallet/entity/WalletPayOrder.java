@@ -50,30 +50,13 @@ public class WalletPayOrder extends Model<WalletPayOrder> {
      */
 	@TableField("member_id")
 	private Integer memberId;
-    /**
-     * 商户系统用户标识
-     */
-	@TableField("payer_id")
-	private String payerId;
+
     /**
      * 系统订单号
      */
 	@TableField("sys_order_no")
 	private String sysOrderNo;
-    /**
-     * 商品类型
-     */
-	@TableField("goods_type")
-	private Integer goodsType;
-    /**
-     * 商户系统商品编号
-     */
-	@TableField("goods_no")
-	private String goodsNo;
-    /**
-     * 业务码
-     */
-	private String tradeCode;
+
     /**
      * 订单金额
      */
@@ -82,30 +65,12 @@ public class WalletPayOrder extends Model<WalletPayOrder> {
      * 手续费
      */
 	private BigDecimal fee;
-    /**
-     * 交易验证方式
-     */
-	@TableField("validate_type")
-	private Integer validateType;
+
     /**
      * 订单生成时间
      */
 	private Date ctime;
-    /**
-     * 支付方式
-     */
-	@TableField("pay_method")
-	private String payMethod;
-    /**
-     * 商品名称
-     */
-	@TableField("goods_name")
-	private String goodsName;
-    /**
-     * 商品描述
-     */
-	@TableField("goods_desc")
-	private String goodsDesc;
+
     /**
      * 行业代码
      */
@@ -126,10 +91,7 @@ public class WalletPayOrder extends Model<WalletPayOrder> {
      */
 	@TableField("goods_summary")
 	private String goodsSummary;
-    /**
-     * 扩展信息
-     */
-	private String extendInfo;
+
     /**
      * 支付状态 成功：success 进行中：pending 失败：fail
      */
@@ -148,17 +110,7 @@ public class WalletPayOrder extends Model<WalletPayOrder> {
      * 交易编号
      */
 	private String tradeNo;
-    /**
-     * 移动认证支付订单号
-     */
-	@TableField("cert_pay_order_no")
-	private String certPayOrderNo;
-    /**
-     * 移动认证支付订单生成时
-            间
-     */
-	@TableField("order_datetime")
-	private String orderDatetime;
+
     /**
      * POS 支付的付款码
      */
@@ -169,22 +121,7 @@ public class WalletPayOrder extends Model<WalletPayOrder> {
      */
 	@TableField("we_chat_aapinfo")
 	private String weChatAapinfo;
-    /**
-     * 扫码支付信息/ JS 支付串信息  JS 支付必传;
-            微信公众号JS 支付：返回
-            json 字符串
-     */
-	@TableField("pay_info")
-	private String payInfo;
-    /**
-     * 新移动快捷支付支付密码标记
-     */
-	private String needpassword;
-    /**
-     * 新移动快捷支付短信标记
-     */
-	@TableField("mobile_flag")
-	private Integer mobileFlag;
+
     /**
      * 退款订单号
      */
@@ -205,7 +142,21 @@ public class WalletPayOrder extends Model<WalletPayOrder> {
      */
 	@TableField("refund_external_no")
 	private String refundExternalNo;
+	
+	/**
+	 * 支付宝或微信账号(openid)
+	 */
+	private String acct;
+	
+	/**
+	 * 提交订单号
+	 */
+	private String submitNo;
 
+	/**
+	 * 支付方式
+	 */
+	private Integer payType;
 
 	@Override
 	protected Serializable pkVal() {
@@ -219,34 +170,20 @@ public class WalletPayOrder extends Model<WalletPayOrder> {
 			", busId=" + busId +
 			", wMemberId=" + wMemberId +
 			", memberId=" + memberId +
-			", payerId=" + payerId +
 			", sysOrderNo=" + sysOrderNo +
-			", goodsType=" + goodsType +
-			", goodsNo=" + goodsNo +
-			", tradeCode=" + tradeCode +
 			", amount=" + amount +
 			", fee=" + fee +
-			", validateType=" + validateType +
 			", ctime=" + ctime +
-			", payMethod=" + payMethod +
-			", goodsName=" + goodsName +
-			", goodsDesc=" + goodsDesc +
 			", industryCode=" + industryCode +
 			", industryName=" + industryName +
 			", visitSource=" + visitSource +
 			", goodsSummary=" + goodsSummary +
-			", extendInfo=" + extendInfo +
 			", status=" + status +
 			", payFailMessage=" + payFailMessage +
 			", externalNo=" + externalNo +
 			", tradeNo=" + tradeNo +
-			", certPayOrderNo=" + certPayOrderNo +
-			", orderDatetime=" + orderDatetime +
 			", payCode=" + payCode +
 			", weChatAapinfo=" + weChatAapinfo +
-			", payInfo=" + payInfo +
-			", needpassword=" + needpassword +
-			", mobileFlag=" + mobileFlag +
 			", sysRefundNo=" + sysRefundNo +
 			", refundAmount=" + refundAmount +
 			", refundFeeamount=" + refundFeeamount +

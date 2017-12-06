@@ -8,43 +8,53 @@
 		<result column="bus_id" property="busId" />
 		<result column="w_member_id" property="wMemberId" />
 		<result column="member_id" property="memberId" />
-		<result column="payer_id" property="payerId" />
 		<result column="sys_order_no" property="sysOrderNo" />
-		<result column="goods_type" property="goodsType" />
-		<result column="goods_no" property="goodsNo" />
-		<result column="tradeCode" property="tradeCode" />
 		<result column="amount" property="amount" />
 		<result column="fee" property="fee" />
-		<result column="validate_type" property="validateType" />
 		<result column="ctime" property="ctime" />
-		<result column="pay_method" property="payMethod" />
-		<result column="goods_name" property="goodsName" />
-		<result column="goods_desc" property="goodsDesc" />
 		<result column="industry_code" property="industryCode" />
 		<result column="industry_name" property="industryName" />
 		<result column="visit_source" property="visitSource" />
 		<result column="goods_summary" property="goodsSummary" />
-		<result column="extendInfo" property="extendInfo" />
 		<result column="status" property="status" />
 		<result column="pay_fail_message" property="payFailMessage" />
 		<result column="external_no" property="externalNo" />
 		<result column="tradeNo" property="tradeNo" />
-		<result column="cert_pay_order_no" property="certPayOrderNo" />
-		<result column="order_datetime" property="orderDatetime" />
 		<result column="pay_code" property="payCode" />
-		<result column="we_chat_aapinfo" property="weChatAapinfo" />
-		<result column="pay_info" property="payInfo" />
-		<result column="needpassword" property="needpassword" />
-		<result column="mobile_flag" property="mobileFlag" />
 		<result column="sys_refund_no" property="sysRefundNo" />
 		<result column="refund_amount" property="refundAmount" />
 		<result column="refund_feeamount" property="refundFeeamount" />
 		<result column="refund_external_no" property="refundExternalNo" />
+		<result column="acct" property="acct" />
+		<result column="submit_no" property="submitNo" />
+		<result column="pay_type" property="payType" />
 	</resultMap>
 
     <!-- 通用查询结果列 -->
     <sql id="Base_Column_List">
-        id, bus_id AS busId, w_member_id AS wMemberId, member_id AS memberId, payer_id AS payerId, sys_order_no AS sysOrderNo, goods_type AS goodsType, goods_no AS goodsNo, tradeCode, amount, fee, validate_type AS validateType, ctime, pay_method AS payMethod, goods_name AS goodsName, goods_desc AS goodsDesc, industry_code AS industryCode, industry_name AS industryName, visit_source AS visitSource, goods_summary AS goodsSummary, extendInfo, status, pay_fail_message AS payFailMessage, external_no AS externalNo, tradeNo, cert_pay_order_no AS certPayOrderNo, order_datetime AS orderDatetime, pay_code AS payCode, we_chat_aapinfo AS weChatAapinfo, pay_info AS payInfo, needpassword, mobile_flag AS mobileFlag, sys_refund_no AS sysRefundNo, refund_amount AS refundAmount, refund_feeamount AS refundFeeamount, refund_external_no AS refundExternalNo
+        id, bus_id AS busId, 
+        w_member_id AS wMemberId, 
+        member_id AS memberId, 
+        sys_order_no AS sysOrderNo, 
+        amount, 
+        fee, 
+        ctime, 
+        industry_code AS industryCode, 
+        industry_name AS industryName, 
+        visit_source AS visitSource, 
+        goods_summary AS goodsSummary, 
+        status, 
+        pay_fail_message AS payFailMessage, 
+        external_no AS externalNo, 
+        tradeNo, 
+        pay_code AS payCode, 
+        sys_refund_no AS sysRefundNo, 
+        refund_amount AS refundAmount, 
+        refund_feeamount AS refundFeeamount, 
+        refund_external_no AS refundExternalNo,
+        acct,
+        submit_no AS submitNo,
+        pay_type AS payType
     </sql>
 
 </mapper>

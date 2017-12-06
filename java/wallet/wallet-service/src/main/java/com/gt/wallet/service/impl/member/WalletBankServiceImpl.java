@@ -12,6 +12,7 @@ import com.alibaba.fastjson.JSONObject;
 import com.baomidou.mybatisplus.mapper.EntityWrapper;
 import com.gt.api.util.httpclient.JsonUtil;
 import com.gt.wallet.base.BaseServiceImpl;
+import com.gt.wallet.data.api.tonglian.TCardBin;
 import com.gt.wallet.data.wallet.request.WalletCompanyAdd;
 import com.gt.wallet.data.wallet.request.WalletIndividualAdd;
 import com.gt.wallet.dto.ServerResponse;
@@ -107,8 +108,8 @@ public class WalletBankServiceImpl extends BaseServiceImpl<WalletBankMapper, Wal
 				throw new BusinessException("持卡人姓名与法人姓名不一致");
 			}
 		}
-		ServerResponse<com.alibaba.fastjson.JSONObject>  serverResponseBin=YunSoaMemberUtil.getBankCardBin(walletIndividualAdd.getCardNo());
-		JSONObject jsonObject=serverResponseBin.getData();
+		ServerResponse<TCardBin>  serverResponseBin=YunSoaMemberUtil.getBankCardBin(walletIndividualAdd.getCardNo());
+		TCardBin tCardBin=serverResponseBin.getData();
 		if(serverResponseBin.getCode()!=0){//
 			throw new BusinessException(serverResponseBin.getCode(),serverResponseBin.getMsg());
 		}
@@ -116,10 +117,10 @@ public class WalletBankServiceImpl extends BaseServiceImpl<WalletBankMapper, Wal
 		Long cardType =0L;
 		Integer cardLenth =0;
 		Integer cardState =0;
-		bankCode =jsonObject.getString("bankCode");
-		cardType =jsonObject.getLong("cardType");
-		cardLenth =jsonObject.getInteger("cardLenth");
-		cardState =jsonObject.getInteger("cardState");
+		bankCode =tCardBin.getBankCode();
+		cardType =tCardBin.getCardType();
+		cardLenth =tCardBin.getCardLenth().intValue();
+		cardState =tCardBin.getCardState().intValue();
 		walletIndividualAdd.getMemberId();
 		if(cardType!=1){//
 			log.error("biz接口:银行卡类型异常,请填写借记卡");
@@ -183,9 +184,9 @@ public class WalletBankServiceImpl extends BaseServiceImpl<WalletBankMapper, Wal
 	public ServerResponse<Integer> addPublic(WalletCompanyAdd walletCompanyAdd)throws Exception {
 		log.info(CommonUtil.format("start addPublic api:%s", JsonUtil.toJSONString(walletCompanyAdd)));
 		/****************************************银行卡操作********************************************/
-		ServerResponse<com.alibaba.fastjson.JSONObject>  serverResponseBin=YunSoaMemberUtil.getBankCardBin(walletCompanyAdd.getAccountNo());
+		ServerResponse<TCardBin>  serverResponseBin=YunSoaMemberUtil.getBankCardBin(walletCompanyAdd.getAccountNo());
 		log.info(CommonUtil.format("serverResponseBin:%s", JsonUtil.toJSONString(serverResponseBin)));
-		JSONObject jsonObject=serverResponseBin.getData();
+		TCardBin tCardBin=serverResponseBin.getData();
 		if(serverResponseBin.getCode()!=0){//
 			throw new BusinessException(serverResponseBin.getCode(),serverResponseBin.getMsg());
 		}
@@ -194,11 +195,10 @@ public class WalletBankServiceImpl extends BaseServiceImpl<WalletBankMapper, Wal
 		Long cardType =0L;
 		Integer cardLenth =0;
 		Integer cardState =0;
-		bankCode =jsonObject.getString("bankCode");
-		cardType =jsonObject.getLong("cardType");
-		cardLenth =jsonObject.getInteger("cardLenth");
-		cardState =jsonObject.getInteger("cardState");
-		
+		bankCode =tCardBin.getBankCode();
+		cardType =tCardBin.getCardType();
+		cardLenth =tCardBin.getCardLenth().intValue();
+		cardState =tCardBin.getCardState().intValue();
 		if(cardType!=1){//
 			log.error("biz接口:银行卡类型异常,请填写借记卡");
 			throw new BusinessException("银行卡类型异常,请填写借记卡");
@@ -265,6 +265,12 @@ public class WalletBankServiceImpl extends BaseServiceImpl<WalletBankMapper, Wal
 			walletBankMapper.updateById(walletBank);
 		}
 		log.info("end bindBankCard api:%s"+JsonUtil.toJSONString(serverResponse));
+		return serverResponse;
+	}
+
+	@Override
+	public ServerResponse<TCardBin> getBankCardBin(String bankCardNo) {
+		ServerResponse<TCardBin> serverResponse=YunSoaMemberUtil.getBankCardBin(bankCardNo);
 		return serverResponse;
 	}
 }
