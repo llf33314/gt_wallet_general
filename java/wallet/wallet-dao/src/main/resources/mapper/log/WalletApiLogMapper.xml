@@ -12,11 +12,12 @@
 		<result column="ctime" property="ctime" />
 		<result column="status" property="status" />
 		<result column="msg" property="msg" />
+		<result column="url" property="url" />
 	</resultMap>
 
     <!-- 通用查询结果列 -->
     <sql id="Base_Column_List">
-        id, w_member_id AS wMemberId, params_json AS paramsJson, type, result, ctime, status, msg
+        id, w_member_id AS wMemberId, params_json AS paramsJson, type, result, ctime, status, msg,url
     </sql>
 
 

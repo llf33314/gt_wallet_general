@@ -128,6 +128,11 @@ public class WalletMember extends Model<WalletMember> {
 	@TableField("registerIp")
 	@ApiModelProperty(name="创建ip",notes="创建ip，如无业务需要不传")
 	private String registerIp;
+	
+	/**
+	 * 手续费百分比
+	 */
+	private Double feePercent;
 
 	@Override
 	protected Serializable pkVal() {
