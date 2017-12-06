@@ -26,7 +26,7 @@
           success: (res) => {
             console.log(res, '查询会员信息')
             //-2:删除,-1:锁定用户,0:创建,1:审核中,3:正常使用)
-            res.data.status = 3
+            // res.data.status = 3
             if (res.data.status == 0) {
               this.$router.push({
                 path: '/wallet/individual/open'

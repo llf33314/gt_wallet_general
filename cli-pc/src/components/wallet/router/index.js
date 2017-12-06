@@ -23,6 +23,14 @@ export const individual = [
     component: resolve => {
       require(['@/components/wallet/vue/individual/index'], resolve)
     }
+  },
+  {
+    path: '/wallet/individual/addBank/:memberId',
+    name: 'individualAddBank',
+    title: '新增个人银行卡',
+    component: resolve => {
+      require(['@/components/wallet/vue/individual/addBank'], resolve)
+    }
   }
 ]
 //企业
@@ -30,7 +38,7 @@ export const company = [
   {
     path: '/wallet/company/open/:memberId',
     name: 'companyOpen',
-    title: '个人开通',
+    title: '企业开通',
     component: resolve => {
       require(['@/components/wallet/vue/company/open'], resolve)
     }
