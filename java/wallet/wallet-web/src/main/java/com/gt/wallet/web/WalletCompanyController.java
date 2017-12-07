@@ -108,7 +108,7 @@ public class WalletCompanyController extends BaseController {
 	 * @return
 	 */
 	@ResponseBody
-	@RequestMapping(value="save",method=RequestMethod.POST)
+	@RequestMapping(value="uploadFile",method=RequestMethod.POST)
 	 @ApiOperation(value="上传文件证件", notes="新增企业会员信息")
 	@ApiImplicitParams({
 		@ApiImplicitParam(name = "memberId",value = "会员id(调用开通会员接口有返回)",paramType = "form",dataType = "int",required=true),
