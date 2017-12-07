@@ -1,7 +1,6 @@
 package com.gt.wallet.service.order;
 
-import java.util.Map;
-
+import com.alibaba.fastjson.JSONObject;
 import com.gt.wallet.base.BaseService;
 import com.gt.wallet.data.wallet.request.PayOrder;
 import com.gt.wallet.dto.ServerResponse;
@@ -41,5 +40,14 @@ public interface WalletPayOrderService extends BaseService<WalletPayOrder> {
 	 */
 	ServerResponse<WalletPayOrder> findByOrderNo(String orderNo) throws Exception;
 	
-//	ServerResponse<?>	paySuccessNotify(Map<String, Object> params);
+	
+	/**
+	 * 根据提交订单号查询
+	 * @param orderNo
+	 * @return
+	 * @throws Exception
+	 */
+	ServerResponse<WalletPayOrder> findBySubmitOrderNo(String submitOrderNo) throws Exception;
+	
+	ServerResponse<?>	paySuccessNotify(JSONObject params)throws Exception;
 }

@@ -51,12 +51,12 @@ public class WalletApiLogServiceImpl extends BaseServiceImpl<WalletApiLogMapper,
 	}
 
 	@Override
-	public ServerResponse<?> save(String paramJson, ServerResponse<?> serverResponse,Integer memberId,String url,String orderNo) throws Exception {
+	public ServerResponse<?> save(String paramJson, ServerResponse<?> serverResponse,Integer memberId,String url,String orderNo,Integer type) throws Exception {
 		WalletApiLog walletApiLog=new WalletApiLog();
 		walletApiLog.setMsg(serverResponse.getMsg());
 		walletApiLog.setParamsJson(paramJson);
 		walletApiLog.setResult(JsonUtil.toJSONString(serverResponse));
-		walletApiLog.setType(1);
+		walletApiLog.setType(type);
 		walletApiLog.setUrl(url);
 		walletApiLog.setWMemberId(memberId);
 		walletApiLog.setOrderNo(orderNo);
@@ -73,6 +73,22 @@ public class WalletApiLogServiceImpl extends BaseServiceImpl<WalletApiLogMapper,
 			return ServerResponse.createByError();
 		}
 	}
+
+	@Override
+	public ServerResponse<WalletApiLog> findById(String orderNo, Integer type) {
+		WalletApiLog params=new  WalletApiLog();
+		params.setOrderNo(orderNo);
+		params.setType(type);
+		WalletApiLog walletApiLog=	walletApiLogMapper.selectOne(params);
+		if(CommonUtil.isEmpty(walletApiLog)){
+			return ServerResponse.createByError();
+		}else{
+			
+			return ServerResponse.createBySuccessCodeData(walletApiLog);
+		}
+	}
+	
+	
 	
 	
 }

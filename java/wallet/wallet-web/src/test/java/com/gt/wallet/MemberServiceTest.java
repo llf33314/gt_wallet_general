@@ -4,7 +4,7 @@ import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import com.gt.api.util.httpclient.JsonUtil;
-import com.gt.wallet.data.api.tonglian.TCardBin;
+import com.gt.wallet.data.api.tonglian.request.TCardBin;
 import com.gt.wallet.dto.ServerResponse;
 import com.gt.wallet.service.member.WalletBankService;
 import com.gt.wallet.service.member.WalletCompanyService;

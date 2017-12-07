@@ -9,10 +9,10 @@ import org.json.JSONObject;
 
 import com.gt.api.util.httpclient.JsonUtil;
 import com.gt.wallet.constant.WalletConstants;
-import com.gt.wallet.data.api.tonglian.TCardBin;
-import com.gt.wallet.data.api.tonglian.TPayOrder;
-import com.gt.wallet.data.api.tonglian.TRefundOrder;
-import com.gt.wallet.data.api.tonglian.TWithdrawOrder;
+import com.gt.wallet.data.api.tonglian.request.TCardBin;
+import com.gt.wallet.data.api.tonglian.request.TPayOrder;
+import com.gt.wallet.data.api.tonglian.request.TRefundOrder;
+import com.gt.wallet.data.api.tonglian.request.TWithdrawOrder;
 import com.gt.wallet.data.wallet.request.WalletCompanyAdd;
 import com.gt.wallet.data.wallet.request.WalletIndividualAdd;
 import com.gt.wallet.dto.ServerResponse;

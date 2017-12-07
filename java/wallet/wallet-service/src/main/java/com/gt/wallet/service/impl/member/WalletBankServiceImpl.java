@@ -12,7 +12,7 @@ import com.alibaba.fastjson.JSONObject;
 import com.baomidou.mybatisplus.mapper.EntityWrapper;
 import com.gt.api.util.httpclient.JsonUtil;
 import com.gt.wallet.base.BaseServiceImpl;
-import com.gt.wallet.data.api.tonglian.TCardBin;
+import com.gt.wallet.data.api.tonglian.request.TCardBin;
 import com.gt.wallet.data.wallet.request.WalletCompanyAdd;
 import com.gt.wallet.data.wallet.request.WalletIndividualAdd;
 import com.gt.wallet.dto.ServerResponse;

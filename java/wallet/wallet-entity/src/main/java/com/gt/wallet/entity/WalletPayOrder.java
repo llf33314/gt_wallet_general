@@ -151,12 +151,21 @@ public class WalletPayOrder extends Model<WalletPayOrder> {
 	/**
 	 * 提交订单号
 	 */
+	@TableField("submit_no")
 	private String submitNo;
 
 	/**
 	 * 支付方式
 	 */
+	@TableField("pay_type")
 	private Integer payType;
+	
+	
+	/**
+	 * 是否可提现(1:可取 2:不可取)
+	 */
+	@TableField("take_state")
+	private Integer takeState;
 
 	@Override
 	protected Serializable pkVal() {

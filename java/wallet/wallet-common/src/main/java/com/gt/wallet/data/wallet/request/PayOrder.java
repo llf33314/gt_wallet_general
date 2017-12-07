@@ -71,5 +71,10 @@ public class PayOrder {
 	@ApiModelProperty(name="submitNo",notes="提交订单号",required=true)
 	private String submitNo;
 
+	/**
+	 * 是否可立即提现(1:可取 2:不可取)
+	 */
+	@ApiModelProperty(name="takeState",notes="是否可立即提现(1:可取 2:不可取)",required=true)
+	private Integer takeState;
 	
 }

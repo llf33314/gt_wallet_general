@@ -35,6 +35,14 @@ public interface WalletApiLogService extends BaseService<WalletApiLog> {
 	 * @param apiLog
 	 * @return
 	 */
-	ServerResponse<?> save(String paramJson, ServerResponse<?> serverResponse,Integer memberId,String url,String orderNo)throws  Exception;
+	ServerResponse<?> save(String paramJson, ServerResponse<?> serverResponse,Integer memberId,String url,String orderNo,Integer type)throws  Exception;
+	
+	/**
+	 * 查询日志
+	 * @param orderNo
+	 * @param type
+	 * @return
+	 */
+	ServerResponse<WalletApiLog> findById(String orderNo,Integer type);
 	
 }

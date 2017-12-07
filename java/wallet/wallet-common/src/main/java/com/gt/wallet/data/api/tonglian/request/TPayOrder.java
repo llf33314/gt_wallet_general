@@ -1,4 +1,4 @@
-package com.gt.wallet.data.api.tonglian;
+package com.gt.wallet.data.api.tonglian.request;
 
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;

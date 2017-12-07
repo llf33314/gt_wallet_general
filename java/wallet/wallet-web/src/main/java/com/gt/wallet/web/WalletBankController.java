@@ -16,7 +16,7 @@ import org.springframework.web.bind.annotation.RestController;
 import com.gt.api.bean.session.BusUser;
 import com.gt.api.util.httpclient.JsonUtil;
 import com.gt.wallet.base.BaseController;
-import com.gt.wallet.data.api.tonglian.TCardBin;
+import com.gt.wallet.data.api.tonglian.request.TCardBin;
 import com.gt.wallet.data.wallet.request.WalletBankAdd;
 import com.gt.wallet.data.wallet.request.WalletIndividualAdd;
 import com.gt.wallet.dto.ServerResponse;
