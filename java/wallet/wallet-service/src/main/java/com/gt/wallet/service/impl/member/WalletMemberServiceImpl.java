@@ -102,7 +102,7 @@ public class WalletMemberServiceImpl extends BaseServiceImpl<WalletMemberMapper,
 					ServerResponse<WalletIndividual> serverResponse=walletIndividualService.findByMemberId(walletMembers.get(i).getId());
 					if(CommonUtil.isNotEmpty(serverResponse.getData())){
 						walletMembers.get(i).setWalletIndividual(serverResponse.getData());
-						walletMembers.get(i).getWalletIndividual().setIdentityCardNo(IdCardUtil.hide(walletMembers.get(i).getWalletIndividual().getIdentityCardNo()));
+						walletMembers.get(i).getWalletIndividual().setIdentityCardNo(IdCardUtil.hide(YunSoaMemberUtil.rsaDecrypt(walletMembers.get(i).getWalletIndividual().getIdentityCardNo())));
 						walletMembers.get(i).getWalletIndividual().setIdentitycardUrl1(null);
 						walletMembers.get(i).getWalletIndividual().setIdentitycardUrl2(null);
 					}

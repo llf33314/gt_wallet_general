@@ -668,17 +668,18 @@ public class YunSoaMemberUtil {
 	 * @param signStr
 	 * @throws Exception
 	 */
-	public static void rsaDecrypt(String signStr) throws Exception{
+	public static String  rsaDecrypt(String signStr) throws Exception{
 		try{
 			log.info("rsaDecrypt start");
 
 			RSAUtil rsaUtil = new RSAUtil((RSAPublicKey)publicKey, (RSAPrivateKey)privateKey);
 			String dencryptStr = rsaUtil.dencrypt(signStr);
 			log.info("解密：" + dencryptStr);
+			return dencryptStr;
 		}catch(Exception e){
 			log.error("rsaDecrypt error");
 			e.printStackTrace();
-			throw e;
+			return "";
 		}
 	}
 	
