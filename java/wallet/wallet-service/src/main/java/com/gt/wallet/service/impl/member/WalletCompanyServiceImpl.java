@@ -23,6 +23,7 @@ import com.gt.wallet.data.wallet.request.SendMail;
 import com.gt.wallet.data.wallet.request.WalletCompanyAdd;
 import com.gt.wallet.dto.ServerResponse;
 import com.gt.wallet.entity.WalletCompany;
+import com.gt.wallet.entity.WalletIndividual;
 import com.gt.wallet.entity.WalletMember;
 import com.gt.wallet.enums.WalletResponseEnums;
 import com.gt.wallet.exception.BusinessException;
@@ -187,4 +188,14 @@ public class WalletCompanyServiceImpl extends BaseServiceImpl<WalletCompanyMappe
 		/*******************************发送邮件**************************************/
 		return mailServerResponse;
 	}
+
+
+	@Override
+	public ServerResponse<WalletCompany> findByMemberId(Integer memberId) {
+		WalletCompany params=new WalletCompany();
+		params.setWMemberId(memberId);
+		WalletCompany walletIndividual=walletCompanyMapper.selectOne(params);
+		return ServerResponse.createBySuccessCodeData(walletIndividual);
+	}
+	
 }

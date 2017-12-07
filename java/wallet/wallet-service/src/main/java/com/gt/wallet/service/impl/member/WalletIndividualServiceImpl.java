@@ -181,6 +181,14 @@ public class WalletIndividualServiceImpl extends BaseServiceImpl<WalletIndividua
 			throw new BusinessException(WalletResponseEnums.DATA_NULL_ERROR);
 		}
 	}
+
+	@Override
+	public ServerResponse<WalletIndividual> findByMemberId(Integer memberId) {
+		WalletIndividual params=new WalletIndividual();
+		params.setWMemberId(memberId);
+		WalletIndividual walletIndividual=walletIndividualMapper.selectOne(params);
+		return ServerResponse.createBySuccessCodeData(walletIndividual);
+	}
 	
 	
 

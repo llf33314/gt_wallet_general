@@ -36,4 +36,11 @@ public interface WalletCompanyService extends BaseService<WalletCompany> {
 	 */
 	ServerResponse<?> uploadFile(CompanyUploadFile companyUploadFile,BusUser busUser)throws Exception;
 	
+	/**
+	 * 根据会员id查询
+	 * @param memberId
+	 * @return
+	 */
+	ServerResponse<WalletCompany> findByMemberId(Integer memberId);
+	
 }
