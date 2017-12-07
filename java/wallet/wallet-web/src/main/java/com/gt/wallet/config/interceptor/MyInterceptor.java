@@ -73,7 +73,7 @@ public class MyInterceptor implements HandlerInterceptor {
         long startTime = System.currentTimeMillis();
         request.setAttribute("runStartTime", startTime);
         BusUser busUser=new BusUser();
-        busUser.setId(33);
+        busUser.setId(42);
         SessionUtils.setLoginUser(request,busUser);
         // 获得在下面代码中要用的request,response,session对象
         String homeUrl=WalletWebConfig.getHomeUrl();
