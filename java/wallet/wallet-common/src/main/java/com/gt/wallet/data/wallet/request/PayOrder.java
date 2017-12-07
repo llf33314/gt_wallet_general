@@ -56,12 +56,20 @@ public class PayOrder {
 	/**
 	 * 支付方式 1：微信 2:支付宝
 	 */
+	@ApiModelProperty(name="type",notes="支付方式 1：微信 2:支付宝",required=true)
 	private Integer type;
 	
 	/**
 	 * 描述
 	 */
+	@ApiModelProperty(name="desc",notes="描述",required=true)
 	private String desc;
+	
+	/**
+	 * 提交订单号
+	 */
+	@ApiModelProperty(name="submitNo",notes="提交订单号",required=true)
+	private String submitNo;
 
 	
 }

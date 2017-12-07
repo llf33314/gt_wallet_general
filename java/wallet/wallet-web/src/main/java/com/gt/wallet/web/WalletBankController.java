@@ -158,32 +158,13 @@ public class WalletBankController extends BaseController {
 	
 	
 	/**
-	 * 新增个人银行卡
+	 * 查询银行卡bin信息
 	 * @return
 	 */
 	@ResponseBody
-	@RequestMapping(value="addBank",method=RequestMethod.POST)
-	 @ApiOperation(value="新增个人银行卡", notes="新增个人银行卡")
-	@ApiImplicitParams({
-        @ApiImplicitParam(name = "memberId",value = "会员id(调用开通会员接口有返回)",paramType = "form",dataType = "int",required=true,example="调用开通会员接口有返回"),
-        @ApiImplicitParam(name = "cardNo",value = "银行卡号",paramType = "form",dataType = "string",required=true,example="1234567891234567")
-        ,
-        @ApiImplicitParam(name = "phone",value = "银行预留手机",paramType = "form",dataType = "string",required=true,example="13888888888")
-        ,
-        @ApiImplicitParam(name = "bankName",value = "银行卡开户人姓名(必须与注册人姓名一致)",paramType = "form",dataType = "string",required=true),
-        @ApiImplicitParam(name = "unionBank",value = "支付行号",paramType = "form",dataType = "string",required=false),
-        @ApiImplicitParam(name = "isSafeCard",value = "是否为安全卡 0：是 1：否",paramType = "form",dataType = "string",required=false)
-//        ,
-//        @ApiImplicitParam(name = "code",value = "短信验证码",paramType = "form",dataType = "string",required=true)
-        // path, query, body, header, form
-	})
+	@RequestMapping(value="getBankCardBin",method=RequestMethod.POST)
+	 @ApiOperation(value="查询银行卡bin信息", notes="查询银行卡bin信息")
 	
-	/**
-	 * 查询银行卡bin信息
-	 * @param request
-	 * @param bankCardNo
-	 * @return
-	 */
 	public ServerResponse<TCardBin> getBankCardBin(HttpServletRequest request,@ApiParam(required=true,name="bankCardNo" ,value="银行卡号") @RequestParam(required=true) String bankCardNo
 			){
 		log.info(CommonUtil.format("触发getBankCardBin api:%s",bankCardNo));
