@@ -43,7 +43,8 @@ import lombok.extern.slf4j.Slf4j;
  * @since 2017-10-23
  */
 @Slf4j
-@RestController("/walletMember")  
+@RestController
+@RequestMapping("/walletMember")
 @Api(value = "walletMember",description="多粉会员")  
 public class WalletMemberController extends BaseController {
 	
