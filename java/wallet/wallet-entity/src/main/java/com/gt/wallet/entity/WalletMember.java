@@ -132,6 +132,7 @@ public class WalletMember extends Model<WalletMember> {
 	/**
 	 * 手续费百分比
 	 */
+	@TableField("fee_percent")
 	private Double feePercent;
 
 	@Override
