@@ -70,6 +70,7 @@ public class WalletCompanyController extends BaseController {
         @ApiImplicitParam(name = "legalPhone",value = "法人证件号码",paramType = "form",dataType = "string",required=true),
         @ApiImplicitParam(name = "province",value = "省份(code)",paramType = "form",dataType = "string",required=true),
         @ApiImplicitParam(name = "area",value = "县市(code)",paramType = "form",dataType = "string",required=true),
+        @ApiImplicitParam(name = "accountNo",value = "对公账号",paramType = "form",dataType = "string",required=true),
         @ApiImplicitParam(name = "legalIds",value = "法人证件号码",paramType = "form",dataType = "string",required=true),
         @ApiImplicitParam(name = "parentBankName",value = "开户银行名称",paramType = "form",dataType = "string",required=false),
         @ApiImplicitParam(name = "bankName",value = "开户行支行名称",paramType = "form",dataType = "string",required=false),
