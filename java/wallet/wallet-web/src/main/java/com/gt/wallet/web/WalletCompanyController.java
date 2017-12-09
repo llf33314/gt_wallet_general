@@ -128,7 +128,7 @@ public class WalletCompanyController extends BaseController {
 			log.info(CommonUtil.format("serverResponse:%s",JsonUtil.toJSONString(serverResponse)));
 			return serverResponse;
 			} catch ( BusinessException e) {
-				throw new ResponseEntityException(e.getCode(),e.getMessage());
+				throw new ResponseEntityException(e.getMessage());
 			} catch ( Exception e) {
 				e.printStackTrace();
 				log.error(CommonUtil.format("uploadFile api：%s,%s",WalletResponseEnums.SYSTEM_ERROR.getCode(),WalletResponseEnums.SYSTEM_ERROR.getDesc()));
