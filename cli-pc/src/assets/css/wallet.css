@@ -29,7 +29,10 @@
   margin-bottom: 15px;
 }
 .wallet-index .top-msg .title {
-  padding-right: 25px;
+  padding-right: 15px;
+  display: inline-block;
+  min-width: 50px;
+  text-align: left;
 }
 .wallet-index .data-msg {
   position: relative;

@@ -6,15 +6,15 @@ let base = 'http://dfpay.yifriend.net'
 export const wallet = {
   //查询会员信息
   findMember() {
-    return axios.get(`${base}/findMember`).then(res => res.data)
+    return axios.get(`${base}/walletMember/findMember`).then(res => res.data)
   },
   // 判断商家是否开通多粉钱包
   isPassWallet() {
-    return axios.get(`${base}/isPassWallet`).then(res => res.data)
+    return axios.get(`${base}/walletMember/isPassWallet`).then(res => res.data)
   },
   //开通会员
   register(param) {
-    return axios.get(`${base}/isPassWallet`, param).then(res => res.data)
+    return axios.get(`${base}/walletMember/isPassWallet`, param).then(res => res.data)
   },
   //个人开通
   saveIndividual(param) {

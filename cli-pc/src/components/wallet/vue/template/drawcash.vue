@@ -91,7 +91,6 @@
     }
     .bottom-dps {
       font-size: 13px;
-      line-height: 2.5;
       border-top: 1px solid #ddd;
       padding: 30px 0 50px;
       margin-top: 30px;

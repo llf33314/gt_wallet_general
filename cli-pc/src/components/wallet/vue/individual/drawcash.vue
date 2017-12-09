@@ -17,7 +17,7 @@
         margin-bottom: 15px;
       }
       .title {
-        padding-right: 25px;
+        padding-right: 15px;
       }
     }
     .data-msg {
@@ -94,11 +94,19 @@
       border-top: 1px solid #ddd;
       padding: 30px 0 50px;
       margin-top: 30px;
+      line-height: 2;
+    }
+    .title-i {
+      width: 70px;
+      text-align: right;
+      display: inline-block;
     }
   }
+
   .wallet-drawcash-dialog {
     width: 640px;
   }
+
 </style>
 <template>
   <section class="wallet-drawcash">
@@ -112,11 +120,11 @@
         <div class="gray">
           <div class="public-fl">
             <div class="row1 public-c333">
-              <span class="title">姓名：</span>
+              <span class="title title-i">姓名：</span>
               <span>撒个</span>
             </div>
             <div class="row1 public-c333">
-              <span class="title">认证类型：</span>
+              <span class="title title-i">认证类型：</span>
               <span>个人认证</span>
             </div>
           </div>
@@ -124,9 +132,8 @@
         <div class="data-msg">
           <ul class="public-fl public-c333 list">
             <li>
-              <p class="name">可用余额
-              </p>
-              <p>
+              <p class="name">可用余额</p>
+              <p style="padding-left: 20px;">
                 <span class="num">0</span>元</p>
             </li>
           </ul>

@@ -25,6 +25,14 @@ export const individual = [
     }
   },
   {
+    path: '/wallet/individual/drawcash',
+    name: 'individualDrawcash',
+    title: '个人提现',
+    component: resolve => {
+      require(['@/components/wallet/vue/individual/drawcash'], resolve)
+    }
+  },
+  {
     path: '/wallet/individual/addBank/:memberId',
     name: 'individualAddBank',
     title: '新增个人银行卡',

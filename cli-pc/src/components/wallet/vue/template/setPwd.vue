@@ -78,7 +78,7 @@
       save() {
         console.log(this.ruleForm, 'this.ruleForm')
         $.ajax({
-          url: this.DFPAYDOMAIN + '/setpwd',
+          url: this.DFPAYDOMAIN + '/walletMember/setpwd',
           type: 'POST',
           dataType: 'json',
           data: this.ruleForm,

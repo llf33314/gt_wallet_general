@@ -65,6 +65,15 @@
       height: 137px;
       display: block;
     }
+    .public-bottom-btns {
+      background-color: #dfdfdf;
+      padding: 10px 0;
+      position: fixed;
+      width: 100%;
+      left: 0;
+      bottom: 0;
+      text-align: center;
+    }
   }
 
 </style>
@@ -74,86 +83,21 @@
       <el-breadcrumb-item :to="{ path: '/wallet/index' }">多粉钱包</el-breadcrumb-item>
       <el-breadcrumb-item>企业开通</el-breadcrumb-item>
     </el-breadcrumb>
-    <div class="public-content">
+    <div class="public-content" style="margin-bottom:0;padding-bottom:0">
       <el-steps :active="active" center="true" style="border-bottom: 1px solid #ddd;padding:20px 0;">
         <el-step title="填写基本信息"></el-step>
         <el-step title="上传证件照片"></el-step>
         <el-step title="提交成功"></el-step>
       </el-steps>
-      <div v-show="active==1">
-        <div class="public-table-title">
-          企业信息
-          <span class="public-c999 public-f13">按照营业执照上的内容逐字填写</span>
-        </div>
-        <el-form :model="ruleForm1" :rules="rules1" ref="ruleForm1" label-width="200px" class="demo-ruleForm">
-          <el-form-item label="企业名称：" prop="companyName">
-            <el-input v-model="ruleForm1.companyName" placeholder="请输入企业名称" class="input-width"></el-input>
-          </el-form-item>
-          <el-form-item label="营业执照号：" prop="businessLicense">
-            <el-input v-model="ruleForm1.businessLicense" placeholder="请输入营业执照号" class="input-width"></el-input>
-          </el-form-item>
-          <el-form-item label="企业地址：" prop="companyAddress">
-            <el-select v-model="value" placeholder="请选择">
-              <el-option v-for="item in options" :key="item.value" :label="item.label" :value="item.value">
-              </el-option>
-            </el-select>
-            <el-select v-model="value" placeholder="请选择">
-              <el-option v-for="item in options" :key="item.value" :label="item.label" :value="item.value">
-              </el-option>
-            </el-select>
-          </el-form-item>
-          <el-form-item prop="companyAddress">
-            <el-input v-model="ruleForm1.companyAddress" placeholder="请输入详细地址" class="input-width"></el-input>
-          </el-form-item>
-          <el-form-item label="联系电话：" prop="telephone">
-            <el-input v-model="ruleForm1.telephone" placeholder="请输入联系电话" class="input-width"></el-input>
-          </el-form-item>
-        </el-form>
-        <div class="public-table-title">
-          法定代表人信息
-        </div>
-        <el-form :model="ruleForm2" :rules="rules2" ref="ruleForm2" label-width="200px" class="demo-ruleForm">
-          <el-form-item label="法定代表人姓名：" prop="legalName">
-            <el-input v-model="ruleForm2.legalName" placeholder="请输入法定代表人姓名" class="input-width"></el-input>
-          </el-form-item>
-          <el-form-item label="法人证件号码：" prop="legalIds">
-            <el-input v-model="ruleForm2.legalIds" placeholder="请输入法人证件号码" class="input-width"></el-input>
-          </el-form-item>
-          <el-form-item label="法人手机号码：" prop="legalPhone">
-            <el-input v-model="ruleForm2.legalPhone" placeholder="请输入法人手机号码" class="input-width"></el-input>
-          </el-form-item>
-        </el-form>
-        <div class="public-table-title">
-          银行卡信息
-        </div>
-        <el-form :model="ruleForm3" :rules="rules3" ref="ruleForm3" label-width="200px" class="demo-ruleForm">
-          <el-form-item label="开户银行名称：" prop="parentBankName">
-            <el-input v-model="ruleForm3.parentBankName" placeholder="请输入开户银行名称" class="input-width"></el-input>
-          </el-form-item>
-          <el-form-item label="开户支行行名称：" prop="bankName">
-            <el-input v-model="ruleForm3.bankName" placeholder="请输入开户支行行名称" class="input-width"></el-input>
-          </el-form-item>
-          <el-form-item label="支付行号：" prop="unionBank">
-            <el-input v-model="ruleForm3.unionBank" placeholder="请输入支付行号" class="input-width"></el-input>
-            <el-tooltip placement="right" effect="light">
-              <div slot="content">如非以下银行，则需要填写支付行号。
-                <br/> （工商银行、农业银行、中国银行、建设银行、
-                <br/> 中信银行、广大银行、华夏银行、平安银行、
-                <br/> 招商银行、兴业银行、浦发银行、邮储银行、
-                <br/> 宁波银行、南京银行、农信湖南）
-              </div>
-              <i class="el-icon-question" style="position:relative;color:#666666"></i>
-            </el-tooltip>
-          </el-form-item>
-        </el-form>
-        <div class="public-bottom-btns">
-          <el-button type="primary" @click="avtive1">下一步</el-button>
-        </div>
-      </div>
-      <div v-show="active==2">
+    </div>
+    <div v-show="active==1">
+      <open-base></open-base>
+    </div>
+    <div v-show="active==2">
+      <div class="public-content">
         <div class="public-table-title">
           企业法人营业执照
-        </div> 
+        </div>
         <el-form :model="ruleForm4" :rules="rules4" ref="ruleForm4" label-width="170px" class="demo-ruleForm">
           <el-form-item label="营业执照：" prop="doBusinessUrl">
             <el-upload class="avatar-uploader" ref="identitycardUrl1" action="" style="float:left" :multiple="true" :show-file-list="false"
@@ -200,145 +144,34 @@
             </div>
           </el-form-item>
         </el-form>
-        <div class="public-bottom-btns">
-          <el-button type="primary" @click="avtive2('ruleForm4')">下一步</el-button>
-        </div>
       </div>
-      <div v-show="active == 3">
-        <div class="public-c666 active-last">
-          <i class="el-icon-circle-check"></i>
-          <p>恭喜您完成多粉钱包的注册</p>
-          <p>身份信息与银行卡信息需要X个工作日进行审核验证，请您耐心等候。</p>
-        </div>
+      <div class="public-bottom-btns">
+        <el-button @click="active=1">上一步</el-button>
+        <el-button type="primary" @click="avtive2('ruleForm4')">下一步</el-button>
       </div>
     </div>
+    <div v-show="active == 3">
+      <div class="public-c666 active-last">
+        <i class="el-icon-circle-check"></i>
+        <p>恭喜您完成多粉钱包的注册</p>
+        <p>身份信息与银行卡信息需要X个工作日进行审核验证，请您耐心等候。</p>
+      </div>
+    </div>
+
+
   </section>
 </template>
 <script>
   import {
     wallet
   } from './../../api/index'
-
+  import OpenBase from './template/base.vue'
   export default {
+    components: {
+      OpenBase
+    },
     data() {
       return {
-        ruleForm1: {
-          companyName: '',
-          businessLicense: '',
-          companyAddress: '',
-          telephone: '',
-        },
-        rules1: {
-          companyName: [{
-              required: true,
-              message: '请输入企业名称',
-              trigger: 'blur'
-            },
-            {
-              min: 3,
-              max: 5,
-              message: '长度在 3 到 30 个字符',
-              trigger: 'blur'
-            }
-          ],
-          companyAddress: [{
-              required: true,
-              message: '请输入企业地址',
-              trigger: 'blur'
-            },
-            {
-              min: 3,
-              max: 5,
-              message: '长度在 3 到 30 个字符',
-              trigger: 'blur'
-            }
-          ],
-          businessLicense: [{
-              required: true,
-              message: '请输入营业执照号',
-              trigger: 'blur'
-            },
-            {
-              min: 15,
-              max: 15,
-              message: '长度在15 个字符',
-              trigger: 'blur'
-            }
-          ],
-        },
-        ruleForm2: {
-          legalName: '',
-          legalIds: '',
-          legalPhone: '',
-        },
-        rules2: {
-          legalName: [{
-              required: true,
-              message: '请输入法定代表人姓名',
-              trigger: 'blur'
-            },
-            {
-              min: 3,
-              max: 5,
-              message: '长度在 2 到 20 个字符',
-              trigger: 'blur'
-            }
-          ],
-          legalIds: [{
-            required: true,
-            message: '请输入法人证件号码',
-            trigger: 'blur'
-          }],
-          legalPhone: [{
-              required: true,
-              message: '请输入法人手机号码',
-              trigger: 'blur'
-            },
-            {
-              min: 11,
-              max: 11,
-              message: '长度在11个字符',
-              trigger: 'blur'
-            }
-          ],
-        },
-
-        ruleForm3: {
-          parentBankName: '',
-          bankName: '',
-          unionBank: '',
-        },
-        rules3: {
-          parentBankName: [{
-              required: true,
-              message: '请输入开户银行名称',
-              trigger: 'blur'
-            },
-            {
-              min: 3,
-              max: 5,
-              message: '长度在 2 到 20 个字符',
-              trigger: 'blur'
-            }
-          ],
-          bankName: [{
-            required: true,
-            message: '请输入开户支行行名称',
-            trigger: 'blur'
-          }],
-          unionBank: [{
-              required: true,
-              message: '请输入支付行号',
-              trigger: 'blur'
-            },
-            {
-              min: 11,
-              max: 11,
-              message: '长度在11个字符',
-              trigger: 'blur'
-            }
-          ],
-        },
         ruleForm4: {
           doBusinessUrl: '',
           licenseUrl: '',
@@ -367,8 +200,8 @@
             trigger: 'change'
           }],
         },
-        activeFlag: {},
-        active: 2,
+        
+        active: 1,
         // *************
         value1: true,
         radio2: 3,
@@ -408,36 +241,17 @@
             }
           ],
         },
+
       }
     },
-    methods: {
-      avtive1() {
-        // this.active = 2
-        this.submitForm("ruleForm1", 'type1');
-        this.submitForm("ruleForm2", 'type2');
-        this.submitForm("ruleForm3", 'type3');
 
-        if (this.activeFlag.type1 && this.activeFlag.type2 && this.activeFlag.type3) {
-          this.active = 2
-        }
-        console.log(this.activeFlag, 'this.activeFlag')
-      },
-      avtive2(formName){
+    methods: {
+      avtive2(formName) {
         this.$refs[formName].validate((valid) => {
           if (valid) {
             console.log(66)
           } else {
             return false
-          }
-        });
-      },
-      //确认开通
-      submitForm(formName, flagType) {
-        this.$refs[formName].validate((valid) => {
-          if (valid) {
-            this.activeFlag[flagType] = true
-          } else {
-            this.activeFlag[flagType] = false
           }
         });
       },

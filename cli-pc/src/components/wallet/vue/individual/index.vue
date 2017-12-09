@@ -1,26 +1,34 @@
 <style lang="less">
-
+  .wallet-individual-index {
+    .title-dps {
+      display: inline-block;
+      min-width: 180px;
+    }
+  }
 
 </style>
 <template>
-  <section class="wallet-index">
+  <section class="wallet-index wallet-individual-index">
     <div class="public-content">
       <div class="top-msg">
         <div class="gray">
           <div class="public-fl">
             <div class="row1 public-c333">
-              <span class="title">姓名：</span>
-              <span>撒个</span>
+              <span class="title" style="width:60px;">姓名：</span>
+              <span class="title-dps">撒个</span>
               <span class="title">认证类型：</span>
               <span>个人认证</span>
             </div>
-            <div class="row2 public-c666">
-              <span>请选择使用多粉钱包的应用</span>
-              <el-button @click="dialogFormVisible=true" class="public-cb" size="small" style="margin-left:27px;">选择</el-button>
+            <div class="row1 public-c333">
+              <span class="title" style="width:60px;">安全卡：</span>
+              <span class="title-dps">1264 4568 7894 465</span>
+              <span class="title">银行卡类型：</span>
+              <span>个人账户</span>
             </div>
           </div>
           <div class="public-fr">
-            <set-pwd></set-pwd>
+            <!-- <set-pwd></set-pwd> -->
+            <!-- <el-button @click="goToDrawCash" type="primary">个人信息</el-button> -->
           </div>
         </div>
         <div class="data-msg">
@@ -47,7 +55,7 @@
           </ul>
           <div class="bts">
             <el-button @click="goToDrawCash" type="primary">提现</el-button>
-            <el-button @click="addBank" type="primary">新增个人银行卡</el-button>
+            <!-- <el-button @click="addBank" type="primary">新增个人银行卡</el-button> -->
           </div>
         </div>
       </div>
@@ -231,7 +239,7 @@
         },
         value3: [new Date(2000, 10, 10, 10, 10), new Date(2000, 10, 11, 10, 10)],
         value4: '',
-        data:{}
+        data: {}
       }
     },
     mounted() {
@@ -261,7 +269,7 @@
       //提现
       goToDrawCash() {
         this.$router.push({
-          path: '/wallet/drawcash'
+          path: '/wallet/individual/drawcash'
         })
       },
       toggleSelection(rows) {
@@ -290,7 +298,7 @@
       },
       addBank() {
         this.$router.push({
-          path: '/wallet/individual/addBank/'+this.data.memberId
+          path: '/wallet/individual/addBank/' + this.data.memberId
         })
       }
 

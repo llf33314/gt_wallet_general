@@ -20,7 +20,7 @@
       getVipMsg() {
         console.log(6666)
         $.ajax({
-          url: this.DFPAYDOMAIN + '/findMember',
+          url: this.DFPAYDOMAIN + '/walletMember/findMember',
           type: 'GET',
           dataType: 'json',
           success: (res) => {
@@ -29,7 +29,7 @@
             // res.data.status = 3
             if (res.data.status == 0) {
               this.$router.push({
-                path: '/wallet/individual/open'
+                path: '/wallet/individual/open/' + res.data.id
               })
             } else if (res.data.status == 1) {
               this.$router.push({
@@ -48,7 +48,7 @@
       // 判断商家是否开通多粉钱包
       isPass() {
         $.ajax({
-          url: this.DFPAYDOMAIN + '/isPassWallet',
+          url: this.DFPAYDOMAIN + '/walletMember/isPassWallet',
           type: 'GET',
           dataType: 'json',
           success: (res) => {
@@ -70,6 +70,6 @@
 
 </script>
 <style lang="less">
-  
+
 
 </style>
