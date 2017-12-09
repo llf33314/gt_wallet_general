@@ -143,29 +143,29 @@ public class WalletCompanyAdd {
 	
 	
 	
-	/**
-	 * 营业执照url
-	 */
-	@ApiModelProperty(name="营业执照url",notes="营业执照url",required=true)
-	private String doBusinessUrl;
-	
-	/**
-	 * 身份证正面
-	 */
-	@ApiModelProperty(name="身份证正面",notes="身份证正面",required=true)
-	private String identitycardUrl1;
-	
-	/**
-	 * 身份证反面
-	 */
-	@ApiModelProperty(name="身份证反面",notes="身份证反面",required=true)
-	private String identitycardUrl2;
-	
-	/**
-	 * 许可证url
-	 */
-	@ApiModelProperty(name="许可证url",notes="许可证url",required=true)
-	private String licenseUrl;
+//	/**
+//	 * 营业执照url
+//	 */
+//	@ApiModelProperty(name="营业执照url",notes="营业执照url",required=true)
+//	private String doBusinessUrl;
+//	
+//	/**
+//	 * 身份证正面
+//	 */
+//	@ApiModelProperty(name="身份证正面",notes="身份证正面",required=true)
+//	private String identitycardUrl1;
+//	
+//	/**
+//	 * 身份证反面
+//	 */
+//	@ApiModelProperty(name="身份证反面",notes="身份证反面",required=true)
+//	private String identitycardUrl2;
+//	
+//	/**
+//	 * 许可证url
+//	 */
+//	@ApiModelProperty(name="许可证url",notes="许可证url",required=true)
+//	private String licenseUrl;
 
 
 	public WalletCompanyAdd(Integer memberId, String companyName, String companyAddress, String businessLicense, String telephone, String legalName, String legalIds,

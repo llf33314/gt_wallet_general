@@ -39,8 +39,12 @@ public interface WalletIndividualService extends BaseService<WalletIndividual> {
 	public ServerResponse<?> set(WalletSet walletSet,BusUser busUser) throws Exception;
 	
 	
-	
-	
+	/**
+	 * 根据会员id查询
+	 * @param memberId
+	 * @return
+	 */
+	ServerResponse<WalletIndividual> findByMemberId(Integer memberId);
 }
 
 

@@ -9,7 +9,7 @@ import java.util.Map;
  * Date : 2017/7/21 0021
  * Time : 15:54
  */
-public class Constants {
+public class WalletConstants {
 
     /**
      * 定义session key 开头字符串
@@ -60,6 +60,16 @@ public class Constants {
      * 直连银行范围(对私)
      */
     public static Map<String,String> privateBankCard=new HashMap<String, String>();
+    
+    /**
+     * 通联行业代码
+     */
+    public static final String  INDUSTRYCODE="1916";
+    
+    /**
+     * 通联行业代码名称
+     */
+    public static final String  INDUSTRYNAME="便捷付";
     
     static{
     	privateBankCard.put("01020000", "工商银行");

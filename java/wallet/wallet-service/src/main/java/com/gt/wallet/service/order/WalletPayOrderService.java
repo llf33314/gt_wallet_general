@@ -1,7 +1,10 @@
 package com.gt.wallet.service.order;
 
-import com.gt.wallet.entity.WalletPayOrder;
+import com.alibaba.fastjson.JSONObject;
 import com.gt.wallet.base.BaseService;
+import com.gt.wallet.data.wallet.request.PayOrder;
+import com.gt.wallet.dto.ServerResponse;
+import com.gt.wallet.entity.WalletPayOrder;
 
 /**
  * <p>
@@ -13,4 +16,38 @@ import com.gt.wallet.base.BaseService;
  */
 public interface WalletPayOrderService extends BaseService<WalletPayOrder> {
 	
+	
+	/**
+	 * 通联下单
+	 * @param payOrder
+	 * @return
+	 */
+	ServerResponse<com.alibaba.fastjson.JSONObject> applyDeposit(PayOrder payOrder) throws Exception;
+	
+	/**
+	 * 保存订单信息
+	 * @param payOrder
+	 * @return
+	 */
+	ServerResponse<?> save(PayOrder payOrder) throws Exception;
+	
+	
+	/**
+	 * 根据订单号查询
+	 * @param orderNo
+	 * @return
+	 * @throws Exception
+	 */
+	ServerResponse<WalletPayOrder> findByOrderNo(String orderNo) throws Exception;
+	
+	
+	/**
+	 * 根据提交订单号查询
+	 * @param orderNo
+	 * @return
+	 * @throws Exception
+	 */
+	ServerResponse<WalletPayOrder> findBySubmitOrderNo(String submitOrderNo) throws Exception;
+	
+	ServerResponse<?>	paySuccessNotify(JSONObject params)throws Exception;
 }

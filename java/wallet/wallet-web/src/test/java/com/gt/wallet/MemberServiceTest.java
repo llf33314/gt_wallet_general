@@ -3,9 +3,8 @@ package com.gt.wallet;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 
-import com.gt.api.bean.session.BusUser;
 import com.gt.api.util.httpclient.JsonUtil;
-import com.gt.wallet.data.wallet.request.WalletCompanyAdd;
+import com.gt.wallet.data.api.tonglian.request.TCardBin;
 import com.gt.wallet.dto.ServerResponse;
 import com.gt.wallet.service.member.WalletBankService;
 import com.gt.wallet.service.member.WalletCompanyService;
@@ -109,11 +108,28 @@ public class MemberServiceTest extends BasicTest {
 	/**
 	 * 查询绑定银行卡
 	 */
+//	@Test
+//	public void queryBankCard(){
+//		log.info(" start test queryBankCard api");
+//		try {
+//			ServerResponse<?> serverResponse=YunSoaMemberUtil.queryBankCard("kCXiZJ8rnEJxtUSkSv+IaSeCKmmjjpCaKnLzXVXWEPEO/wINZY6+Nmtqb/zNVrSa8rA920Yx3RjLusOLH9rQ+cAc1dU58/hvaXWbVKs1sFle7R/IFUuSlOuym8qG3kgLCVEQLX2IFhd10qd5GcJKEEj6MwsUt+tPjxKBdWllmhA=","dfw1511774649223");
+//			log.info(CommonUtil.format("serverResponse:%s", JsonUtil.toJSONString(serverResponse)));
+//		} catch (Exception e) {
+//			e.printStackTrace();
+//			log.error("test queryBankCard api error");
+//		}
+//		log.info(" end test queryBankCard api");
+//	}
+//	
+//	
+	/**
+	 * 查询绑定银行卡
+	 */
 	@Test
 	public void queryBankCard(){
 		log.info(" start test queryBankCard api");
 		try {
-			ServerResponse<?> serverResponse=YunSoaMemberUtil.queryBankCard("kCXiZJ8rnEJxtUSkSv+IaSeCKmmjjpCaKnLzXVXWEPEO/wINZY6+Nmtqb/zNVrSa8rA920Yx3RjLusOLH9rQ+cAc1dU58/hvaXWbVKs1sFle7R/IFUuSlOuym8qG3kgLCVEQLX2IFhd10qd5GcJKEEj6MwsUt+tPjxKBdWllmhA=","dfw1511774649223");
+			ServerResponse<TCardBin> serverResponse=YunSoaMemberUtil.getBankCardBin("6228481139158261672");
 			log.info(CommonUtil.format("serverResponse:%s", JsonUtil.toJSONString(serverResponse)));
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -121,5 +137,4 @@ public class MemberServiceTest extends BasicTest {
 		}
 		log.info(" end test queryBankCard api");
 	}
-	
 }

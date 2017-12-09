@@ -17,11 +17,14 @@ import com.gt.api.util.httpclient.JsonUtil;
 import com.gt.wallet.base.BaseServiceImpl;
 import com.gt.wallet.data.wallet.request.WalletPasswordSet;
 import com.gt.wallet.dto.ServerResponse;
+import com.gt.wallet.entity.WalletCompany;
+import com.gt.wallet.entity.WalletIndividual;
 import com.gt.wallet.entity.WalletMember;
-import com.gt.wallet.entity.WalletQuota;
 import com.gt.wallet.enums.WalletResponseEnums;
 import com.gt.wallet.exception.BusinessException;
 import com.gt.wallet.mapper.member.WalletMemberMapper;
+import com.gt.wallet.service.member.WalletCompanyService;
+import com.gt.wallet.service.member.WalletIndividualService;
 import com.gt.wallet.service.member.WalletMemberService;
 import com.gt.wallet.utils.BankUtil;
 import com.gt.wallet.utils.CommonUtil;
@@ -48,7 +51,11 @@ public class WalletMemberServiceImpl extends BaseServiceImpl<WalletMemberMapper,
 	@Autowired
 	private WalletMemberMapper walletMemberMapper;
 	
+	@Autowired
+	private WalletIndividualService walletIndividualService;
 	
+	@Autowired
+	private WalletCompanyService walletCompanyService;
 
 	
 	/**
@@ -88,20 +95,28 @@ public class WalletMemberServiceImpl extends BaseServiceImpl<WalletMemberMapper,
 				walletMembers.get(i).setPayPass(null);
 				walletMembers.get(i).setExternalNum(null);
 				if(CommonUtil.isNotEmpty(walletMembers.get(i).getPhone())){
-					walletMembers.get(i).setPhone(PhoneUtil.hide(walletMembers.get(i).getPhone()));
+					walletMembers.get(i).setPhone(PhoneUtil.hide(WalletKeyUtil.getDesString(walletMembers.get(i).getPhone())));
 				}
 				walletMembers.get(i).setMemberinfoJson(null);
-				if(walletMembers.get(i).getMemberType()==1&&CommonUtil.isNotEmpty(walletMembers.get(i).getWalletIndividual())){//个人会员
-					walletMembers.get(i).getWalletIndividual().setIdentityCardNo(IdCardUtil.hide(walletMembers.get(i).getWalletIndividual().getIdentityCardNo()));
-					walletMembers.get(i).getWalletIndividual().setIdentitycardUrl1(null);
-					walletMembers.get(i).getWalletIndividual().setIdentitycardUrl2(null);
-				}else if(walletMembers.get(i).getMemberType()==2&&CommonUtil.isNotEmpty(walletMembers.get(i).getWalletCompany())){//企业会员
-					walletMembers.get(i).getWalletCompany().setTelephone(PhoneUtil.hide(WalletKeyUtil.getDesString(walletMembers.get(i).getWalletCompany().getTelephone())));
-					walletMembers.get(i).getWalletCompany().setLegalIds(IdCardUtil.hide(WalletKeyUtil.getDesString(walletMembers.get(i).getWalletCompany().getLegalIds())));
-					walletMembers.get(i).getWalletCompany().setAccountNo(BankUtil.hide(WalletKeyUtil.getDesString(walletMembers.get(i).getWalletCompany().getAccountNo())));
+				if(walletMembers.get(i).getMemberType()==3){//个人会员
+					ServerResponse<WalletIndividual> serverResponse=walletIndividualService.findByMemberId(walletMembers.get(i).getId());
+					if(CommonUtil.isNotEmpty(serverResponse.getData())){
+						walletMembers.get(i).setWalletIndividual(serverResponse.getData());
+						walletMembers.get(i).getWalletIndividual().setIdentityCardNo(IdCardUtil.hide(YunSoaMemberUtil.rsaDecrypt(walletMembers.get(i).getWalletIndividual().getIdentityCardNo())));
+						walletMembers.get(i).getWalletIndividual().setIdentitycardUrl1(null);
+						walletMembers.get(i).getWalletIndividual().setIdentitycardUrl2(null);
+					}
+				}else if(walletMembers.get(i).getMemberType()==2){//企业会员
+					ServerResponse<WalletCompany> serverResponse=walletCompanyService.findByMemberId(walletMembers.get(i).getId());
+					if(CommonUtil.isNotEmpty(serverResponse.getData())){
+						walletMembers.get(i).setWalletCompany(serverResponse.getData());
+						walletMembers.get(i).getWalletCompany().setTelephone(PhoneUtil.hide(WalletKeyUtil.getDesString(walletMembers.get(i).getWalletCompany().getTelephone())));
+						walletMembers.get(i).getWalletCompany().setLegalIds(IdCardUtil.hide(WalletKeyUtil.getDesString(walletMembers.get(i).getWalletCompany().getLegalIds())));
+						walletMembers.get(i).getWalletCompany().setAccountNo(BankUtil.hide(WalletKeyUtil.getDesString(walletMembers.get(i).getWalletCompany().getAccountNo())));
+					}
 				}
 			}
-			return ServerResponse.createBySuccessCodeData( walletMembers);
+			return ServerResponse.createBySuccessCodeData(walletMembers);
 		}else{
 			throw new BusinessException(WalletResponseEnums.DATA_NULL_ERROR);
 		}

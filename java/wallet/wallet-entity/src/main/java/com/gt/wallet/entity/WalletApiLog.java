@@ -67,6 +67,17 @@ public class WalletApiLog extends Model<WalletApiLog> {
 	 * 描述
 	 */
 	private String msg;
+	
+	/**
+	 * 接口地址
+	 */
+	private String url;
+	
+	
+	/**
+	 * 订单号(或唯一键)
+	 */
+	private String orderNo;
 
 
 	@Override

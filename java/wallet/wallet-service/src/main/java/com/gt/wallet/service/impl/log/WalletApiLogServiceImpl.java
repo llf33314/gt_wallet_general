@@ -6,6 +6,7 @@ import org.springframework.transaction.annotation.Isolation;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.gt.api.util.httpclient.JsonUtil;
 import com.gt.wallet.base.BaseServiceImpl;
 import com.gt.wallet.dto.ServerResponse;
 import com.gt.wallet.entity.WalletApiLog;
@@ -48,5 +49,46 @@ public class WalletApiLogServiceImpl extends BaseServiceImpl<WalletApiLogMapper,
 			throw new BusinessException(WalletResponseEnums.NULL_ERROR);
 		}
 	}
+
+	@Override
+	public ServerResponse<?> save(String paramJson, ServerResponse<?> serverResponse,Integer memberId,String url,String orderNo,Integer type) throws Exception {
+		WalletApiLog walletApiLog=new WalletApiLog();
+		walletApiLog.setMsg(serverResponse.getMsg());
+		walletApiLog.setParamsJson(paramJson);
+		walletApiLog.setResult(JsonUtil.toJSONString(serverResponse));
+		walletApiLog.setType(type);
+		walletApiLog.setUrl(url);
+		walletApiLog.setWMemberId(memberId);
+		walletApiLog.setOrderNo(orderNo);
+		if(ServerResponse.judgeSuccess(serverResponse)){
+			walletApiLog.setStatus(serverResponse.getCode());
+			
+		}else{
+			walletApiLog.setStatus(-1);
+		}
+		Integer count=walletApiLogMapper.insert(walletApiLog);
+		if(count==1){
+			return ServerResponse.createBySuccess();
+		}else{
+			return ServerResponse.createByError();
+		}
+	}
+
+	@Override
+	public ServerResponse<WalletApiLog> findById(String orderNo, Integer type) {
+		WalletApiLog params=new  WalletApiLog();
+		params.setOrderNo(orderNo);
+		params.setType(type);
+		WalletApiLog walletApiLog=	walletApiLogMapper.selectOne(params);
+		if(CommonUtil.isEmpty(walletApiLog)){
+			return ServerResponse.createByError();
+		}else{
+			
+			return ServerResponse.createBySuccessCodeData(walletApiLog);
+		}
+	}
+	
+	
+	
 	
 }

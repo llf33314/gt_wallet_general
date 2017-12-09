@@ -99,6 +99,25 @@ public class WalletWebConfig {
 	private static String wxmpKey;
 	
 	
+	/**
+	 * 支付成功异步回调
+	 */
+	private static String yunpaySuccessNotifyUrl;
+	
+	
+	/**
+	 * 提现成功异步回调
+	 */
+	private static String yunWithdrawSuccessNotifyUrl;
+	
+	
+	
+	/**
+	 * 退款成功成功异步回调
+	 */
+	private static String yunRefundSuccessNotifyUrl;
+	
+	
 //	 // 注入配置属性 根据环境配置切换
 	public static String getDomain() {
 		return domain;
@@ -226,6 +245,30 @@ public class WalletWebConfig {
 
 	public static void setWxmpKey(String wxmpKey) {
 		WalletWebConfig.wxmpKey = wxmpKey;
+	}
+
+	public static String getYunpaySuccessNotifyUrl() {
+		return yunpaySuccessNotifyUrl;
+	}
+
+	public static void setYunpaySuccessNotifyUrl(String yunpaySuccessNotifyUrl) {
+		WalletWebConfig.yunpaySuccessNotifyUrl = yunpaySuccessNotifyUrl;
+	}
+
+	public static String getYunWithdrawSuccessNotifyUrl() {
+		return yunWithdrawSuccessNotifyUrl;
+	}
+
+	public static void setYunWithdrawSuccessNotifyUrl(String yunWithdrawSuccessNotifyUrl) {
+		WalletWebConfig.yunWithdrawSuccessNotifyUrl = yunWithdrawSuccessNotifyUrl;
+	}
+
+	public static String getYunRefundSuccessNotifyUrl() {
+		return yunRefundSuccessNotifyUrl;
+	}
+
+	public static void setYunRefundSuccessNotifyUrl(String yunRefundSuccessNotifyUrl) {
+		WalletWebConfig.yunRefundSuccessNotifyUrl = yunRefundSuccessNotifyUrl;
 	}
 
 

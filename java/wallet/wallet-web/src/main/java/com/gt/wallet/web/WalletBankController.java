@@ -9,12 +9,14 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.gt.api.bean.session.BusUser;
 import com.gt.api.util.httpclient.JsonUtil;
 import com.gt.wallet.base.BaseController;
+import com.gt.wallet.data.api.tonglian.request.TCardBin;
 import com.gt.wallet.data.wallet.request.WalletBankAdd;
 import com.gt.wallet.data.wallet.request.WalletIndividualAdd;
 import com.gt.wallet.dto.ServerResponse;
@@ -31,6 +33,7 @@ import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiImplicitParam;
 import io.swagger.annotations.ApiImplicitParams;
 import io.swagger.annotations.ApiOperation;
+import io.swagger.annotations.ApiParam;
 import lombok.extern.slf4j.Slf4j;
 
 /**
@@ -149,6 +152,32 @@ public class WalletBankController extends BaseController {
 			} catch ( Exception e) {
 				e.printStackTrace();
 				log.error(CommonUtil.format("addBank api异常：%s,%s",WalletResponseEnums.SYSTEM_ERROR.getCode(),WalletResponseEnums.SYSTEM_ERROR.getDesc()));
+				throw new ResponseEntityException(WalletResponseEnums.SYSTEM_ERROR);
+			}
+	}
+	
+	
+	/**
+	 * 查询银行卡bin信息
+	 * @return
+	 */
+	@ResponseBody
+	@RequestMapping(value="getBankCardBin",method=RequestMethod.POST)
+	 @ApiOperation(value="查询银行卡bin信息", notes="查询银行卡bin信息")
+	
+	public ServerResponse<TCardBin> getBankCardBin(HttpServletRequest request,@ApiParam(required=true,name="bankCardNo" ,value="银行卡号") @RequestParam(required=true) String bankCardNo
+			){
+		log.info(CommonUtil.format("触发getBankCardBin api:%s",bankCardNo));
+		try {
+			ServerResponse<TCardBin> serverResponse=null;
+			serverResponse=walletBankService.getBankCardBin(bankCardNo);
+			log.info(CommonUtil.format("serverResponse:%s",JsonUtil.toJSONString(serverResponse)));
+			return serverResponse;
+			} catch ( BusinessException e) {
+				throw new ResponseEntityException(e.getCode(),e.getMessage());
+			} catch ( Exception e) {
+				e.printStackTrace();
+				log.error(CommonUtil.format("getBankCardBin api异常：%s,%s",WalletResponseEnums.SYSTEM_ERROR.getCode(),WalletResponseEnums.SYSTEM_ERROR.getDesc()));
 				throw new ResponseEntityException(WalletResponseEnums.SYSTEM_ERROR);
 			}
 	}

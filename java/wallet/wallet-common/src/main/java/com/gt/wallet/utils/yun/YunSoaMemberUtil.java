@@ -6,9 +6,13 @@ import java.security.interfaces.RSAPrivateKey;
 import java.security.interfaces.RSAPublicKey;
 
 import org.json.JSONObject;
-import org.junit.Test;
 
 import com.gt.api.util.httpclient.JsonUtil;
+import com.gt.wallet.constant.WalletConstants;
+import com.gt.wallet.data.api.tonglian.request.TCardBin;
+import com.gt.wallet.data.api.tonglian.request.TPayOrder;
+import com.gt.wallet.data.api.tonglian.request.TRefundOrder;
+import com.gt.wallet.data.api.tonglian.request.TWithdrawOrder;
 import com.gt.wallet.data.wallet.request.WalletCompanyAdd;
 import com.gt.wallet.data.wallet.request.WalletIndividualAdd;
 import com.gt.wallet.dto.ServerResponse;
@@ -33,7 +37,6 @@ public class YunSoaMemberUtil {
 		try {
 			init();
 		} catch (Exception e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 	}
@@ -370,7 +373,7 @@ public class YunSoaMemberUtil {
 	 * @param cardNo
 	 * @return
 	 */
-	public static ServerResponse<com.alibaba.fastjson.JSONObject>  getBankCardBin(String cardNo){
+	public static ServerResponse<TCardBin>  getBankCardBin(String cardNo){
 		try{
 			log.info("getBankCardBin start");
 
@@ -384,7 +387,7 @@ public class YunSoaMemberUtil {
 				String value = response.getString("signedValue");
 				com.alibaba.fastjson.JSONObject json=	JsonUtil.parseObject(value, com.alibaba.fastjson.JSONObject.class);
 				log.info("getBankCardBin end");
-				return ServerResponse.createBySuccessCodeData(JsonUtil.parseObject(json.getString("cardBinInfo"), com.alibaba.fastjson.JSONObject.class));
+				return ServerResponse.createBySuccessCodeData(JsonUtil.parseObject(json.getString("cardBinInfo"), TCardBin.class));
 			}else{
 				log.info("getMemberInfo end");
 				return ServerResponse.createByErrorMessage(CommonUtil.format("第三方接口异常,错误代码 : %s,描述:%s", response.getString("errorCode"), response.getString("message")));
@@ -609,8 +612,6 @@ public class YunSoaMemberUtil {
 			JSONObject response = client.request(soaName, "unlockMember", param);
 			log.info("response:" + response);
 			if(CommonUtil.isNotEmpty(response)&&response.get("status").equals("OK")){
-				String value = response.getString("signedValue");
-				com.alibaba.fastjson.JSONObject json=	JsonUtil.parseObject(value, com.alibaba.fastjson.JSONObject.class);
 				log.info("unlockMember end");
 				return ServerResponse.createBySuccess();
 			}else{
@@ -667,117 +668,266 @@ public class YunSoaMemberUtil {
 	 * @param signStr
 	 * @throws Exception
 	 */
-	public static void rsaDecrypt(String signStr) throws Exception{
+	public static String  rsaDecrypt(String signStr) throws Exception{
 		try{
 			log.info("rsaDecrypt start");
 
 			RSAUtil rsaUtil = new RSAUtil((RSAPublicKey)publicKey, (RSAPrivateKey)privateKey);
 			String dencryptStr = rsaUtil.dencrypt(signStr);
 			log.info("解密：" + dencryptStr);
+			return dencryptStr;
 		}catch(Exception e){
 			log.error("rsaDecrypt error");
 			e.printStackTrace();
-			throw e;
+			return "";
+		}
+	}
+	
+/***********************************************************************订单类接口********************************************************************************************/
+
+	/**
+	 * 充值申请
+	 * @param payOrder
+	 * @return
+	 */
+	public static ServerResponse<com.alibaba.fastjson.JSONObject> applyDeposit(TPayOrder payOrder) {
+		try{
+			log.info("applyDeposit start");
+			//支付方式
+			//快捷
+			String frontUrl =payOrder.getFrontUrl();
+
+			//组装支付方式
+			JSONObject payMethod = new JSONObject();
+			if(payOrder.getType()==1){
+				//微信js支付
+				JSONObject weixin = new JSONObject();
+				weixin.put("acct", payOrder.getAcct());
+				weixin.put("amount", payOrder.getAmount()*100);
+				payMethod.put("WECHAT_PUBLIC",weixin);
+			}else if(payOrder.getType()==2){
+				//微信js支付
+				JSONObject alipay = new JSONObject();
+				alipay.put("acct", payOrder.getAcct());
+				alipay.put("amount", payOrder.getAmount()*100);
+				payMethod.put("ALIPAY_SERVICE",alipay);
+			}
+//			payMethod.put("GATEWAY", gatewayPay);
+//			payMethod.put("DAIKOU", daikouPay);
+
+			String backUrl =WalletWebConfig.getYunpaySuccessNotifyUrl();
+
+	//		String extendInfo = "this is extendInfo";
+
+			JSONObject param = new JSONObject();
+			param.put("bizUserId", payOrder.getBizUserId());
+			param.put("bizOrderNo", payOrder.getBizOrderNo());
+			param.put("accountSetNo", WalletWebConfig.getYunBizUserId());
+			param.put("amount", payOrder.getAmount()*100);
+			param.put("fee", payOrder.getFee()*100);
+			param.put("frontUrl", frontUrl);
+			param.put("backUrl", backUrl);
+//			param.put("ordErexpireDatetime", ordErexpireDatetime);
+			param.put("payMethod", payMethod);
+			param.put("industryCode", WalletConstants.INDUSTRYCODE);
+			param.put("industryName",WalletConstants.INDUSTRYNAME);
+			param.put("source", 1);
+			param.put("summary",payOrder.getDesc());
+//			param.put("extendInfo", extendInfo);
+
+			log.info("request:" + param);
+			JSONObject response = client.request(soaName, "depositApply", param);
+			log.info("response:" + response);
+			if(CommonUtil.isNotEmpty(response)&&response.get("status").equals("OK")){//创建成功
+				log.info("applyDeposit end");
+				String value = response.getString("signedValue");
+				com.alibaba.fastjson.JSONObject json=	JsonUtil.parseObject(value, com.alibaba.fastjson.JSONObject.class);
+				com.alibaba.fastjson.JSONObject payInfo=	json.getJSONObject("payInfo");
+				return ServerResponse.createBySuccessCodeData(payInfo);
+			}else{
+				log.info("applyDeposit end");
+				return ServerResponse.createByErrorMessage(CommonUtil.format("第三方接口异常,错误代码 :%s,描述:%s", response.getString("errorCode"), response.getString("message")));
+			}
+
+		}catch(Exception e){
+			log.info("applyDeposit error");
+			e.printStackTrace();
+			return ServerResponse.createByErrorCode(WalletResponseEnums.API_ERROR);
+		}
+	}
+
+	/**
+	 * 提现申请
+	 * @param consumeOrder
+	 */
+	public ServerResponse<?> applyWithdraw(TWithdrawOrder consumeOrder) {
+		try{
+			log.info("applyWithdraw start");
+
+		//	String extendInfo = "this is withdraw.";
+			String backUrl =WalletWebConfig.getYunWithdrawSuccessNotifyUrl();
+
+			JSONObject param = new JSONObject();
+			param.put("bizUserId", consumeOrder.getBizUserId());
+			param.put("bizOrderNo", consumeOrder.getBizOrderNo());
+			param.put("accountSetNo", WalletWebConfig.getYunBizUserId());
+			param.put("amount", consumeOrder.getAmount()*100);
+			param.put("fee", consumeOrder.getFee());
+			param.put("backUrl", backUrl);
+		//	param.put("ordErexpireDatetime", ordErexpireDatetime);
+			param.put("bankCardNo", YunSoaMemberUtil.rsaEncrypt(consumeOrder.getBankCardNo()));
+			param.put("industryCode", WalletConstants.INDUSTRYCODE);
+			param.put("industryName",WalletConstants.INDUSTRYNAME);
+			param.put("source", 1);
+			param.put("summary", consumeOrder.getDesc());
+			param.put("withdrawType", consumeOrder.getWithdrawType());
+			param.put("bankCardPro", consumeOrder.getBankCardPro());
+	//		param.put("extendInfo", extendInfo);
+
+			log.info("request:" + param);
+			JSONObject response = client.request(soaName, "withdrawApply", param);
+			log.info("response:" + response);
+			if(CommonUtil.isNotEmpty(response)&&response.get("status").equals("OK")){//创建成功
+				log.info("applyWithdraw end");
+				String value = response.getString("signedValue");
+				com.alibaba.fastjson.JSONObject json=	JsonUtil.parseObject(value, com.alibaba.fastjson.JSONObject.class);
+				log.info("payStatus:"+json.getString("payStatus"));
+				if(json.getString("payStatus").equals("success")){//成功
+					return ServerResponse.createBySuccess();
+				}else if(json.getString("payStatus").equals("pending")){//进行时
+					return ServerResponse.createBySuccess();
+				}else if(json.getString("payStatus").equals("fail")){
+					return ServerResponse.createByErrorMessage("提现失败");
+				}
+				com.alibaba.fastjson.JSONObject payInfo=	json.getJSONObject("payInfo");
+				return ServerResponse.createBySuccessCodeData(payInfo);
+			}else{
+				log.info("applyWithdraw end");
+				return ServerResponse.createByErrorMessage(CommonUtil.format("第三方接口异常,错误代码 :%s,描述:%s", response.getString("errorCode"), response.getString("message")));
+			}
+
+		}catch(Exception e){
+			log.info("applyWithdraw error");
+			e.printStackTrace();
+			return ServerResponse.createByErrorCode(WalletResponseEnums.API_ERROR);
 		}
 	}
 	
 	
-//	//充值申请
-//		@Test
-//		public void testApplyDeposit() {
-//			try{
-//				System.out.println("testApplyDeposit start");
-//
-//				//支付方式
-//				//快捷
-//				JSONObject quickPay = new JSONObject();
-//				quickPay.put("bankCardNo", rsaEncrypt(jjBankCardNo));
-//				quickPay.put("amount", 10);
-//
-//				//网关
-//				String frontUrl = "";
-//				JSONObject gatewayPay = new JSONObject();
-//				gatewayPay.put("bankCode", "vbank");  //虚拟银行，专门用于测试环境
-//				gatewayPay.put("payType", 1L);
-//				gatewayPay.put("amount", 10);
-//
-//				//代扣
-//				JSONObject daikouPay = new JSONObject();
-//				daikouPay.put("bankCardNo", rsaEncrypt(jjBankCardNo));
-//				daikouPay.put("amount", 10);
-//
-//				//组装支付方式
-//				JSONObject payMethod = new JSONObject();
-//				payMethod.put("QUICKPAY", quickPay);
-////				payMethod.put("GATEWAY", gatewayPay);
-////				payMethod.put("DAIKOU", daikouPay);
-//
-//				String bizOrderNo = System.currentTimeMillis() + "cz";
-//				String backUrl = "";
-//
-//				String extendInfo = "this is extendInfo";
-//
-//				JSONObject param = new JSONObject();
-//				param.put("bizUserId", bizUserId);
-//				param.put("bizOrderNo", bizOrderNo);
-//				param.put("accountSetNo", accountSetNo);
-//				param.put("amount", 10);
-//				param.put("fee", 0);
-//				param.put("frontUrl", frontUrl);
-//				param.put("backUrl", backUrl);
-////				param.put("ordErexpireDatetime", ordErexpireDatetime);
-//				param.put("payMethod", payMethod);
-//				param.put("industryCode", industryCode);
-//				param.put("industryName", industryName);
-//				param.put("source", 2);
-//				param.put("summary", "deposit");
-//				param.put("extendInfo", extendInfo);
-//
-//				System.out.println("request:" + param);
-//				JSONObject response = client.request(soaName, "depositApply", param);
-//				System.out.println("response:" + response);
-//
-//				System.out.println("testApplyDeposit end");
-//			}catch(Exception e){
-//				System.out.println("testApplyDeposit error");
-//				e.printStackTrace();
-//			}
-//		}
-	
-	
-	//提现申请
-		@Test
-		public void orderApplyWithdraw(String bizUserId,String accountSetNo) {
+	/**
+	 * 查询余额
+	 * @param bizUserId 会员账号
+	 */
+	public ServerResponse<com.alibaba.fastjson.JSONObject> queryBalance(String bizUserId){
+		try{
+			log.info("queryBalance start");
+
+			JSONObject param = new JSONObject();
+			param.put("bizUserId", bizUserId);
+			param.put("accountSetNo", WalletWebConfig.getYunBizUserId());
+
+			log.info("request:" + param);
+			JSONObject response = client.request(soaName, "queryBalance", param);
+			log.info("response:" + response);
+
+			if(CommonUtil.isNotEmpty(response)&&response.get("status").equals("OK")){//查询成功
+				String value = response.getString("signedValue");
+				com.alibaba.fastjson.JSONObject json=	JsonUtil.parseObject(value, com.alibaba.fastjson.JSONObject.class);
+				return ServerResponse.createBySuccessCodeData(json);
+			}else{//接口异常
+				log.info("applyWithdraw end");
+				return ServerResponse.createByErrorMessage(CommonUtil.format("第三方接口异常,错误代码 :%s,描述:%s", response.getString("errorCode"), response.getString("message")));
+			}
+		}catch(Exception e){
+			log.info("queryBalance error");
+			e.printStackTrace();
+			return ServerResponse.createByErrorCode(WalletResponseEnums.API_ERROR);
+		}
+	}
+		
+		
+		/**
+		 * 查询订单状态
+		 * @param bizUserId 会员账号
+		 * @param bizOrderNo 订单号
+		 */
+		public ServerResponse<com.alibaba.fastjson.JSONObject> getOrderDetail(String bizUserId,String bizOrderNo){
 			try{
-//				System.out.println("testApplyWithdraw start");
-//
-//				String bizOrderNo = System.currentTimeMillis() + "tx";
-//				String extendInfo = "this is withdraw.";
-//				String backUrl = "";
-//
-//				JSONObject param = new JSONObject();
-//				param.put("bizUserId", bizUserId);
-//				param.put("bizOrderNo", bizOrderNo);
-//				param.put("accountSetNo", accountSetNo);
-//				param.put("amount", 1);
-//				param.put("fee", 0);
-//				param.put("backUrl", backUrl);
-//				param.put("ordErexpireDatetime", ordErexpireDatetime);
-//				param.put("bankCardNo", rsaEncrypt(jjBankCardNo));
-//				param.put("industryCode", industryCode);
-//				param.put("industryName", industryName);
-//				param.put("source", 1L);
-//				param.put("summary", "withdraw");
-//				param.put("extendInfo", extendInfo);
-
-//				System.out.println("request:" + param);
-//				JSONObject response = client.request(soaName, "withdrawApply", param);
-//				System.out.println("response:" + response);
-
-				System.out.println("testApplyWithdraw end");
+				log.info("getOrderDetail start");
+				JSONObject param = new JSONObject();
+				param.put("bizUserId", bizUserId);
+				param.put("bizOrderNo", "");
+				log.info("request:" + param);
+				JSONObject response = client.request(soaName, "getOrderDetail", param);
+				log.info("response:" + response);
+				if(CommonUtil.isNotEmpty(response)&&response.get("status").equals("OK")){//查询成功
+					log.info("getOrderDetail end");
+					String value = response.getString("signedValue");
+					com.alibaba.fastjson.JSONObject json=	JsonUtil.parseObject(value, com.alibaba.fastjson.JSONObject.class);
+					return ServerResponse.createBySuccessCodeData(json);
+				}else{//接口异常
+					log.info("getOrderDetail end");
+					return ServerResponse.createByErrorMessage(CommonUtil.format("第三方接口异常,错误代码 :%s,描述:%s", response.getString("errorCode"), response.getString("message")));
+				}
 			}catch(Exception e){
-				System.out.println("testApplyWithdraw error");
+				log.info("getOrderDetail error");
 				e.printStackTrace();
+				return ServerResponse.createByErrorCode(WalletResponseEnums.API_ERROR);
 			}
 		}
+
+//		
+//		//退款
+		public ServerResponse<String> refund(TRefundOrder tRefundOrder ){
+			try{
+				log.info("testRefund start");
+
+				String bizOrderNo = tRefundOrder.getBizOrderNo();
+
+				JSONObject refund1 = new JSONObject();
+				refund1.put("bizUserId", tRefundOrder.getBizUserId());
+				refund1.put("amount", tRefundOrder.getAmount()-tRefundOrder.getFeeAmount());
+
+				org.json.JSONArray refundList = new org.json.JSONArray();
+				refundList.put(refund1);
+
+				JSONObject param = new JSONObject();
+				param.put("bizOrderNo", bizOrderNo);
+				param.put("oriBizOrderNo", tRefundOrder.getOriBizOrderNo());
+				param.put("bizUserId", tRefundOrder.getBizUserId());
+				param.put("refundList", refundList);
+				param.put("amount", tRefundOrder.getAmount());
+				param.put("couponAmount", 0);
+				param.put("feeAmount", tRefundOrder.getFeeAmount());
+
+				log.info("request:" + param);
+				JSONObject response = client.request(soaName, "refund", param);
+				log.info("response:" + response);
+				if(CommonUtil.isNotEmpty(response)&&response.get("status").equals("OK")){//查询成功
+					log.info("refund end");
+					String value = response.getString("signedValue");
+					com.alibaba.fastjson.JSONObject json=	JsonUtil.parseObject(value, com.alibaba.fastjson.JSONObject.class);
+					log.info("payStatus:"+json.getString("payStatus"));
+					if(json.getString("payStatus").equals("success")){//成功
+						return ServerResponse.createBySuccess();
+					}else if(json.getString("payStatus").equals("pending")){//进行时
+						return ServerResponse.createBySuccess();
+					}else if(json.getString("payStatus").equals("fail")){
+						return ServerResponse.createByErrorMessage("提现失败");
+					}
+					String  orderNo=	json.getString("orderNo");
+					return ServerResponse.createBySuccessCodeData(orderNo);
+				}else{//接口异常
+					log.info("refund end");
+					return ServerResponse.createByErrorMessage(CommonUtil.format("第三方接口异常,错误代码 :%s,描述:%s", response.getString("errorCode"), response.getString("message")));
+				}
+				
+			}catch(Exception e){
+				log.info("testRefund error");
+				e.printStackTrace();
+				return ServerResponse.createByErrorCode(WalletResponseEnums.API_ERROR);
+			}
+		}
+	
+	/***********************************************************************订单类接口********************************************************************************************/
 }

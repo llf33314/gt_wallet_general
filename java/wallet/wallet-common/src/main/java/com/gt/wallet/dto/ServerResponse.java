@@ -3,6 +3,7 @@ package com.gt.wallet.dto;
 import static com.fasterxml.jackson.databind.annotation.JsonSerialize.Typing.DEFAULT_TYPING;
 
 import java.io.Serializable;
+import java.util.Map;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
@@ -139,13 +140,28 @@ public class ServerResponse< T> implements Serializable {
     public static < T > ServerResponse< T > createByErrorCode(WalletResponseEnums enums) {
 	return createByErrorCodeMessage(enums.getCode(),enums.getDesc());
     }
+    
+    
+    /**
+     * 创建响应失败
+     *
+     * @param 错误代码枚举
+     *
+     * @return ServerResponse
+     */
+    public static < T > ServerResponse< T > createByErrorCode(Map<String, Object> params) {
+    	Integer code=CommonUtil.toInteger(params.get("code"));
+		String msg=CommonUtil.toString(params.get("msg"));
+		return createByErrorCodeMessage(code,msg);
+    }
+
 
     /**
      * 判断是否是返回成功
      * @param serverResponse
      * @return
      */
-    public static boolean judgeSuccess(ServerResponse serverResponse){
+    public static boolean judgeSuccess(ServerResponse<?> serverResponse){
     	return (CommonUtil.isNotEmpty(serverResponse)&&serverResponse.getCode()==0)?true:false;
     }
     
