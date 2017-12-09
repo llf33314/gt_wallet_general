@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.gt.wallet.mapper.WalletIndexStatisticsMapper">
+
+	<!-- 通用查询映射结果 -->
+	<resultMap id="BaseResultMap" type="com.gt.wallet.entity.WalletIndexStatistics">
+		<id column="id" property="id" />
+		<result column="w_member_id" property="wMemberId" />
+		<result column="total" property="total" />
+		<result column="wait_balance" property="waitBalance" />
+		<result column="balance" property="balance" />
+		<result column="ctime" property="ctime" />
+	</resultMap>
+
+    <!-- 通用查询结果列 -->
+    <sql id="Base_Column_List">
+        id, w_member_id AS wMemberId, total, wait_balance AS waitBalance, balance, ctime
+    </sql>
+
+</mapper>

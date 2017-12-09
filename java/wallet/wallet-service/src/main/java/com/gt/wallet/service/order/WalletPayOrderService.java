@@ -49,5 +49,14 @@ public interface WalletPayOrderService extends BaseService<WalletPayOrder> {
 	 */
 	ServerResponse<WalletPayOrder> findBySubmitOrderNo(String submitOrderNo) throws Exception;
 	
+	/**
+	 * 支付成功异步回调
+	 * @param params
+	 * @return
+	 * @throws Exception
+	 */
 	ServerResponse<?>	paySuccessNotify(JSONObject params)throws Exception;
+	
+	
+	
 }
