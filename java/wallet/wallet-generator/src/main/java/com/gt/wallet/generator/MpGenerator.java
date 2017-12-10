@@ -22,12 +22,12 @@ import java.util.*;
 public class MpGenerator {
 
     // 项目的绝对路径
-    public static final  String   outPutBaseDir      = "D:/workspace-sts-3.7.3.RELEASE/wallet/";
+    public static final  String   outPutBaseDir      = "D:/workspace-sts-3.7.3.RELEASE/gt_wallet_general/java/wallet/";
     // 生成*.java 的文件路径
     public static final  String   outPutJavaModel    = outPutBaseDir + "wallet-generator/src/main/java";
     // 需要生成的表
     public static final  String[] generatorTableName = new String[] {
-		    "t_wallet_quota",
+		    "t_wallet_index_statistics",
 
     };
     // 去除表前缀 例如：bus_user 填入bus 生成的 user
@@ -36,7 +36,7 @@ public class MpGenerator {
     public static final  String   packagePath        = "com.gt.wallet";
     public static final  String   moduleName         = "";
     // 生成mapper.xml 文件路径wallet/wallet-dao/src/main/resources/mapper/log
-    public static final  String   generatorXmlPath   = outPutBaseDir + "wallet-dao/src/main/resources/mapper/log/";
+    public static final  String   generatorXmlPath   = outPutBaseDir + "wallet-dao/src/main/resources/mapper/order/";
     // Mapper.java Mapper 后缀修改 DAO
     public static final  String   setMapperName      = "%sMapper";
     // Mapper.xml Mapper 后缀修改 DAO

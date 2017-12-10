@@ -12,6 +12,8 @@ import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.alibaba.fastjson.JSONObject;
+import com.baomidou.mybatisplus.mapper.EntityWrapper;
+import com.baomidou.mybatisplus.plugins.Page;
 import com.gt.api.util.DateTimeKitUtils;
 import com.gt.api.util.HttpClienUtils;
 import com.gt.api.util.MD5Utils;
@@ -21,6 +23,7 @@ import com.gt.wallet.constant.WalletConstants;
 import com.gt.wallet.constant.WalletLogConstants;
 import com.gt.wallet.data.api.tonglian.request.TPayOrder;
 import com.gt.wallet.data.wallet.request.PayOrder;
+import com.gt.wallet.data.wallet.request.SearchPayOrderPage;
 import com.gt.wallet.dto.ServerResponse;
 import com.gt.wallet.entity.WalletApiLog;
 import com.gt.wallet.entity.WalletMember;
@@ -33,6 +36,7 @@ import com.gt.wallet.service.log.WalletApiLogService;
 import com.gt.wallet.service.order.WalletPayOrderService;
 import com.gt.wallet.utils.CommonUtil;
 import com.gt.wallet.utils.DateTimeKit;
+import com.gt.wallet.utils.MyPageUtil;
 import com.gt.wallet.utils.yun.YunSoaMemberUtil;
 
 import lombok.extern.slf4j.Slf4j;
@@ -257,6 +261,36 @@ public class WalletPayOrderServiceImpl extends BaseServiceImpl<WalletPayOrderMap
 			return ServerResponse.createByErrorMessage("订单不存在");
 		}
 		
+	}
+
+
+	@Override
+	public ServerResponse<MyPageUtil<WalletPayOrder>> getPage(Page<?> page,SearchPayOrderPage searchPayOrderPage) {
+		log.info(CommonUtil.format("biz接口:分页查询,请求参数:%s", JsonUtil.toJSONString(page)));
+		EntityWrapper<WalletPayOrder> wrapper=new EntityWrapper<WalletPayOrder>() ;
+		wrapper.where("status={0}",searchPayOrderPage.getStatus());		
+		wrapper.where("w_member_id={0}",searchPayOrderPage.getWmemberId());
+		if(CommonUtil.isNotEmpty(searchPayOrderPage.getStartTime())&&CommonUtil.isEmpty(searchPayOrderPage.getEndTime())){
+			wrapper.between("ctime", searchPayOrderPage.getStartTime(), DateTimeKit.getNowDate());
+		}else if(CommonUtil.isNotEmpty(searchPayOrderPage.getEndTime())&&CommonUtil.isEmpty(searchPayOrderPage.getStartTime())){
+			wrapper.where("ctime<{0}", searchPayOrderPage.getEndTime());
+		}else if(CommonUtil.isNotEmpty(searchPayOrderPage.getEndTime())&&CommonUtil.isNotEmpty(searchPayOrderPage.getStartTime())){
+			wrapper.between("ctime", searchPayOrderPage.getStartTime(), searchPayOrderPage.getEndTime());
+		}
+		Integer total=walletPayOrderMapper.selectCount(wrapper);
+		if(CommonUtil.isEmpty(total)||total==0){
+			throw new BusinessException(WalletResponseEnums.DATA_NULL_ERROR);
+		}
+		
+		wrapper.orderBy("id", false);
+		Page<WalletPayOrder> page1=new Page<WalletPayOrder>();
+		page1.setCurrent(page.getCurrent());
+		page1.setRecords(walletPayOrderMapper.selectPage(page1, wrapper));
+		MyPageUtil<WalletPayOrder> myPageUtil=new MyPageUtil<WalletPayOrder>(page.getCurrent(), page.getSize());
+		myPageUtil.setRecords(walletPayOrderMapper.selectPage(myPageUtil,wrapper),total);
+//		MyPageUtil.getInit( page.getRecords().size(), page);
+		log.info(CommonUtil.format("page:%s", JsonUtil.toJSONString(page)));
+		return ServerResponse.createBySuccessCodeData(myPageUtil);
 	}
 	
 	

@@ -1,6 +1,5 @@
 package com.gt.wallet.web;
 
-import java.io.IOException;
 import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
@@ -11,17 +10,22 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.alibaba.fastjson.JSONObject;
+import com.baomidou.mybatisplus.plugins.Page;
 import com.gt.api.util.httpclient.JsonUtil;
 import com.gt.wallet.base.BaseController;
 import com.gt.wallet.data.wallet.request.PayOrder;
+import com.gt.wallet.data.wallet.request.SearchPayOrderPage;
 import com.gt.wallet.dto.ServerResponse;
+import com.gt.wallet.entity.WalletPayOrder;
 import com.gt.wallet.enums.WalletResponseEnums;
 import com.gt.wallet.exception.BusinessException;
 import com.gt.wallet.exception.ResponseEntityException;
 import com.gt.wallet.service.order.WalletPayOrderService;
 import com.gt.wallet.utils.CommonUtil;
+import com.gt.wallet.utils.MyPageUtil;
 
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiImplicitParam;
@@ -180,4 +184,36 @@ public class WalletPayOrderController extends BaseController {
 	}
 	
 	
+	
+	/**
+	 * 分页查询
+	 * @return
+	 */
+	@ResponseBody
+	@RequestMapping(value="getPage",method=RequestMethod.POST)
+	 @ApiOperation(value="分页查询", notes="分页查询")
+	@ApiImplicitParams({
+        @ApiImplicitParam(name = "current",value = "当前页",paramType = "form",dataType = "int",required=true,defaultValue="1"),
+        @ApiImplicitParam(name = "total",value = "总条数",paramType = "form",dataType = "int",required=false,defaultValue="0"),
+        @ApiImplicitParam(name = "size",value = "显示行数",paramType = "form",dataType = "int",required=false,defaultValue="10"),
+        @ApiImplicitParam(name = "wmemberId",value = "钱包会员id",paramType = "form",dataType = "int",required=true),
+        @ApiImplicitParam(name = "startTime",value = "开始时间",paramType = "form",dataType = "date",required=false),
+        @ApiImplicitParam(name = "endTime",value = "结束时间",paramType = "form",dataType = "date",required=false),
+        // path, query, body, header, form
+	})
+	public ServerResponse<MyPageUtil<WalletPayOrder>> getPage(HttpServletRequest request,Page<?> page,SearchPayOrderPage searchPayOrderPage){
+		log.info(CommonUtil.format("触发分页查询接口 %s",JsonUtil.toJSONString(page)));
+		try {
+			ServerResponse<MyPageUtil<WalletPayOrder>> serverResponse=walletPayOrderService.getPage(page,searchPayOrderPage);
+			log.info(CommonUtil.format("serverResponse:", JsonUtil.toJSONString(serverResponse)));
+			return serverResponse;
+			} catch ( BusinessException e) {
+				log.error(CommonUtil.format("分页查询接口异常：%s,%s",e.getCode(),e.getMessage()));
+				throw new ResponseEntityException(e.getCode(),e.getMessage());
+			} catch ( Exception e) {
+				e.printStackTrace();
+				log.error(CommonUtil.format("分页查询接口异常：%s,%s",WalletResponseEnums.SYSTEM_ERROR.getCode(),WalletResponseEnums.SYSTEM_ERROR.getDesc()));
+				throw new ResponseEntityException(WalletResponseEnums.SYSTEM_ERROR);
+			}
+	}
 }

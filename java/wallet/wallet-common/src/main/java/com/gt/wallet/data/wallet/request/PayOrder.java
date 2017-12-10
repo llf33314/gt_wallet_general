@@ -17,6 +17,7 @@ public class PayOrder {
 	/**
 	 * 商家id
 	 */
+	@ApiModelProperty(name="busId",notes="商家id",required=true)
 	private Integer busId;
 	
 	/**

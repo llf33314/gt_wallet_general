@@ -1,6 +1,7 @@
 package com.gt.wallet.data.wallet.response;
 
 import io.swagger.annotations.ApiModel;
+import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.experimental.Accessors;
@@ -18,17 +19,20 @@ public class IndexStatistics {
 	/**
 	 * 资产总额
 	 */
+	@ApiModelProperty(name="id",notes="资产总额",required=true)
 	private Double total;
 	
 
 	/**
 	 * 待结算
 	 */
+	@ApiModelProperty(name="waitBalance",notes="待结算",required=true)
 	private Double waitBalance;
 	
 	
 	/**
 	 * 余额
 	 */
+	@ApiModelProperty(name="balance",notes="余额",required=true)
 	private Double balance;
 }

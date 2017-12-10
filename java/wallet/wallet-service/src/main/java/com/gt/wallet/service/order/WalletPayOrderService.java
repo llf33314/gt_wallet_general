@@ -1,10 +1,13 @@
 package com.gt.wallet.service.order;
 
 import com.alibaba.fastjson.JSONObject;
+import com.baomidou.mybatisplus.plugins.Page;
 import com.gt.wallet.base.BaseService;
 import com.gt.wallet.data.wallet.request.PayOrder;
+import com.gt.wallet.data.wallet.request.SearchPayOrderPage;
 import com.gt.wallet.dto.ServerResponse;
 import com.gt.wallet.entity.WalletPayOrder;
+import com.gt.wallet.utils.MyPageUtil;
 
 /**
  * <p>
@@ -57,6 +60,11 @@ public interface WalletPayOrderService extends BaseService<WalletPayOrder> {
 	 */
 	ServerResponse<?>	paySuccessNotify(JSONObject params)throws Exception;
 	
-	
-	
+	/**
+	 * 分页
+	 * @param page
+	 * @param status
+	 * @return
+	 */
+	 ServerResponse<MyPageUtil<WalletPayOrder>> getPage(Page<?> page,SearchPayOrderPage searchPayOrderPage);
 }
