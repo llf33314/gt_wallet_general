@@ -68,4 +68,22 @@ public class TWithdrawOrder {
 	 */
 	@ApiModelProperty(name="desc",notes="描述",required=true)
 	private String desc;
+
+	public TWithdrawOrder(String bizOrderNo, String bizUserId, Double amount, Double fee, String bankCardNo,
+			Integer bankCardPro, String withdrawType, String desc) {
+		super();
+		this.bizOrderNo = bizOrderNo;
+		this.bizUserId = bizUserId;
+		this.amount = amount;
+		this.fee = fee;
+		this.bankCardNo = bankCardNo;
+		this.bankCardPro = bankCardPro;
+		this.withdrawType = withdrawType;
+		this.desc = desc;
+	}
+	
+
+	public TWithdrawOrder() {
+		super();
+	}
 }

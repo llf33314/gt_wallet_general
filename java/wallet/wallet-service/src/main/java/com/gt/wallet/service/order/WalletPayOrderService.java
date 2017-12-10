@@ -67,4 +67,7 @@ public interface WalletPayOrderService extends BaseService<WalletPayOrder> {
 	 * @return
 	 */
 	 ServerResponse<MyPageUtil<WalletPayOrder>> getPage(Page<?> page,SearchPayOrderPage searchPayOrderPage);
+	 
+	 
+	
 }

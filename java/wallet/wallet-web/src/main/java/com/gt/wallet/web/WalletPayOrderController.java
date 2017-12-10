@@ -42,8 +42,8 @@ import lombok.extern.slf4j.Slf4j;
  * @since 2017-10-23
  */
 @Controller
-@Api(value = "walletMember",description="多粉钱包订单")
 @RequestMapping("/walletPayOrder")
+@Api(value = "walletMember",description="多粉钱包订单")
 @Slf4j
 public class WalletPayOrderController extends BaseController {
 

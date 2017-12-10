@@ -20,19 +20,19 @@ public class IndexStatistics {
 	 * 资产总额
 	 */
 	@ApiModelProperty(name="id",notes="资产总额",required=true)
-	private Double total;
+	private double total;
 	
 
 	/**
 	 * 待结算
 	 */
 	@ApiModelProperty(name="waitBalance",notes="待结算",required=true)
-	private Double waitBalance;
+	private double waitBalance;
 	
 	
 	/**
 	 * 余额
 	 */
 	@ApiModelProperty(name="balance",notes="余额",required=true)
-	private Double balance;
+	private double balance;
 }
