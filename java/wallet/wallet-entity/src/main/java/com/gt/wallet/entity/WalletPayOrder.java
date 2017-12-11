@@ -25,8 +25,8 @@ import lombok.experimental.Accessors;
  */
 @Data
 @Accessors(chain = true)
-@TableName("t_wallet_pay_order")
 @EqualsAndHashCode(callSuper=false)
+@TableName("t_wallet_pay_order")
 public class WalletPayOrder extends Model<WalletPayOrder> {
 
     private static final long serialVersionUID = 1L;

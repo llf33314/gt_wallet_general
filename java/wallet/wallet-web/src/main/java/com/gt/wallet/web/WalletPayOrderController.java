@@ -81,37 +81,6 @@ public class WalletPayOrderController extends BaseController {
 		response.getWriter().close();
 	}
 
-	/**
-	 * 提现成功异步回调
-	 * 
-	 * @return
-	 */
-	@RequestMapping(value = "/79B4DE7C/withdrawSuccessNotify", method = RequestMethod.POST)
-	@ApiOperation(value = "提现成功异步回调", notes = "提现成功异步回调")
-	public void withdrawSuccessNotify(HttpServletRequest request, @RequestParam Map<String, Object> params) {
-		log.info(CommonUtil.format("支付成功异步回调,%s", JsonUtil.toJSONString(params)));
-		try {
-			// BusUser busUser=CommonUtil.getLoginUser(request);
-			// ServerResponse<WalletMember> serverResponse=null;
-			// ServerResponse<List<WalletMember>>
-			// temp=walletMemberService.findMember(busUser.getId());
-			// if(CommonUtil.isNotEmpty(temp)&&temp.getCode()==0&&CommonUtil.isNotEmpty(temp.getData())&&temp.getData().size()==1){
-			// serverResponse=ServerResponse.createBySuccessCodeData(temp.getData().get(0));
-			// return serverResponse;
-			// }else{
-			// throw new
-			// ResponseEntityException(WalletResponseEnums.SYSTEM_ERROR);
-			// }
-		} catch (BusinessException e) {
-			log.error(CommonUtil.format("提现成功异步回调异常：%s,%s", e.getCode(), e.getMessage()));
-			throw new ResponseEntityException(e.getCode(), e.getMessage());
-		} catch (Exception e) {
-			e.printStackTrace();
-			log.error(CommonUtil.format("提现成功异步回调接口异常：%s,%s", WalletResponseEnums.SYSTEM_ERROR.getCode(),
-					WalletResponseEnums.SYSTEM_ERROR.getDesc()));
-			throw new ResponseEntityException(WalletResponseEnums.SYSTEM_ERROR);
-		}
-	}
 
 	/**
 	 * 退款成功异步回调

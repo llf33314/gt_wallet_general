@@ -762,7 +762,7 @@ public class YunSoaMemberUtil {
 	 * 提现申请
 	 * @param consumeOrder
 	 */
-	public static ServerResponse<?> applyWithdraw(TWithdrawOrder consumeOrder) {
+	public static ServerResponse<String> applyWithdraw(TWithdrawOrder consumeOrder) {
 		try{
 			log.info("applyWithdraw start");
 
@@ -796,14 +796,12 @@ public class YunSoaMemberUtil {
 				com.alibaba.fastjson.JSONObject json=	JsonUtil.parseObject(value, com.alibaba.fastjson.JSONObject.class);
 				log.info("payStatus:"+json.getString("payStatus"));
 				if(json.getString("payStatus").equals("success")){//成功
-					return ServerResponse.createBySuccess();
+					return ServerResponse.createBySuccessCodeData(json.getString("orderNo"));
 				}else if(json.getString("payStatus").equals("pending")){//进行时
-					return ServerResponse.createBySuccess();
-				}else if(json.getString("payStatus").equals("fail")){
+					return ServerResponse.createBySuccessCodeData(json.getString("orderNo"));
+				}else{//失败
 					return ServerResponse.createByErrorMessage("提现失败");
 				}
-				com.alibaba.fastjson.JSONObject payInfo=	json.getJSONObject("payInfo");
-				return ServerResponse.createBySuccessCodeData(payInfo);
 			}else{
 				log.info("applyWithdraw end");
 				return ServerResponse.createByErrorMessage(CommonUtil.format("第三方接口异常,错误代码 :%s,描述:%s", response.getString("errorCode"), response.getString("message")));
@@ -933,13 +931,13 @@ public class YunSoaMemberUtil {
 		}
 	
 		/**
-		 * 查询订单状态
+		 * 确认支付
 		 * @param bizUserId 会员账号
 		 * @param bizOrderNo 订单号
 		 */
-		public ServerResponse<com.alibaba.fastjson.JSONObject> pay(String bizUserId,String bizOrderNo,String verificationCode,String consumerIp){
+		public static ServerResponse<com.alibaba.fastjson.JSONObject> pay(String bizUserId,String bizOrderNo,String verificationCode,String consumerIp){
 			try{
-				log.info("getOrderDetail start");
+				log.info("pay start");
 				JSONObject param = new JSONObject();
 				param.put("bizUserId", bizUserId);
 				param.put("bizOrderNo", "");
@@ -949,12 +947,12 @@ public class YunSoaMemberUtil {
 				JSONObject response = client.request(ordersoaName, "pay", param);
 				log.info("response:" + response);
 				if(CommonUtil.isNotEmpty(response)&&response.get("status").equals("OK")){//查询成功
-					log.info("getOrderDetail end");
+					log.info("pay end");
 					String value = response.getString("signedValue");
 					com.alibaba.fastjson.JSONObject json=	JsonUtil.parseObject(value, com.alibaba.fastjson.JSONObject.class);
 					return ServerResponse.createBySuccessCodeData(json);
 				}else{//接口异常
-					log.info("getOrderDetail end");
+					log.info("pay end");
 					return ServerResponse.createByErrorMessage(CommonUtil.format("第三方接口异常,错误代码 :%s,描述:%s", response.getString("errorCode"), response.getString("message")));
 				}
 			}catch(Exception e){

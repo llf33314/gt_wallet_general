@@ -1,5 +1,6 @@
 package com.gt.wallet.service.order;
 
+import com.alibaba.fastjson.JSONObject;
 import com.baomidou.mybatisplus.plugins.Page;
 import com.gt.wallet.base.BaseService;
 import com.gt.wallet.data.wallet.request.SearchPayOrderPage;
@@ -42,6 +43,30 @@ public interface WalletMoneyService extends BaseService<WalletMoney> {
 	  * @param bankId 银行卡id
 	  * @return
 	  */
-	 ServerResponse<?> withdrawApply(Integer busId,double money,Integer bankId) throws Exception;
+	 ServerResponse<Integer> withdrawApply(Integer busId,double money,Integer bankId) throws Exception;
+	 
+	 /**根据系统订单获取订单信息提现
+	  * @param sysOrderNo 系统订单号
+	  * @return
+	  */
+	 ServerResponse<WalletMoney> getInfoBySysOrderNo(String sysOrderNo) throws Exception;
+	 
+	 
+		/**
+		 *提现成功异步回调
+		 * @param params
+		 * @return
+		 * @throws Exception
+		 */
+		ServerResponse<?>	withdrawSuccessNotify(JSONObject params)throws Exception;
+	 
+		/**
+		 * 提现确认
+		 * @param busId 商家id
+		 * @param id 订单id
+		 * @param verificationCode 验证码
+		 * @return
+		 */
+		ServerResponse<Integer> confirm(Integer busId,Integer id,String  verificationCode,String ip) throws Exception;
 	
 }

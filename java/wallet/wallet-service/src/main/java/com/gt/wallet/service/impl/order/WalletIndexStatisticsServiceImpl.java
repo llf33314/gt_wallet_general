@@ -15,6 +15,7 @@ import com.gt.wallet.exception.BusinessException;
 import com.gt.wallet.mapper.order.WalletIndexStatisticsMapper;
 import com.gt.wallet.service.member.WalletMemberService;
 import com.gt.wallet.service.order.WalletIndexStatisticsService;
+import com.gt.wallet.service.order.WalletMoneyService;
 import com.gt.wallet.utils.CommonUtil;
 
 import lombok.extern.slf4j.Slf4j;
@@ -35,8 +36,10 @@ public class WalletIndexStatisticsServiceImpl extends BaseServiceImpl<WalletInde
 	@Autowired
 	private WalletMemberService walletMemberService;
 	
+//	@Autowired
+//	private WalletIndexStatisticsMapper walletIndexStatisticsMapper;
 	@Autowired
-	private WalletIndexStatisticsMapper walletIndexStatisticsMapper;
+	private WalletMoneyService walletMoneyService;
 	
 	@Override
 	public ServerResponse<IndexStatistics> getIndexStatistics(Integer busId) throws Exception {
@@ -44,24 +47,25 @@ public class WalletIndexStatisticsServiceImpl extends BaseServiceImpl<WalletInde
 		ServerResponse<List<WalletMember>> memberServerResponse=walletMemberService.findMember(busId);
 		if(ServerResponse.judgeSuccess(memberServerResponse)&&memberServerResponse.getData().size()>0){
 			WalletMember walletMember=memberServerResponse.getData().get(0);
-			WalletIndexStatistics params=new WalletIndexStatistics();
-			params.setWMemberId(walletMember.getId());
-			WalletIndexStatistics walletIndexStatistics=walletIndexStatisticsMapper.selectOne(params);
-			IndexStatistics indexStatistics=new IndexStatistics();
-			if(CommonUtil.isEmpty(walletIndexStatistics)){
-				indexStatistics.setBalance(0.0);
-				indexStatistics.setTotal(0.0);
-				indexStatistics.setWaitBalance(0.0);
-				log.info(CommonUtil.format("end getIndexStatistics api:%s",JsonUtil.toJSONString(indexStatistics)));
-				return ServerResponse.createBySuccessCodeData(indexStatistics);
-			}else{
-				indexStatistics.setBalance(walletIndexStatistics.getBalance().doubleValue());
-				indexStatistics.setTotal(walletIndexStatistics.getTotal().doubleValue());
-				indexStatistics.setWaitBalance(walletIndexStatistics.getWaitBalance().doubleValue());
-				log.info(CommonUtil.format("end getIndexStatistics api:%s",JsonUtil.toJSONString(indexStatistics)));
-				return ServerResponse.createBySuccessCodeData(indexStatistics);
-			}
+//			WalletIndexStatistics params=new WalletIndexStatistics();
+//			params.setWMemberId(walletMember.getId());
+//			WalletIndexStatistics walletIndexStatistics=walletIndexStatisticsMapper.selectOne(params);
+//			IndexStatistics indexStatistics=new IndexStatistics();
+//			if(CommonUtil.isEmpty(walletIndexStatistics)){
+//				indexStatistics.setBalance(0.0);
+//				indexStatistics.setTotal(0.0);
+//				indexStatistics.setWaitBalance(0.0);
+//				log.info(CommonUtil.format("end getIndexStatistics api:%s",JsonUtil.toJSONString(indexStatistics)));
+//				return ServerResponse.createBySuccessCodeData(indexStatistics);
+//			}else{
+//				indexStatistics.setBalance(walletIndexStatistics.getBalance().doubleValue());
+//				indexStatistics.setTotal(walletIndexStatistics.getTotal().doubleValue());
+//				indexStatistics.setWaitBalance(walletIndexStatistics.getWaitBalance().doubleValue());
+//				log.info(CommonUtil.format("end getIndexStatistics api:%s",JsonUtil.toJSONString(indexStatistics)));
+//				return ServerResponse.createBySuccessCodeData(indexStatistics);
+//			}
 			
+			return walletMoneyService.getTotal(walletMember.getId());
 		}else{
 			log.error("请先注册多粉会员");
 			throw new BusinessException("请先注册多粉会员");

@@ -6,11 +6,15 @@ import javax.servlet.http.HttpServletRequest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.alibaba.druid.support.http.util.IPAddress;
+import com.alibaba.fastjson.JSONObject;
 import com.baomidou.mybatisplus.plugins.Page;
 import com.gt.api.bean.session.BusUser;
+import com.gt.api.util.IPOrAddressUtils;
 import com.gt.api.util.httpclient.JsonUtil;
 import com.gt.wallet.base.BaseController;
 import com.gt.wallet.data.wallet.request.SearchPayOrderPage;
@@ -40,8 +44,8 @@ import lombok.extern.slf4j.Slf4j;
  * @since 2017-10-23
  */
 @RestController  
-@RequestMapping("//walletMoney")
-@Api(value = "walletMember",description="提现记录")
+@RequestMapping("/walletMoney")
+@Api(value = "walletMoney",description="提现")
 @Slf4j
 public class WalletMoneyController extends BaseController {
 	
@@ -87,7 +91,7 @@ public class WalletMoneyController extends BaseController {
 	 * @return
 	 */
 	@RequestMapping(value = "/withdrawApply", method = RequestMethod.POST)
-	@ApiOperation(value = "支付下单", notes = "支付下单")
+	@ApiOperation(value = "withdrawApply", notes = "提现(成功后会返回订单id),支付确认时需要传递")
 	public String withdrawApply(HttpServletRequest request,@ApiParam(required=true,name="money" ,value="钱包会员id")double money,@ApiParam(required=true,name="bankId" ,value="银行卡id")Integer bankId) {
 		log.info(CommonUtil.format("applyDeposit api,%s,%s", JsonUtil.toJSONString(money),bankId));
 		try {
@@ -106,13 +110,37 @@ public class WalletMoneyController extends BaseController {
 	
 	
 	/**
+	 * 提现确认
+	 * 
+	 * @return
+	 */
+	@RequestMapping(value = "/confirm", method = RequestMethod.POST)
+	@ApiOperation(value = "confirm", notes = "提现确认")
+	public String confirm(HttpServletRequest request,@ApiParam(required=true,name="id" ,value="订单id")Integer id,@ApiParam(required=true,name="verificationCode" ,value="验证码")String verificationCode) {
+		log.info(CommonUtil.format("confirm api,%s,%s", JsonUtil.toJSONString(id),verificationCode));
+		try {
+			BusUser busUser=	CommonUtil.getLoginUser(request);
+			String ip=IPOrAddressUtils.getIpAddr(request);
+			ServerResponse<?> serverResponse=walletMoneyService.confirm(busUser.getId(), id, verificationCode,ip);
+			log.info("serverResponse %s",JsonUtil.toJSONString(serverResponse));
+			request.setAttribute("serverResponse", serverResponse);
+		} catch (Exception e) {
+			e.printStackTrace();
+			log.error(CommonUtil.format("confirm api异常：%s,%s", WalletResponseEnums.SYSTEM_ERROR.getCode(),
+					WalletResponseEnums.SYSTEM_ERROR.getDesc()));
+			throw new BusinessException(WalletResponseEnums.SYSTEM_ERROR);
+		}
+		return "";
+	}
+	
+	/**
 	 * 获取余额(提现页面展示)
 	 * @return
 	 */
 	@ResponseBody
-	@RequestMapping(value="getPage",method=RequestMethod.POST)
-	 @ApiOperation(value="getPage", notes="获取余额(提现页面展示)")
-	public ServerResponse<Double> getPage(HttpServletRequest request,@ApiParam(required=true,name="wMemberId" ,value="钱包会员id")Integer wMemberId){
+	@RequestMapping(value="getTotal",method=RequestMethod.POST)
+	 @ApiOperation(value="getTotal", notes="获取余额(提现页面展示)")
+	public ServerResponse<Double> getTotal(HttpServletRequest request,@ApiParam(required=true,name="wMemberId" ,value="钱包会员id")Integer wMemberId){
 		log.info(CommonUtil.format("触发获取余额(提现页面展示)接口 %s",JsonUtil.toJSONString(wMemberId)));
 		try {
 			ServerResponse<IndexStatistics> serverResponse=walletMoneyService.getTotal(wMemberId);
@@ -130,5 +158,29 @@ public class WalletMoneyController extends BaseController {
 				log.error(CommonUtil.format("获取余额(提现页面展示)接口异常：%s,%s",WalletResponseEnums.SYSTEM_ERROR.getCode(),WalletResponseEnums.SYSTEM_ERROR.getDesc()));
 				throw new ResponseEntityException(WalletResponseEnums.SYSTEM_ERROR);
 			}
+	}
+	
+	
+	/**
+	 * 提现成功异步回调
+	 * 
+	 * @return
+	 */
+	@RequestMapping(value = "/79B4DE7C/withdrawSuccessNotify", method = RequestMethod.POST)
+	@ApiOperation(value = "提现成功异步回调", notes = "提现成功异步回调")
+	public ServerResponse<?> withdrawSuccessNotify(HttpServletRequest request, @RequestParam JSONObject params) {
+		log.info(CommonUtil.format("支付成功异步回调,%s", JsonUtil.toJSONString(params)));
+		try {
+			ServerResponse<?> serverResponse=	walletMoneyService.withdrawSuccessNotify(params);
+			return serverResponse;
+		} catch (BusinessException e) {
+			log.error(CommonUtil.format("提现成功异步回调异常：%s,%s", e.getCode(), e.getMessage()));
+			throw new ResponseEntityException(e.getCode(), e.getMessage());
+		} catch (Exception e) {
+			e.printStackTrace();
+			log.error(CommonUtil.format("提现成功异步回调接口异常：%s,%s", WalletResponseEnums.SYSTEM_ERROR.getCode(),
+					WalletResponseEnums.SYSTEM_ERROR.getDesc()));
+			throw new ResponseEntityException(WalletResponseEnums.SYSTEM_ERROR);
+		}
 	}
 }
