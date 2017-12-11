@@ -454,4 +454,30 @@ public class CommonUtil {
 		return null;
 	};
 
+	/**
+	 * 获取状态描述会员状态(-2:删除,-1:锁定用户,0:创建,1:审核中,3:正常使用)
+	 * @param stataus
+	 */
+	public static String getMemberStatusDesc(Integer stataus){
+		String desc="";
+		switch (stataus) {
+		case -2:
+			desc="删除";
+			break;
+		case -1:
+			desc="锁定用户";
+			break;
+		case 0:
+			desc="创建中";
+			break;
+		case 1:
+			desc="审核中";
+			break;
+
+		default:
+			desc="正常使用";
+			break;
+		}
+		return desc;
+	}
 }

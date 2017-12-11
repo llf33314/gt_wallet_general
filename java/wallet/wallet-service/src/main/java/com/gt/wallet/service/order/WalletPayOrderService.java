@@ -3,6 +3,7 @@ package com.gt.wallet.service.order;
 import com.alibaba.fastjson.JSONObject;
 import com.baomidou.mybatisplus.plugins.Page;
 import com.gt.wallet.base.BaseService;
+import com.gt.wallet.data.api.tonglian.request.TRefundOrder;
 import com.gt.wallet.data.wallet.request.PayOrder;
 import com.gt.wallet.data.wallet.request.SearchPayOrderPage;
 import com.gt.wallet.dto.ServerResponse;
@@ -70,4 +71,12 @@ public interface WalletPayOrderService extends BaseService<WalletPayOrder> {
 	 
 	 
 	
+	 /**
+	  * 退款
+	  * @param payOrder
+	  * @return
+	  */
+	 ServerResponse<?> refund(TRefundOrder refundOrder) throws Exception;
 }
+
+

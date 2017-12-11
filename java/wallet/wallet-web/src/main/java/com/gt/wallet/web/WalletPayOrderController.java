@@ -16,6 +16,7 @@ import com.alibaba.fastjson.JSONObject;
 import com.baomidou.mybatisplus.plugins.Page;
 import com.gt.api.util.httpclient.JsonUtil;
 import com.gt.wallet.base.BaseController;
+import com.gt.wallet.data.api.tonglian.request.TRefundOrder;
 import com.gt.wallet.data.wallet.request.PayOrder;
 import com.gt.wallet.data.wallet.request.SearchPayOrderPage;
 import com.gt.wallet.dto.ServerResponse;
@@ -155,12 +156,45 @@ public class WalletPayOrderController extends BaseController {
 	
 	
 	/**
+	 * 退款 api
+	 * 
+	 * @return
+	 */
+	@RequestMapping(value = "refund", method = RequestMethod.POST)
+	@ApiOperation(value = "退款", notes = "退款")
+	@ApiImplicitParams({
+		@ApiImplicitParam(name = "bizOrderNo",value = "商户退款订单号",paramType = "form",dataType = "string",required=true,example="cy123456789")
+		,
+		@ApiImplicitParam(name = "oriBizOrderNo",value = "商户原订单号",paramType = "form",dataType = "string",required=true,example="openid或userid(支付宝)")
+		,
+		@ApiImplicitParam(name = "backUrl",value = "后台通知地址",paramType = "form",dataType = "string",required=true,defaultValue="http://duofriend.com")
+		,
+		@ApiImplicitParam(name = "amount",value = "退款订单金额",paramType = "form",dataType = "double",required=true,defaultValue="1")
+	})
+	public String refund(HttpServletRequest request, TRefundOrder tRefundOrder) {
+//		log.info(CommonUtil.format("refund api,%s", JsonUtil.toJSONString(tRefundOrder)));
+//		try {
+//			ServerResponse<com.alibaba.fastjson.JSONObject> serverResponse=walletPayOrderService.refund(tRefundOrder);
+//			log.info("serverResponse %s",JsonUtil.toJSONString(serverResponse));
+//			request.setAttribute("serverResponse", serverResponse);
+//		} catch (Exception e) {
+//			e.printStackTrace();
+//			log.error(CommonUtil.format("refund api异常：%s,%s", WalletResponseEnums.SYSTEM_ERROR.getCode(),
+//					WalletResponseEnums.SYSTEM_ERROR.getDesc()));
+//			throw new BusinessException(WalletResponseEnums.SYSTEM_ERROR);
+//		}
+		return "";
+	}
+	
+	
+	
+	/**
 	 * 分页查询
 	 * @return
 	 */
 	@ResponseBody
 	@RequestMapping(value="getPage",method=RequestMethod.POST)
-	 @ApiOperation(value="分页查询", notes="分页查询")
+	@ApiOperation(value="分页查询", notes="分页查询")
 	@ApiImplicitParams({
         @ApiImplicitParam(name = "current",value = "当前页",paramType = "form",dataType = "int",required=true,defaultValue="1"),
         @ApiImplicitParam(name = "total",value = "总条数",paramType = "form",dataType = "int",required=false,defaultValue="0"),
@@ -174,7 +208,7 @@ public class WalletPayOrderController extends BaseController {
 		log.info(CommonUtil.format("触发分页查询接口 %s",JsonUtil.toJSONString(page)));
 		try {
 			ServerResponse<MyPageUtil<WalletPayOrder>> serverResponse=walletPayOrderService.getPage(page,searchPayOrderPage);
-			log.info(CommonUtil.format("serverResponse:", JsonUtil.toJSONString(serverResponse)));
+			log.info(CommonUtil.format("serverResponse:%s", JsonUtil.toJSONString(serverResponse)));
 			return serverResponse;
 			} catch ( BusinessException e) {
 				log.error(CommonUtil.format("分页查询接口异常：%s,%s",e.getCode(),e.getMessage()));

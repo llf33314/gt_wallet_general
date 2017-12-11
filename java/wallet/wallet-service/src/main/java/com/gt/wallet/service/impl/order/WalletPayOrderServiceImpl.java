@@ -22,6 +22,7 @@ import com.gt.wallet.base.BaseServiceImpl;
 import com.gt.wallet.constant.WalletConstants;
 import com.gt.wallet.constant.WalletLogConstants;
 import com.gt.wallet.data.api.tonglian.request.TPayOrder;
+import com.gt.wallet.data.api.tonglian.request.TRefundOrder;
 import com.gt.wallet.data.wallet.request.PayOrder;
 import com.gt.wallet.data.wallet.request.SearchPayOrderPage;
 import com.gt.wallet.dto.ServerResponse;
@@ -61,6 +62,9 @@ public class WalletPayOrderServiceImpl extends BaseServiceImpl<WalletPayOrderMap
 	
 	@Autowired
 	private WalletPayOrderMapper walletPayOrderMapper;
+	
+	@Autowired
+	private WalletPayOrderService walletPayOrderService;
 	
 
 //	@Transactional(propagation = Propagation.REQUIRED,isolation = Isolation.DEFAULT,timeout=36000,rollbackFor=Exception.class)
@@ -291,6 +295,24 @@ public class WalletPayOrderServiceImpl extends BaseServiceImpl<WalletPayOrderMap
 //		MyPageUtil.getInit( page.getRecords().size(), page);
 		log.info(CommonUtil.format("page:%s", JsonUtil.toJSONString(page)));
 		return ServerResponse.createBySuccessCodeData(myPageUtil);
+	}
+
+
+	@Override
+	public ServerResponse<?> refund(TRefundOrder refundOrder) throws Exception {
+		log.info(CommonUtil.format("biz接口:refund api,params:%s", JsonUtil.toJSONString(refundOrder)));
+		ServerResponse<WalletPayOrder>  serverResponseWalletPayOrder=	walletPayOrderService.findByOrderNo(refundOrder.getBizOrderNo());
+		if(!ServerResponse.judgeSuccess(serverResponseWalletPayOrder)){
+			log.error("异常：订单号不存在!");
+			throw new BusinessException("异常：订单号不存在!");
+		}
+		WalletPayOrder walletPayOrder=serverResponseWalletPayOrder.getData();
+		WalletMember walletMember=walletMemberMapper.selectById(walletPayOrder.getWMemberId());
+		if(walletMember.getStatus()!=3){
+			log.error("会员账号异常("+CommonUtil.getMemberStatusDesc(walletMember.getStatus())+")，退款失败!");
+			throw new BusinessException("会员账号异常("+CommonUtil.getMemberStatusDesc(walletMember.getStatus())+")，退款失败!");
+		}
+		return null;
 	}
 	
 	

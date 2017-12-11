@@ -144,7 +144,7 @@ public class WalletMoneyController extends BaseController {
 		log.info(CommonUtil.format("触发获取余额(提现页面展示)接口 %s",JsonUtil.toJSONString(wMemberId)));
 		try {
 			ServerResponse<IndexStatistics> serverResponse=walletMoneyService.getTotal(wMemberId);
-			log.info(CommonUtil.format("serverResponse:", JsonUtil.toJSONString(serverResponse)));
+			log.info(CommonUtil.format("serverResponse:%s", JsonUtil.toJSONString(serverResponse)));
 			Double yue=0.0;
 			if(CommonUtil.isNotEmpty(serverResponse.getData())){
 				yue=serverResponse.getData().getBalance();
@@ -171,7 +171,7 @@ public class WalletMoneyController extends BaseController {
 	public ServerResponse<?> withdrawSuccessNotify(HttpServletRequest request, @RequestParam JSONObject params) {
 		log.info(CommonUtil.format("支付成功异步回调,%s", JsonUtil.toJSONString(params)));
 		try {
-			ServerResponse<?> serverResponse=	walletMoneyService.withdrawSuccessNotify(params);
+			ServerResponse<?> serverResponse=walletMoneyService.withdrawSuccessNotify(params);
 			return serverResponse;
 		} catch (BusinessException e) {
 			log.error(CommonUtil.format("提现成功异步回调异常：%s,%s", e.getCode(), e.getMessage()));

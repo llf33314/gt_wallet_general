@@ -17,18 +17,19 @@ public class TRefundOrder {
 	/**
 	 * 商户订单号
 	 */
-	@ApiModelProperty(name="bizOrderNo",notes="商户订单号",required=true)
+	@ApiModelProperty(name="bizOrderNo",notes="商户退款订单号",required=true)
 	private String bizOrderNo;
 	
 	/**
 	 * 商户原订单号
 	 */
+	@ApiModelProperty(name="oriBizOrderNo",notes="商户原订单号",required=true)
 	private String oriBizOrderNo;
 	
 	/**
 	 * 多粉会员账号
 	 */
-	@ApiModelProperty(name="bizUserId",notes="多粉会员账号",required=true)
+	@ApiModelProperty(name="bizUserId",notes="多粉会员账号",required=true,hidden=true)
 	private String bizUserId;
 	
 	
@@ -42,8 +43,19 @@ public class TRefundOrder {
 	/**
 	 * 手续费退款金额 
 	 */
-	@ApiModelProperty(name="feeAmount",notes="手续费退款金额 ",required=true)
+	@ApiModelProperty(name="feeAmount",notes="手续费退款金额 ",required=true,hidden=true)
 	private Double feeAmount;
 	
 
+	/**
+	 * 异步回调通知
+	 */
+	@ApiModelProperty(name="backUrl",notes="异步回调通知",required=true)
+	private String backUrl;
+	
+	/**
+	 * 商家id
+	 */
+	@ApiModelProperty(name="busId",notes="商家id",required=true,hidden=true)
+	private Integer busId;
 }

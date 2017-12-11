@@ -277,24 +277,15 @@ public class WalletMoneyServiceImpl extends BaseServiceImpl<WalletMoneyMapper, W
 			log.info(CommonUtil.format("log生成结果: %s", JsonUtil.toJSONString(logServerResponse)));
 		} catch (Exception e) {
 			log.error("生成api日志接口异常");
-			// TODO: handle exception
 			e.printStackTrace();
 		}
 		if(ServerResponse.judgeSuccess(serverResponse)){
 			JSONObject data=serverResponse.getData();
-			switch (data.getString("payStatus")) {
-			case "success":
-				
-				break;
-
-			default:
-				break;
-			}
 			walletMoney.setStatus(data.getString("payStatus"));
 			if(data.getString("payStatus").equals("fail")){
 				walletMoney.setPayFailMessage(data.getString("payFailMessage"));
 			}
-			Integer count=	walletMoneyMapper.insert(walletMoney);
+			Integer count=	walletMoneyMapper.updateById(walletMoney);
 			if(count==1){
 				log.info("success");
 				return	ServerResponse.createBySuccessCodeData(walletMoney.getId());
@@ -303,7 +294,6 @@ public class WalletMoneyServiceImpl extends BaseServiceImpl<WalletMoneyMapper, W
 				return	ServerResponse.createByError();
 			}
 		}else{
-			
 			return ServerResponse.createByErrorCodeMessage(serverResponse.getCode(), serverResponse.getMsg());
 		}
 	
