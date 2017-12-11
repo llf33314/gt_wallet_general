@@ -43,7 +43,7 @@
       //获取会员id
       getVipNum(type) {
         $.ajax({
-          url: this.DFPAYDOMAIN + '/register',
+          url: this.DFPAYDOMAIN + '/walletMember/register',
           type: 'GET',
           dataType: 'json',
           data: {

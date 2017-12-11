@@ -45,7 +45,7 @@ public class WalletMember extends Model<WalletMember> {
 	@TableField("member_id")
 	private Integer memberId;
     /**
-     * 会员类型(1:个人会员 2:企业会员)
+     * 会员类型(3:个人会员 2:企业会员)
      */
 	@ApiModelProperty(name="会员类型",notes="(会员类型(3:个人会员 2:企业会员))")
 	@TableField("member_type")
@@ -135,6 +135,16 @@ public class WalletMember extends Model<WalletMember> {
 	@TableField("fee_percent")
 	private Double feePercent;
 
+	
+	/**
+	 * 提现额度
+	 */
+	@ApiModelProperty(name="withdrawQuota",notes="提现额度")
+	@TableField("withdraw_quota")
+	private Double withdrawQuota;
+	
+	
+	
 	@Override
 	protected Serializable pkVal() {
 		return this.id;

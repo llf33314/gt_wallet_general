@@ -2,7 +2,13 @@
   .wallet-individual-index {
     .title-dps {
       display: inline-block;
-      min-width: 180px;
+      width: 200px;
+    }
+    .ellipsis {
+      margin-right: 20px;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
     }
   }
 
@@ -14,13 +20,15 @@
         <div class="gray">
           <div class="public-fl">
             <div class="row1 public-c333">
-              <span class="title" style="width:60px;">姓名：</span>
-              <span class="title-dps">撒个</span>
+              <span class="title" style="width:70px;text-align:right">企业名称：</span>
+              <span class="title-dps ellipsis" title="多粉科技有多粉">多粉科技有多粉科技有限公技有限公司限公技有限公司</span>
               <span class="title">认证类型：</span>
               <span>个人认证</span>
+              <span class="title" style="margin-left: 110px;">安全手机号码：</span>
+              <span>1564004646</span>
             </div>
             <div class="row1 public-c333">
-              <span class="title" style="width:60px;">安全卡：</span>
+              <span class="title" style="width:70px;text-align:right">安全卡：</span>
               <span class="title-dps">1264 4568 7894 465</span>
               <span class="title">银行卡类型：</span>
               <span>个人账户</span>
@@ -28,7 +36,7 @@
           </div>
           <div class="public-fr">
             <!-- <set-pwd></set-pwd> -->
-            <!-- <el-button @click="goToDrawCash" type="primary">个人信息</el-button> -->
+            <el-button @click="goToMsg" type="primary">企业信息</el-button>
           </div>
         </div>
         <div class="data-msg">
@@ -59,7 +67,7 @@
           </div>
         </div>
       </div>
-      <div class="public-table-title public-c666">近期交易记录</div>
+      <div class="public-table-title public-c666" style="margin-top: 30px;">近期交易记录</div>
       <!-- <gt-null-data class="public-top20">您近期没有交易记录</gt-null-data> -->
       <div class="table-top-conent">
         <div class="row">
@@ -71,22 +79,9 @@
           <span class="title public-c333">时间范围：</span>
           <el-date-picker v-model="value4" type="datetimerange" :picker-options="pickerOptions2" placeholder="选择时间范围" align="right">
           </el-date-picker>
-          <div v-show="tType==0" style="display:inline-block;">
-            <span class="title public-c333" style="padding-left:30px;">来源：</span>
-            <el-select v-model="value" placeholder="请选择">
-              <el-option v-for="item in options" :key="item.value" :label="item.label" :value="item.value">
-              </el-option>
-            </el-select>
-          </div>
-        </div>
-        <div v-show="tType==0" class="public-c666" style="line-height:1.8;margin-top:15px;">
-          <p>1.金额：是订单的交易金额（为扣除交易手续费的金额）</p>
-          <p>2.交易手续费用：是承担微信、支付宝、银行机构等“支付通道商”收取的0.6%交易手续费。</p>
-          <p>3.到账金额：是实际到多粉钱包的金额（到账金额=金额-交易手续费用）</p>
         </div>
       </div>
-      <el-table ref="multipleTable" :data="tableData3" class="public-top20" align="center" border tooltip-effect="dark" style="width: 100%"
-        @selection-change="handleSelectionChange">
+      <el-table ref="multipleTable" :data="tableData3" class="public-top20" @selection-change="handleSelectionChange">
         <el-table-column label="创建时间" show-overflow-tooltip align="center">
           <template slot-scope="scope">{{ scope.row.date }}</template>
         </el-table-column>
@@ -266,12 +261,7 @@
       selectApply() {
 
       },
-      //提现
-      goToDrawCash() {
-        this.$router.push({
-          path: '/wallet/individual/drawcash'
-        })
-      },
+
       toggleSelection(rows) {
         if (rows) {
           rows.forEach(row => {
@@ -300,7 +290,19 @@
         this.$router.push({
           path: '/wallet/individual/addBank/' + this.data.memberId
         })
-      }
+      },
+      //企业信息
+      goToMsg() {
+        this.$router.push({
+          path: '/wallet/company/messages/' + this.data.memberId
+        })
+      },
+      //提现
+      goToDrawCash() {
+        this.$router.push({
+          path: '/wallet/company/drawcash/' + this.data.memberId
+        })
+      },
 
     }
   }

@@ -25,6 +25,14 @@ export const individual = [
     }
   },
   {
+    path: '/wallet/individual/drawcash',
+    name: 'individualDrawcash',
+    title: '个人提现',
+    component: resolve => {
+      require(['@/components/wallet/vue/individual/drawcash'], resolve)
+    }
+  },
+  {
     path: '/wallet/individual/addBank/:memberId',
     name: 'individualAddBank',
     title: '新增个人银行卡',
@@ -36,11 +44,43 @@ export const individual = [
 //企业
 export const company = [
   {
-    path: '/wallet/company/open/:memberId',
-    name: 'companyOpen',
-    title: '企业开通',
+    path: '/wallet/company/open/base/:memberId',
+    name: 'company_open_base',
+    title: '企业开通-基本信息',
     component: resolve => {
-      require(['@/components/wallet/vue/company/open'], resolve)
+      require(['@/components/wallet/vue/company/open/base'], resolve)
+    }
+  },
+  {
+    path: '/wallet/company/open/uploadFile/:memberId',
+    name: 'company_open_uploadFile',
+    title: '企业开通-上传文件',
+    component: resolve => {
+      require(['@/components/wallet/vue/company/open/uploadFile'], resolve)
+    }
+  },
+  {
+    path: '/wallet/company/index',
+    name: 'company_index',
+    title: '企业主页',
+    component: resolve => {
+      require(['@/components/wallet/vue/company/index'], resolve)
+    }
+  },
+  {
+    path: '/wallet/company/messages/:memberId',
+    name: 'company_messages',
+    title: '企业信息',
+    component: resolve => {
+      require(['@/components/wallet/vue/company/messages'], resolve)
+    }
+  },
+  {
+    path: '/wallet/company/drawcash/:memberId',
+    name: 'company_messages',
+    title: '企业提现',
+    component: resolve => {
+      require(['@/components/wallet/vue/company/drawcash'], resolve)
     }
   }
 ]

@@ -31,7 +31,9 @@ public class YunSoaMemberUtil {
 	private static PrivateKey privateKey;
 
 	//soa服务名
-	private static String soaName = "MemberService";
+	private static String membersoaName = "MemberService";
+	//soa服务名
+	private static String ordersoaName = "OrderService";
 	//借记卡卡号
 	static{
 		try {
@@ -98,7 +100,7 @@ public class YunSoaMemberUtil {
 			param.put("extendParam", new JSONObject());
 
 			log.info("request:" + param);
-			JSONObject response = client.request(soaName, "createMember", param);
+			JSONObject response = client.request(membersoaName, "createMember", param);
 			log.info("response:" + response);
 			if(CommonUtil.isNotEmpty(response)&&response.get("status").equals("OK")){//创建成功
 				log.info("createMember end");
@@ -135,7 +137,7 @@ public class YunSoaMemberUtil {
 			param.put("extendParams", extendParams);
 
 			log.info("request:" + param);
-			JSONObject response = client.request(soaName, "sendVerificationCode", param);
+			JSONObject response = client.request(membersoaName, "sendVerificationCode", param);
 			log.info("response:" + response);
 			if(CommonUtil.isNotEmpty(response)&&response.get("status").equals("OK")){
 				log.info("testSendVerificationCode end");
@@ -193,7 +195,7 @@ public class YunSoaMemberUtil {
 			param.put("identityNo", rsaEncrypt(identityNo));
 
 			log.info("request:" + param);
-			JSONObject response = client.request(soaName, "setRealName", param);
+			JSONObject response = client.request(membersoaName, "setRealName", param);
 			log.info("response:" + response);
 
 			String value = response.getString("signedValue");
@@ -232,7 +234,7 @@ public class YunSoaMemberUtil {
 			param.put("verificationCode",verificationCode);
 
 			log.info("request:" + param);
-			JSONObject response = client.request(soaName, "bindPhone", param);
+			JSONObject response = client.request(membersoaName, "bindPhone", param);
 			log.info("response:" + response);
 			if(CommonUtil.isNotEmpty(response)&&response.get("status").equals("OK")){
 				log.info("bindPhone end");
@@ -278,7 +280,7 @@ public class YunSoaMemberUtil {
 			param.put("companyBasicInfo", companyBasicInfo);
 
 			log.info("request:" + param);
-			JSONObject response = client.request(soaName, "setCompanyInfo", param);
+			JSONObject response = client.request(membersoaName, "setCompanyInfo", param);
 			log.info("response:" + response);
 			if(CommonUtil.isNotEmpty(response)&&response.get("status").equals("OK")){
 				String value = response.getString("signedValue");
@@ -323,7 +325,7 @@ public class YunSoaMemberUtil {
 			param.put("userInfo", userInfo);
 
 			log.info("request:" + param);
-			JSONObject response = client.request(soaName, "setMemberInfo", param);
+			JSONObject response = client.request(membersoaName, "setMemberInfo", param);
 			log.info("response:" + response);
 
 			log.info("setMemberInfo end");
@@ -348,7 +350,7 @@ public class YunSoaMemberUtil {
 			param.put("bizUserId", bizUserId);
 
 			log.info("request:" + param);
-			JSONObject response = client.request(soaName, "getMemberInfo", param);
+			JSONObject response = client.request(membersoaName, "getMemberInfo", param);
 			log.info("response:" + response);
 			if(CommonUtil.isNotEmpty(response)&&response.get("status").equals("OK")){
 				String value = response.getString("signedValue");
@@ -381,7 +383,7 @@ public class YunSoaMemberUtil {
 			param.put("cardNo", rsaEncrypt(cardNo));
 
 			log.info("request:" + param);
-			JSONObject response = client.request(soaName, "getBankCardBin", param);
+			JSONObject response = client.request(membersoaName, "getBankCardBin", param);
 			log.info("response:" + response);
 			if(CommonUtil.isNotEmpty(response)&&response.get("status").equals("OK")){
 				String value = response.getString("signedValue");
@@ -432,7 +434,7 @@ public class YunSoaMemberUtil {
 			}
 			
 			log.info("request:" + param);
-			JSONObject response = client.request(soaName, "applyBindBankCard", param);
+			JSONObject response = client.request(membersoaName, "applyBindBankCard", param);
 			log.info("response:" + response);
 			if(CommonUtil.isNotEmpty(response)&&response.get("status").equals("OK")){
 				String value = response.getString("signedValue");
@@ -467,7 +469,7 @@ public class YunSoaMemberUtil {
 			param.put("verificationCode", verificationCode);
 
 			log.info("request:" + param);
-			JSONObject response = client.request(soaName, "bindBankCard", param);
+			JSONObject response = client.request(membersoaName, "bindBankCard", param);
 			log.info("response:" + response);
 			if(CommonUtil.isNotEmpty(response)&&response.get("status").equals("OK")){
 				log.info("bindBankCard end");
@@ -502,7 +504,7 @@ public class YunSoaMemberUtil {
 //			param.put("bizUserId", bizUserId);
 
 			log.info("request:" + param);
-			JSONObject response = client.request(soaName, "queryBankCard", param);
+			JSONObject response = client.request(membersoaName, "queryBankCard", param);
 			log.info("response:" + response);
 			if(CommonUtil.isNotEmpty(response)&&response.get("status").equals("OK")){
 				String value = response.getString("signedValue");
@@ -530,7 +532,7 @@ public class YunSoaMemberUtil {
 			param.put("cardNo", rsaEncrypt(cardNo));
 
 			log.info("request:" + param);
-			JSONObject response = client.request(soaName, "unbindBankCard", param);
+			JSONObject response = client.request(membersoaName, "unbindBankCard", param);
 			log.info("response:" + response);
 
 			log.info("testUnbindBankCard end");
@@ -561,7 +563,7 @@ public class YunSoaMemberUtil {
 			param.put("newVerificationCode", "");
 
 			log.info("request:" + param);
-			JSONObject response = client.request(soaName, "changeBindPhone", param);
+			JSONObject response = client.request(membersoaName, "changeBindPhone", param);
 			log.info("response:" + response);
 
 			log.info("testChangeBindPhone end");
@@ -580,7 +582,7 @@ public class YunSoaMemberUtil {
 			param.put("bizUserId", bizUserId);
 
 			log.info("request:" + param);
-			JSONObject response = client.request(soaName, "lockMember", param);
+			JSONObject response = client.request(membersoaName, "lockMember", param);
 			log.info("response:" + response);
 			if(CommonUtil.isNotEmpty(response)&&response.get("status").equals("OK")){
 				return ServerResponse.createBySuccess();
@@ -609,7 +611,7 @@ public class YunSoaMemberUtil {
 			param.put("bizUserId", bizUserId);
 
 			log.info("request:" + param);
-			JSONObject response = client.request(soaName, "unlockMember", param);
+			JSONObject response = client.request(membersoaName, "unlockMember", param);
 			log.info("response:" + response);
 			if(CommonUtil.isNotEmpty(response)&&response.get("status").equals("OK")){
 				log.info("unlockMember end");
@@ -736,7 +738,7 @@ public class YunSoaMemberUtil {
 //			param.put("extendInfo", extendInfo);
 
 			log.info("request:" + param);
-			JSONObject response = client.request(soaName, "depositApply", param);
+			JSONObject response = client.request(ordersoaName, "depositApply", param);
 			log.info("response:" + response);
 			if(CommonUtil.isNotEmpty(response)&&response.get("status").equals("OK")){//创建成功
 				log.info("applyDeposit end");
@@ -760,7 +762,7 @@ public class YunSoaMemberUtil {
 	 * 提现申请
 	 * @param consumeOrder
 	 */
-	public ServerResponse<?> applyWithdraw(TWithdrawOrder consumeOrder) {
+	public static ServerResponse<String> applyWithdraw(TWithdrawOrder consumeOrder) {
 		try{
 			log.info("applyWithdraw start");
 
@@ -775,7 +777,8 @@ public class YunSoaMemberUtil {
 			param.put("fee", consumeOrder.getFee());
 			param.put("backUrl", backUrl);
 		//	param.put("ordErexpireDatetime", ordErexpireDatetime);
-			param.put("bankCardNo", YunSoaMemberUtil.rsaEncrypt(consumeOrder.getBankCardNo()));
+//			param.put("bankCardNo", YunSoaMemberUtil.rsaEncrypt(consumeOrder.getBankCardNo()));
+			param.put("bankCardNo", consumeOrder.getBankCardNo());
 			param.put("industryCode", WalletConstants.INDUSTRYCODE);
 			param.put("industryName",WalletConstants.INDUSTRYNAME);
 			param.put("source", 1);
@@ -785,7 +788,7 @@ public class YunSoaMemberUtil {
 	//		param.put("extendInfo", extendInfo);
 
 			log.info("request:" + param);
-			JSONObject response = client.request(soaName, "withdrawApply", param);
+			JSONObject response = client.request(ordersoaName, "withdrawApply", param);
 			log.info("response:" + response);
 			if(CommonUtil.isNotEmpty(response)&&response.get("status").equals("OK")){//创建成功
 				log.info("applyWithdraw end");
@@ -793,14 +796,12 @@ public class YunSoaMemberUtil {
 				com.alibaba.fastjson.JSONObject json=	JsonUtil.parseObject(value, com.alibaba.fastjson.JSONObject.class);
 				log.info("payStatus:"+json.getString("payStatus"));
 				if(json.getString("payStatus").equals("success")){//成功
-					return ServerResponse.createBySuccess();
+					return ServerResponse.createBySuccessCodeData(json.getString("orderNo"));
 				}else if(json.getString("payStatus").equals("pending")){//进行时
-					return ServerResponse.createBySuccess();
-				}else if(json.getString("payStatus").equals("fail")){
+					return ServerResponse.createBySuccessCodeData(json.getString("orderNo"));
+				}else{//失败
 					return ServerResponse.createByErrorMessage("提现失败");
 				}
-				com.alibaba.fastjson.JSONObject payInfo=	json.getJSONObject("payInfo");
-				return ServerResponse.createBySuccessCodeData(payInfo);
 			}else{
 				log.info("applyWithdraw end");
 				return ServerResponse.createByErrorMessage(CommonUtil.format("第三方接口异常,错误代码 :%s,描述:%s", response.getString("errorCode"), response.getString("message")));
@@ -827,7 +828,7 @@ public class YunSoaMemberUtil {
 			param.put("accountSetNo", WalletWebConfig.getYunBizUserId());
 
 			log.info("request:" + param);
-			JSONObject response = client.request(soaName, "queryBalance", param);
+			JSONObject response = client.request(ordersoaName, "queryBalance", param);
 			log.info("response:" + response);
 
 			if(CommonUtil.isNotEmpty(response)&&response.get("status").equals("OK")){//查询成功
@@ -858,7 +859,7 @@ public class YunSoaMemberUtil {
 				param.put("bizUserId", bizUserId);
 				param.put("bizOrderNo", "");
 				log.info("request:" + param);
-				JSONObject response = client.request(soaName, "getOrderDetail", param);
+				JSONObject response = client.request(ordersoaName, "getOrderDetail", param);
 				log.info("response:" + response);
 				if(CommonUtil.isNotEmpty(response)&&response.get("status").equals("OK")){//查询成功
 					log.info("getOrderDetail end");
@@ -880,7 +881,7 @@ public class YunSoaMemberUtil {
 //		//退款
 		public ServerResponse<String> refund(TRefundOrder tRefundOrder ){
 			try{
-				log.info("testRefund start");
+				log.info("refund start");
 
 				String bizOrderNo = tRefundOrder.getBizOrderNo();
 
@@ -901,7 +902,7 @@ public class YunSoaMemberUtil {
 				param.put("feeAmount", tRefundOrder.getFeeAmount());
 
 				log.info("request:" + param);
-				JSONObject response = client.request(soaName, "refund", param);
+				JSONObject response = client.request(ordersoaName, "refund", param);
 				log.info("response:" + response);
 				if(CommonUtil.isNotEmpty(response)&&response.get("status").equals("OK")){//查询成功
 					log.info("refund end");
@@ -923,11 +924,43 @@ public class YunSoaMemberUtil {
 				}
 				
 			}catch(Exception e){
-				log.info("testRefund error");
+				log.info("refund error");
 				e.printStackTrace();
 				return ServerResponse.createByErrorCode(WalletResponseEnums.API_ERROR);
 			}
 		}
 	
+		/**
+		 * 确认支付
+		 * @param bizUserId 会员账号
+		 * @param bizOrderNo 订单号
+		 */
+		public static ServerResponse<com.alibaba.fastjson.JSONObject> pay(String bizUserId,String bizOrderNo,String verificationCode,String consumerIp){
+			try{
+				log.info("pay start");
+				JSONObject param = new JSONObject();
+				param.put("bizUserId", bizUserId);
+				param.put("bizOrderNo", "");
+				param.put("verificationCode", verificationCode);
+				param.put("consumerIp", consumerIp);
+				log.info("request:" + param);
+				JSONObject response = client.request(ordersoaName, "pay", param);
+				log.info("response:" + response);
+				if(CommonUtil.isNotEmpty(response)&&response.get("status").equals("OK")){//查询成功
+					log.info("pay end");
+					String value = response.getString("signedValue");
+					com.alibaba.fastjson.JSONObject json=	JsonUtil.parseObject(value, com.alibaba.fastjson.JSONObject.class);
+					return ServerResponse.createBySuccessCodeData(json);
+				}else{//接口异常
+					log.info("pay end");
+					return ServerResponse.createByErrorMessage(CommonUtil.format("第三方接口异常,错误代码 :%s,描述:%s", response.getString("errorCode"), response.getString("message")));
+				}
+			}catch(Exception e){
+				log.info("getOrderDetail error");
+				e.printStackTrace();
+				return ServerResponse.createByErrorCode(WalletResponseEnums.API_ERROR);
+			}
+		}
+		
 	/***********************************************************************订单类接口********************************************************************************************/
 }

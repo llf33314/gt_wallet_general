@@ -17,11 +17,26 @@ public class WalletLogConstants {
 	/**
 	 * 支付异步回调通知接收
 	 */
-	public static final Integer LOG_PAYNOTITY=1;
+	public static final Integer LOG_PAYNOTITY=2;
 	
 	/**
-	 * 支付异步回调通知ERP
+	 * 支付成功回调各子系统
 	 */
-	public static final Integer LOG_PAYNOTITYERP=1;
+	public static final Integer LOG_PAYNOTITYERP=3;
+	
+	
+	
+	/**
+	 * 调用通联提现api
+	 */
+	public static final Integer LOG_WITHDRAW=4;
+	
+	
+	/**
+	 * 确认支付接口
+	 */
+	public static final Integer LOG_PAYCONFIRM=4;
+	
+	
 	
 }

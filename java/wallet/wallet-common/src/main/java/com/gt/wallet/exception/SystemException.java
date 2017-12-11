@@ -22,6 +22,7 @@ public class SystemException extends RuntimeException {
 
     public SystemException( String message ) {
 	super( message );
+	this.code=1000;
 	this.message = message;
     }
 

@@ -69,17 +69,6 @@
         <el-form-item label="身份证号：" prop="identityNo">
           <el-input v-model="ruleForm.identityNo" placeholder="请输入身份证号" class="input-width"></el-input>
         </el-form-item>
-
-        <el-form-item label="银行卡预留手机号：" prop="phone">
-          <el-input v-model="ruleForm.phone" placeholder="请输入银行卡预留手机号" class="input-width"></el-input>
-        </el-form-item>
-        <el-form-item label="银行卡开户人姓名：" prop="bankName">
-          <el-input v-model="ruleForm.bankName" placeholder="请输入银行卡开户人姓名" class="input-width"></el-input>
-        </el-form-item>
-        <el-form-item label="银行卡号：" prop="cardNo">
-          <el-input v-model="ruleForm.cardNo" placeholder="请输入银行卡号" class="input-width"></el-input>
-          <p class="public-c666">此为多粉钱包安全卡，绑定后不能直接修改。如需修改请联系：***-***</p>
-        </el-form-item>
         <el-form-item label="身份证正面：" prop="identitycardUrl1File">
           <el-upload class="avatar-uploader" ref="identitycardUrl1File" action="" :multiple="true" :show-file-list="false" :http-request="uploadImg"
             :before-upload="beforeAvatarUpload">
@@ -91,7 +80,7 @@
             <img src="./../../img/c1.jpg" alt="">
           </div>
         </el-form-item>
-        <el-form-item label="身份证背面：" prop="identitycardUrl2File">
+        <el-form-item label="身份证反面：" prop="identitycardUrl2File">
           <el-upload class="avatar-uploader" ref="identitycardUrl2File" action="" :show-file-list="false" :http-request="uploadImg2"
             :before-upload="beforeAvatarUpload">
             <img v-if="ruleForm.identitycardUrl2File" :src="ruleForm.identitycardUrl2File" class="avatar">
@@ -106,11 +95,32 @@
           <el-input v-model="ruleForm.name" placeholder="请输入验证码" class="input-width"></el-input>
           <el-button type="primary" @click="sendVerificationCode">获取验证码</el-button>
         </el-form-item> -->
+        <el-form-item label="个人账户：" prop="cardNo">
+          <el-input v-model="ruleForm.cardNo" placeholder="请输入个人账户" class="input-width"></el-input>
+        </el-form-item>
+        <el-form-item label="开户人姓名：">
+          <div>{{ruleForm.name}}</div>
+        </el-form-item>
+        <el-form-item label="银行卡预留手机号：" prop="phone">
+          <el-input v-model="ruleForm.phone" placeholder="请输入银行卡预留手机号" class="input-width"></el-input>
+        </el-form-item>
         <el-form-item>
-          <el-button type="primary" @click="submitForm('ruleForm')">确认开通</el-button>
+          <el-button type="primary" @click="submitForm('ruleForm')">下一步</el-button>
         </el-form-item>
       </el-form>
-
+      <el-dialog title="手机验证" :visible.sync="dialogVisible" size="tiny">
+        <el-form :model="ruleForm2" :rules="rules2" ref="ruleForm2" label-width="100px" class="demo-ruleForm">
+          <!-- <el-form-item label="银行卡预留手机号：">
+            <div>{{ruleForm.phone}}</div>
+          </el-form-item> -->
+          <el-form-item label="短信验证：" prop="verificationCode">
+            <el-input v-model="ruleForm2.verificationCode" placeholder="请输入手机验证码"></el-input>
+          </el-form-item>
+        </el-form>
+        <div style="text-align: right;">
+          <el-button type="primary" @click="addBank('ruleForm2')">确认</el-button>
+        </div>
+      </el-dialog>
     </div>
   </section>
 </template>
@@ -124,7 +134,7 @@
         ruleForm: {
           identitycardUrl1File: 'http://113.106.202.53:14884/upload/image/2/wallet/null/1511871076687.png',
           identitycardUrl2File: 'http://113.106.202.53:14884/upload/image/2/wallet/null/1511871076687.png',
-          memberId: 9,
+          memberId: '',
           name: '李小强', //注册人姓名
           identityNo: '441621199011164013', //身份证号码
           cardNo: '6217212008009165086', //银行卡号
@@ -162,12 +172,12 @@
           cardNo: [{
             required: true,
             message: '请输入银行卡号',
-            trigger: 'change'
+            trigger: 'blur'
           }],
           phone: [{
             required: true,
             message: '请输入银行预留手机',
-            trigger: 'change'
+            trigger: 'blur'
           }],
           bankName: [{
             required: true,
@@ -176,9 +186,22 @@
           }],
         },
         wmemberId: '',
+        dialogVisible: false,
+        ruleForm2: {
+          verificationCode: '',
+          id: ''
+        },
+        rules2: {
+          verificationCode: [{
+            required: true,
+            message: '请输入手机验证码',
+            trigger: 'blur'
+          }],
+        }
       }
     },
     mounted() {
+      this.resetForm.memberId = this.$route.params.memberId
 
     },
     methods: {
@@ -205,46 +228,17 @@
         }
         return isJPG && isLt5M;
       },
-      //发送短信验证码
-      sendVerificationCode() {
-        $.ajax({
-          url: this.DFPAYDOMAIN + '/sendVerificationCode',
-          type: 'POST',
-          dataType: 'json',
-          data: {
-            phone: this.ruleForm.phone,
-            wmemberId: this.wmemberId
-          },
-          success: (res) => {
-            console.log(res, 'res')
-            if (res.code != 0) {
-              this.$message.error(res.msg);
-            } else {
-              this.$message({
-                message: '提交成功',
-                type: 'success'
-              });
-            }
-          }
-        })
-      },
-      //确认开通
-      submitForm(formName) {
-        this.$router.push({
-          path: '/wallet/individual/index'
-        })
-
+      //绑定银行卡
+      addBank(formName) {
+        console.log(this.ruleForm2, 'this.ruleForm2')
         this.$refs[formName].validate((valid) => {
           if (valid) {
-            this.ruleForm.memberId = this.$route.params.memberId
-            console.log(this.ruleForm, 'this.ruleForm')
             $.ajax({
-              url: this.DFPAYDOMAIN + '/walletIndividual/saveIndividual',
+              url: this.DFPAYDOMAIN + '/bindBankCard',
               type: 'POST',
               dataType: 'json',
-              data: this.ruleForm,
+              data: this.ruleForm2,
               success: (res) => {
-                console.log(res, 'res')
                 if (res.code != 0) {
                   this.$message.error(res.msg);
                 } else {
@@ -258,6 +252,33 @@
                       })
                     }
                   });
+                }
+              }
+            })
+          } else {
+            return false;
+          }
+        });
+      },
+      //确认开通
+      submitForm(formName) {
+        this.$refs[formName].validate((valid) => {
+          if (valid) {
+            this.ruleForm.memberId = this.$route.params.memberId
+            console.log(this.ruleForm, 'this.ruleForm')
+            $.ajax({
+              url: this.DFPAYDOMAIN + '/walletIndividual/saveIndividual',
+              type: 'POST',
+              dataType: 'json',
+              data: this.ruleForm,
+              success: (res) => {
+                console.log(res, 'res')
+                res.code = 0
+                if (res.code != 0) {
+                  this.$message.error(res.msg);
+                } else {
+                  this.dialogVisible = true
+                  this.ruleForm2.id = res.data
                 }
               }
             })
