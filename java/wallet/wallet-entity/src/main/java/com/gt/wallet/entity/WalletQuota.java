@@ -33,6 +33,7 @@ public class WalletQuota extends Model<WalletQuota> {
 
     private static final long serialVersionUID = 1L;
 
+    @ApiModelProperty(name="id",notes="id",required=true,hidden=true)
 	@TableId(value="id", type= IdType.AUTO)
 	private Integer id;
     /**
@@ -57,10 +58,12 @@ public class WalletQuota extends Model<WalletQuota> {
     /**
      * 状态 0：创建待审核 1:审核通过 -1:审核不通过
      */
+	@ApiModelProperty(name="status",notes="状态 0：创建待审核 1:审核通过 -1:审核不通过",required=true,hidden=true)
 	private Integer status;
     /**
      * 失败原因
      */
+	@ApiModelProperty(name="failReason",notes="失败原因",required=true,hidden=true)
 	@TableField("fail_reason")
 	private String failReason;
 
