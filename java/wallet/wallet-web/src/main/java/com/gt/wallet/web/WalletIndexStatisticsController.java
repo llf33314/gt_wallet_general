@@ -44,6 +44,7 @@ public class WalletIndexStatisticsController extends BaseController {
 	 * 获取首页总计数据
 	 * @return
 	 */
+	@ResponseBody
 	@RequestMapping(value="getIndexStatistics",method=RequestMethod.GET)
 	 @ApiOperation(value="获取首页总计数据", notes="获取首页总计数据，但必须登录多粉商家后台",produces="application/json")
 	public ServerResponse<IndexStatistics> getIndexStatistics(HttpServletRequest request){
