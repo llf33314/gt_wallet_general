@@ -27,6 +27,7 @@ import com.gt.wallet.service.log.WalletApiLogService;
 import com.gt.wallet.service.member.WalletBankService;
 import com.gt.wallet.service.member.WalletMemberService;
 import com.gt.wallet.service.order.WalletMoneyService;
+import com.gt.wallet.utils.BankUtil;
 import com.gt.wallet.utils.CommonUtil;
 import com.gt.wallet.utils.DateTimeKit;
 import com.gt.wallet.utils.MyPageUtil;
@@ -62,7 +63,7 @@ public class WalletMoneyServiceImpl extends BaseServiceImpl<WalletMoneyMapper, W
 	private WalletMemberMapper walletMemberMapper;
 
 	@Override
-	public ServerResponse<MyPageUtil<WalletMoney>> getPage(Page<?> page, SearchPayOrderPage searchPayOrderPage) {
+	public ServerResponse<MyPageUtil<WalletMoney>> getPage(Page<?> page, SearchPayOrderPage searchPayOrderPage) throws Exception{
 		log.info(CommonUtil.format("biz接口:分页查询,请求参数:%s", JsonUtil.toJSONString(page)));
 		EntityWrapper<WalletMoney> wrapper=new EntityWrapper<WalletMoney>() ;
 		wrapper.where("status={0}",searchPayOrderPage.getStatus());		
@@ -85,6 +86,9 @@ public class WalletMoneyServiceImpl extends BaseServiceImpl<WalletMoneyMapper, W
 		page1.setRecords(walletMoneyMapper.selectPage(page1, wrapper));
 		MyPageUtil<WalletMoney> myPageUtil=new MyPageUtil<WalletMoney>(page.getCurrent(), page.getSize());
 		myPageUtil.setRecords(walletMoneyMapper.selectPage(myPageUtil,wrapper),total);
+		for(int i=0;i<myPageUtil.getRecords().size();i++){
+			myPageUtil.getRecords().get(i).setBankCardNo(BankUtil.hide(YunSoaMemberUtil.rsaDecrypt(myPageUtil.getRecords().get(i).getBankCardNo())));
+		}
 		log.info(CommonUtil.format("page:%s", JsonUtil.toJSONString(page)));
 		return ServerResponse.createBySuccessCodeData(myPageUtil);
 	}

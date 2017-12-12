@@ -25,7 +25,7 @@ public interface WalletMoneyService extends BaseService<WalletMoney> {
 	 * @param status
 	 * @return
 	 */
-	 ServerResponse<MyPageUtil<WalletMoney>> getPage(Page<?> page,SearchPayOrderPage searchPayOrderPage);
+	 ServerResponse<MyPageUtil<WalletMoney>> getPage(Page<?> page,SearchPayOrderPage searchPayOrderPage)throws Exception;;
 	 
 	 
 	 /**
