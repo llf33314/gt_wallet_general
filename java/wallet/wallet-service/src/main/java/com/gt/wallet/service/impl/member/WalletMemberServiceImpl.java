@@ -8,6 +8,7 @@ import org.springframework.transaction.annotation.Isolation;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.alibaba.fastjson.JSONObject;
 import com.baomidou.mybatisplus.mapper.EntityWrapper;
 import com.baomidou.mybatisplus.mapper.Wrapper;
 import com.baomidou.mybatisplus.plugins.Page;
@@ -15,6 +16,7 @@ import com.gt.api.bean.session.BusUser;
 import com.gt.api.util.MD5Utils;
 import com.gt.api.util.httpclient.JsonUtil;
 import com.gt.wallet.base.BaseServiceImpl;
+import com.gt.wallet.constant.WalletLogConstants;
 import com.gt.wallet.data.wallet.request.WalletPasswordSet;
 import com.gt.wallet.dto.ServerResponse;
 import com.gt.wallet.entity.WalletCompany;
@@ -23,6 +25,7 @@ import com.gt.wallet.entity.WalletMember;
 import com.gt.wallet.enums.WalletResponseEnums;
 import com.gt.wallet.exception.BusinessException;
 import com.gt.wallet.mapper.member.WalletMemberMapper;
+import com.gt.wallet.service.log.WalletApiLogService;
 import com.gt.wallet.service.member.WalletCompanyService;
 import com.gt.wallet.service.member.WalletIndividualService;
 import com.gt.wallet.service.member.WalletMemberService;
@@ -56,6 +59,9 @@ public class WalletMemberServiceImpl extends BaseServiceImpl<WalletMemberMapper,
 	
 	@Autowired
 	private WalletCompanyService walletCompanyService;
+	
+	@Autowired
+	private WalletApiLogService walletApiLogService;
 
 	
 	/**
@@ -275,7 +281,41 @@ public class WalletMemberServiceImpl extends BaseServiceImpl<WalletMemberMapper,
 	}
 
 
-	
+	@Transactional(propagation = Propagation.REQUIRED,isolation = Isolation.DEFAULT,timeout=36000,rollbackFor=Exception.class)
+	@Override
+	public ServerResponse<?> reset(Integer busId, String newPhone, String verificationCode, Integer wmemberId)throws Exception {
+		log.info(CommonUtil.format("biz:reset api memberId:%s,%s,%s,%s", busId,newPhone,verificationCode,wmemberId));
+		WalletMember walletMember=	walletMemberMapper.selectById(wmemberId);
+		if(walletMember.getMemberId()!=busId){
+			throw new BusinessException("操作异常，此钱包会员不属于当前登录商家");
+		}else if(walletMember.getStatus()!=3){
+			throw new BusinessException("多粉钱包会员账号状态异常("+CommonUtil.getMemberStatusDesc(walletMember.getStatus())+")");
+		}
+		ServerResponse<?> serverResponse=YunSoaMemberUtil.changeBindPhone(walletMember.getMemberNum(), YunSoaMemberUtil.rsaDecrypt(walletMember.getPhone()), newPhone, verificationCode);
+		log.info(CommonUtil.format("serverResponse:%s", JsonUtil.toJSONString(serverResponse)));
+		JSONObject jsonObject=new JSONObject();
+		jsonObject.put("memberNum", walletMember.getMemberNum());
+		jsonObject.put("oldPhone",YunSoaMemberUtil.rsaDecrypt(walletMember.getPhone()));
+		jsonObject.put("newPhone",newPhone);
+		jsonObject.put("verificationCode",verificationCode);
+		try {
+			walletApiLogService.save(JsonUtil.toJSONString(jsonObject), serverResponse, walletMember.getId(), null, null, WalletLogConstants.LOG_CHANGEBINDPHONE);
+		} catch (Exception e) {
+			e.printStackTrace();
+			log.error("save log api error");
+		}
+		if(ServerResponse.judgeSuccess(serverResponse)){
+			walletMember.setPhone(YunSoaMemberUtil.rsaEncrypt(newPhone));
+			Integer count=walletMemberMapper.updateById(walletMember);
+			if(count==1){//成功
+				return ServerResponse.createBySuccess();
+			} else{//失败
+				return ServerResponse.createByError();
+			}
+		}else{
+			return serverResponse;
+		}
+	}
 	
 	
 }

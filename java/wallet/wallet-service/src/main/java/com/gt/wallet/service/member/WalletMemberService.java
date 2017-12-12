@@ -102,4 +102,15 @@ public interface WalletMemberService extends BaseService<WalletMember> {
 	 * @return
 	 */
 	public ServerResponse<MyPageUtil<WalletMember>> getPage(Page<WalletMember> page);
+	
+	
+	/**
+	 * 重置手机
+	 * @param busId 商家id
+	 * @param newPhone 新号码
+	 * @param verificationCode 新手机验证码
+	 * @param wmemberId 钱包会员id
+	 * @return
+	 */
+	ServerResponse<?> reset(Integer busId,String newPhone,String verificationCode,Integer wmemberId)throws Exception;
 }

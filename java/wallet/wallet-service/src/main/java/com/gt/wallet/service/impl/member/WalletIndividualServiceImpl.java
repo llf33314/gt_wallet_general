@@ -152,6 +152,7 @@ public class WalletIndividualServiceImpl extends BaseServiceImpl<WalletIndividua
 
 	@Override
 	public ServerResponse<?> set(WalletSet walletSet, BusUser busUser) throws Exception {
+		log.info(CommonUtil.format("biz接口:set,请求参数:%s,%s", JsonUtil.toJSONString(walletSet), JsonUtil.toJSONString(busUser)));
 		// TODO Auto-generated method stub
 //		if(!walletSet.getPwd().equals(walletSet.getConfirm())){
 //			log.error(CommonUtil.format("biz接口:钱包设置异常:%s",WalletResponseEnums.PWD_ERROR.getDesc()));
@@ -184,12 +185,12 @@ public class WalletIndividualServiceImpl extends BaseServiceImpl<WalletIndividua
 
 	@Override
 	public ServerResponse<WalletIndividual> findByMemberId(Integer memberId) {
+		log.info(CommonUtil.format("biz:findByMemberId api memberId:%s", memberId));
 		WalletIndividual params=new WalletIndividual();
 		params.setWMemberId(memberId);
 		WalletIndividual walletIndividual=walletIndividualMapper.selectOne(params);
+		log.info(CommonUtil.format("walletIndividual:%s", JsonUtil.toJSONString(walletIndividual)));
 		return ServerResponse.createBySuccessCodeData(walletIndividual);
 	}
-	
-	
 
 }

@@ -542,7 +542,6 @@ public class YunSoaMemberUtil {
 		}
 	}
 
-	//更改绑定手机 ok
 	/**
 	 * 
 	 * @param bizUserId 会员账号
@@ -551,27 +550,63 @@ public class YunSoaMemberUtil {
 	 * @param oldVerificationCode 原手机验证码
 	 * @param newVerificationCode 变更手机验证码
 	 */
-	public static void changeBindPhone(String bizUserId,String phone,String changePhone,String oldVerificationCode,String newVerificationCode){
+	public static ServerResponse<?> changeBindPhone(String bizUserId,String phone,String changePhone,String newVerificationCode){
 		try{
-			log.info("testChangeBindPhone start");
+			log.info("changeBindPhone start");
 
 			JSONObject param = new JSONObject();
 			param.put("bizUserId", bizUserId);
 			param.put("oldPhone", phone);
-			param.put("oldVerificationCode", "");
+//			param.put("oldVerificationCode",oldVerificationCode);
 			param.put("newPhone", changePhone);
-			param.put("newVerificationCode", "");
+			param.put("newVerificationCode", newVerificationCode);
 
 			log.info("request:" + param);
 			JSONObject response = client.request(membersoaName, "changeBindPhone", param);
 			log.info("response:" + response);
-
-			log.info("testChangeBindPhone end");
+			if(CommonUtil.isNotEmpty(response)&&response.get("status").equals("OK")){
+				log.info("changeBindPhone end");
+				return ServerResponse.createBySuccess();
+			}else{
+				log.info("changeBindPhone end");
+				return ServerResponse.createByErrorMessage(CommonUtil.format("第三方接口异常,错误代码 : %s,描述:%s", response.getString("errorCode"), response.getString("message")));
+			}
 		}catch(Exception e){
-			log.error("testChangeBindPhone error");
+			log.error("changeBindPhone error");
 			e.printStackTrace();
+			return ServerResponse.createByErrorCode(WalletResponseEnums.API_ERROR);
 		}
 	}
+//	
+//	/**
+//	 * 
+//	 * @param bizUserId 会员账号
+//	 * @param phone 原手机
+//	 * @param changePhone 需要变更手机
+//	 * @param oldVerificationCode 原手机验证码
+//	 * @param newVerificationCode 变更手机验证码
+//	 */
+//	public static void changeBindPhone(String bizUserId,String phone,String changePhone,String oldVerificationCode,String newVerificationCode){
+//		try{
+//			log.info("testChangeBindPhone start");
+//			
+//			JSONObject param = new JSONObject();
+//			param.put("bizUserId", bizUserId);
+//			param.put("oldPhone", phone);
+//			param.put("oldVerificationCode", "");
+//			param.put("newPhone", changePhone);
+//			param.put("newVerificationCode", "");
+//			
+//			log.info("request:" + param);
+//			JSONObject response = client.request(membersoaName, "changeBindPhone", param);
+//			log.info("response:" + response);
+//			
+//			log.info("testChangeBindPhone end");
+//		}catch(Exception e){
+//			log.error("testChangeBindPhone error");
+//			e.printStackTrace();
+//		}
+//	}
 
 	//锁定用户 ok
 	public static ServerResponse<?> lockMember(String bizUserId){

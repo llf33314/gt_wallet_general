@@ -92,7 +92,7 @@ public class WalletMoneyController extends BaseController {
 	 */
 	@RequestMapping(value = "/withdrawApply", method = RequestMethod.POST)
 	@ApiOperation(value = "withdrawApply", notes = "提现(成功后会返回订单id),支付确认时需要传递")
-	public String withdrawApply(HttpServletRequest request,@ApiParam(required=true,name="money" ,value="钱包会员id")double money,@ApiParam(required=true,name="bankId" ,value="银行卡id")Integer bankId) {
+	public String withdrawApply(HttpServletRequest request,@ApiParam(required=true,name="money" ,value="提现金额")double money,@ApiParam(required=true,name="bankId" ,value="银行卡id")Integer bankId) {
 		log.info(CommonUtil.format("applyDeposit api,%s,%s", JsonUtil.toJSONString(money),bankId));
 		try {
 			BusUser busUser=	CommonUtil.getLoginUser(request);

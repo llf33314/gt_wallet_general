@@ -285,4 +285,29 @@ public class WalletMemberController extends BaseController {
 		}
 	} 
 	
+	
+	/**
+	 * 重置手机
+	 * @return
+	 */
+	@ResponseBody
+	@RequestMapping(value="reset",method=RequestMethod.POST)
+	 @ApiOperation(value="重置手机", notes="重置手机",produces="application/json")
+	
+	public ServerResponse<?> reset(HttpServletRequest request,@ApiParam(required=true,name="newPhone" ,value="新手机号码") @RequestParam(required=true) String newPhone
+			,@ApiParam(required=true,name="verificationCode" ,value="验证码") @RequestParam(required=true) String verificationCode,@ApiParam(required=true,name="wmemberId" ,value="钱包会员id") @RequestParam(required=true) Integer wmemberId){
+		log.info(CommonUtil.format("触发重置手机接口,参数%s,%s",newPhone,verificationCode));
+		try {
+			BusUser busUser=CommonUtil.getLoginUser(request);
+			ServerResponse<?> serverResponse=walletMemberService.reset(busUser.getId(), newPhone, verificationCode, wmemberId);
+			return serverResponse;
+			} catch ( BusinessException e) {
+				log.error(CommonUtil.format("重置手机接口异常：%s,%s",e.getCode(),e.getMessage()));
+				throw new ResponseEntityException(e.getCode(),e.getMessage());
+			} catch ( Exception e) {
+				e.printStackTrace();
+				log.error(CommonUtil.format("重置手机接口异常：%s,%s",WalletResponseEnums.SYSTEM_ERROR.getCode(),WalletResponseEnums.SYSTEM_ERROR.getDesc()));
+				throw new ResponseEntityException(WalletResponseEnums.SYSTEM_ERROR);
+			}
+	}  
 }
