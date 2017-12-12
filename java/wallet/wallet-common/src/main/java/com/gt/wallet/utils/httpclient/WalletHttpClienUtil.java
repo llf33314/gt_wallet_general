@@ -112,18 +112,18 @@ public class WalletHttpClienUtil {
 //		System.out.println(com.alibaba.fastjson.JSONObject.toJSONString(map));
 		
 		String url="http://wallet.yifriend.net:8440/walletIndividual/saveIndividual";
-		WalletIndividualAdd walletIndividualAdd=new WalletIndividualAdd();
-		walletIndividualAdd.setBankName("1312");
-		walletIndividualAdd.setCardNo("12313");
-		walletIndividualAdd.setIdentitycardUrl1File("4113");
-		walletIndividualAdd.setIdentitycardUrl2File("131");
-		walletIndividualAdd.setIdentityNo("sfsf");
-		walletIndividualAdd.setMemberId(113);
-		walletIndividualAdd.setName("sf");
-		walletIndividualAdd.setPhone("sfsd");
-		walletIndividualAdd.setUnionBank("sfsd");
-		
-		Map s=reqPostUTF8(JsonUtil.toJSONString(walletIndividualAdd), url, Map.class);
-		System.out.println(s);
+//		WalletIndividualAdd walletIndividualAdd=new WalletIndividualAdd();
+//		walletIndividualAdd.setBankName("1312");
+//		walletIndividualAdd.setCardNo("12313");
+//		walletIndividualAdd.setIdentitycardUrl1File("4113");
+//		walletIndividualAdd.setIdentitycardUrl2File("131");
+//		walletIndividualAdd.setIdentityNo("sfsf");
+//		walletIndividualAdd.setMemberId(113);
+//		walletIndividualAdd.setName("sf");
+//		walletIndividualAdd.setPhone("sfsd");
+//		walletIndividualAdd.setUnionBank("sfsd");
+//		
+		//Map s=reqPostUTF8(JsonUtil.toJSONString(walletIndividualAdd), url, Map.class);
+//		System.out.println(s);
 		}
 }

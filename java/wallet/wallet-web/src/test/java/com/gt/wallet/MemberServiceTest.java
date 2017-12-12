@@ -137,4 +137,6 @@ public class MemberServiceTest extends BasicTest {
 		}
 		log.info(" end test queryBankCard api");
 	}
+	
+	
 }

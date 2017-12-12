@@ -6,6 +6,7 @@ import java.util.List;
 import javax.servlet.http.HttpServletRequest;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -268,7 +269,7 @@ public class WalletMemberController extends BaseController {
 	@ResponseBody
 	@RequestMapping(value="79B4DE7C/memberListPage",method=RequestMethod.POST)
 	@ApiOperation(value="会员列表分页", notes="会员列表分页")
-	public ServerResponse<MyPageUtil<WalletMember>> memberListPage(HttpServletRequest request,Page<WalletMember> page
+	public ServerResponse<MyPageUtil<WalletMember>> memberListPage(HttpServletRequest request,@RequestBody Page<WalletMember> page
 			){
 		log.info(CommonUtil.format("触发会员列表分页接口,参数:%s",JsonUtil.toJSONString(page)));
 		try {

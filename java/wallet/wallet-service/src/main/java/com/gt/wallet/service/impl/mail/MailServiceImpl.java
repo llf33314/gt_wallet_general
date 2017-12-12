@@ -58,7 +58,7 @@ public class MailServiceImpl implements MailService {
 			for (String string : sendMail.getFiles()) {
 				FileSystemResource file = new FileSystemResource(new File(string));
 				String format=string.substring(string.lastIndexOf(".")+1,string.length());
-				helper.addAttachment(CommonUtil.format("%s%s", System.currentTimeMillis(),format), file);
+				helper.addAttachment(CommonUtil.format("%s.%s", System.currentTimeMillis(),format), file);
 			}
 		}
 		mailSender.send(message);

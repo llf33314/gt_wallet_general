@@ -175,6 +175,8 @@ public class WalletMoneyServiceImpl extends BaseServiceImpl<WalletMoneyMapper, W
 			walletMoney.setGoodsSummary(desc);
 			walletMoney.setStatus("pending");
 			walletMoney.setWithdrawType("T0");
+			walletMoney.setBankCardNo(walletBank.getCardNo());
+			walletMoney.setBankCardPro(walletBank.getCardClass());
 			walletMoney.setExternalOrderNo(serverResponse.getData());
 			Integer count=	walletMoneyMapper.insert(walletMoney);
 			if(count==1){

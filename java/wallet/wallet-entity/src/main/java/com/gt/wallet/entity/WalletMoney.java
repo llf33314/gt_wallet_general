@@ -104,7 +104,7 @@ public class WalletMoney extends Model<WalletMoney> {
     /**
      * 银行卡号/账号
      */
-	@ApiModelProperty(name="bankCardNo",notes="银行卡号/账号",required=true,hidden=true)
+	@ApiModelProperty(name="bankCardNo",notes="银行卡号/账号",required=true)
 	private String bankCardNo;
     /**
      * 银行卡/账户属性
