@@ -25,6 +25,14 @@ export const individual = [
     }
   },
   {
+    path: '/wallet/individual/messages',
+    name: 'individual_messages',
+    title: '企业信息',
+    component: resolve => {
+      require(['@/components/wallet/vue/individual/messages'], resolve)
+    }
+  },
+  {
     path: '/wallet/individual/drawcash',
     name: 'individualDrawcash',
     title: '个人提现',

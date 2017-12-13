@@ -21,12 +21,7 @@
   background-color: #f8f8f8;
   padding: 27px 30px;
   overflow: hidden;
-}
-.wallet-index .top-msg .gray .public-fr {
-  margin-top: 15px;
-}
-.wallet-index .top-msg .row1 {
-  margin-bottom: 15px;
+  line-height: 30px;
 }
 .wallet-index .top-msg .title {
   padding-right: 15px;

@@ -105,7 +105,7 @@
           <el-input v-model="ruleForm.phone" placeholder="请输入银行卡预留手机号" class="input-width"></el-input>
         </el-form-item>
         <el-form-item>
-          <el-button type="primary" @click="submitForm('ruleForm')">下一步</el-button>
+          <el-button type="primary" @click="submitForm('ruleForm')" :loading="loading1">下一步</el-button>
         </el-form-item>
       </el-form>
       <el-dialog title="手机验证" :visible.sync="dialogVisible" size="tiny">
@@ -118,7 +118,7 @@
           </el-form-item>
         </el-form>
         <div style="text-align: right;">
-          <el-button type="primary" @click="addBank('ruleForm2')">确认</el-button>
+          <el-button type="primary" @click="addBank('ruleForm2')"  :loading="loading2">确认</el-button>
         </div>
       </el-dialog>
     </div>
@@ -185,6 +185,7 @@
             trigger: 'change'
           }],
         },
+        loading1:false,
         wmemberId: '',
         dialogVisible: false,
         ruleForm2: {
@@ -197,7 +198,8 @@
             message: '请输入手机验证码',
             trigger: 'blur'
           }],
-        }
+        },
+        loading2:false
       }
     },
     mounted() {
@@ -232,6 +234,7 @@
       addBank(formName) {
         console.log(this.ruleForm2, 'this.ruleForm2')
         this.$refs[formName].validate((valid) => {
+          this.loading2 = true
           if (valid) {
             $.ajax({
               url: this.DFPAYDOMAIN + '/bindBankCard',
@@ -239,6 +242,7 @@
               dataType: 'json',
               data: this.ruleForm2,
               success: (res) => {
+                res.code=0
                 if (res.code != 0) {
                   this.$message.error(res.msg);
                 } else {
@@ -253,6 +257,7 @@
                     }
                   });
                 }
+                this.loading2 = false
               }
             })
           } else {
@@ -264,6 +269,7 @@
       submitForm(formName) {
         this.$refs[formName].validate((valid) => {
           if (valid) {
+            this.loading1 = true
             this.ruleForm.memberId = this.$route.params.memberId
             console.log(this.ruleForm, 'this.ruleForm')
             $.ajax({
@@ -280,6 +286,7 @@
                   this.dialogVisible = true
                   this.ruleForm2.id = res.data
                 }
+                this.loading1 = false
               }
             })
           } else {

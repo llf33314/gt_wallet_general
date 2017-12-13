@@ -27,13 +27,13 @@
               <span class="title" style="margin-left: 110px;">安全手机号码：</span>
               <span v-text="WalletBank.phone">1564004646</span>
             </div>
-            <div class="row1 public-c333">
+            <!-- <div class="row1 public-c333">
               <span class="title" style="width:70px;text-align:right">银行卡：</span>
               <span class="title-dps" v-text="WalletBank.cardNo">1264 4568 7894 465</span>
               <span class="title">银行卡类型：</span>
               <span v-if="WalletBank.cardClass==1">个人账户</span>
               <span v-if="WalletBank.cardClass==2">对公账号</span>
-            </div>
+            </div> -->
           </div>
           <div class="public-fr">
             <!-- <set-pwd></set-pwd> -->
