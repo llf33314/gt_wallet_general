@@ -18,7 +18,7 @@ export const wallet = {
   },
   //个人开通
   saveIndividual(param) {
-    return axios.post(`${base}/walletIndividual/saveIndividual`,  window.JSON.stringify(param),{
+    return axios.post(`${base}/walletIndividual/saveIndividual`, window.JSON.stringify(param), {
       headers: {
         'Content-Type': 'application/json;charset=UTF-8'
       }
@@ -26,7 +26,7 @@ export const wallet = {
   },
   //额度申请
   addDrawCash(param) {
-    return axios.post(`${base}/walletQuota/add`,param,{
+    return axios.post(`${base}/walletQuota/add`, param, {
       headers: {
         'Content-Type': 'application/json;charset=UTF-8'
       }
@@ -35,9 +35,9 @@ export const wallet = {
   // 上传图片
   upload(param) {
     let formData = new FormData()
-    formData.append('file',param)
+    formData.append('file', param)
     return axios
-      .post(`${base}/wcommon/upload`,formData, {
+      .post(`${base}/wcommon/upload`, formData, {
         headers: {
           'Content-Type': 'multipart/form-data'
         },
@@ -47,6 +47,10 @@ export const wallet = {
   }
 }
 
-export const findMember = ()=>{
-  
-} 
+export const findMember = () => {
+
+}
+
+export const PayOrderList = (param) => {
+  return axios.post(`${base}/walletPayOrder/getPage`, param).then(res => res.data)
+}

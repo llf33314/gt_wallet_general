@@ -21,7 +21,7 @@
           <div class="public-fl">
             <div class="row1 public-c333">
               <span class="title" style="width:70px;text-align:right">姓名：</span>
-              <span class="title-dps ellipsis" v-text="walletIndividual.name"style="vertical-align: top;"></span>
+              <span class="title-dps ellipsis" v-text="walletIndividual.name" style="vertical-align: top;"></span>
               <span class="title">认证类型：</span>
               <span>个人认证</span>
             </div>
@@ -156,6 +156,9 @@
   import {
     wallet
   } from '../../api/index'
+  import {
+    PayOrderList
+  } from '../../api/index'
   export default {
     components: {
       DrawCash,
@@ -226,7 +229,7 @@
         value3: [new Date(2000, 10, 10, 10, 10), new Date(2000, 10, 11, 10, 10)],
         value4: '',
         data: {},
-        walletIndividual:{},
+        walletIndividual: {},
         //会员信息
         walletCompany: {
           "accountNo": "string",
@@ -324,7 +327,12 @@
           endTime: '',
           current: 1,
           total: '',
-          size: 10
+          size: 10,
+          records: [],
+          searchCount: false,
+          openSort: false,
+          orderByField: '',
+          condition: ''
         }
       }
     },
@@ -332,6 +340,8 @@
       this.findMember()
 
       this.getIndexStatistics()
+
+
     },
     methods: {
       //提现 分页查询
@@ -358,11 +368,13 @@
         console.log(this.drawListParams, 'this.drawListParams')
         $.ajax({
           url: this.DFPAYDOMAIN + '/walletMoney/getPage',
-          type: 'post',
+          type: 'POST',
           dataType: 'json',
+          // data: window.JSON.stringify(this.drawListParams),
           data: this.drawListParams,
           success: (res) => {
             console.log(res, '提现 分页查询')
+
             if (res.code == 0) {
 
             } else {
@@ -383,6 +395,9 @@
               this.walletIndividual = res.data.walletIndividual
               //this.WalletBank = res.data.WalletBank
               this.drawListParams.wmemberId = res.data.id
+
+              this.getDrawPage()
+              this.walletPayOrderList()
             } else {
               this.$message.error(res.msg)
             }
@@ -455,6 +470,34 @@
           type: 'get',
           success: (res) => {
             console.log(res, "获取首页总计数据")
+            if (res.code == 0) {
+              this.IndexStatistics = res.data;
+            } else {
+              this.$message.error(res.msg);
+            }
+          }
+        })
+      },
+      //消费list
+      walletPayOrderList() {
+        PayOrderList({
+          startTime: '',
+          endTime: '',
+          wmemberId: 7,
+        }).then(res => {
+          console.log(res, "获取消费list")
+        })
+        $.ajax({
+          url: this.DFPAYDOMAIN + '/walletPayOrder/getPage',
+          type: 'POST',
+          dataType: "JSON",
+          data: {
+            startTime: '',
+            endTime: '',
+            wmemberId: 7,
+          },
+          success: (res) => {
+            console.log(res, "获取消费list")
             if (res.code == 0) {
               this.IndexStatistics = res.data;
             } else {

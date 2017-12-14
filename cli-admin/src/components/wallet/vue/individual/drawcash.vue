@@ -169,10 +169,10 @@
           </div>
           <!-- <p v-if="walletBanks.length == 1 && walletBanks[0].cardClass != 1" @click="dialogApply4=true" style="color:#409EFF;cursor:pointer;display: inline-block;">添加个人账户</p> -->
           <p class="public-c999" style="margin-top:-10px;">
-            <span>商家提现额度为
-              <span style="color:#ff4949" v-text="withdrawQuota">100,000</span>元</span>
-            <!-- 如需提高提现金额，请点击
-            <el-button @click="dialogApply=true" type="primary" size="small">申请</el-button> -->
+            <span>此账户提现额度为
+              <span style="color:#ff4949" v-text="withdrawQuota">100,000</span>元,</span>
+            如需提高提现金额，请点击
+            <el-button @click="dialogApply=true" type="primary" size="small">申请</el-button>
           </p>
         </el-form-item>
 
