@@ -167,12 +167,13 @@
               </ul>
             </el-radio-group>
           </div>
-          <!-- <p v-if="walletBanks.length == 1 && walletBanks[0].cardClass != 1" @click="dialogApply4=true" style="color:#409EFF;cursor:pointer;display: inline-block;">添加个人账户</p>
-          <p class="public-c999" style="padding-top:10px;">
+          <!-- <p v-if="walletBanks.length == 1 && walletBanks[0].cardClass != 1" @click="dialogApply4=true" style="color:#409EFF;cursor:pointer;display: inline-block;">添加个人账户</p> -->
+          <p class="public-c999" style="margin-top:-10px;">
             <span>商家提现额度为
-              <span style="color:#ff4949" v-text="withdrawQuota">100,000</span>元，如需提高提现金额，请点击</span>
-            <el-button @click="dialogApply=true" type="primary" size="small">申请</el-button>
-          </p> -->
+              <span style="color:#ff4949" v-text="withdrawQuota">100,000</span>元</span>
+            <!-- 如需提高提现金额，请点击
+            <el-button @click="dialogApply=true" type="primary" size="small">申请</el-button> -->
+          </p>
         </el-form-item>
 
         <el-form-item label="提现金额：" prop="money">
@@ -438,24 +439,19 @@
       //获取bankId
       walletBanksIndex() {
         this.ruleForm.bankId = this.walletBanks[this.walletBanksIndex].id
+
+
       }
     },
     mounted() {
-      this.getTotal()
+
       //this.getWalletBanksByMemberId()
       this.findMember()
+
     },
     methods: {
       //申请额度提交
       walletQuotaAdd() {
-        // this.$message({
-        //   message: 666,
-        //   type: 'success',
-        //   duration: 2000,
-        //   onClose: () => {
-        //     this.dialogApply = false
-        //   }
-        // });
         console.log(this.ruleForm3, 'this.ruleForm3')
         $.ajax({
           url: this.DFPAYDOMAIN + '/walletQuota/add',
@@ -493,17 +489,6 @@
       },
       //短信验证提交
       confirm() {
-        // console.log(this.ruleForm2, 'this.ruleForm2')
-        // this.$message({
-        //   message: '6666',
-        //   type: 'success',
-        //   duration: 2000,
-        //   onClose: () => {
-        //     this.getTotal()
-        //     this.findMember()
-        //     this.dialogApply2 = false
-        //   }
-        // });
         $.ajax({
           url: this.DFPAYDOMAIN + '/walletMoney/confirm',
           type: 'POST',
@@ -563,6 +548,7 @@
               this.legalName = name
 
               this.getWalletBanksByMemberId(data.id)
+              this.getTotal(data.id)
             } else {
               this.$message.error(res.msg)
             }
@@ -573,7 +559,6 @@
       submitForm(formName) {
         this.$refs[formName].validate((valid) => {
           if (valid) {
-            this.loading = true
             this.withdrawApply()
           } else {
             return false;
@@ -583,9 +568,7 @@
       //提现(成功后会返回订单id),支付确认时需要传递
       withdrawApply() {
         console.log(this.ruleForm, 'this.ruleForm')
-        return
-        // this.ruleForm2.id = 123
-        this.dialogApply2 = true
+        this.loading = true
         $.ajax({
           url: this.DFPAYDOMAIN + '/walletMoney/withdrawApply',
           type: 'POST',
@@ -595,6 +578,7 @@
             console.log(res, '提现')
             if (res.code == 0) {
               this.confirm.id = res.data
+              this.dialogApply2 = true
             } else {
               this.$message.error(res.msg)
             }
@@ -609,12 +593,12 @@
           type: 'POST',
           dataType: 'JSON',
           data: {
-            wMemberId: 33
+            wMemberId: 7
           },
           success: res => {
             console.log(res, '获取余额')
             if (res.code == 0) {
-              this.total = 666 || code.data
+              this.total = res.data
             } else {
               this.$message.error(res.msg)
             }
