@@ -27,7 +27,7 @@ import com.gt.wallet.exception.ResponseEntityException;
 import com.gt.wallet.service.member.WalletBankService;
 import com.gt.wallet.utils.BankUtil;
 import com.gt.wallet.utils.CommonUtil;
-import com.gt.wallet.utils.WalletKeyUtil;
+import com.gt.wallet.utils.yun.YunSoaMemberUtil;
 
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiImplicitParam;
@@ -66,7 +66,7 @@ public class WalletBankController extends BaseController {
 				ServerResponse<List<WalletBank>> serverResponse=walletBankService.getWalletBanksByMemberId(wmemberId);
 				
 				for (WalletBank walletBank:serverResponse.getData()) {
-					walletBank.setCardNo(BankUtil.hide(WalletKeyUtil.getDesString(walletBank.getCardNo())));
+					walletBank.setCardNo(BankUtil.hide(YunSoaMemberUtil.rsaDecrypt(walletBank.getCardNo())));
 				}
 				log.info("serverResponse:%s",JsonUtil.toJSONString(serverResponse));
 				return serverResponse;

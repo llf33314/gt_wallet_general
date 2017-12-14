@@ -7,6 +7,7 @@ import javax.servlet.http.HttpServletResponse;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -196,17 +197,19 @@ public class WalletPayOrderController extends BaseController {
 	@RequestMapping(value="getPage",method=RequestMethod.POST)
 	@ApiOperation(value="分页查询", notes="分页查询")
 	@ApiImplicitParams({
-        @ApiImplicitParam(name = "current",value = "当前页",paramType = "form",dataType = "int",required=true,defaultValue="1"),
-        @ApiImplicitParam(name = "total",value = "总条数",paramType = "form",dataType = "int",required=false,defaultValue="0"),
-        @ApiImplicitParam(name = "size",value = "显示行数",paramType = "form",dataType = "int",required=false,defaultValue="10"),
-        @ApiImplicitParam(name = "wmemberId",value = "钱包会员id",paramType = "form",dataType = "int",required=true),
-        @ApiImplicitParam(name = "startTime",value = "开始时间",paramType = "form",dataType = "date",required=false),
-        @ApiImplicitParam(name = "endTime",value = "结束时间",paramType = "form",dataType = "date",required=false),
-        // path, query, body, header, form
+       @ApiImplicitParam(name = "current",value = "当前页",paramType = "form",dataType = "Integer",required=true,defaultValue="1"),
+       @ApiImplicitParam(name = "size",value = "显示行数",paramType = "form",dataType = "Integer",required=false,defaultValue="10"),
+       @ApiImplicitParam(name = "wmemberId",value = "钱包会员id",paramType = "form",dataType = "int",required=true),
+       @ApiImplicitParam(name = "startTime",value = "开始时间",paramType = "form",dataType = "string",required=false),
+       @ApiImplicitParam(name = "endTime",value = "结束时间",paramType = "form",dataType = "string",required=false),
+       // path, query, body, header, form
 	})
-	public ServerResponse<MyPageUtil<WalletPayOrder>> getPage(HttpServletRequest request,Page<?> page,SearchPayOrderPage searchPayOrderPage){
-		log.info(CommonUtil.format("触发分页查询接口 %s",JsonUtil.toJSONString(page)));
+	public ServerResponse<MyPageUtil<WalletPayOrder>> getPage(HttpServletRequest request,  SearchPayOrderPage searchPayOrderPage){
+		log.info(CommonUtil.format("触发分页查询接口 %s",JsonUtil.toJSONString(searchPayOrderPage)));
 		try {
+			Page<?> page=new Page<>();
+			page.setSize(searchPayOrderPage.getSize());
+			page.setCurrent(searchPayOrderPage.getCurrent());
 			ServerResponse<MyPageUtil<WalletPayOrder>> serverResponse=walletPayOrderService.getPage(page,searchPayOrderPage);
 			log.info(CommonUtil.format("serverResponse:%s", JsonUtil.toJSONString(serverResponse)));
 			return serverResponse;

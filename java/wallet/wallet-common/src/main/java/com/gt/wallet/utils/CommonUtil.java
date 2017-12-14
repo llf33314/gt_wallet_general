@@ -22,6 +22,7 @@ import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONArray;
 import com.gt.api.bean.session.BusUser;
 import com.gt.api.util.SessionUtils;
+import com.gt.wallet.enums.WalletMsgEnums;
 
 import net.sf.json.JSONObject;
 
@@ -480,4 +481,54 @@ public class CommonUtil {
 		}
 		return desc;
 	}
+	
+	
+	/**
+	 * 获取消息类型描述
+	 * @param stataus
+	 */
+	public static String getMsgTypeDesc(Integer code){
+		String desc="";
+		switch (code) {
+		case 1:
+			desc=WalletMsgEnums.MSGTYPE_QUOTAREVIEW.getDesc();
+			break;
+		case 2:
+			desc=WalletMsgEnums.MSGTYPE_TAKE_MONEY.getDesc();
+			break;
+		case 3:
+			desc=WalletMsgEnums.MSGTYPE_USERLOCK.getDesc();
+			break;
+		case 4:
+			desc=WalletMsgEnums.MSGTYPE_USERUNLOCK.getDesc();
+			break;
+		}
+		return desc;
+	}
+	
+	
+	/**
+	 * 获取消息读取状态
+	 * @param stataus
+	 */
+	public static String getMsgStatusDesc(Integer code){
+		String desc="";
+		switch (code) {
+		case 1:
+			desc=WalletMsgEnums.MSGTYPE_QUOTAREVIEW.getDesc();
+			break;
+		case 2:
+			desc=WalletMsgEnums.MSGTYPE_TAKE_MONEY.getDesc();
+			break;
+		case 3:
+			desc=WalletMsgEnums.MSGTYPE_USERLOCK.getDesc();
+			break;
+		case 4:
+			desc=WalletMsgEnums.MSGTYPE_USERUNLOCK.getDesc();
+			break;
+		}
+		return desc;
+	}
+	
+	
 }

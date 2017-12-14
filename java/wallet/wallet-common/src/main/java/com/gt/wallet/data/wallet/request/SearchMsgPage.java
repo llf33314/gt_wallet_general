@@ -16,32 +16,38 @@ import lombok.experimental.Accessors;
 @Data
 @Accessors(chain = true)
 @EqualsAndHashCode(callSuper=false)
-@ApiModel(description="商家后台支付订单列表分页")
-public class SearchPayOrderPage {
+@ApiModel(description="消息列表分页")
+public class SearchMsgPage {
 	/**
 	 * 钱包会员id
 	 */
 	@ApiModelProperty(name="wmemberId",notes="钱包会员id",required=true)
 	private Integer wmemberId;
 	
+//	/**
+//	 * 开始时间
+//	 */
+//	@ApiModelProperty(name="startTime",notes="开始时间",required=false)
+//	private String startTime;
+//	
+//	/**
+//	 * 结束时间
+//	 */
+//	@ApiModelProperty(name="endTime",notes="结束时间",required=false)
+//	private String endTime;
+//	
 	/**
-	 * 开始时间
+	 * 消息类型
 	 */
-	@ApiModelProperty(name="startTime",notes="开始时间",required=false)
-	private String startTime;
+	@ApiModelProperty(name="msgType",notes="消息类型",required=false)
+	private Integer msgType;
 	
-	/**
-	 * 结束时间
-	 */
-	@ApiModelProperty(name="endTime",notes="结束时间",required=false)
-	private String endTime;
-	
-	/**
-	 * 状态
-	 */
-	@ApiModelProperty(name="status",notes="状态",required=false,hidden=true)
-	private String status="success";
-	
+//	/**
+//	 * 状态
+//	 */
+//	@ApiModelProperty(name="status",notes="状态",required=false,hidden=true)
+//	private String status="success";
+//	
 	
 	/**
 	 * 当前页

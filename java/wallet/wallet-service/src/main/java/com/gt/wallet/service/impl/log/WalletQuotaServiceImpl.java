@@ -13,11 +13,16 @@ import com.gt.api.util.httpclient.JsonUtil;
 import com.gt.wallet.base.BaseServiceImpl;
 import com.gt.wallet.data.wallet.request.ReviewResult;
 import com.gt.wallet.dto.ServerResponse;
+import com.gt.wallet.entity.WalletMember;
 import com.gt.wallet.entity.WalletQuota;
+import com.gt.wallet.enums.WalletMsgEnums;
 import com.gt.wallet.enums.WalletResponseEnums;
 import com.gt.wallet.exception.BusinessException;
 import com.gt.wallet.mapper.log.WalletQuotaMapper;
+import com.gt.wallet.mapper.member.WalletMemberMapper;
+import com.gt.wallet.service.log.WalletMessageService;
 import com.gt.wallet.service.log.WalletQuotaService;
+import com.gt.wallet.service.member.WalletMemberService;
 import com.gt.wallet.utils.CommonUtil;
 import com.gt.wallet.utils.MyPageUtil;
 
@@ -37,6 +42,13 @@ public class WalletQuotaServiceImpl extends BaseServiceImpl<WalletQuotaMapper, W
 	
 	@Autowired
 	private WalletQuotaMapper walletQuotaMapper;
+	
+	
+	@Autowired
+	private WalletMemberMapper walletMemberMapper;
+	
+	@Autowired
+	private WalletMessageService walletMessageService;
 
 	@Transactional(propagation = Propagation.REQUIRED,isolation = Isolation.DEFAULT,timeout=36000,rollbackFor=Exception.class)
 	@Override
@@ -56,6 +68,7 @@ public class WalletQuotaServiceImpl extends BaseServiceImpl<WalletQuotaMapper, W
 		return ServerResponse.createBySuccess();
 	}
 
+	@Transactional(propagation = Propagation.REQUIRED,isolation = Isolation.DEFAULT,timeout=36000,rollbackFor=Exception.class)
 	@Override
 	public ServerResponse<?> review(ReviewResult reviewResult) {
 		log.info(CommonUtil.format("biz接口:审核结果回调,请求参数:%s", JsonUtil.toJSONString(reviewResult)));
@@ -66,10 +79,22 @@ public class WalletQuotaServiceImpl extends BaseServiceImpl<WalletQuotaMapper, W
 		if(CommonUtil.isEmpty(walletQuota)){
 			throw new BusinessException(WalletResponseEnums.DATA_NULL_ERROR);
 		}
+		if(walletQuota.getStatus()==1){
+			throw new BusinessException("已审核通过");
+		}
 		walletQuota.setStatus(reviewResult.getStatus());
 		walletQuota.setQuotaDesc(reviewResult.getQuotaDesc());
 		int count=walletQuotaMapper.updateById(walletQuota);
+		WalletMember walletMember=walletMemberMapper.selectById(walletQuota.getWMemberId());
+		walletMember.setWithdrawQuota(walletQuota.getQuotaValue().doubleValue());
+		walletMemberMapper.updateById(walletMember);
 		log.info(CommonUtil.format("影响行数:%s",count));
+		try {
+			walletMessageService.add(walletMember.getId(), WalletMsgEnums.MSGTYPE_QUOTAREVIEW.getCode(), reviewResult.getQuotaDesc(), walletQuota.getId());
+		} catch (Exception e) {
+			log.error("write msg api error");
+			e.printStackTrace();
+		}
 		if(count==1){
 			return ServerResponse.createBySuccess();
 		}else{
@@ -95,8 +120,13 @@ public class WalletQuotaServiceImpl extends BaseServiceImpl<WalletQuotaMapper, W
 		page1.setRecords(walletQuotaMapper.selectPage(page1, wrapper));
 		MyPageUtil<WalletQuota> myPageUtil=new MyPageUtil<WalletQuota>(page.getCurrent(), page.getSize());
 		myPageUtil.setRecords(walletQuotaMapper.selectPage(myPageUtil,wrapper),total);
-//		MyPageUtil.getInit( page.getRecords().size(), page);
-		log.info(CommonUtil.format("page:%s", JsonUtil.toJSONString(page)));
+		if(myPageUtil.getRecords().size()>0){
+			for (int i = 0; i < myPageUtil.getRecords().size(); i++) {
+				WalletMember walletMember=	walletMemberMapper.selectById(myPageUtil.getRecords().get(i).getWMemberId());
+				myPageUtil.getRecords().get(i).setMemberNum(walletMember.getMemberNum());
+			}
+		}
+		log.info(CommonUtil.format("page:%s", JsonUtil.toJSONString(myPageUtil)));
 		return ServerResponse.createBySuccessCodeData(myPageUtil);
 	}
 	

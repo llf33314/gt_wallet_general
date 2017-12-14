@@ -4,6 +4,7 @@ package com.gt.wallet.web;
 import javax.servlet.http.HttpServletRequest;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -60,17 +61,19 @@ public class WalletMoneyController extends BaseController {
 	@RequestMapping(value="getPage",method=RequestMethod.POST)
 	 @ApiOperation(value="分页查询", notes="分页查询")
 	@ApiImplicitParams({
-        @ApiImplicitParam(name = "current",value = "当前页",paramType = "form",dataType = "int",required=true,defaultValue="1"),
-        @ApiImplicitParam(name = "total",value = "总条数",paramType = "form",dataType = "int",required=false,defaultValue="0"),
-        @ApiImplicitParam(name = "size",value = "显示行数",paramType = "form",dataType = "int",required=false,defaultValue="10"),
+        @ApiImplicitParam(name = "current",value = "当前页",paramType = "form",dataType = "Integer",required=true,defaultValue="1"),
+        @ApiImplicitParam(name = "size",value = "显示行数",paramType = "form",dataType = "Integer",required=false,defaultValue="10"),
         @ApiImplicitParam(name = "wmemberId",value = "钱包会员id",paramType = "form",dataType = "int",required=true),
-        @ApiImplicitParam(name = "startTime",value = "开始时间",paramType = "form",dataType = "date",required=false),
-        @ApiImplicitParam(name = "endTime",value = "结束时间",paramType = "form",dataType = "date",required=false),
+        @ApiImplicitParam(name = "startTime",value = "开始时间",paramType = "form",dataType = "string",required=false),
+        @ApiImplicitParam(name = "endTime",value = "结束时间",paramType = "form",dataType = "string",required=false),
         // path, query, body, header, form
 	})
-	public ServerResponse<MyPageUtil<WalletMoney>> getPage(HttpServletRequest request,Page<?> page,SearchPayOrderPage searchPayOrderPage){
-		log.info(CommonUtil.format("触发分页查询接口 %s",JsonUtil.toJSONString(page)));
+	public ServerResponse<MyPageUtil<WalletMoney>> getPage(HttpServletRequest request, SearchPayOrderPage searchPayOrderPage){
+		log.info(CommonUtil.format("触发分页查询接口 %s",JsonUtil.toJSONString(searchPayOrderPage)));
 		try {
+			Page<?> page=new Page<>();
+			page.setSize(searchPayOrderPage.getSize());
+			page.setCurrent(searchPayOrderPage.getCurrent());
 			ServerResponse<MyPageUtil<WalletMoney>> serverResponse=walletMoneyService.getPage(page,searchPayOrderPage);
 			log.info(CommonUtil.format("serverResponse:", JsonUtil.toJSONString(serverResponse)));
 			return serverResponse;
@@ -92,7 +95,7 @@ public class WalletMoneyController extends BaseController {
 	 */
 	@RequestMapping(value = "/withdrawApply", method = RequestMethod.POST)
 	@ApiOperation(value = "withdrawApply", notes = "提现(成功后会返回订单id),支付确认时需要传递")
-	public String withdrawApply(HttpServletRequest request,@ApiParam(required=true,name="money" ,value="提现金额")double money,@ApiParam(required=true,name="bankId" ,value="银行卡id")Integer bankId) {
+	public String withdrawApply(HttpServletRequest request,@ApiParam(required=true,name="money" ,value="提现金额")@RequestParam double money,@ApiParam(required=true,name="bankId" ,value="银行卡id")@RequestParam Integer bankId) {
 		log.info(CommonUtil.format("applyDeposit api,%s,%s", JsonUtil.toJSONString(money),bankId));
 		try {
 			BusUser busUser=	CommonUtil.getLoginUser(request);
@@ -103,7 +106,7 @@ public class WalletMoneyController extends BaseController {
 			e.printStackTrace();
 			log.error(CommonUtil.format("applyDeposit api异常：%s,%s", WalletResponseEnums.SYSTEM_ERROR.getCode(),
 					WalletResponseEnums.SYSTEM_ERROR.getDesc()));
-			throw new BusinessException(WalletResponseEnums.SYSTEM_ERROR);
+			throw new ResponseEntityException(WalletResponseEnums.SYSTEM_ERROR);
 		}
 		return "";
 	}
@@ -128,7 +131,7 @@ public class WalletMoneyController extends BaseController {
 			e.printStackTrace();
 			log.error(CommonUtil.format("confirm api异常：%s,%s", WalletResponseEnums.SYSTEM_ERROR.getCode(),
 					WalletResponseEnums.SYSTEM_ERROR.getDesc()));
-			throw new BusinessException(WalletResponseEnums.SYSTEM_ERROR);
+			throw new ResponseEntityException(WalletResponseEnums.SYSTEM_ERROR);
 		}
 		return "";
 	}

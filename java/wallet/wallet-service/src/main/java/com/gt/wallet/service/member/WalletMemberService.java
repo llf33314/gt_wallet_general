@@ -101,7 +101,7 @@ public interface WalletMemberService extends BaseService<WalletMember> {
 	 * @param page
 	 * @return
 	 */
-	public ServerResponse<MyPageUtil<WalletMember>> getPage(Page<WalletMember> page);
+	public ServerResponse<MyPageUtil<WalletMember>> getPage(Page<WalletMember> page,Integer status,String phone, Integer memberType)throws Exception;
 	
 	
 	/**

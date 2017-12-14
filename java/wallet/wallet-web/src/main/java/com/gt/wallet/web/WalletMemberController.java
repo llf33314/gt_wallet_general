@@ -2,6 +2,7 @@ package com.gt.wallet.web;
 
 
 import java.util.List;
+import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
 
@@ -211,12 +212,12 @@ public class WalletMemberController extends BaseController {
 	@ResponseBody
 	@RequestMapping(value="79B4DE7C/lockMember",method=RequestMethod.POST)
 	@ApiOperation(value="锁定用户", notes="锁定用户")
-	public ServerResponse<?> lockMember(HttpServletRequest request,Integer wmemberId
+	public ServerResponse<?> lockMember(HttpServletRequest request,@RequestBody Map<String, Object> params
 			){
-		log.info(CommonUtil.format("触发锁定用户接口,参数:%s",wmemberId));
+		log.info(CommonUtil.format("触发锁定用户接口,参数:%s",JsonUtil.toJSONString(params)));
 		try {
 			ServerResponse<?> serverResponse=null;
-			serverResponse=walletMemberService.lockMember(wmemberId);//YunSoaMemberUtil.sendVerificationCode(bizUserId, phone, verificationCodeType);
+			serverResponse=walletMemberService.lockMember(CommonUtil.toInteger(params.get("wmemberId")));//YunSoaMemberUtil.sendVerificationCode(bizUserId, phone, verificationCodeType);
 			log.info(CommonUtil.format("serverResponse:%s",JsonUtil.toJSONString(serverResponse)));
 			return serverResponse;
 		} catch ( BusinessException e) {
@@ -240,12 +241,12 @@ public class WalletMemberController extends BaseController {
 	@ResponseBody
 	@RequestMapping(value="79B4DE7C/unlockMember",method=RequestMethod.POST)
 	@ApiOperation(value="解锁用户", notes="解锁用户")
-	public ServerResponse<?> unlockMember(HttpServletRequest request,Integer wmemberId
+	public ServerResponse<?> unlockMember(HttpServletRequest request,@RequestBody Map<String, Object> params
 			){
-		log.info(CommonUtil.format("触发解锁用户接口,参数:%s",wmemberId));
+		log.info(CommonUtil.format("触发解锁用户接口,参数:%s",JsonUtil.toJSONString(params)));
 		try {
 			ServerResponse<?> serverResponse=null;
-			serverResponse=walletMemberService.unlockMember(wmemberId);
+			serverResponse=walletMemberService.unlockMember(CommonUtil.toInteger(params.get("wmemberId")));
 			log.info(CommonUtil.format("serverResponse:%s",JsonUtil.toJSONString(serverResponse)));
 			return serverResponse;
 		} catch ( BusinessException e) {
@@ -269,11 +270,26 @@ public class WalletMemberController extends BaseController {
 	@ResponseBody
 	@RequestMapping(value="79B4DE7C/memberListPage",method=RequestMethod.POST)
 	@ApiOperation(value="会员列表分页", notes="会员列表分页")
-	public ServerResponse<MyPageUtil<WalletMember>> memberListPage(HttpServletRequest request,@RequestBody Page<WalletMember> page
+	public ServerResponse<MyPageUtil<WalletMember>> memberListPage(HttpServletRequest request,@RequestBody com.alibaba.fastjson.JSONObject params
 			){
-		log.info(CommonUtil.format("触发会员列表分页接口,参数:%s",JsonUtil.toJSONString(page)));
+		log.info(CommonUtil.format("触发会员列表分页接口,参数:%s",JsonUtil.toJSONString(params)));
 		try {
-			ServerResponse<MyPageUtil<WalletMember>>  serverResponse=walletMemberService.getPage(page);
+			 Page<WalletMember> page=new Page<WalletMember>();
+			 page.setSize(params.getInteger("size"));
+			 page.setCurrent(params.getInteger("current"));
+			 Integer status=null;
+			 String phone=null;
+			 Integer memberType=null;
+			if( CommonUtil.isNotEmpty(params.get("status"))){
+				status=params.getInteger("status");
+			}
+			if( CommonUtil.isNotEmpty(params.get("phone"))){
+				phone=params.getString("phone");
+			}
+			if( CommonUtil.isNotEmpty(params.get("memberType"))){
+				memberType=params.getInteger("memberType");
+			}
+			ServerResponse<MyPageUtil<WalletMember>>  serverResponse=walletMemberService.getPage(page,status, phone,  memberType);
 			log.info(CommonUtil.format("serverResponse:%s",JsonUtil.toJSONString(serverResponse)));
 			return serverResponse;
 		} catch ( BusinessException e) {

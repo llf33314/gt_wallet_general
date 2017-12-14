@@ -22,15 +22,18 @@ import com.gt.wallet.dto.ServerResponse;
 import com.gt.wallet.entity.WalletCompany;
 import com.gt.wallet.entity.WalletIndividual;
 import com.gt.wallet.entity.WalletMember;
+import com.gt.wallet.enums.WalletMsgEnums;
 import com.gt.wallet.enums.WalletResponseEnums;
 import com.gt.wallet.exception.BusinessException;
 import com.gt.wallet.mapper.member.WalletMemberMapper;
 import com.gt.wallet.service.log.WalletApiLogService;
+import com.gt.wallet.service.log.WalletMessageService;
 import com.gt.wallet.service.member.WalletCompanyService;
 import com.gt.wallet.service.member.WalletIndividualService;
 import com.gt.wallet.service.member.WalletMemberService;
 import com.gt.wallet.utils.BankUtil;
 import com.gt.wallet.utils.CommonUtil;
+import com.gt.wallet.utils.DateTimeKit;
 import com.gt.wallet.utils.IdCardUtil;
 import com.gt.wallet.utils.MyPageUtil;
 import com.gt.wallet.utils.PhoneUtil;
@@ -62,7 +65,10 @@ public class WalletMemberServiceImpl extends BaseServiceImpl<WalletMemberMapper,
 	
 	@Autowired
 	private WalletApiLogService walletApiLogService;
-
+	
+	@Autowired
+	private WalletMessageService walletMessageService;
+	
 	
 	/**
 	 * 使用事务控制
@@ -236,7 +242,12 @@ public class WalletMemberServiceImpl extends BaseServiceImpl<WalletMemberMapper,
 			walletMember.setStatus(-1);
 			walletMemberMapper.updateById(walletMember);
 		}
-		
+		try {
+			walletMessageService.add(walletMember.getId(), WalletMsgEnums.MSGTYPE_QUOTAREVIEW.getCode(),"用户被锁", walletMember.getId());
+		} catch (Exception e) {
+			log.error("write msg api error");
+			e.printStackTrace();
+		}
 		return serverResponse;
 	}
 	@Transactional(propagation = Propagation.REQUIRED,isolation = Isolation.DEFAULT,timeout=36000,rollbackFor=Exception.class)
@@ -253,17 +264,29 @@ public class WalletMemberServiceImpl extends BaseServiceImpl<WalletMemberMapper,
 			walletMember.setStatus(3);
 			walletMemberMapper.updateById(walletMember);
 		}
+		try {
+			walletMessageService.add(walletMember.getId(), WalletMsgEnums.MSGTYPE_QUOTAREVIEW.getCode(),"解锁用户", walletMember.getId());
+		} catch (Exception e) {
+			log.error("write msg api error");
+			e.printStackTrace();
+		}
 		return serverResponse;
 	}
 
 
 	@Override
-	public ServerResponse<MyPageUtil<WalletMember>> getPage(Page<WalletMember> page) {
+	public ServerResponse<MyPageUtil<WalletMember>> getPage(Page<WalletMember> page,Integer status,String phone, Integer memberType) throws Exception{
 		log.info(CommonUtil.format("biz接口:分页查询,请求参数:%s", JsonUtil.toJSONString(page)));
 		EntityWrapper<WalletMember> wrapper=new EntityWrapper<WalletMember>() ;
-//		if(CommonUtil.isNotEmpty(status)){
-//			wrapper.where("status={0}", status);			
-//		}
+		if(CommonUtil.isNotEmpty(status)){
+			wrapper.where("status={0}", status);			
+		}
+		if(CommonUtil.isNotEmpty(phone)){
+			wrapper.where("phone={0}",WalletKeyUtil.getEncString(phone) );			
+		}
+		if(CommonUtil.isNotEmpty(memberType)&&memberType!=0){
+			wrapper.where("member_type={0}", memberType);			
+		}
 		Integer total=walletMemberMapper.selectCount(wrapper);
 		if(CommonUtil.isEmpty(total)||total==0){
 			throw new BusinessException(WalletResponseEnums.DATA_NULL_ERROR);
@@ -275,6 +298,13 @@ public class WalletMemberServiceImpl extends BaseServiceImpl<WalletMemberMapper,
 		page1.setRecords(walletMemberMapper.selectPage(page1, wrapper));
 		MyPageUtil<WalletMember> myPageUtil=new MyPageUtil<WalletMember>(page.getCurrent(), page.getSize());
 		myPageUtil.setRecords(walletMemberMapper.selectPage(myPageUtil,wrapper),total);
+		for (int i=0; i<myPageUtil.getRecords().size() ;i++) {
+			if(CommonUtil.isNotEmpty(myPageUtil.getRecords().get(i).getPhone())){
+				log.info("myPageUtil.getRecords().get(i).getPhone():"+WalletKeyUtil.getDesString(myPageUtil.getRecords().get(i).getPhone()));
+				myPageUtil.getRecords().get(i).setPhone(PhoneUtil.hide(WalletKeyUtil.getDesString(myPageUtil.getRecords().get(i).getPhone())));
+				log.info("myPageUtil.getRecords().get(i):"+myPageUtil.getRecords().get(i).getPhone());
+			}
+		}
 //		MyPageUtil.getInit( page.getRecords().size(), page);
 		log.info(CommonUtil.format("page:%s", JsonUtil.toJSONString(page)));
 		return ServerResponse.createBySuccessCodeData(myPageUtil);

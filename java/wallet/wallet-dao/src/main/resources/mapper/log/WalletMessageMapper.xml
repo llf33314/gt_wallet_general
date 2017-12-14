@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.gt.wallet.mapper.WalletMessageMapper">
+
+	<!-- 通用查询映射结果 -->
+	<resultMap id="BaseResultMap" type="com.gt.wallet.entity.WalletMessage">
+		<id column="id" property="id" />
+		<result column="w_member_id" property="wMemberId" />
+		<result column="msg_type" property="msgType" />
+		<result column="desc_content" property="descContent" />
+		<result column="state" property="state" />
+		<result column="order_id" property="orderId" />
+		<result column="url" property="url" />
+		<result column="ctime" property="ctime" />
+	</resultMap>
+
+    <!-- 通用查询结果列 -->
+    <sql id="Base_Column_List">
+        id, w_member_id AS wMemberId, msg_type AS msgType, desc_content AS descContent, state, order_id AS orderId, url, ctime
+    </sql>
+
+</mapper>
