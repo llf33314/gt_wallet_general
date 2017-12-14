@@ -46,13 +46,13 @@ public class SearchPayOrderPage {
 	/**
 	 * 当前页
 	 */
-	@ApiModelProperty(name="current",notes="当前页",required=false,hidden=true)
+	@ApiModelProperty(name="current",notes="当前页",required=false)
 	private Integer current=1;
 	
 	/**
 	 * 显示行数
 	 */
-	@ApiModelProperty(name="size",notes="显示行数",required=false,hidden=true)
+	@ApiModelProperty(name="size",notes="显示行数",required=false)
 	private Integer size=10;
 
 }
