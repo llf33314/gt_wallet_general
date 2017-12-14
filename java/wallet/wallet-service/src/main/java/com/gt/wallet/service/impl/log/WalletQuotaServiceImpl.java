@@ -15,10 +15,12 @@ import com.gt.wallet.data.wallet.request.ReviewResult;
 import com.gt.wallet.dto.ServerResponse;
 import com.gt.wallet.entity.WalletMember;
 import com.gt.wallet.entity.WalletQuota;
+import com.gt.wallet.enums.WalletMsgEnums;
 import com.gt.wallet.enums.WalletResponseEnums;
 import com.gt.wallet.exception.BusinessException;
 import com.gt.wallet.mapper.log.WalletQuotaMapper;
 import com.gt.wallet.mapper.member.WalletMemberMapper;
+import com.gt.wallet.service.log.WalletMessageService;
 import com.gt.wallet.service.log.WalletQuotaService;
 import com.gt.wallet.service.member.WalletMemberService;
 import com.gt.wallet.utils.CommonUtil;
@@ -44,6 +46,9 @@ public class WalletQuotaServiceImpl extends BaseServiceImpl<WalletQuotaMapper, W
 	
 	@Autowired
 	private WalletMemberMapper walletMemberMapper;
+	
+	@Autowired
+	private WalletMessageService walletMessageService;
 
 	@Transactional(propagation = Propagation.REQUIRED,isolation = Isolation.DEFAULT,timeout=36000,rollbackFor=Exception.class)
 	@Override
@@ -63,6 +68,7 @@ public class WalletQuotaServiceImpl extends BaseServiceImpl<WalletQuotaMapper, W
 		return ServerResponse.createBySuccess();
 	}
 
+	@Transactional(propagation = Propagation.REQUIRED,isolation = Isolation.DEFAULT,timeout=36000,rollbackFor=Exception.class)
 	@Override
 	public ServerResponse<?> review(ReviewResult reviewResult) {
 		log.info(CommonUtil.format("biz接口:审核结果回调,请求参数:%s", JsonUtil.toJSONString(reviewResult)));
@@ -83,6 +89,12 @@ public class WalletQuotaServiceImpl extends BaseServiceImpl<WalletQuotaMapper, W
 		walletMember.setWithdrawQuota(walletQuota.getQuotaValue().doubleValue());
 		walletMemberMapper.updateById(walletMember);
 		log.info(CommonUtil.format("影响行数:%s",count));
+		try {
+			walletMessageService.add(walletMember.getId(), WalletMsgEnums.MSGTYPE_QUOTAREVIEW.getCode(), reviewResult.getQuotaDesc(), walletQuota.getId());
+		} catch (Exception e) {
+			log.error("write msg api error");
+			e.printStackTrace();
+		}
 		if(count==1){
 			return ServerResponse.createBySuccess();
 		}else{
@@ -114,7 +126,7 @@ public class WalletQuotaServiceImpl extends BaseServiceImpl<WalletQuotaMapper, W
 				myPageUtil.getRecords().get(i).setMemberNum(walletMember.getMemberNum());
 			}
 		}
-		log.info(CommonUtil.format("page:%s", JsonUtil.toJSONString(page)));
+		log.info(CommonUtil.format("page:%s", JsonUtil.toJSONString(myPageUtil)));
 		return ServerResponse.createBySuccessCodeData(myPageUtil);
 	}
 	

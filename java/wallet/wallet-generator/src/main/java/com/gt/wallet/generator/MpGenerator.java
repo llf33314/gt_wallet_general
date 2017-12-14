@@ -27,7 +27,7 @@ public class MpGenerator {
     public static final  String   outPutJavaModel    = outPutBaseDir + "wallet-generator/src/main/java";
     // 需要生成的表
     public static final  String[] generatorTableName = new String[] {
-		    "t_wallet_index_statistics",
+		    "t_wallet_message",
 
     };
     // 去除表前缀 例如：bus_user 填入bus 生成的 user

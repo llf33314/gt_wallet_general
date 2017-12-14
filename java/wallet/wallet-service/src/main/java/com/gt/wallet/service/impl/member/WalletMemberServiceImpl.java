@@ -22,10 +22,12 @@ import com.gt.wallet.dto.ServerResponse;
 import com.gt.wallet.entity.WalletCompany;
 import com.gt.wallet.entity.WalletIndividual;
 import com.gt.wallet.entity.WalletMember;
+import com.gt.wallet.enums.WalletMsgEnums;
 import com.gt.wallet.enums.WalletResponseEnums;
 import com.gt.wallet.exception.BusinessException;
 import com.gt.wallet.mapper.member.WalletMemberMapper;
 import com.gt.wallet.service.log.WalletApiLogService;
+import com.gt.wallet.service.log.WalletMessageService;
 import com.gt.wallet.service.member.WalletCompanyService;
 import com.gt.wallet.service.member.WalletIndividualService;
 import com.gt.wallet.service.member.WalletMemberService;
@@ -63,7 +65,10 @@ public class WalletMemberServiceImpl extends BaseServiceImpl<WalletMemberMapper,
 	
 	@Autowired
 	private WalletApiLogService walletApiLogService;
-
+	
+	@Autowired
+	private WalletMessageService walletMessageService;
+	
 	
 	/**
 	 * 使用事务控制
@@ -237,7 +242,12 @@ public class WalletMemberServiceImpl extends BaseServiceImpl<WalletMemberMapper,
 			walletMember.setStatus(-1);
 			walletMemberMapper.updateById(walletMember);
 		}
-		
+		try {
+			walletMessageService.add(walletMember.getId(), WalletMsgEnums.MSGTYPE_QUOTAREVIEW.getCode(),"用户被锁", walletMember.getId());
+		} catch (Exception e) {
+			log.error("write msg api error");
+			e.printStackTrace();
+		}
 		return serverResponse;
 	}
 	@Transactional(propagation = Propagation.REQUIRED,isolation = Isolation.DEFAULT,timeout=36000,rollbackFor=Exception.class)
@@ -253,6 +263,12 @@ public class WalletMemberServiceImpl extends BaseServiceImpl<WalletMemberMapper,
 		if(ServerResponse.judgeSuccess(serverResponse)){
 			walletMember.setStatus(3);
 			walletMemberMapper.updateById(walletMember);
+		}
+		try {
+			walletMessageService.add(walletMember.getId(), WalletMsgEnums.MSGTYPE_QUOTAREVIEW.getCode(),"解锁用户", walletMember.getId());
+		} catch (Exception e) {
+			log.error("write msg api error");
+			e.printStackTrace();
 		}
 		return serverResponse;
 	}

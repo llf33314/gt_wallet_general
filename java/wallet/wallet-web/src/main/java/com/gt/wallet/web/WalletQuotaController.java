@@ -15,7 +15,6 @@ import com.gt.api.util.httpclient.JsonUtil;
 import com.gt.wallet.base.BaseController;
 import com.gt.wallet.data.wallet.request.ReviewResult;
 import com.gt.wallet.dto.ServerResponse;
-import com.gt.wallet.entity.WalletMember;
 import com.gt.wallet.entity.WalletQuota;
 import com.gt.wallet.enums.WalletResponseEnums;
 import com.gt.wallet.exception.BusinessException;
