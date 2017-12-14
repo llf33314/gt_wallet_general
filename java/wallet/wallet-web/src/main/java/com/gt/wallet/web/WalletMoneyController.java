@@ -4,6 +4,7 @@ package com.gt.wallet.web;
 import javax.servlet.http.HttpServletRequest;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -68,7 +69,7 @@ public class WalletMoneyController extends BaseController {
         @ApiImplicitParam(name = "endTime",value = "结束时间",paramType = "form",dataType = "date",required=false),
         // path, query, body, header, form
 	})
-	public ServerResponse<MyPageUtil<WalletMoney>> getPage(HttpServletRequest request,SearchPayOrderPage searchPayOrderPage){
+	public ServerResponse<MyPageUtil<WalletMoney>> getPage(HttpServletRequest request,@RequestBody SearchPayOrderPage searchPayOrderPage){
 		log.info(CommonUtil.format("触发分页查询接口 %s",JsonUtil.toJSONString(searchPayOrderPage)));
 		try {
 			Page<?> page=new Page<>();
