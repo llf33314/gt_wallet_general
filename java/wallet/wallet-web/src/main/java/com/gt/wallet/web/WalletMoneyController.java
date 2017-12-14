@@ -92,7 +92,7 @@ public class WalletMoneyController extends BaseController {
 	 */
 	@RequestMapping(value = "/withdrawApply", method = RequestMethod.POST)
 	@ApiOperation(value = "withdrawApply", notes = "提现(成功后会返回订单id),支付确认时需要传递")
-	public String withdrawApply(HttpServletRequest request,@ApiParam(required=true,name="money" ,value="提现金额")double money,@ApiParam(required=true,name="bankId" ,value="银行卡id")Integer bankId) {
+	public String withdrawApply(HttpServletRequest request,@ApiParam(required=true,name="money" ,value="提现金额")@RequestParam double money,@ApiParam(required=true,name="bankId" ,value="银行卡id")@RequestParam Integer bankId) {
 		log.info(CommonUtil.format("applyDeposit api,%s,%s", JsonUtil.toJSONString(money),bankId));
 		try {
 			BusUser busUser=	CommonUtil.getLoginUser(request);
@@ -103,7 +103,7 @@ public class WalletMoneyController extends BaseController {
 			e.printStackTrace();
 			log.error(CommonUtil.format("applyDeposit api异常：%s,%s", WalletResponseEnums.SYSTEM_ERROR.getCode(),
 					WalletResponseEnums.SYSTEM_ERROR.getDesc()));
-			throw new BusinessException(WalletResponseEnums.SYSTEM_ERROR);
+			throw new ResponseEntityException(WalletResponseEnums.SYSTEM_ERROR);
 		}
 		return "";
 	}
@@ -128,7 +128,7 @@ public class WalletMoneyController extends BaseController {
 			e.printStackTrace();
 			log.error(CommonUtil.format("confirm api异常：%s,%s", WalletResponseEnums.SYSTEM_ERROR.getCode(),
 					WalletResponseEnums.SYSTEM_ERROR.getDesc()));
-			throw new BusinessException(WalletResponseEnums.SYSTEM_ERROR);
+			throw new ResponseEntityException(WalletResponseEnums.SYSTEM_ERROR);
 		}
 		return "";
 	}

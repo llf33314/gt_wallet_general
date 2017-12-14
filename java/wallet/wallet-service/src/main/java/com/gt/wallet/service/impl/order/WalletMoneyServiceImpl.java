@@ -104,8 +104,8 @@ public class WalletMoneyServiceImpl extends BaseServiceImpl<WalletMoneyMapper, W
 	@Override
 	public ServerResponse<Integer> withdrawApply(Integer busId, double money, Integer bankId) throws Exception{
 		log.info(CommonUtil.format("biz接口:withdrawApply,请求参数:%s,%s,%s",busId,money,bankId));
-		if(money<=0){
-			throw new BusinessException("请输入大于0的金额");
+		if(money<1000){
+			throw new BusinessException("请输入大于1000的金额");
 		}
 		ServerResponse<List<WalletMember>> responseMember=walletMemberService.findMember(busId);
 		if(ServerResponse.judgeSuccess(responseMember)==false||responseMember.getData().size()<=0){

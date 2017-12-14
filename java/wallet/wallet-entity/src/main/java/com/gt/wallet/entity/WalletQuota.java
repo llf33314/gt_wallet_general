@@ -4,6 +4,8 @@ import java.io.Serializable;
 import java.math.BigDecimal;
 import java.util.Date;
 
+import org.springframework.data.annotation.Transient;
+
 import com.baomidou.mybatisplus.activerecord.Model;
 import com.baomidou.mybatisplus.annotations.TableField;
 import com.baomidou.mybatisplus.annotations.TableId;
@@ -66,6 +68,13 @@ public class WalletQuota extends Model<WalletQuota> {
 	@ApiModelProperty(name="failReason",notes="失败原因",required=true,hidden=true)
 	@TableField("fail_reason")
 	private String failReason;
+	
+	/**
+	 * 会员账号
+	 */
+	@TableField(exist = false)
+	@ApiModelProperty(name="memberNum",notes="会员账号",required=true,hidden=true)
+	private String memberNum;
 
 
 	@Override

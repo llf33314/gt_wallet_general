@@ -11,7 +11,9 @@ import org.apache.http.entity.ContentType;
 import org.apache.http.entity.StringEntity;
 import org.apache.http.message.BasicHeader;
 
+import com.alibaba.fastjson.JSONObject;
 import com.gt.api.bean.sign.SignBean;
+import com.gt.api.util.HttpClienUtils;
 import com.gt.api.util.KeysUtil;
 import com.gt.api.util.httpclient.JsonUtil;
 import com.gt.api.util.httpclient.LocalHttpClient;
@@ -111,7 +113,9 @@ public class WalletHttpClienUtil {
 //		ResponseUtils map=reqPostUTF8( ss,"http://127.0.0.1:8440/8A5DA52E/shopapi/6F6D9AD2/79B4DE7C/queryWxShopByBusId.do",ResponseUtils.class,"WXMP2017");
 //		System.out.println(com.alibaba.fastjson.JSONObject.toJSONString(map));
 		
-		String url="http://wallet.yifriend.net:8440/walletIndividual/saveIndividual";
+		String url="https://mess.deeptel.com.cn/messMobile/36/79B4DE7C/getMessMainByBusId";
+		Map map=HttpClienUtils.reqGet(null, url, Map.class);
+		System.out.println(JSONObject.toJSONString(map));
 //		WalletIndividualAdd walletIndividualAdd=new WalletIndividualAdd();
 //		walletIndividualAdd.setBankName("1312");
 //		walletIndividualAdd.setCardNo("12313");

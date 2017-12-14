@@ -15,6 +15,7 @@ import com.gt.api.util.httpclient.JsonUtil;
 import com.gt.wallet.base.BaseController;
 import com.gt.wallet.data.wallet.request.ReviewResult;
 import com.gt.wallet.dto.ServerResponse;
+import com.gt.wallet.entity.WalletMember;
 import com.gt.wallet.entity.WalletQuota;
 import com.gt.wallet.enums.WalletResponseEnums;
 import com.gt.wallet.exception.BusinessException;
@@ -82,7 +83,7 @@ public class WalletQuotaController extends BaseController {
 	 * @return
 	 */
 	@ResponseBody
-	@RequestMapping(value="review",method=RequestMethod.POST)
+	@RequestMapping(value="79B4DE7C/review",method=RequestMethod.POST)
 	 @ApiOperation(value="审核结果回调", notes="提升额度申请")
 	@ApiImplicitParams({
         @ApiImplicitParam(name = "wMemberId",value = "会员id",paramType = "form",dataType = "int",required=true,defaultValue="0"),
@@ -91,7 +92,7 @@ public class WalletQuotaController extends BaseController {
         @ApiImplicitParam(name = "quotaValue",value = "申请描述",paramType = "form",dataType = "string",required=true,example="申请描述")
         // path, query, body, header, form
 	})
-	public ServerResponse<?> review(HttpServletRequest request,ReviewResult result){
+	public ServerResponse<?> review(HttpServletRequest request,@RequestBody ReviewResult result){
 		log.info(CommonUtil.format("触发审核结果回调接口 %s",JsonUtil.toJSONString(result)));
 		try {
 			ServerResponse<?> serverResponse=null;
@@ -114,7 +115,7 @@ public class WalletQuotaController extends BaseController {
 	 * @return
 	 */
 	@ResponseBody
-	@RequestMapping(value="getPage",method=RequestMethod.POST)
+	@RequestMapping(value="79B4DE7C/getPage",method=RequestMethod.POST)
 	 @ApiOperation(value="分页查询", notes="分页查询")
 	@ApiImplicitParams({
         @ApiImplicitParam(name = "current",value = "当前页",paramType = "form",dataType = "int",required=true,defaultValue="1"),
@@ -123,9 +124,16 @@ public class WalletQuotaController extends BaseController {
         @ApiImplicitParam(name = "size",value = "显示行数",paramType = "form",dataType = "int",required=true,defaultValue="10")
         // path, query, body, header, form
 	})
-	public ServerResponse<MyPageUtil<WalletQuota>> getPage(HttpServletRequest request,Page<WalletQuota> page, Integer status){
-		log.info(CommonUtil.format("触发分页查询接口 %s",JsonUtil.toJSONString(page)));
+	public ServerResponse<MyPageUtil<WalletQuota>> getPage(HttpServletRequest request,@RequestBody com.alibaba.fastjson.JSONObject params){
+		log.info(CommonUtil.format("触发分页查询接口 %s",JsonUtil.toJSONString(params)));
 		try {
+			 Page<WalletQuota> page=new Page<WalletQuota>();
+			 page.setSize(params.getInteger("size"));
+			 page.setCurrent(params.getInteger("current"));
+			 Integer status=null;
+			 if( CommonUtil.isNotEmpty(params.get("status"))){
+					status=params.getInteger("status");
+				}
 			ServerResponse<MyPageUtil<WalletQuota>> serverResponse=walletQuotaService.getPage(page,status);
 			log.info(CommonUtil.format("serverResponse:", JsonUtil.toJSONString(serverResponse)));
 			return serverResponse;

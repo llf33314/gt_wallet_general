@@ -31,6 +31,7 @@ import com.gt.wallet.service.member.WalletIndividualService;
 import com.gt.wallet.service.member.WalletMemberService;
 import com.gt.wallet.utils.BankUtil;
 import com.gt.wallet.utils.CommonUtil;
+import com.gt.wallet.utils.DateTimeKit;
 import com.gt.wallet.utils.IdCardUtil;
 import com.gt.wallet.utils.MyPageUtil;
 import com.gt.wallet.utils.PhoneUtil;
@@ -258,12 +259,18 @@ public class WalletMemberServiceImpl extends BaseServiceImpl<WalletMemberMapper,
 
 
 	@Override
-	public ServerResponse<MyPageUtil<WalletMember>> getPage(Page<WalletMember> page) {
+	public ServerResponse<MyPageUtil<WalletMember>> getPage(Page<WalletMember> page,Integer status,String phone, Integer memberType) throws Exception{
 		log.info(CommonUtil.format("biz接口:分页查询,请求参数:%s", JsonUtil.toJSONString(page)));
 		EntityWrapper<WalletMember> wrapper=new EntityWrapper<WalletMember>() ;
-//		if(CommonUtil.isNotEmpty(status)){
-//			wrapper.where("status={0}", status);			
-//		}
+		if(CommonUtil.isNotEmpty(status)){
+			wrapper.where("status={0}", status);			
+		}
+		if(CommonUtil.isNotEmpty(phone)){
+			wrapper.where("phone={0}",WalletKeyUtil.getEncString(phone) );			
+		}
+		if(CommonUtil.isNotEmpty(memberType)&&memberType!=0){
+			wrapper.where("member_type={0}", memberType);			
+		}
 		Integer total=walletMemberMapper.selectCount(wrapper);
 		if(CommonUtil.isEmpty(total)||total==0){
 			throw new BusinessException(WalletResponseEnums.DATA_NULL_ERROR);
@@ -275,6 +282,13 @@ public class WalletMemberServiceImpl extends BaseServiceImpl<WalletMemberMapper,
 		page1.setRecords(walletMemberMapper.selectPage(page1, wrapper));
 		MyPageUtil<WalletMember> myPageUtil=new MyPageUtil<WalletMember>(page.getCurrent(), page.getSize());
 		myPageUtil.setRecords(walletMemberMapper.selectPage(myPageUtil,wrapper),total);
+		for (int i=0; i<myPageUtil.getRecords().size() ;i++) {
+			if(CommonUtil.isNotEmpty(myPageUtil.getRecords().get(i).getPhone())){
+				log.info("myPageUtil.getRecords().get(i).getPhone():"+WalletKeyUtil.getDesString(myPageUtil.getRecords().get(i).getPhone()));
+				myPageUtil.getRecords().get(i).setPhone(PhoneUtil.hide(WalletKeyUtil.getDesString(myPageUtil.getRecords().get(i).getPhone())));
+				log.info("myPageUtil.getRecords().get(i):"+myPageUtil.getRecords().get(i).getPhone());
+			}
+		}
 //		MyPageUtil.getInit( page.getRecords().size(), page);
 		log.info(CommonUtil.format("page:%s", JsonUtil.toJSONString(page)));
 		return ServerResponse.createBySuccessCodeData(myPageUtil);
