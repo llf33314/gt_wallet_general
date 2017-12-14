@@ -28,13 +28,13 @@ public class SearchPayOrderPage {
 	 * 开始时间
 	 */
 	@ApiModelProperty(name="startTime",notes="开始时间",required=false)
-	private Date startTime;
+	private String startTime;
 	
 	/**
 	 * 结束时间
 	 */
 	@ApiModelProperty(name="endTime",notes="结束时间",required=false)
-	private Date endTime;
+	private String endTime;
 	
 	/**
 	 * 状态

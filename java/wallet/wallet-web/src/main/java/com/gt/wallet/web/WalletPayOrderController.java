@@ -197,14 +197,14 @@ public class WalletPayOrderController extends BaseController {
 	@RequestMapping(value="getPage",method=RequestMethod.POST)
 	@ApiOperation(value="分页查询", notes="分页查询")
 	@ApiImplicitParams({
-        @ApiImplicitParam(name = "current",value = "当前页",paramType = "form",dataType = "int",required=true,defaultValue="1"),
-        @ApiImplicitParam(name = "size",value = "显示行数",paramType = "form",dataType = "int",required=false,defaultValue="10"),
-        @ApiImplicitParam(name = "wmemberId",value = "钱包会员id",paramType = "form",dataType = "int",required=true),
-        @ApiImplicitParam(name = "startTime",value = "开始时间",paramType = "form",dataType = "date",required=false),
-        @ApiImplicitParam(name = "endTime",value = "结束时间",paramType = "form",dataType = "date",required=false),
-        // path, query, body, header, form
+       @ApiImplicitParam(name = "current",value = "当前页",paramType = "form",dataType = "Integer",required=true,defaultValue="1"),
+       @ApiImplicitParam(name = "size",value = "显示行数",paramType = "form",dataType = "Integer",required=false,defaultValue="10"),
+       @ApiImplicitParam(name = "wmemberId",value = "钱包会员id",paramType = "form",dataType = "int",required=true),
+       @ApiImplicitParam(name = "startTime",value = "开始时间",paramType = "form",dataType = "string",required=false),
+       @ApiImplicitParam(name = "endTime",value = "结束时间",paramType = "form",dataType = "string",required=false),
+       // path, query, body, header, form
 	})
-	public ServerResponse<MyPageUtil<WalletPayOrder>> getPage(HttpServletRequest request, @RequestBody SearchPayOrderPage searchPayOrderPage){
+	public ServerResponse<MyPageUtil<WalletPayOrder>> getPage(HttpServletRequest request,  SearchPayOrderPage searchPayOrderPage){
 		log.info(CommonUtil.format("触发分页查询接口 %s",JsonUtil.toJSONString(searchPayOrderPage)));
 		try {
 			Page<?> page=new Page<>();
