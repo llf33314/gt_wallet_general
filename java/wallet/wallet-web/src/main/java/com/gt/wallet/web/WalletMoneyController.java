@@ -68,9 +68,12 @@ public class WalletMoneyController extends BaseController {
         @ApiImplicitParam(name = "endTime",value = "结束时间",paramType = "form",dataType = "date",required=false),
         // path, query, body, header, form
 	})
-	public ServerResponse<MyPageUtil<WalletMoney>> getPage(HttpServletRequest request,Page<?> page,SearchPayOrderPage searchPayOrderPage){
-		log.info(CommonUtil.format("触发分页查询接口 %s",JsonUtil.toJSONString(page)));
+	public ServerResponse<MyPageUtil<WalletMoney>> getPage(HttpServletRequest request,SearchPayOrderPage searchPayOrderPage){
+		log.info(CommonUtil.format("触发分页查询接口 %s",JsonUtil.toJSONString(searchPayOrderPage)));
 		try {
+			Page<?> page=new Page<>();
+			page.setSize(searchPayOrderPage.getSize());
+			page.setCurrent(searchPayOrderPage.getCurrent());
 			ServerResponse<MyPageUtil<WalletMoney>> serverResponse=walletMoneyService.getPage(page,searchPayOrderPage);
 			log.info(CommonUtil.format("serverResponse:", JsonUtil.toJSONString(serverResponse)));
 			return serverResponse;

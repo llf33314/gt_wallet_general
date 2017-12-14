@@ -41,5 +41,18 @@ public class SearchPayOrderPage {
 	 */
 	@ApiModelProperty(name="status",notes="状态",required=false,hidden=true)
 	private String status="success";
+	
+	
+	/**
+	 * 当前页
+	 */
+	@ApiModelProperty(name="current",notes="当前页",required=false,hidden=true)
+	private Integer current=1;
+	
+	/**
+	 * 显示行数
+	 */
+	@ApiModelProperty(name="size",notes="显示行数",required=false,hidden=true)
+	private Integer size=10;
 
 }

@@ -204,9 +204,12 @@ public class WalletPayOrderController extends BaseController {
         @ApiImplicitParam(name = "endTime",value = "结束时间",paramType = "form",dataType = "date",required=false),
         // path, query, body, header, form
 	})
-	public ServerResponse<MyPageUtil<WalletPayOrder>> getPage(HttpServletRequest request,Page<?> page,SearchPayOrderPage searchPayOrderPage){
-		log.info(CommonUtil.format("触发分页查询接口 %s",JsonUtil.toJSONString(page)));
+	public ServerResponse<MyPageUtil<WalletPayOrder>> getPage(HttpServletRequest request,SearchPayOrderPage searchPayOrderPage){
+		log.info(CommonUtil.format("触发分页查询接口 %s",JsonUtil.toJSONString(searchPayOrderPage)));
 		try {
+			Page<?> page=new Page<>();
+			page.setSize(searchPayOrderPage.getSize());
+			page.setCurrent(searchPayOrderPage.getCurrent());
 			ServerResponse<MyPageUtil<WalletPayOrder>> serverResponse=walletPayOrderService.getPage(page,searchPayOrderPage);
 			log.info(CommonUtil.format("serverResponse:%s", JsonUtil.toJSONString(serverResponse)));
 			return serverResponse;
