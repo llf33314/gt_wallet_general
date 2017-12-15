@@ -1,5 +1,7 @@
 <style lang="less">
   .wallet-individual-index {
+    margin-bottom: 50px;
+    overflow: hidden;
     .title-dps {
       display: inline-block;
       width: 200px;
@@ -11,7 +13,6 @@
       white-space: nowrap;
     }
   }
-
 </style>
 <template>
   <section class="wallet-index wallet-individual-index">
@@ -58,37 +59,36 @@
           </div>
         </div>
       </div>
-        <el-tabs v-model="activeName" type="card" style="margin-top: 40px;margin-bottom: 20px;">
-          <el-tab-pane label="交易记录" name="record"></el-tab-pane>
-          <el-tab-pane label="消息中心" name="news"></el-tab-pane>
-        </el-tabs>
-        <router-view></router-view>
-      </div>  
-       
+      <el-tabs v-model="activeName" type="card" style="margin-top: 40px;margin-bottom: 20px;">
+        <el-tab-pane label="交易记录" name="record"></el-tab-pane>
+        <el-tab-pane label="消息中心" name="news"></el-tab-pane>
+      </el-tabs>
+      <router-view></router-view>
+    </div>
+
     </div>
   </section>
 </template>
 <script>
   export default {
-   
+
     data() {
       return {
         activeName: 'record',
         IndexStatistics: {},
         walletIndividual: {},
-        wmemberId:''
       }
     },
     mounted() {
       this.findMember()
       this.getIndexStatistics()
       console.log(this.$route.name)
-      if(this.$route.name == 'wallet-record'){
+      if (this.$route.name == 'wallet-record') {
         this.activeName = 'record'
         this.$router.push({
           path: '/wallet/individual/record'
         })
-      }else{
+      } else {
         this.activeName = 'news'
         this.$router.push({
           path: '/wallet/individual/news'
@@ -112,8 +112,10 @@
           success: (res) => {
             console.log(res, '查询多粉会员信息')
             if (res.code == 0) {
-              this.wmemberId = res.data.id
               this.walletIndividual = res.data.walletIndividual
+              window.sessionStorage.walletId = res.data.id
+
+              this.$store.commit('getWalletId', res.data.id)
             } else {
               this.$message.error(res.msg)
             }

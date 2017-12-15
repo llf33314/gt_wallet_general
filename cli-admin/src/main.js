@@ -28,6 +28,7 @@ Vue.prototype.isPhone = window.isPhone
 new Vue({
   el: '#app',
   router,
+  store,
   template: '<App/>',
   components: {
     App
