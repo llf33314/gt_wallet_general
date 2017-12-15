@@ -22,14 +22,30 @@ export const individual = [
     title: '个人主页',
     component: resolve => {
       require(['@/components/wallet/vue/individual/index'], resolve)
-    }
+    },
+    redirect:'/wallet/individual/record/',
+    children: [{
+      path: '/wallet/individual/record',
+      name: 'wallet-record',
+      title: '交易记录',
+      component: resolve => {
+        require(['@/components/wallet/vue/individual/record/index'], resolve)
+      },
+    }, {
+      path: '/wallet/individual/news',
+      name: 'wallet-news',
+      title: '消息中心',
+      component: resolve => {
+        require(['@/components/wallet/vue/individual/news/index'], resolve)
+      },
+    }]
   },
   {
     path: '/wallet/individual/messages',
     name: 'individual_messages',
-    title: '企业信息',
+    title: '个人信息',
     component: resolve => {
-      require(['@/components/wallet/vue/individual/messages'], resolve)
+      require(['@/components/wallet/vue/individual/messages/index'], resolve)
     }
   },
   {
@@ -37,7 +53,7 @@ export const individual = [
     name: 'individualDrawcash',
     title: '个人提现',
     component: resolve => {
-      require(['@/components/wallet/vue/individual/drawcash'], resolve)
+      require(['@/components/wallet/vue/individual/drawcash/index'], resolve)
     }
   },
   {
