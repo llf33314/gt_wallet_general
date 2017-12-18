@@ -1,6 +1,5 @@
 //个人
-export const individual = [
-  {
+export const individual = [{
     path: '/wallet/individual/auditing',
     name: 'auditing',
     title: '个人审核中',
@@ -23,7 +22,7 @@ export const individual = [
     component: resolve => {
       require(['@/components/wallet/vue/individual/index'], resolve)
     },
-    redirect:'/wallet/individual/record/',
+    redirect: '/wallet/individual/record/',
     children: [{
       path: '/wallet/individual/record',
       name: 'wallet-record',
@@ -66,8 +65,7 @@ export const individual = [
   }
 ]
 //企业
-export const company = [
-  {
+export const company = [{
     path: '/wallet/company/open/base/:memberId',
     name: 'company_open_base',
     title: '企业开通-基本信息',
@@ -89,14 +87,29 @@ export const company = [
     title: '企业主页',
     component: resolve => {
       require(['@/components/wallet/vue/company/index'], resolve)
-    }
+    },
+    children: [{
+      path: '/wallet/company/record',
+      name: 'wallet-record',
+      title: '交易记录',
+      component: resolve => {
+        require(['@/components/wallet/vue/company/record/index'], resolve)
+      },
+    }, {
+      path: '/wallet/company/news',
+      name: 'wallet-news',
+      title: '消息中心',
+      component: resolve => {
+        require(['@/components/wallet/vue/company/news/index'], resolve)
+      },
+    }]
   },
   {
     path: '/wallet/company/messages',
     name: 'company_messages',
     title: '企业信息',
     component: resolve => {
-      require(['@/components/wallet/vue/company/messages'], resolve)
+      require(['@/components/wallet/vue/company/messages/index'], resolve)
     }
   },
   {
@@ -104,12 +117,12 @@ export const company = [
     name: 'company_drawcash',
     title: '企业提现',
     component: resolve => {
-      require(['@/components/wallet/vue/company/drawcash'], resolve)
+      require(['@/components/wallet/vue/company/drawcash/index'], resolve)
     }
   }
+
 ]
-export const wallet = [
-  {
+export const wallet = [{
     path: '/wallet/index',
     name: 'index',
     title: '多粉钱包',

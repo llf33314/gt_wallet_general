@@ -5,7 +5,7 @@
 <template>
   <div class="wallet-company-messages">
     <el-breadcrumb separator="/" class="public-crumbs">
-      <el-breadcrumb-item :to="{ path: '/wallet/company/index' }">多粉钱包</el-breadcrumb-item>
+      <el-breadcrumb-item onclick="window.history.go(-1)">多粉钱包</el-breadcrumb-item>
       <el-breadcrumb-item>企业信息</el-breadcrumb-item>
     </el-breadcrumb>
     <div class="public-content public-top20">
@@ -196,7 +196,7 @@
         },
         loading2: false,
         getCodeText: '获取验证码',
-        loading22:false
+        loading22: false
       }
     },
     mounted() {

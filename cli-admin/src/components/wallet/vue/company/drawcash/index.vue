@@ -111,8 +111,7 @@
 <template>
   <section class="wallet-drawcash">
     <el-breadcrumb separator="/" class="public-crumbs">
-      <el-breadcrumb-item>多粉钱包</el-breadcrumb-item>
-      <el-breadcrumb-item :to="{ path: '/wallet/index' }">个人信息</el-breadcrumb-item>
+      <el-breadcrumb-item onclick="window.history.go(-1)">多粉钱包</el-breadcrumb-item>
       <el-breadcrumb-item>提现</el-breadcrumb-item>
     </el-breadcrumb>
     <div class="public-content">
