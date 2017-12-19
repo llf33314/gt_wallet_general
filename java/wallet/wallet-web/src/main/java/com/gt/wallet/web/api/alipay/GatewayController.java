@@ -33,7 +33,7 @@ import lombok.extern.slf4j.Slf4j;
 @RequestMapping("alipGateway")
 public class GatewayController {
 
-	@RequestMapping(value="79B4DE7C/gateway",method={RequestMethod.POST})
+	@RequestMapping(value="79B4DE7C/gateway",method={RequestMethod.POST,RequestMethod.HEAD})
 	public void gateway(HttpServletRequest request, HttpServletResponse response)
 			throws ServletException, IOException {
 		// 支付宝响应消息
