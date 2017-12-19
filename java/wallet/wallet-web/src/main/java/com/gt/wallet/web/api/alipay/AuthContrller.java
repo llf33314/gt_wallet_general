@@ -9,6 +9,7 @@ import javax.servlet.http.HttpServletResponse;
 
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
 
 import com.alipay.api.AlipayApiException;
 import com.alipay.api.AlipayClient;
@@ -31,7 +32,7 @@ import lombok.extern.slf4j.Slf4j;
 @RequestMapping("alipayAuth")
 public class AuthContrller {
 
-	@RequestMapping("79B4DE7C/auth")
+	@RequestMapping(value="79B4DE7C/auth",method=RequestMethod.POST)
 	protected void auth(HttpServletRequest request, HttpServletResponse response)
 			throws ServletException, IOException {
 		// 1. 解析请求参数
