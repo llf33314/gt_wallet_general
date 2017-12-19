@@ -187,6 +187,14 @@ public class WalletPayOrder extends Model<WalletPayOrder> {
 	@ApiModelProperty(name="startTime",notes="开始时间",required=false,hidden=true)
 	@TableField("take_state")
 	private Integer takeState;
+	
+	
+	/**
+	 * 支付模块
+	 */
+	@ApiModelProperty(name="model",notes="支付模块",required=false,hidden=true)
+	@TableField("model")
+	private Integer model;
 
 	@Override
 	protected Serializable pkVal() {

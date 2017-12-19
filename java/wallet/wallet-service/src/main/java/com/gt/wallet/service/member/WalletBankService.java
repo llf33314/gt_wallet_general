@@ -67,4 +67,21 @@ public interface WalletBankService extends BaseService<WalletBank> {
 	ServerResponse<TCardBin> getBankCardBin(String bankCardNo);
 	
 	
+	
+	/**
+	 * 获取会员安全卡
+	 * @param wmemberId
+	 * @return
+	 */
+	public ServerResponse<WalletBank> getWalletSafeBankByMemberId(Integer wmemberId);
+	
+	
+	
+	/**
+	 * 获取对公银行卡卡
+	 * @param wmemberId
+	 * @return
+	 */
+	public ServerResponse<WalletBank> getWalletPublicBankByMemberId(Integer wmemberId);
+	
 }

@@ -96,13 +96,62 @@ public class WalletPayOrderServiceImpl extends BaseServiceImpl<WalletPayOrderMap
 		String md5=MD5Utils.getSmallMD5( DateTimeKit.format(currentTime, format));
 		String submitNo=md5+"__"+payOrder.getBizOrderNo();
 		payOrder.setSubmitNo(submitNo);
-		TPayOrder tPayOrder=new TPayOrder(payOrder.getAmount(),submitNo, walletMember.getFeePercent()*payOrder.getAmount(), payOrder.getAcct(), payOrder.getFrontUrl(), payOrder.getType(), payOrder.getDesc(), walletMember.getMemberNum());
+		TPayOrder tPayOrder=new TPayOrder(payOrder.getAmount(),submitNo, (walletMember.getFeePercent()*payOrder.getAmount())/100, payOrder.getAcct(), payOrder.getReturnUrl(), payOrder.getType(), payOrder.getDesc(), walletMember.getMemberNum());
+		/************通联下单************/
+		ServerResponse<com.alibaba.fastjson.JSONObject> serverResponse=YunSoaMemberUtil.applyDeposit(tPayOrder);
+		com.alibaba.fastjson.JSONObject payInfo=	serverResponse.getData().getJSONObject("payInfo");
+		/************通联下单************/
+		log.info(CommonUtil.format("serverResponse:%s", JsonUtil.toJSONString(serverResponse)));
+		/************记录日志************/
+		walletApiLogService.save(JsonUtil.toJSONString(tPayOrder), serverResponse, walletMember.getMemberId(), payOrder.getNotifyUrl(),submitNo,WalletLogConstants.LOG_PAY);
+		/************记录日志************/
+		if(ServerResponse.judgeSuccess(serverResponse)){//临时订单入库
+			ServerResponse<?> response=save(payOrder);
+			if(!ServerResponse.judgeSuccess(response)){
+				return ServerResponse.createByErrorCodeMessage(response.getCode(), response.getMsg());
+			}
+		}
+		serverResponse=ServerResponse.createBySuccessCodeData(payInfo);
+		log.info("end applyDeposit api:%s"+JsonUtil.toJSONString(serverResponse));
+		return serverResponse;
+	}
+
+	
+	@Override
+	public ServerResponse<com.alibaba.fastjson.JSONObject> codepay(PayOrder payOrder)throws Exception {
+		log.info(CommonUtil.format("start applyDeposit api:%s",JsonUtil.toJSONString(payOrder)));
+		ServerResponse<WalletPayOrder> serverResponseOrder=findByOrderNo(payOrder.getBizOrderNo());
+		WalletPayOrder walletPayOrder=null;
+		if(!ServerResponse.judgeSuccess(serverResponseOrder)){
+			 walletPayOrder=new  WalletPayOrder();
+		}else{
+			walletPayOrder=serverResponseOrder.getData();
+			if(walletPayOrder.getStatus().equals("success")){//已支付
+				throw new BusinessException(WalletResponseEnums.PAY_SUCCESS);
+			}
+		}
+		WalletMember params=new WalletMember();
+		params.setMemberClass(1);
+		params.setMemberId(payOrder.getBusId());
+		WalletMember walletMember=walletMemberMapper.selectOne(params);
+		if(CommonUtil.isEmpty(walletMember)){
+			throw new BusinessException("先请注册多粉钱包会员");
+		}
+		if(walletMember.getStatus()!=3){//正常状态
+			throw new BusinessException("多粉钱包会员账号异常，请联系管理员");
+		}
+		String format="yyyyMMddHHmmss";
+		Date currentTime=DateTimeKitUtils.getNow();
+		String md5=MD5Utils.getSmallMD5( DateTimeKit.format(currentTime, format));
+		String submitNo=md5+"__"+payOrder.getBizOrderNo();
+		payOrder.setSubmitNo(submitNo);
+		TPayOrder tPayOrder=new TPayOrder(payOrder.getAmount(),submitNo, (walletMember.getFeePercent()*payOrder.getAmount())/100, payOrder.getAcct(), payOrder.getReturnUrl(), payOrder.getType(), payOrder.getDesc(), walletMember.getMemberNum());
 		/************通联下单************/
 		ServerResponse<com.alibaba.fastjson.JSONObject> serverResponse=YunSoaMemberUtil.applyDeposit(tPayOrder);
 		/************通联下单************/
 		log.info(CommonUtil.format("serverResponse:%s", JsonUtil.toJSONString(serverResponse)));
 		/************记录日志************/
-		walletApiLogService.save(JsonUtil.toJSONString(tPayOrder), serverResponse, walletMember.getMemberId(), payOrder.getBackUrl(),submitNo,WalletLogConstants.LOG_PAY);
+		walletApiLogService.save(JsonUtil.toJSONString(tPayOrder), serverResponse, walletMember.getMemberId(), payOrder.getNotifyUrl(),submitNo,WalletLogConstants.LOG_PAY);
 		/************记录日志************/
 		if(ServerResponse.judgeSuccess(serverResponse)){//临时订单入库
 			ServerResponse<?> response=save(payOrder);
@@ -113,7 +162,6 @@ public class WalletPayOrderServiceImpl extends BaseServiceImpl<WalletPayOrderMap
 		log.info("end applyDeposit api:%s"+JsonUtil.toJSONString(serverResponse));
 		return serverResponse;
 	}
-
 
 	@Transactional(propagation = Propagation.REQUIRED,isolation = Isolation.DEFAULT,timeout=36000,rollbackFor=Exception.class)
 	@Override

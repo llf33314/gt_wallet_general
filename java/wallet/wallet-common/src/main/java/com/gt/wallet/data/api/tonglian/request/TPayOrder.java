@@ -30,7 +30,7 @@ public class TPayOrder {
 	/**
 	 * 手续费
 	 */
-	@ApiModelProperty(name="fee",notes="手续费",required=true)
+	@ApiModelProperty(name="fee",notes="手续费",required=true,hidden=true)
 	private Double fee;
 	
 	

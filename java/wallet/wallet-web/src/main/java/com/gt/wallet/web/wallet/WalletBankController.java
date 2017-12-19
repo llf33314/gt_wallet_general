@@ -1,4 +1,4 @@
-package com.gt.wallet.web;
+package com.gt.wallet.web.wallet;
 
 
 import java.util.List;

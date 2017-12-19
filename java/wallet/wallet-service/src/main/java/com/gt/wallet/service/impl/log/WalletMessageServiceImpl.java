@@ -1,7 +1,5 @@
 package com.gt.wallet.service.impl.log;
 
-import java.util.List;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Isolation;
@@ -14,9 +12,7 @@ import com.gt.api.util.httpclient.JsonUtil;
 import com.gt.wallet.base.BaseServiceImpl;
 import com.gt.wallet.data.wallet.request.SearchMsgPage;
 import com.gt.wallet.dto.ServerResponse;
-import com.gt.wallet.entity.WalletMember;
 import com.gt.wallet.entity.WalletMessage;
-import com.gt.wallet.entity.WalletQuota;
 import com.gt.wallet.enums.WalletResponseEnums;
 import com.gt.wallet.exception.BusinessException;
 import com.gt.wallet.mapper.log.WalletMessageMapper;
@@ -60,7 +56,7 @@ public class WalletMessageServiceImpl extends BaseServiceImpl<WalletMessageMappe
 		ServerResponse<Integer> serverResponse=null;
 		String[] array=	listStr.split(",");
 		for (String string : array) {
-			if(CommonUtil.isInteger(string)&&string.equals("0")){
+			if(CommonUtil.isInteger(string)&&!string.equals("0")){
 				WalletMessage walletMessage=new WalletMessage();
 				walletMessage.setId(CommonUtil.toInteger(CommonUtil.toInteger(string)));
 				//已读
@@ -106,7 +102,8 @@ public class WalletMessageServiceImpl extends BaseServiceImpl<WalletMessageMappe
 	public ServerResponse<Integer> getReadState(Integer wMemberId) throws Exception {
 		log.info(CommonUtil.format("biz接口:getReadState api,params:%s", JsonUtil.toJSONString(wMemberId)));
 		EntityWrapper<WalletMessage> wrapper=new EntityWrapper<WalletMessage>() ;
-		wrapper.where("w_member_id={0}", wMemberId);		
+		wrapper.where("w_member_id={0}", wMemberId);	
+		wrapper.where("state={0}", 0);	
 		Integer total=walletMessageMapper.selectCount(wrapper);
 		if(CommonUtil.isEmpty(total)){
 			total=0;

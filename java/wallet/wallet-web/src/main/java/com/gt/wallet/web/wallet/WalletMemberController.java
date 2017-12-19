@@ -1,4 +1,4 @@
-package com.gt.wallet.web;
+package com.gt.wallet.web.wallet;
 
 
 import java.util.List;
@@ -91,7 +91,7 @@ public class WalletMemberController extends BaseController {
 	 */
 	@ResponseBody
 	@RequestMapping(value="isPassWallet",method=RequestMethod.GET)
-	 @ApiOperation(value="判断商家是否开通多粉钱包", notes="此接口不需要传入参数，但必须登录多粉商家后台,返回值中data表示0 :已开通, 1:未开通",produces="application/json")
+	 @ApiOperation(value="判断商家是否开通多粉钱包(内部接口)", notes="此接口不需要传入参数，但必须登录多粉商家后台,返回值中data表示0 :已开通, 1:未开通",produces="application/json")
 	public ServerResponse<Integer> isPassWallet(HttpServletRequest request){
 		log.info(CommonUtil.format("触发查询多粉会员信息接口"));
 		try {
@@ -107,6 +107,7 @@ public class WalletMemberController extends BaseController {
 				throw new ResponseEntityException(WalletResponseEnums.SYSTEM_ERROR);
 			}
 	}
+	
 	
 	/**
 	 * 开通会员

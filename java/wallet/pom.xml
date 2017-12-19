@@ -254,8 +254,12 @@
 			<artifactId>bcprov-jdk15</artifactId>
 			<version>1.46</version>
 		</dependency>
-
-
+		<!-- 支付宝jar -->
+		<dependency>
+		  <groupId>com.gt.alipay</groupId>
+		  <artifactId>alipay-sdk-java</artifactId>
+		  <version>0.0.1</version>
+		</dependency>
 	</dependencies>
 
 	<build>

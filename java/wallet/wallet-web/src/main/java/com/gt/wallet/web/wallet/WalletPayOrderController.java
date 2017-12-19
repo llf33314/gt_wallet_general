@@ -1,4 +1,4 @@
-package com.gt.wallet.web;
+package com.gt.wallet.web.wallet;
 
 import java.util.Map;
 
@@ -7,7 +7,6 @@ import javax.servlet.http.HttpServletResponse;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -15,6 +14,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.alibaba.fastjson.JSONObject;
 import com.baomidou.mybatisplus.plugins.Page;
+import com.gt.api.util.KeysUtil;
 import com.gt.api.util.httpclient.JsonUtil;
 import com.gt.wallet.base.BaseController;
 import com.gt.wallet.data.api.tonglian.request.TRefundOrder;
@@ -45,7 +45,7 @@ import lombok.extern.slf4j.Slf4j;
  */
 @Controller
 @RequestMapping("/walletPayOrder")
-@Api(value = "walletMember",description="多粉钱包订单")
+@Api(value = "walletPayOrder",description="多粉钱包订单")
 @Slf4j
 public class WalletPayOrderController extends BaseController {
 
@@ -112,10 +112,61 @@ public class WalletPayOrderController extends BaseController {
 			e.printStackTrace();
 			log.error(CommonUtil.format("退款成功异步回调异常：%s,%s", WalletResponseEnums.SYSTEM_ERROR.getCode(),
 					WalletResponseEnums.SYSTEM_ERROR.getDesc()));
-			throw new BusinessException(WalletResponseEnums.SYSTEM_ERROR);
+			throw new ResponseEntityException(WalletResponseEnums.SYSTEM_ERROR);
 		}
 	}
+	
+	
 
+	/**
+	 * 支付下单
+	 * 
+	 * @return
+	 */
+	@RequestMapping(value = "/79B4DE7C/codepay", method = RequestMethod.POST)
+	@ApiOperation(value = "支付下单", notes = "支付下单")
+	@ApiImplicitParams({
+        @ApiImplicitParam(name = "busId",value = "商家id",paramType = "form",dataType = "int",required=true,example="35"),
+        @ApiImplicitParam(name = "bizOrderNo",value = "系统订单号",paramType = "form",dataType = "string",required=true,example="cy123456789")
+        ,
+        @ApiImplicitParam(name = "acct",value = "支付授权码",paramType = "form",dataType = "string",required=true,example="openid或userid(支付宝)")
+        ,
+        @ApiImplicitParam(name = "frontUrl",value = "前台通知地址",paramType = "form",dataType = "string",required=true,defaultValue="http://duofriend.com")
+        ,
+        @ApiImplicitParam(name = "notifyUrl",value = "后台通知地址",paramType = "form",dataType = "string",required=true,defaultValue="http://duofriend.com")
+        ,
+        @ApiImplicitParam(name = "type",value = "支付方式 1：微信 2:支付宝",paramType = "form",dataType = "int",required=true,defaultValue="1")
+        ,
+        @ApiImplicitParam(name = "desc",value = "描述",paramType = "form",dataType = "string",required=true,defaultValue="描述")
+        ,
+        @ApiImplicitParam(name = "takeState",value = "是否可立即提现(1:可取 2:不可取)",paramType = "form",dataType = "string",required=true,defaultValue="1")
+        ,
+        @ApiImplicitParam(name = "model",value = "支付模块",paramType = "form",dataType = "string",required=true,defaultValue="1")
+        ,
+        @ApiImplicitParam(name = "memberId",value = "会员ID",paramType = "form",dataType = "string",required=true,defaultValue="1")
+        ,
+        @ApiImplicitParam(name = "sendUrl",value = "推送路径",paramType = "form",dataType = "string",required=true,defaultValue="1")
+       })
+	public String codepay(HttpServletRequest request, String  obj) {
+		log.info(CommonUtil.format("codepay api,%s", JsonUtil.toJSONString(obj)));
+		try {
+			PayOrder payOrder=null;
+			String  json=KeysUtil.getDesString(obj);
+			payOrder=JsonUtil.parseObject(json, PayOrder.class);
+			ServerResponse<com.alibaba.fastjson.JSONObject> serverResponse=walletPayOrderService.applyDeposit(payOrder);
+			log.info("serverResponse %s",JsonUtil.toJSONString(serverResponse));
+			request.setAttribute("serverResponse", serverResponse);
+			request.setAttribute("payOrder", payOrder);
+		} catch (Exception e) {
+			e.printStackTrace();
+			log.error(CommonUtil.format("codepay api异常：%s,%s", WalletResponseEnums.SYSTEM_ERROR.getCode(),
+					WalletResponseEnums.SYSTEM_ERROR.getDesc()));
+			throw new ResponseEntityException(WalletResponseEnums.SYSTEM_ERROR);
+		}
+		return "";
+	}
+	
+	
 	/**
 	 * 支付下单
 	 * 
@@ -131,29 +182,38 @@ public class WalletPayOrderController extends BaseController {
         ,
         @ApiImplicitParam(name = "frontUrl",value = "前台通知地址",paramType = "form",dataType = "string",required=true,defaultValue="http://duofriend.com")
         ,
-        @ApiImplicitParam(name = "backUrl",value = "后台通知地址",paramType = "form",dataType = "string",required=true,defaultValue="http://duofriend.com")
+        @ApiImplicitParam(name = "notifyUrl",value = "后台通知地址",paramType = "form",dataType = "string",required=true,defaultValue="http://duofriend.com")
         ,
         @ApiImplicitParam(name = "type",value = "支付方式 1：微信 2:支付宝",paramType = "form",dataType = "int",required=true,defaultValue="1")
         ,
         @ApiImplicitParam(name = "desc",value = "描述",paramType = "form",dataType = "string",required=true,defaultValue="描述")
         ,
-        @ApiImplicitParam(name = "type",value = "支付方式 1：微信 2:支付宝",paramType = "form",dataType = "string",required=true,defaultValue="1")
+        @ApiImplicitParam(name = "takeState",value = "是否可立即提现(1:可取 2:不可取)",paramType = "form",dataType = "string",required=true,defaultValue="1")
+        ,
+        @ApiImplicitParam(name = "model",value = "支付模块",paramType = "form",dataType = "string",required=true,defaultValue="1")
+        ,
+        @ApiImplicitParam(name = "memberId",value = "会员ID",paramType = "form",dataType = "string",required=false,defaultValue="1")
+        ,
+        @ApiImplicitParam(name = "sendUrl",value = "推送路径",paramType = "form",dataType = "string",required=false,defaultValue="1")
        })
-	public String applyDeposit(HttpServletRequest request, PayOrder payOrder) {
-		log.info(CommonUtil.format("applyDeposit api,%s", JsonUtil.toJSONString(payOrder)));
+	public String applyDeposit(HttpServletRequest request, String  obj) {
+		log.info(CommonUtil.format("applyDeposit api,%s", JsonUtil.toJSONString(obj)));
 		try {
+			PayOrder payOrder=null;
+			String  json=KeysUtil.getDesString(obj);
+			payOrder=JsonUtil.parseObject(json, PayOrder.class);
 			ServerResponse<com.alibaba.fastjson.JSONObject> serverResponse=walletPayOrderService.applyDeposit(payOrder);
 			log.info("serverResponse %s",JsonUtil.toJSONString(serverResponse));
 			request.setAttribute("serverResponse", serverResponse);
+			request.setAttribute("payOrder", payOrder);
 		} catch (Exception e) {
 			e.printStackTrace();
 			log.error(CommonUtil.format("applyDeposit api异常：%s,%s", WalletResponseEnums.SYSTEM_ERROR.getCode(),
 					WalletResponseEnums.SYSTEM_ERROR.getDesc()));
-			throw new BusinessException(WalletResponseEnums.SYSTEM_ERROR);
+			throw new ResponseEntityException(WalletResponseEnums.SYSTEM_ERROR);
 		}
 		return "";
 	}
-	
 	
 	
 	/**

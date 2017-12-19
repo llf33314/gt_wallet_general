@@ -19,6 +19,7 @@ import com.gt.wallet.base.BaseServiceImpl;
 import com.gt.wallet.constant.WalletLogConstants;
 import com.gt.wallet.data.wallet.request.WalletPasswordSet;
 import com.gt.wallet.dto.ServerResponse;
+import com.gt.wallet.entity.WalletBank;
 import com.gt.wallet.entity.WalletCompany;
 import com.gt.wallet.entity.WalletIndividual;
 import com.gt.wallet.entity.WalletMember;
@@ -28,12 +29,12 @@ import com.gt.wallet.exception.BusinessException;
 import com.gt.wallet.mapper.member.WalletMemberMapper;
 import com.gt.wallet.service.log.WalletApiLogService;
 import com.gt.wallet.service.log.WalletMessageService;
+import com.gt.wallet.service.member.WalletBankService;
 import com.gt.wallet.service.member.WalletCompanyService;
 import com.gt.wallet.service.member.WalletIndividualService;
 import com.gt.wallet.service.member.WalletMemberService;
 import com.gt.wallet.utils.BankUtil;
 import com.gt.wallet.utils.CommonUtil;
-import com.gt.wallet.utils.DateTimeKit;
 import com.gt.wallet.utils.IdCardUtil;
 import com.gt.wallet.utils.MyPageUtil;
 import com.gt.wallet.utils.PhoneUtil;
@@ -68,6 +69,10 @@ public class WalletMemberServiceImpl extends BaseServiceImpl<WalletMemberMapper,
 	
 	@Autowired
 	private WalletMessageService walletMessageService;
+	
+	
+	@Autowired
+	private WalletBankService walletBankService;
 	
 	
 	/**
@@ -147,6 +152,39 @@ public class WalletMemberServiceImpl extends BaseServiceImpl<WalletMemberMapper,
 		}else{
 			return ServerResponse.createBySuccessCodeData( 1);
 		}
+	}
+	
+	@Override
+	public ServerResponse<?> isOpen(Integer busId) throws Exception {
+		log.info(CommonUtil.format("biz接口:判断商家是否开通多粉钱包,请求参数:%s", JsonUtil.toJSONString(busId)));
+		Wrapper<WalletMember> wrapper=new EntityWrapper<WalletMember>() ;
+		wrapper.where("member_id={0}",busId).and("member_class={0}", 1);
+		List<WalletMember> walletMembers=walletMemberMapper.selectList(wrapper);
+		ServerResponse<?> serverResponse=null;
+		if(CommonUtil.isNotEmpty(walletMembers)&&walletMembers.size()>0){
+			WalletMember walletMember=walletMembers.get(0);
+			
+			if(walletMember.getStatus()==3){
+				ServerResponse<WalletBank> bankServerResponse=	null;
+				if(walletMember.getMemberType()==2){//企业
+					bankServerResponse=	walletBankService.getWalletPublicBankByMemberId(walletMember.getId());
+				}else{//个人
+					bankServerResponse=	walletBankService.getWalletSafeBankByMemberId(walletMember.getId());
+				}
+				log.error(CommonUtil.format("bankServerResponse ：%s", JsonUtil.toJSONString(bankServerResponse)));
+				if(!ServerResponse.judgeSuccess(bankServerResponse)||CommonUtil.isEmpty(bankServerResponse.getData())){
+					serverResponse= ServerResponse.createByErrorCode(WalletResponseEnums.MEMBER_BANK_ERROR);
+				}else{
+					serverResponse=ServerResponse.createBySuccess();
+				}
+			}else{
+				log.error(CommonUtil.format("serverResponse ：%s", JsonUtil.toJSONString(serverResponse)));
+				serverResponse= ServerResponse.createByErrorCode(WalletResponseEnums.MEMBER_STATE_ERROR);
+			}
+		}else{
+			serverResponse=ServerResponse.createByErrorCode(WalletResponseEnums.MEMBER_NULL_ERROR);
+		}
+		return serverResponse;
 	}
 
 
@@ -243,7 +281,7 @@ public class WalletMemberServiceImpl extends BaseServiceImpl<WalletMemberMapper,
 			walletMemberMapper.updateById(walletMember);
 		}
 		try {
-			walletMessageService.add(walletMember.getId(), WalletMsgEnums.MSGTYPE_QUOTAREVIEW.getCode(),"用户被锁", walletMember.getId());
+			walletMessageService.add(walletMember.getId(), WalletMsgEnums.MSGTYPE_USERLOCK.getCode(),"用户被锁", walletMember.getId());
 		} catch (Exception e) {
 			log.error("write msg api error");
 			e.printStackTrace();
@@ -265,7 +303,7 @@ public class WalletMemberServiceImpl extends BaseServiceImpl<WalletMemberMapper,
 			walletMemberMapper.updateById(walletMember);
 		}
 		try {
-			walletMessageService.add(walletMember.getId(), WalletMsgEnums.MSGTYPE_QUOTAREVIEW.getCode(),"解锁用户", walletMember.getId());
+			walletMessageService.add(walletMember.getId(), WalletMsgEnums.MSGTYPE_USERUNLOCK.getCode(),"解锁用户", walletMember.getId());
 		} catch (Exception e) {
 			log.error("write msg api error");
 			e.printStackTrace();

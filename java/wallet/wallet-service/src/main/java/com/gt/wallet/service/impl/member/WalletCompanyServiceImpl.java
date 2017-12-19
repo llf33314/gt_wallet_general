@@ -23,7 +23,6 @@ import com.gt.wallet.data.wallet.request.SendMail;
 import com.gt.wallet.data.wallet.request.WalletCompanyAdd;
 import com.gt.wallet.dto.ServerResponse;
 import com.gt.wallet.entity.WalletCompany;
-import com.gt.wallet.entity.WalletIndividual;
 import com.gt.wallet.entity.WalletMember;
 import com.gt.wallet.enums.WalletResponseEnums;
 import com.gt.wallet.exception.BusinessException;

@@ -86,7 +86,33 @@ public enum WalletResponseEnums {
      */
     PWD_ERROR(1014, "两次密码输入不一致" ),
     
-	PAY_SUCCESS(1015, "支付异常，此订单已支付" )
+	PAY_SUCCESS(1015, "支付异常，此订单已支付" ),
+	
+	
+	/**
+	 * 账号状态异常
+	 */
+	MEMBER_STATE_ERROR(1016, "账号状态异常" ),
+	
+	
+	/**
+	 * 账号缺少安全手机
+	 */
+	MEMBER_PHONE_ERROR(1017, "账号缺少安全手机" ),
+	
+	
+	/**
+	 * 账号缺少银行卡
+	 */
+	MEMBER_BANK_ERROR(1018, "账号缺少银行卡" ),
+	
+	
+	/**
+	 * 还没开通多粉钱包
+	 */
+	MEMBER_NULL_ERROR(1019, "还没开通多粉钱包" ),
+	
+	
 	;
 
     private final int    code;

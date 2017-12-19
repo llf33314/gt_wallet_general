@@ -29,6 +29,13 @@ public interface WalletPayOrderService extends BaseService<WalletPayOrder> {
 	ServerResponse<com.alibaba.fastjson.JSONObject> applyDeposit(PayOrder payOrder) throws Exception;
 	
 	/**
+	 * 钱包支付(支付宝微信)
+	 * @param payOrder
+	 * @return
+	 */
+	ServerResponse<com.alibaba.fastjson.JSONObject> codepay(PayOrder payOrder) throws Exception;
+	
+	/**
 	 * 保存订单信息
 	 * @param payOrder
 	 * @return

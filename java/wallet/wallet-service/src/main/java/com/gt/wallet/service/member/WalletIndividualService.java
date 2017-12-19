@@ -1,7 +1,5 @@
 package com.gt.wallet.service.member;
 
-import org.springframework.web.multipart.MultipartFile;
-
 import com.gt.api.bean.session.BusUser;
 import com.gt.wallet.base.BaseService;
 import com.gt.wallet.data.wallet.request.WalletIndividualAdd;

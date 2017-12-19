@@ -45,14 +45,14 @@ public class PayOrder {
 	/**
 	 * 前台通知地址
 	 */
-	@ApiModelProperty(name="frontUrl",notes="前台通知地址",required=true)
-	private String frontUrl;
+	@ApiModelProperty(name="returnUrl",notes="前台通知地址",required=true)
+	private String returnUrl;
 	
 	/**
 	 * 后台通知地址
 	 */
-	@ApiModelProperty(name="backUrl",notes="后台通知地址",required=true)
-	private String backUrl;
+	@ApiModelProperty(name="notifyUrl",notes="后台通知地址",required=true)
+	private String notifyUrl;
 	
 	/**
 	 * 支付方式 1：微信 2:支付宝
@@ -69,7 +69,7 @@ public class PayOrder {
 	/**
 	 * 提交订单号
 	 */
-	@ApiModelProperty(name="submitNo",notes="提交订单号",required=true)
+	@ApiModelProperty(name="submitNo",notes="提交订单号",required=true,hidden=false)
 	private String submitNo;
 
 	/**
@@ -77,5 +77,27 @@ public class PayOrder {
 	 */
 	@ApiModelProperty(name="takeState",notes="是否可立即提现(1:可取 2:不可取)",required=true)
 	private Integer takeState;
+	
+	/**
+	 * 支付模块
+	 */
+	@ApiModelProperty(name="model",notes="支付模块",required=false)
+	private Integer model;
+	
+	
+
+	/**
+	 * 会员ID
+	 */
+	@ApiModelProperty(name="memberId",notes="会员ID",required=false)
+	private Integer memberId;
+	
+	
+	
+	/**
+	 * 推送路径
+	 */
+	@ApiModelProperty(name="sendUrl",notes="推送路径",required=false)
+	private String sendUrl;
 	
 }

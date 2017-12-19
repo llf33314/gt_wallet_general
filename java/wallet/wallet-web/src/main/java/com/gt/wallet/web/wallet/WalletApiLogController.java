@@ -1,4 +1,4 @@
-package com.gt.wallet.web;
+package com.gt.wallet.web.wallet;
 
 
 import org.springframework.beans.factory.annotation.Autowired;

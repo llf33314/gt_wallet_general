@@ -118,6 +118,17 @@ public class WalletWebConfig {
 	private static String yunRefundSuccessNotifyUrl;
 	
 	
+	/**
+	 * 网站应用appid
+	 */
+	private static String appid;
+	
+	/**
+	 * 网站应用密钥
+	 */
+	private static String appSecret;
+	
+	
 //	 // 注入配置属性 根据环境配置切换
 	public static String getDomain() {
 		return domain;
@@ -269,6 +280,22 @@ public class WalletWebConfig {
 
 	public static void setYunRefundSuccessNotifyUrl(String yunRefundSuccessNotifyUrl) {
 		WalletWebConfig.yunRefundSuccessNotifyUrl = yunRefundSuccessNotifyUrl;
+	}
+
+	public static String getAppid() {
+		return appid;
+	}
+
+	public static void setAppid(String appid) {
+		WalletWebConfig.appid = appid;
+	}
+
+	public static String getAppSecret() {
+		return appSecret;
+	}
+
+	public static void setAppSecret(String appSecret) {
+		WalletWebConfig.appSecret = appSecret;
 	}
 
 

@@ -8,7 +8,6 @@ import com.gt.wallet.base.BaseService;
 import com.gt.wallet.data.wallet.request.WalletPasswordSet;
 import com.gt.wallet.dto.ServerResponse;
 import com.gt.wallet.entity.WalletMember;
-import com.gt.wallet.entity.WalletQuota;
 import com.gt.wallet.utils.MyPageUtil;
 
 /**
@@ -42,6 +41,14 @@ public interface WalletMemberService extends BaseService<WalletMember> {
 	 * @return 0 :已开通, 1:未开通
 	 */
 	public ServerResponse<Integer> isPassWallet(Integer busId) throws Exception;
+	
+	
+	/**
+	 * 判断商家是否开通多粉钱包
+	 * @param budId 商家id
+	 * @return 0 :已开通, 1:未开通
+	 */
+	public ServerResponse<?> isOpen(Integer busId) throws Exception;
 	
 	
 	/**

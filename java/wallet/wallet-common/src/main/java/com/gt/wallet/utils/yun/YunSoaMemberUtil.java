@@ -743,11 +743,43 @@ public class YunSoaMemberUtil {
 				weixin.put("amount", payOrder.getAmount()*100);
 				payMethod.put("WECHAT_PUBLIC",weixin);
 			}else if(payOrder.getType()==2){
-				//微信js支付
+				//支付宝支付
 				JSONObject alipay = new JSONObject();
 				alipay.put("acct", payOrder.getAcct());
 				alipay.put("amount", payOrder.getAmount()*100);
 				payMethod.put("ALIPAY_SERVICE",alipay);
+			}else if(payOrder.getType()==3){
+				//微信H5
+				JSONObject alipay = new JSONObject();
+				alipay.put("limitPay","no_credit");
+				alipay.put("amount", payOrder.getAmount()*100);
+				payMethod.put("WECHATPAY_H5",alipay);
+			}else if(payOrder.getType()==4){
+				//微信扫码支付(正扫)
+				JSONObject alipay = new JSONObject();
+				alipay.put("payType","W02");
+				alipay.put("amount", payOrder.getAmount()*100);
+				payMethod.put("SCAN_WEIXIN",alipay);
+			}else if(payOrder.getType()==5){
+				//支付宝扫码支付(正扫)
+				JSONObject alipay = new JSONObject();
+				alipay.put("payType","A01");
+				alipay.put("amount", payOrder.getAmount()*100);
+				payMethod.put("SCAN_ALIPAY",alipay);
+			}else if(payOrder.getType()==6){
+				//微信刷卡支付(被扫)
+				JSONObject alipay = new JSONObject();
+				alipay.put("payType","A01");
+				alipay.put("amount", payOrder.getAmount()*100);
+				alipay.put("authcode", payOrder.getAcct());
+				payMethod.put("SCAN_ALIPAY",alipay);
+			}else if(payOrder.getType()==7){
+				//支付宝刷卡支付(被扫)
+				JSONObject alipay = new JSONObject();
+				alipay.put("payType","A01");
+				alipay.put("amount", payOrder.getAmount()*100);
+				alipay.put("authcode", payOrder.getAcct());
+				payMethod.put("SCAN_ALIPAY",alipay);
 			}
 //			payMethod.put("GATEWAY", gatewayPay);
 //			payMethod.put("DAIKOU", daikouPay);

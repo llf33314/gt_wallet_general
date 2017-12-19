@@ -64,6 +64,7 @@ public class WalletBankServiceImpl extends BaseServiceImpl<WalletBankMapper, Wal
 		}
 		EntityWrapper<WalletBank> wrapper=new EntityWrapper<WalletBank>();
 		wrapper.where("w_member_id={0}", wmemberId);
+		wrapper.where("status={0}", 1);
 		List<WalletBank> list=	walletBankMapper.selectList(wrapper);
 		if(CommonUtil.isNotEmpty(list)&&list.size()>0){
 			return ServerResponse.createBySuccessCodeData(list);
@@ -272,5 +273,26 @@ public class WalletBankServiceImpl extends BaseServiceImpl<WalletBankMapper, Wal
 	public ServerResponse<TCardBin> getBankCardBin(String bankCardNo) {
 		ServerResponse<TCardBin> serverResponse=YunSoaMemberUtil.getBankCardBin(bankCardNo);
 		return serverResponse;
+	}
+
+	@Override
+	public ServerResponse<WalletBank> getWalletSafeBankByMemberId(Integer wmemberId) {
+		WalletBank params=new WalletBank();
+		params.setWMemberId(wmemberId);
+		params.setStatus(0);
+		params.setCardClass(1);
+		params.setCardState(1);
+		WalletBank walletBank=walletBankMapper.selectOne(params);
+		return ServerResponse.createBySuccessCodeData(walletBank);
+	}
+
+	@Override
+	public ServerResponse<WalletBank> getWalletPublicBankByMemberId(Integer wmemberId) {
+		WalletBank params=new WalletBank();
+		params.setWMemberId(wmemberId);
+		params.setStatus(0);
+		params.setCardClass(2);
+		WalletBank walletBank=walletBankMapper.selectOne(params);
+		return ServerResponse.createBySuccessCodeData(walletBank);
 	}
 }
