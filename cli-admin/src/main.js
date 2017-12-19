@@ -22,6 +22,8 @@ import {
 } from './assets/js/index'
 Vue.prototype.DateFormat = DateFormat
 Vue.prototype.isPhone = window.isPhone
+import 'gt-js/dist/gt.min.js'
+
 // import is_js from 'is_js'
 // Vue.prototype.is = is_js
 /* eslint-disable no-new */

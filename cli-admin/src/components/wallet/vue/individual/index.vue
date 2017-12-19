@@ -1,18 +1,18 @@
 <style lang="less">
-  .wallet-individual-index {
-    margin-bottom: 50px;
-    overflow: hidden;
-    .title-dps {
-      display: inline-block;
-      width: 200px;
-    }
-    .ellipsis {
-      margin-right: 20px;
-      overflow: hidden;
-      text-overflow: ellipsis;
-      white-space: nowrap;
-    }
+.wallet-individual-index {
+  margin-bottom: 50px;
+  overflow: hidden;
+  .title-dps {
+    display: inline-block;
+    width: 200px;
   }
+  .ellipsis {
+    margin-right: 20px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+}
 </style>
 <template>
   <section class="wallet-index wallet-individual-index">
@@ -59,10 +59,13 @@
           </div>
         </div>
       </div>
-      <el-tabs v-model="activeName" type="card" style="margin-top: 40px;margin-bottom: 20px;">
-        <el-tab-pane label="交易记录" name="record"></el-tab-pane>
-        <el-tab-pane label="消息中心" name="news"></el-tab-pane>
-      </el-tabs>
+      <div class="wallet-company-news">
+        <el-tabs v-model="activeName" type="card" style="margin-top: 40px;margin-bottom: 20px;">
+          <el-tab-pane label="交易记录" name="record"></el-tab-pane>
+          <el-tab-pane label="消息中心" name="news"></el-tab-pane>
+        </el-tabs>
+        <span v-if="activeName!='news'" class="tips" style="top: 4px;" v-text="readstate">12</span>
+      </div>
       <router-view></router-view>
     </div>
 
@@ -70,86 +73,108 @@
   </section>
 </template>
 <script>
-  export default {
+export default {
 
-    data() {
-      return {
-        activeName: 'record',
-        IndexStatistics: {},
-        walletIndividual: {},
-      }
-    },
-    mounted() {
-      this.findMember()
-      this.getIndexStatistics()
-      console.log(this.$route.name)
-      if (this.$route.name == 'wallet-record') {
-        this.activeName = 'record'
-        this.$router.push({
-          path: '/wallet/individual/record'
-        })
-      } else {
-        this.activeName = 'news'
-        this.$router.push({
-          path: '/wallet/individual/news'
-        })
-      }
-    },
-    watch: {
-      activeName() {
-        this.$router.push({
-          path: '/wallet/individual/' + this.activeName
-        })
-      }
-    },
-    methods: {
-      //查询多粉会员信息
-      findMember() {
-        $.ajax({
-          url: this.DFPAYDOMAIN + '/walletMember/findMember',
-          type: 'GET',
-          dataType: 'JSON',
-          success: (res) => {
-            console.log(res, '查询多粉会员信息')
-            if (res.code == 0) {
-              this.walletIndividual = res.data.walletIndividual
-              window.sessionStorage.walletId = res.data.id
-
-              this.$store.commit('getWalletId', res.data.id)
-            } else {
-              this.$message.error(res.msg)
-            }
-          }
-        })
-      },
-      //企业信息
-      goToMsg() {
-        this.$router.push({
-          path: '/wallet/individual/messages'
-        })
-      },
-      //提现
-      goToDrawCash() {
-        this.$router.push({
-          path: '/wallet/individual/drawcash'
-        })
-      },
-      //获取首页总计数据
-      getIndexStatistics() {
-        $.ajax({
-          url: this.DFPAYDOMAIN + '/walletIndexStatistics/getIndexStatistics',
-          type: 'get',
-          success: (res) => {
-            console.log(res, "获取首页总计数据")
-            if (res.code == 0) {
-              this.IndexStatistics = res.data;
-            } else {
-              this.$message.error(res.msg);
-            }
-          }
-        })
-      },
+  data() {
+    return {
+      activeName: 'record',
+      IndexStatistics: {},
+      walletIndividual: {},
+      readstate: 0
     }
+  },
+  mounted() {
+    this.findMember()
+    this.getIndexStatistics()
+    console.log(this.$route.name)
+    if (this.$route.name == 'wallet-record') {
+      this.activeName = 'record'
+      this.$router.push({
+        path: '/wallet/individual/record'
+      })
+    } else {
+      this.activeName = 'news'
+      this.$router.push({
+        path: '/wallet/individual/news'
+      })
+    }
+    this.getReadState()
+  },
+  watch: {
+    activeName() {
+      this.$router.push({
+        path: '/wallet/individual/' + this.activeName
+      })
+      this.getReadState()
+    }
+  },
+  methods: {
+    //获取未读记录数
+    getReadState() {
+      $.ajax({
+        url: this.DFPAYDOMAIN + "/walletMessage/79B4DE7C/getReadState",
+        type: "POST",
+        dataType: "JSON",
+        data: {
+          wMemberId: window.sessionStorage.walletId
+        },
+        success: res => {
+          console.log(res, "获取未读记录数");
+          if (res.code == 0) {
+            this.readstate = res.data;
+          } else {
+            this.$message.error(res.msg);
+          }
+        }
+      });
+    },
+    //查询多粉会员信息
+    findMember() {
+      $.ajax({
+        url: this.DFPAYDOMAIN + '/walletMember/findMember',
+        type: 'GET',
+        dataType: 'JSON',
+        success: (res) => {
+          console.log(res, '查询多粉会员信息')
+          if (res.code == 0) {
+            this.walletIndividual = res.data.walletIndividual
+            window.sessionStorage.walletId = res.data.id
+
+            this.$store.commit('getWalletId', res.data.id)
+          } else {
+            this.$message.error(res.msg)
+          }
+        }
+      })
+    },
+    //企业信息
+    goToMsg() {
+      this.$router.push({
+        path: '/wallet/individual/messages'
+      })
+    },
+    //提现
+    goToDrawCash() {
+      this.$router.push({
+        path: '/wallet/individual/drawcash'
+      })
+    },
+    //获取首页总计数据
+    getIndexStatistics() {
+      $.ajax({
+        url: this.DFPAYDOMAIN + '/walletIndexStatistics/getIndexStatistics',
+        type: 'get',
+        success: (res) => {
+          console.log(res, "获取首页总计数据")
+          if (res.code == 0) {
+            this.IndexStatistics = res.data;
+          } else {
+            this.$message.error(res.msg);
+          }
+        }
+      })
+    },
   }
+}
 
 </script>

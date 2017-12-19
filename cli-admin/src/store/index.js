@@ -9,6 +9,7 @@ const store = new Vuex.Store({
   },
   mutations: {
     getWalletId(state, data) {
+      console.log(data,'*****')
       state.wallet.id = data
     }
   }

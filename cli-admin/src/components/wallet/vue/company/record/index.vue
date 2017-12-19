@@ -29,7 +29,7 @@
         </el-table-column>
         <el-table-column prop="fee" label="交易手续费用（元）" align="center">
           <template slot-scope="scope">
-            <span style="color:#F56C6C">+{{scope.row.fee}}</span>
+            <span style="color:#F56C6C">-{{scope.row.fee}}</span>
           </template>
         </el-table-column>
         <el-table-column label="到账金额（元）" show-overflow-tooltip align="center">
