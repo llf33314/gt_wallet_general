@@ -28,6 +28,7 @@ import com.gt.wallet.exception.ResponseEntityException;
 import com.gt.wallet.service.order.WalletPayOrderService;
 import com.gt.wallet.utils.CommonUtil;
 import com.gt.wallet.utils.MyPageUtil;
+import com.gt.wallet.utils.WalletWebConfig;
 
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiImplicitParam;
@@ -209,15 +210,25 @@ public class WalletPayOrderController extends BaseController {
 			payOrder.setAcct(acct);
 			ServerResponse<com.alibaba.fastjson.JSONObject> serverResponse=walletPayOrderService.applyDeposit(payOrder);
 			log.info("serverResponse %s",JsonUtil.toJSONString(serverResponse));
-			request.setAttribute("serverResponse", serverResponse);
+			if(serverResponse.getCode()!=0){//返回异常
+				throw new ResponseEntityException(serverResponse.getCode(),serverResponse.getMsg());
+			}
+			request.setAttribute("data", serverResponse.getData());
 			request.setAttribute("payOrder", payOrder);
+			request.setAttribute("homeDomain", WalletWebConfig.getHomeUrl());
+			if(payOrder.getType()==1){
+				return "page/wxpay";
+			}else if(payOrder.getType()==2){
+				return "page/alipay";
+			}else{//H5
+				return "page/alipay";
+			}
 		} catch (Exception e) {
 			e.printStackTrace();
 			log.error(CommonUtil.format("applyDeposit api error：%s,%s", WalletResponseEnums.SYSTEM_ERROR.getCode(),
 					WalletResponseEnums.SYSTEM_ERROR.getDesc()));
 			throw new ResponseEntityException(WalletResponseEnums.SYSTEM_ERROR);
 		}
-		return "";
 	}
 	
 	
