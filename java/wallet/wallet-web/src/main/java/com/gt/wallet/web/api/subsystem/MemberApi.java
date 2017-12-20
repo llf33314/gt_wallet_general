@@ -3,6 +3,7 @@ package com.gt.wallet.web.api.subsystem;
 import javax.servlet.http.HttpServletRequest;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
@@ -43,7 +44,7 @@ public class MemberApi extends BaseController{
 	@ResponseBody
 	@RequestMapping(value="/79B4DE7C/open",method=RequestMethod.POST)
 	 @ApiOperation(value="判断商家是否开通多粉钱包(提供给各erp系统调用)", notes="reqdata：为商家id",produces="application/json")
-	public ServerResponse<?> is0pen(HttpServletRequest request,RequestUtils<Integer> requestUtils ){
+	public ServerResponse<?> is0pen(HttpServletRequest request,@RequestBody RequestUtils<Integer> requestUtils ){
 		log.info(CommonUtil.format("is0pen api params:%s",JsonUtil.toJSONString(requestUtils)));
 		try {
 			String ua = request.getHeader("user-agent")
