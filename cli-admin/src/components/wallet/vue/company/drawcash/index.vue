@@ -176,7 +176,8 @@
           </p>
         </el-form-item>
         <el-form-item>
-          <el-button type="primary" @click="submitForm('ruleForm')" :loading="loading">提交</el-button>
+          <el-button type="primary" @click="submitForm('ruleForm')" :loading="loading">提现</el-button>
+          <el-button onclick="window.history.go(-1)">返回</el-button>
         </el-form-item>
       </el-form>
       <div class="public-c333 bottom-dps">
@@ -188,7 +189,7 @@
         <p>答：1-3个工作日。</p>
       </div>
     </div>
-    <el-dialog title="提现短信验证" :visible.sync="dialogApply2" :close-on-click-modal="false" :close-on-press-escape="false" :show-close="false" custom-class="wallet-drawcash-dialog">
+    <el-dialog title="提现短信验证" :visible.sync="dialogApply2" @close="loading2=false" :close-on-click-modal="false" :close-on-press-escape="false" :show-close="false" custom-class="wallet-drawcash-dialog">
       <el-form :model="ruleForm2" :rules="rules2" ref="ruleForm2" label-width="155px" class="demo-ruleForm">
         <el-form-item label="短信验证码：" prop="verificationCode">
           <el-input v-model="ruleForm2.verificationCode" placeholder="请输入手机短信验证码"></el-input>
@@ -199,7 +200,7 @@
       </el-form>
     </el-dialog>
 
-    <el-dialog title="申请提额" :visible.sync="dialogApply" custom-class="wallet-drawcash-dialog">
+    <el-dialog title="申请提额" :visible.sync="dialogApply" custom-class="wallet-drawcash-dialog" @close="loading3=false">
       <el-form :model="ruleForm3" :rules="rules3" ref="ruleForm3" label-width="155px" class="demo-ruleForm">
         <el-form-item label="银行卡额度：">
           <span style="color:#ff4949" v-text="withdrawQuota">100,000</span>元
@@ -217,7 +218,7 @@
       </el-form>
     </el-dialog>
 
-    <el-dialog title="添加个人账户" :visible.sync="dialogApply4" custom-class="wallet-drawcash-dialog">
+    <el-dialog title="添加个人账户" :visible.sync="dialogApply4" custom-class="wallet-drawcash-dialog" @close="loading4=false">
       <el-form :model="ruleForm4" :rules="rules4" ref="ruleForm4" label-width="125px" class="demo-ruleForm">
         <el-form-item label="法人姓名：">
           <span v-text="legalName">法人姓名</span>
@@ -238,7 +239,7 @@
         </el-form-item>
       </el-form>
     </el-dialog>
-    <el-dialog title="确认绑定银行卡" :close-on-click-modal="false" :close-on-press-escape="false" :show-close="false" :visible.sync="bindBankCardDialog" custom-class="wallet-drawcash-dialog">
+    <el-dialog title="确认绑定银行卡" :close-on-click-modal="false" :close-on-press-escape="false" @close="loading5=false" :show-close="false" :visible.sync="bindBankCardDialog" custom-class="wallet-drawcash-dialog">
       <el-form :model="ruleForm5" :rules="rules5" ref="ruleForm5" label-width="125px" class="demo-ruleForm">
         <el-form-item label="短信验证：" prop="verificationCode">
           <el-input v-model="ruleForm5.verificationCode" placeholder="请输入手机验证码" style="width:318px;"></el-input>
@@ -421,7 +422,8 @@ export default {
           trigger: 'blur'
         }],
       },
-      loading5: false
+      loading5: false,
+      wMemberId: ''
     }
   },
   watch: {
@@ -438,16 +440,7 @@ export default {
   methods: {
     //申请额度提交
     walletQuotaAdd() {
-      // this.$message({
-      //   message: 666,
-      //   type: 'success',
-      //   duration: 2000,
-      //   onClose: () => {
-      //     this.dialogApply = false
-      //   }
-      // });
 
-      console.log(this.ruleForm3, 'this.ruleForm3')
       $.ajax({
         url: this.DFPAYDOMAIN + '/walletQuota/add',
         type: 'POST',
@@ -484,17 +477,7 @@ export default {
     },
     //短信验证提交
     confirm() {
-      // console.log(this.ruleForm2, 'this.ruleForm2')
-      // this.$message({
-      //   message: '6666',
-      //   type: 'success',
-      //   duration: 2000,
-      //   onClose: () => {
-      //     this.getTotal()
-      //     this.findMember()
-      //     this.dialogApply2 = false
-      //   }
-      // });
+
       $.ajax({
         url: this.DFPAYDOMAIN + '/walletMoney/confirm',
         type: 'POST',
@@ -544,7 +527,7 @@ export default {
             this.ruleForm3.wMemberId = res.data.id
             this.ruleForm4.memberId = res.data.id
             this.ruleForm4.bankName = res.data.walletCompany.legalName
-
+            this.wMemberId = res.data.id
             this.withdrawQuota = res.data.withdrawQuota
             this.companyName = res.data.walletCompany.companyName
             this.legalName = res.data.walletCompany.legalName
@@ -567,8 +550,7 @@ export default {
     },
     //提现(成功后会返回订单id),支付确认时需要传递
     withdrawApply() {
-      // console.log(this.ruleForm, 'this.ruleForm')
-      // this.ruleForm2.id = 123
+
       this.dialogApply2 = true
       $.ajax({
         url: this.DFPAYDOMAIN + '/walletMoney/withdrawApply',
@@ -593,7 +575,7 @@ export default {
         type: 'POST',
         dataType: 'JSON',
         data: {
-          wMemberId: 33
+          wMemberId: this.wMemberId
         },
         success: res => {
           console.log(res, '获取余额')
@@ -612,7 +594,7 @@ export default {
         type: 'GET',
         dataType: 'JSON',
         data: {
-          wmemberId: 33
+          wmemberId: this.wMemberId
         },
         success: res => {
           console.log(res)
@@ -637,11 +619,7 @@ export default {
       this.$refs[formName].validate((valid) => {
         if (valid) {
           this.loading4 = true
-          //成功fn
-
-          this.bindBankCardDialog = true
-          this.bindBankCardParams.id = res.data || 0
-          //
+          this.ruleForm4.bankName = this.legalName
           $.ajax({
             url: this.DFPAYDOMAIN + '/addBank',
             type: 'POST',
@@ -669,13 +647,6 @@ export default {
       this.$refs[formName].validate((valid) => {
         if (valid) {
           this.loading5 = true
-          //成功fn
-          this.getTotal()
-          this.getWalletBanksByMemberId()
-          this.findMember()
-          this.bindBankCardDialog = false
-          this.dialogApply4 = false
-          //
           $.ajax({
             url: this.DFPAYDOMAIN + '/bindBankCard',
             type: 'POST',

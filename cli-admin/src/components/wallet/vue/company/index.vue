@@ -13,6 +13,24 @@
     white-space: nowrap;
   }
 }
+.wallet-company-news {
+  position: relative;
+  .tips {
+    top: -72px;
+    left: 173px;
+    position: absolute;
+    background-color: #e91e63;
+    border-radius: 50%;
+    font-size: 12px;
+    color: #fff;
+    padding: 1px;
+    z-index: 2;
+    min-width: 14px;
+    min-height: 10px;
+    display: inline-block;
+    text-align: center;
+  }
+}
 </style>
 <template>
   <section class="wallet-index wallet-individual-index">
@@ -66,7 +84,7 @@
           <el-tab-pane label="交易记录" name="record"></el-tab-pane>
           <el-tab-pane label="消息中心" name="news"></el-tab-pane>
         </el-tabs>
-        <span v-if="activeName!='news'" class="tips" style="top: 4px;" v-text="readstate">12</span>
+        <span v-show="activeName!='news'" class="tips" style="top: 4px;" v-text="readstate">12</span>
       </div>
 
       <router-view></router-view>
@@ -125,7 +143,7 @@ export default {
         type: "POST",
         dataType: "JSON",
         data: {
-          wMemberId:window.sessionStorage.walletId
+          wMemberId: window.sessionStorage.walletId
         },
         success: res => {
           console.log(res, "获取未读记录数");

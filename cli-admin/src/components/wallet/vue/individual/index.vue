@@ -13,6 +13,24 @@
     white-space: nowrap;
   }
 }
+.wallet-company-news {
+  position: relative;
+  .tips {
+    top: -72px;
+    left: 173px;
+    position: absolute;
+    background-color: #e91e63;
+    border-radius: 50%;
+    font-size: 12px;
+    color: #fff;
+    padding: 1px;
+    z-index: 2;
+    min-width: 14px;
+    min-height: 10px;
+    display: inline-block;
+    text-align: center;
+  }
+}
 </style>
 <template>
   <section class="wallet-index wallet-individual-index">
