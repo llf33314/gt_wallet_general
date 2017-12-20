@@ -27,7 +27,7 @@ import lombok.extern.slf4j.Slf4j;
 * @version 创建时间：2017年12月18日 上午11:32:51 
 * 类说明 
 */
-@RequestMapping("8A5DA52E/memberApi/6F6D9AD2/79B4DE7C/")
+@RequestMapping("8A5DA52E/memberApi/")
 @Slf4j
 @RestController
 @Api(value = "memberApi",description="多粉会员对外api ")  
