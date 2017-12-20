@@ -18,9 +18,12 @@ import com.alipay.api.request.AlipayUserInfoShareRequest;
 import com.alipay.api.response.AlipaySystemOauthTokenResponse;
 import com.alipay.api.response.AlipayUserInfoShareResponse;
 import com.gt.wallet.constant.alipay.AlipayServiceEnvConstants;
+import com.gt.wallet.utils.CommonUtil;
+import com.gt.wallet.utils.WalletWebConfig;
 import com.gt.wallet.utils.alipay.AlipayAPIClientFactory;
 import com.gt.wallet.utils.alipay.RequestUtil;
 
+import io.swagger.annotations.Api;
 import lombok.extern.slf4j.Slf4j;
 
 /**
@@ -30,11 +33,18 @@ import lombok.extern.slf4j.Slf4j;
 @Slf4j
 @Controller
 @RequestMapping("alipayAuth")
+@Api(value="alipayAuth",description="支付宝授权 ",hidden=true)
 public class AuthContrller {
 
 	@RequestMapping(value="79B4DE7C/auth",method=RequestMethod.POST)
-	protected void auth(HttpServletRequest request, HttpServletResponse response)
+	public String auth(HttpServletRequest request, HttpServletResponse response)
 			throws ServletException, IOException {
+		String redirect_uri=WalletWebConfig.getDomain()+"alipayAuth/79B4DE7C/redirect_uri";
+		return CommonUtil.format("redirect:https://openauth.alipay.com/oauth2/publicAppAuthorize.htm?app_id=%s&scope=%s&redirect_uri=%s&state=%s", AlipayServiceEnvConstants.APP_ID,"auth_user",redirect_uri,System.currentTimeMillis());
+	}
+	
+	@RequestMapping(value="79B4DE7C/redirect_uri",method=RequestMethod.GET)
+	public void  redirect_uri(HttpServletRequest request, HttpServletResponse response)throws ServletException, IOException {
 		// 1. 解析请求参数
 		Map<String, String> params = RequestUtil.getRequestParams(request);
 		// 2. 获得authCode
@@ -78,5 +88,4 @@ public class AuthContrller {
 			alipayApiException.printStackTrace();
 		}
 	}
-
 }

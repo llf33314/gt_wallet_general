@@ -22,6 +22,7 @@ import com.gt.wallet.utils.alipay.Dispatcher;
 import com.gt.wallet.utils.alipay.RequestUtil;
 import com.gt.wallet.utils.alipay.executor.ActionExecutor;
 
+import io.swagger.annotations.Api;
 import lombok.extern.slf4j.Slf4j;
 
 /**
@@ -30,7 +31,8 @@ import lombok.extern.slf4j.Slf4j;
  */
 @Slf4j
 @Controller
-@RequestMapping("alipGateway")
+@RequestMapping(value="alipGateway")
+@Api(value="alipGateway",description="支付宝网关 ")
 public class GatewayController {
 
 	@RequestMapping(value="79B4DE7C/gateway",method={RequestMethod.POST,RequestMethod.HEAD})
