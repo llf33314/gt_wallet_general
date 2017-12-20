@@ -44,7 +44,7 @@ public class AuthContrller {
 		log.info(" start auth api  params:%s"+obj);
 		String redirect_uri=CommonUtil.urlEncode(WalletWebConfig.getDomain()+"/alipayAuth/79B4DE7C/redirect_uri");
 		//scope 接口权限值，目前只支持auth_user和auth_base两个值
-		String url= CommonUtil.format("https://openauth.alipay.com/oauth2/publicAppAuthorize.htm?app_id=%s&scope=%s&state=%s&redirect_uri=%s", AlipayServiceEnvConstants.APP_ID,"auth_base",System.currentTimeMillis(),redirect_uri);
+		String url= CommonUtil.format("https://openauth.alipay.com/oauth2/publicAppAuthorize.htm?app_id=%s&scope=%s&state=%s&redirect_uri=%s", AlipayServiceEnvConstants.APP_ID,"auth_base",obj,redirect_uri);
 		 response.sendRedirect(url);
 	}
 	
