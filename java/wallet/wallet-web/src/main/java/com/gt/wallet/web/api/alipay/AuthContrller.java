@@ -36,11 +36,12 @@ import lombok.extern.slf4j.Slf4j;
 @Api(value="alipayAuth",description="支付宝授权 ",hidden=true)
 public class AuthContrller {
 
-	@RequestMapping(value="79B4DE7C/auth",method=RequestMethod.POST)
-	public String auth(HttpServletRequest request, HttpServletResponse response)
+	@RequestMapping(value="79B4DE7C/auth",method=RequestMethod.GET)
+	public void auth(HttpServletRequest request, HttpServletResponse response)
 			throws ServletException, IOException {
-		String redirect_uri=WalletWebConfig.getDomain()+"alipayAuth/79B4DE7C/redirect_uri";
-		return CommonUtil.format("redirect:https://openauth.alipay.com/oauth2/publicAppAuthorize.htm?app_id=%s&scope=%s&redirect_uri=%s&state=%s", AlipayServiceEnvConstants.APP_ID,"auth_user",redirect_uri,System.currentTimeMillis());
+		String redirect_uri=WalletWebConfig.getDomain()+"/alipayAuth/79B4DE7C/redirect_uri";
+		String url= CommonUtil.format("https://openauth.alipay.com/oauth2/publicAppAuthorize.htm?app_id=%s&scope=%s&redirect_uri=%s&state=%s", AlipayServiceEnvConstants.APP_ID,"auth_user",redirect_uri,System.currentTimeMillis());
+		 response.sendRedirect(url);
 	}
 	
 	@RequestMapping(value="79B4DE7C/redirect_uri",method=RequestMethod.GET)
