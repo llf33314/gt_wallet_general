@@ -14,7 +14,6 @@ import com.gt.wallet.base.BaseController;
 import com.gt.wallet.data.wallet.request.CompanyUploadFile;
 import com.gt.wallet.data.wallet.request.WalletCompanyAdd;
 import com.gt.wallet.dto.ServerResponse;
-import com.gt.wallet.entity.WalletCompany;
 import com.gt.wallet.enums.WalletResponseEnums;
 import com.gt.wallet.exception.BusinessException;
 import com.gt.wallet.exception.ResponseEntityException;
@@ -84,7 +83,7 @@ public class WalletCompanyController extends BaseController {
         // path, query, body, header, form
 	})
 	public ServerResponse<?> save(HttpServletRequest request,WalletCompanyAdd walletCompanyAdd){
-		log.info(CommonUtil.format("触发新增企业会员信息接口,walletCompanyAdd:%s",JsonUtil.toJSONString(walletCompanyAdd)));
+		log.info(CommonUtil.format("start view save api params :%s",JsonUtil.toJSONString(walletCompanyAdd)));
 		try {
 			ServerResponse<?> serverResponse=null;
 			serverResponse=walletCompanyService.save(walletCompanyAdd,CommonUtil.getLoginUser(request));
@@ -94,10 +93,11 @@ public class WalletCompanyController extends BaseController {
 			log.info(CommonUtil.format("serverResponse:%s",JsonUtil.toJSONString(serverResponse)));
 			return serverResponse;
 			} catch ( BusinessException e) {
+				log.error(CommonUtil.format("view save api fail：%s,%s",e.getCode(),e.getMessage()));
 				throw new ResponseEntityException(e.getCode(),e.getMessage());
 			} catch ( Exception e) {
 				e.printStackTrace();
-				log.error(CommonUtil.format("新增企业会员信息：%s,%s",WalletResponseEnums.SYSTEM_ERROR.getCode(),WalletResponseEnums.SYSTEM_ERROR.getDesc()));
+				log.error(CommonUtil.format("view save api fail：%s,%s",WalletResponseEnums.SYSTEM_ERROR.getCode(),WalletResponseEnums.SYSTEM_ERROR.getDesc()));
 				throw new ResponseEntityException(WalletResponseEnums.SYSTEM_ERROR);
 			}
 	}
@@ -122,16 +122,17 @@ public class WalletCompanyController extends BaseController {
         // path, query, body, header, form
 	})
 	public ServerResponse<?> uploadFile(HttpServletRequest request,CompanyUploadFile companyUploadFile){
-		log.info(CommonUtil.format("uploadFile api ,companyUploadFile:%s",JsonUtil.toJSONString(companyUploadFile)));
+		log.info(CommonUtil.format("start view uploadFile api ,params:%s",JsonUtil.toJSONString(companyUploadFile)));
 		try {
 			ServerResponse<?> serverResponse=walletCompanyService.uploadFile(companyUploadFile,CommonUtil.getLoginUser(request));
 			log.info(CommonUtil.format("serverResponse:%s",JsonUtil.toJSONString(serverResponse)));
 			return serverResponse;
 			} catch ( BusinessException e) {
-				throw new ResponseEntityException(e.getMessage());
+				log.error(CommonUtil.format("view uploadFile api fail：%s,%s",e.getCode(),e.getMessage()));
+				throw new ResponseEntityException(e.getCode(),e.getMessage());
 			} catch ( Exception e) {
 				e.printStackTrace();
-				log.error(CommonUtil.format("uploadFile api：%s,%s",WalletResponseEnums.SYSTEM_ERROR.getCode(),WalletResponseEnums.SYSTEM_ERROR.getDesc()));
+				log.error(CommonUtil.format("view uploadFile api fail：%s,%s",WalletResponseEnums.SYSTEM_ERROR.getCode(),WalletResponseEnums.SYSTEM_ERROR.getDesc()));
 				throw new ResponseEntityException(WalletResponseEnums.SYSTEM_ERROR);
 			}
 	}

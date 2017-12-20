@@ -85,9 +85,10 @@ public class WalletMemberServiceImpl extends BaseServiceImpl<WalletMemberMapper,
 	@Transactional(propagation = Propagation.REQUIRED,isolation = Isolation.DEFAULT,timeout=36000,rollbackFor=Exception.class)
 	@Override
 	public ServerResponse<Integer> save(WalletMember walletMember) throws Exception {
-		log.info(CommonUtil.format("biz接口:保存会员,请求参数:%s", JsonUtil.toJSONString(walletMember)));
+		log.info(CommonUtil.format("start biz save api prams:%s", JsonUtil.toJSONString(walletMember)));
 		ServerResponse<Integer> serverResponse=null;
 		if(CommonUtil.isEmpty(walletMember)){
+			log.error("biz save api fail:%s"+WalletResponseEnums.NULL_ERROR.getDesc());
 			throw new BusinessException(WalletResponseEnums.NULL_ERROR);
 		}
 		if(CommonUtil.isEmpty(walletMember.getId())){//新增
@@ -96,14 +97,14 @@ public class WalletMemberServiceImpl extends BaseServiceImpl<WalletMemberMapper,
 			walletMemberMapper.updateById(walletMember);
 		}
 		serverResponse=ServerResponse.createBySuccess();
-		log.info(CommonUtil.format("serverResponse:%s", JsonUtil.toJSONString(serverResponse)));
+		log.info(CommonUtil.format("biz save api serverResponse:%s", JsonUtil.toJSONString(serverResponse)));
 		return serverResponse=ServerResponse.createBySuccess();
 	}
 
 
 	@Override
 	public ServerResponse<List<WalletMember>> findMember(Integer budId) throws Exception {
-		log.info(CommonUtil.format("biz接口:根据商家id查询,请求参数:%s", JsonUtil.toJSONString(budId)));
+		log.info(CommonUtil.format("biz findMember api params:%s", JsonUtil.toJSONString(budId)));
 		Wrapper<WalletMember> wrapper=new EntityWrapper<WalletMember>() ;
 		wrapper.where("member_id={0}",budId).and("member_class={0}", 1);
 		List<WalletMember> walletMembers=walletMemberMapper.selectList(wrapper);
@@ -135,6 +136,7 @@ public class WalletMemberServiceImpl extends BaseServiceImpl<WalletMemberMapper,
 			}
 			return ServerResponse.createBySuccessCodeData(walletMembers);
 		}else{
+			log.error("biz findMember api fail:"+WalletResponseEnums.DATA_NULL_ERROR.getDesc());
 			throw new BusinessException(WalletResponseEnums.DATA_NULL_ERROR);
 		}
 		
@@ -143,7 +145,7 @@ public class WalletMemberServiceImpl extends BaseServiceImpl<WalletMemberMapper,
 
 	@Override
 	public ServerResponse<Integer> isPassWallet(Integer busId) throws Exception {
-		log.info(CommonUtil.format("biz接口:判断商家是否开通多粉钱包,请求参数:%s", JsonUtil.toJSONString(busId)));
+		log.info(CommonUtil.format("start biz isPassWallet api params:%s", JsonUtil.toJSONString(busId)));
 		Wrapper<WalletMember> wrapper=new EntityWrapper<WalletMember>() ;
 		wrapper.where("member_id={0}",busId).and("member_class={0}", 1);
 		List<WalletMember> walletMembers=walletMemberMapper.selectList(wrapper);
@@ -156,7 +158,7 @@ public class WalletMemberServiceImpl extends BaseServiceImpl<WalletMemberMapper,
 	
 	@Override
 	public ServerResponse<?> isOpen(Integer busId) throws Exception {
-		log.info(CommonUtil.format("biz接口:判断商家是否开通多粉钱包,请求参数:%s", JsonUtil.toJSONString(busId)));
+		log.info(CommonUtil.format("start biz isOpen api params:%s", JsonUtil.toJSONString(busId)));
 		Wrapper<WalletMember> wrapper=new EntityWrapper<WalletMember>() ;
 		wrapper.where("member_id={0}",busId).and("member_class={0}", 1);
 		List<WalletMember> walletMembers=walletMemberMapper.selectList(wrapper);
@@ -171,17 +173,18 @@ public class WalletMemberServiceImpl extends BaseServiceImpl<WalletMemberMapper,
 				}else{//个人
 					bankServerResponse=	walletBankService.getWalletSafeBankByMemberId(walletMember.getId());
 				}
-				log.error(CommonUtil.format("bankServerResponse ：%s", JsonUtil.toJSONString(bankServerResponse)));
+				log.error(CommonUtil.format("biz isOpen api bankServerResponse ：%s", JsonUtil.toJSONString(bankServerResponse)));
 				if(!ServerResponse.judgeSuccess(bankServerResponse)||CommonUtil.isEmpty(bankServerResponse.getData())){
 					serverResponse= ServerResponse.createByErrorCode(WalletResponseEnums.MEMBER_BANK_ERROR);
 				}else{
 					serverResponse=ServerResponse.createBySuccess();
 				}
 			}else{
-				log.error(CommonUtil.format("serverResponse ：%s", JsonUtil.toJSONString(serverResponse)));
+				log.error(CommonUtil.format("biz isOpen api serverResponse ：%s", JsonUtil.toJSONString(serverResponse)));
 				serverResponse= ServerResponse.createByErrorCode(WalletResponseEnums.MEMBER_STATE_ERROR);
 			}
 		}else{
+			log.error("biz findMember api fail:"+WalletResponseEnums.MEMBER_NULL_ERROR.getDesc());
 			serverResponse=ServerResponse.createByErrorCode(WalletResponseEnums.MEMBER_NULL_ERROR);
 		}
 		return serverResponse;
@@ -191,12 +194,13 @@ public class WalletMemberServiceImpl extends BaseServiceImpl<WalletMemberMapper,
 	@Transactional(propagation = Propagation.REQUIRED,isolation = Isolation.DEFAULT,timeout=36000,rollbackFor=Exception.class)
 	@Override
 	public ServerResponse<Integer> register(Integer memberType,String ip,Integer busId) throws Exception {
-		log.info(CommonUtil.format("biz接口:开通会员,请求参数:%s,%s,%s",memberType,ip,busId));
+		log.info(CommonUtil.format("start biz register api params:%s,%s,%s",memberType,ip,busId));
 		EntityWrapper<WalletMember> wrapper=new EntityWrapper<WalletMember>() ;
 		wrapper.where("member_id={0}",busId).and("member_class=1");
 //		List<WalletMember> walletMembers=walletMemberMapper.selectBySearch(wrapper);
 		List<WalletMember> walletMembers=walletMemberMapper.selectList(wrapper);
 		if(CommonUtil.isNotEmpty(walletMembers)&&walletMembers.size()>0){
+			log.error(CommonUtil.format("biz register api fail:%s", WalletResponseEnums.EXIST_ERROR.getDesc()));
 			throw new BusinessException(WalletResponseEnums.EXIST_ERROR);
 		}
 		if((memberType!=2&&memberType!=3)){
@@ -220,8 +224,10 @@ public class WalletMemberServiceImpl extends BaseServiceImpl<WalletMemberMapper,
 		if(count==1){//新增成功
 			serverResponse=ServerResponse.createBySuccessCodeData(walletMember.getId());
 		}else{
+			log.error(CommonUtil.format("biz register api fail:%s", WalletResponseEnums.SYSTEM_ERROR.getDesc()));
 			throw new BusinessException(WalletResponseEnums.SYSTEM_ERROR);
 		}
+		log.info(CommonUtil.format("biz register api serverResponse:%s",JsonUtil.toJSONString(serverResponse)));
 		return serverResponse;
 	}
 	
@@ -229,6 +235,7 @@ public class WalletMemberServiceImpl extends BaseServiceImpl<WalletMemberMapper,
 	@Transactional(propagation = Propagation.REQUIRED,isolation = Isolation.DEFAULT,timeout=36000,rollbackFor=Exception.class)
 	@Override
 	public ServerResponse<?> setpwd(WalletPasswordSet walletPasswordSet, BusUser busUser) throws Exception {
+		log.info(CommonUtil.format("start biz setpwd api params:%s,%s",JsonUtil.toJSONString(walletPasswordSet),JsonUtil.toJSONString(busUser)));
 		if(!walletPasswordSet.getCode().equals("8888")){
 			log.error(CommonUtil.format("biz接口:修改密码异常:%s",WalletResponseEnums.CODE_ERROR.getDesc()));
 			throw new BusinessException(WalletResponseEnums.CODE_ERROR);
@@ -245,7 +252,7 @@ public class WalletMemberServiceImpl extends BaseServiceImpl<WalletMemberMapper,
 			walletMember.setPayPass(MD5Utils.getMD5(walletPasswordSet.getPwd()));
 			walletMemberMapper.updateById(walletMember);
 		}else{
-			log.error(CommonUtil.format("biz接口:修改密码异常:%s",WalletResponseEnums.DATA_NULL_ERROR.getDesc()));
+			log.error(CommonUtil.format("biz setpwd api fail:%s",WalletResponseEnums.DATA_NULL_ERROR.getDesc()));
 			throw new BusinessException(WalletResponseEnums.DATA_NULL_ERROR);
 		}
 		return ServerResponse.createBySuccess();
@@ -255,11 +262,13 @@ public class WalletMemberServiceImpl extends BaseServiceImpl<WalletMemberMapper,
 	
 	@Override
 	public ServerResponse<?> sendVerificationCode(Integer budId,String phone,Integer wmemberId,Integer verificationCodeType) throws Exception {
+		log.info(CommonUtil.format("start biz sendVerificationCode api params:%s,%s,%s,%s",JsonUtil.toJSONString(budId),phone,wmemberId,verificationCodeType));
 		WalletMember walletMember=walletMemberMapper.selectById(wmemberId);
 		if(CommonUtil.isEmpty(walletMember)){
 			throw new BusinessException(WalletResponseEnums.DATA_NULL_ERROR);
 		}
 		if(walletMember.getMemberId()!=budId&&walletMember.getMemberType()==1){
+			log.error("biz sendVerificationCode api fail: user excption");
 			throw new BusinessException("账号异常");
 		}
 		return YunSoaMemberUtil.sendVerificationCode(walletMember.getMemberNum(), phone, verificationCodeType);
@@ -269,10 +278,10 @@ public class WalletMemberServiceImpl extends BaseServiceImpl<WalletMemberMapper,
 	@Transactional(propagation = Propagation.REQUIRED,isolation = Isolation.DEFAULT,timeout=36000,rollbackFor=Exception.class)
 	@Override
 	public ServerResponse<?> lockMember(Integer wmemberId) {
-		log.info("biz:lockMember api:"+wmemberId);
+		log.info("start biz lockMember api params:"+wmemberId);
 		WalletMember walletMember=	walletMemberMapper.selectById(wmemberId);
 		if(CommonUtil.isEmpty(walletMember)){
-			log.error("biz:lockMember api:"+WalletResponseEnums.DATA_NULL_ERROR.getDesc());
+			log.error("biz lockMember api fail:"+WalletResponseEnums.DATA_NULL_ERROR.getDesc());
 			throw new BusinessException(WalletResponseEnums.DATA_NULL_ERROR);
 		}
 		ServerResponse<?> serverResponse=YunSoaMemberUtil.lockMember(walletMember.getMemberNum());
@@ -283,7 +292,7 @@ public class WalletMemberServiceImpl extends BaseServiceImpl<WalletMemberMapper,
 		try {
 			walletMessageService.add(walletMember.getId(), WalletMsgEnums.MSGTYPE_USERLOCK.getCode(),"用户被锁", walletMember.getId());
 		} catch (Exception e) {
-			log.error("write msg api error");
+			log.error("biz lockMember api fail:write msg api error");
 			e.printStackTrace();
 		}
 		return serverResponse;
@@ -291,10 +300,10 @@ public class WalletMemberServiceImpl extends BaseServiceImpl<WalletMemberMapper,
 	@Transactional(propagation = Propagation.REQUIRED,isolation = Isolation.DEFAULT,timeout=36000,rollbackFor=Exception.class)
 	@Override
 	public ServerResponse<?> unlockMember(Integer wmemberId) {
-		log.info("biz:lockMember api:"+wmemberId);
+		log.info("start biz lockMember api prams:"+wmemberId);
 		WalletMember walletMember=	walletMemberMapper.selectById(wmemberId);
 		if(CommonUtil.isEmpty(walletMember)){
-			log.error("biz:lockMember api:"+WalletResponseEnums.DATA_NULL_ERROR.getDesc());
+			log.error("biz lockMember api fail:"+WalletResponseEnums.DATA_NULL_ERROR.getDesc());
 			throw new BusinessException(WalletResponseEnums.DATA_NULL_ERROR);
 		}
 		ServerResponse<?> serverResponse=YunSoaMemberUtil.unlockMember(walletMember.getMemberNum());
@@ -305,7 +314,7 @@ public class WalletMemberServiceImpl extends BaseServiceImpl<WalletMemberMapper,
 		try {
 			walletMessageService.add(walletMember.getId(), WalletMsgEnums.MSGTYPE_USERUNLOCK.getCode(),"解锁用户", walletMember.getId());
 		} catch (Exception e) {
-			log.error("write msg api error");
+			log.error("biz lockMember api fail:write msg api error");
 			e.printStackTrace();
 		}
 		return serverResponse;
@@ -314,7 +323,7 @@ public class WalletMemberServiceImpl extends BaseServiceImpl<WalletMemberMapper,
 
 	@Override
 	public ServerResponse<MyPageUtil<WalletMember>> getPage(Page<WalletMember> page,Integer status,String phone, Integer memberType) throws Exception{
-		log.info(CommonUtil.format("biz接口:分页查询,请求参数:%s", JsonUtil.toJSONString(page)));
+		log.info(CommonUtil.format("start biz getPage api params:%s", JsonUtil.toJSONString(page)));
 		EntityWrapper<WalletMember> wrapper=new EntityWrapper<WalletMember>() ;
 		if(CommonUtil.isNotEmpty(status)){
 			wrapper.where("status={0}", status);			
@@ -327,6 +336,7 @@ public class WalletMemberServiceImpl extends BaseServiceImpl<WalletMemberMapper,
 		}
 		Integer total=walletMemberMapper.selectCount(wrapper);
 		if(CommonUtil.isEmpty(total)||total==0){
+			log.error("biz getPage api fail:"+WalletResponseEnums.DATA_NULL_ERROR.getDesc());
 			throw new BusinessException(WalletResponseEnums.DATA_NULL_ERROR);
 		}
 		
@@ -352,12 +362,12 @@ public class WalletMemberServiceImpl extends BaseServiceImpl<WalletMemberMapper,
 	@Transactional(propagation = Propagation.REQUIRED,isolation = Isolation.DEFAULT,timeout=36000,rollbackFor=Exception.class)
 	@Override
 	public ServerResponse<?> reset(Integer busId, String newPhone, String verificationCode, Integer wmemberId)throws Exception {
-		log.info(CommonUtil.format("biz:reset api memberId:%s,%s,%s,%s", busId,newPhone,verificationCode,wmemberId));
+		log.info(CommonUtil.format("start biz reset api params:%s,%s,%s,%s", busId,newPhone,verificationCode,wmemberId));
 		WalletMember walletMember=	walletMemberMapper.selectById(wmemberId);
 		if(walletMember.getMemberId()!=busId){
-			throw new BusinessException("操作异常，此钱包会员不属于当前登录商家");
+			throw new BusinessException("biz reset api fail:操作异常，此钱包会员不属于当前登录商家");
 		}else if(walletMember.getStatus()!=3){
-			throw new BusinessException("多粉钱包会员账号状态异常("+CommonUtil.getMemberStatusDesc(walletMember.getStatus())+")");
+			throw new BusinessException("biz reset api fail:多粉钱包会员账号状态异常("+CommonUtil.getMemberStatusDesc(walletMember.getStatus())+")");
 		}
 		ServerResponse<?> serverResponse=YunSoaMemberUtil.changeBindPhone(walletMember.getMemberNum(), YunSoaMemberUtil.rsaDecrypt(walletMember.getPhone()), newPhone, verificationCode);
 		log.info(CommonUtil.format("serverResponse:%s", JsonUtil.toJSONString(serverResponse)));
@@ -370,7 +380,7 @@ public class WalletMemberServiceImpl extends BaseServiceImpl<WalletMemberMapper,
 			walletApiLogService.save(JsonUtil.toJSONString(jsonObject), serverResponse, walletMember.getId(), null, null, WalletLogConstants.LOG_CHANGEBINDPHONE);
 		} catch (Exception e) {
 			e.printStackTrace();
-			log.error("save log api error");
+			log.error("biz reset api fail:save log api error");
 		}
 		if(ServerResponse.judgeSuccess(serverResponse)){
 			walletMember.setPhone(YunSoaMemberUtil.rsaEncrypt(newPhone));

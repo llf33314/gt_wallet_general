@@ -41,7 +41,7 @@ public class AuthContrller {
 	@RequestMapping(value="79B4DE7C/auth",method=RequestMethod.GET)
 	public void auth(HttpServletRequest request, HttpServletResponse response,String obj)
 			throws ServletException, IOException {
-		log.info(" start auth api  params:%s"+obj);
+		log.info("start view auth api  params:%s"+obj);
 		String redirect_uri=CommonUtil.urlEncode(WalletWebConfig.getDomain()+"/alipayAuth/79B4DE7C/redirect_uri");
 		//scope 接口权限值，目前只支持auth_user和auth_base两个值
 		String url= CommonUtil.format("https://openauth.alipay.com/oauth2/publicAppAuthorize.htm?app_id=%s&scope=%s&state=%s&redirect_uri=%s", AlipayServiceEnvConstants.APP_ID,"auth_base",obj,redirect_uri);
@@ -51,7 +51,7 @@ public class AuthContrller {
 	@RequestMapping(value="79B4DE7C/redirect_uri",method=RequestMethod.GET)
 	public String  redirect_uri(HttpServletRequest request, HttpServletResponse response)throws Exception {
 		// 1. 解析请求参数
-		log.info(" start redirect_uri api");
+		log.info(" start view redirect_uri api");
 		Map<String, String> params = RequestUtil.getRequestParams(request);
 		log.info("params:%s"+JsonUtil.toJSONString(params));
 		// 2. 获得authCode
@@ -92,7 +92,7 @@ public class AuthContrller {
 			String url=WalletWebConfig.getDomain()+"walletPayOrder/79B4DE7C/applyDeposit?obj="+orderKey+"&acct="+oauthTokenResponse.getAlipayUserId();
 			return "redirect:"+url;
 		} catch (AlipayApiException alipayApiException) {
-			log.error("alipay redirect_uri fail !");
+			log.error("view redirect_uri fail !");
 			throw new BusinessException("alipay redirect_uri fail ! call admin");
 			
 		}

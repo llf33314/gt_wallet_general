@@ -60,15 +60,16 @@ public class WalletIndividualServiceImpl extends BaseServiceImpl<WalletIndividua
 	 */
 	@Transactional(propagation = Propagation.REQUIRED,isolation = Isolation.DEFAULT,timeout=36000,rollbackFor=Exception.class)
 	public ServerResponse<Integer> add(WalletIndividualAdd walletIndividualAdd,BusUser busUser) throws Exception{
-		log.info(CommonUtil.format("biz接口:保存个人会员信息,请求参数:%s", JsonUtil.toJSONString(walletIndividualAdd)));
+		log.info(CommonUtil.format("start biz add api params:%s", JsonUtil.toJSONString(walletIndividualAdd)));
 		//TODO 调用实名认证api、调用绑定银行卡api
 		WalletMember walletMember=walletMemberMapper.selectById(walletIndividualAdd.getMemberId());
 		if(CommonUtil.isEmpty(walletMember)){
-			log.error(CommonUtil.format("biz接口:保存个人会员信息异常:%s",WalletResponseEnums.DATA_NULL_ERROR.getDesc()));
+			log.error(CommonUtil.format("biz add api fail:%s",WalletResponseEnums.DATA_NULL_ERROR.getDesc()));
 			throw new BusinessException(WalletResponseEnums.DATA_NULL_ERROR);
 		}
 		if(walletMember.getMemberClass()==1&&walletMember.getMemberId()!=busUser.getId()){
-			throw new BusinessException("操作异常，此钱包会员不属于当前登录商家");
+			log.error("biz add api fail:此钱包会员不属于当前登录商家");
+			throw new BusinessException(" biz add api fail:此钱包会员不属于当前登录商家");
 		}
 		/*********************************实名认证******************************************/
 		WalletIndividual walletIndividual=walletIndividualMapper.selectOne(new WalletIndividual(walletIndividualAdd.getMemberId()));
@@ -82,6 +83,7 @@ public class WalletIndividualServiceImpl extends BaseServiceImpl<WalletIndividua
 			walletIndividual.setIdentityChecked(1);
 		}else{
 			if(!walletIndividual.getIdentityCardNo().equals(indeMi)){//
+				log.error("biz add api fail:非法银行卡，请绑定与会员身份证相关的银行卡");
 				throw new BusinessException("非法银行卡，请绑定与会员身份证相关的银行卡");
 			}
 		}
@@ -105,7 +107,7 @@ public class WalletIndividualServiceImpl extends BaseServiceImpl<WalletIndividua
 				JSONObject jsonObject=serverResponseGetMemberInfo.getData();
 				String value = jsonObject.getString("memberInfo");
 				JSONObject json=JsonUtil.parseObject(value, com.alibaba.fastjson.JSONObject.class);
-				log.info(CommonUtil.format("个人信息：%s", value));
+				log.info(CommonUtil.format("biz add api value：%s", value));
 				walletIndividual.setRealNameTime(json.getString("realNameTime"));
 				walletIndividual.setAddress(json.getString("address"));
 				walletIndividual.setCountry(json.getString("country"));
@@ -146,13 +148,13 @@ public class WalletIndividualServiceImpl extends BaseServiceImpl<WalletIndividua
 		
 		
 		
-		log.info(CommonUtil.format("biz接口:保存个人会员信息%s", JsonUtil.toJSONString(serverResponse)));
+		log.info(CommonUtil.format("biz add api serverResponse:%s", JsonUtil.toJSONString(serverResponse)));
 		return serverResponse;
 	}
 
 	@Override
 	public ServerResponse<?> set(WalletSet walletSet, BusUser busUser) throws Exception {
-		log.info(CommonUtil.format("biz接口:set,请求参数:%s,%s", JsonUtil.toJSONString(walletSet), JsonUtil.toJSONString(busUser)));
+		log.info(CommonUtil.format("start biz set api params:%s,%s", JsonUtil.toJSONString(walletSet), JsonUtil.toJSONString(busUser)));
 		// TODO Auto-generated method stub
 //		if(!walletSet.getPwd().equals(walletSet.getConfirm())){
 //			log.error(CommonUtil.format("biz接口:钱包设置异常:%s",WalletResponseEnums.PWD_ERROR.getDesc()));
@@ -164,7 +166,8 @@ public class WalletIndividualServiceImpl extends BaseServiceImpl<WalletIndividua
 		if(CommonUtil.isNotEmpty(walletMembers)&&walletMembers.size()>0){
 			WalletMember walletMember=walletMembers.get(0);
 			if(walletMember.getMemberClass()==1&&walletMember.getMemberId()!=busUser.getId()){
-				throw new BusinessException("操作异常，此钱包会员不属于当前登录商家");
+				log.error("biz set api fail:此钱包会员不属于当前登录商家");
+				throw new BusinessException("biz set api fail:此钱包会员不属于当前登录商家");
 			}
 			ServerResponse<?> serverResponse=YunSoaMemberUtil.bindPhone(walletMember.getMemberNum(), walletSet.getPhone(), walletSet.getCode());
 			if(ServerResponse.judgeSuccess(serverResponse)){
@@ -178,18 +181,18 @@ public class WalletIndividualServiceImpl extends BaseServiceImpl<WalletIndividua
 				return serverResponse;
 			}
 		}else{
-			log.error(CommonUtil.format("biz接口:钱包设置异常:%s",WalletResponseEnums.DATA_NULL_ERROR.getDesc()));
+			log.error(CommonUtil.format("biz set api fail:%s",WalletResponseEnums.DATA_NULL_ERROR.getDesc()));
 			throw new BusinessException(WalletResponseEnums.DATA_NULL_ERROR);
 		}
 	}
 
 	@Override
 	public ServerResponse<WalletIndividual> findByMemberId(Integer memberId) {
-		log.info(CommonUtil.format("biz:findByMemberId api memberId:%s", memberId));
+		log.info(CommonUtil.format("start biz findByMemberId api memberId:%s", memberId));
 		WalletIndividual params=new WalletIndividual();
 		params.setWMemberId(memberId);
 		WalletIndividual walletIndividual=walletIndividualMapper.selectOne(params);
-		log.info(CommonUtil.format("walletIndividual:%s", JsonUtil.toJSONString(walletIndividual)));
+		log.info(CommonUtil.format("biz findByMemberId api walletIndividual:%s", JsonUtil.toJSONString(walletIndividual)));
 		return ServerResponse.createBySuccessCodeData(walletIndividual);
 	}
 

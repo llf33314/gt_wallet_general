@@ -45,7 +45,7 @@ public class MemberApi extends BaseController{
 	@RequestMapping(value="/79B4DE7C/open",method=RequestMethod.POST)
 	 @ApiOperation(value="判断商家是否开通多粉钱包(提供给各erp系统调用)", notes="reqdata：为商家id",produces="application/json")
 	public ServerResponse<?> is0pen(HttpServletRequest request,@RequestBody RequestUtils<Integer> requestUtils ){
-		log.info(CommonUtil.format("is0pen api params:%s",JsonUtil.toJSONString(requestUtils)));
+		log.info(CommonUtil.format("start view is0pen api params:%s",JsonUtil.toJSONString(requestUtils)));
 		try {
 			String ua = request.getHeader("user-agent")
 					.toLowerCase();
@@ -53,11 +53,11 @@ public class MemberApi extends BaseController{
 			ServerResponse<?> serverResponse=walletMemberService.isOpen(requestUtils.getReqdata());
 			return serverResponse;
 			} catch ( BusinessException e) {
-				log.error(CommonUtil.format("is0pen api error ：%s,%s",e.getCode(),e.getMessage()));
+				log.error(CommonUtil.format("view is0pen api fail ：%s,%s",e.getCode(),e.getMessage()));
 				throw new ResponseEntityException(e.getCode(),e.getMessage());
 			} catch ( Exception e) {
 				e.printStackTrace();
-				log.error(CommonUtil.format("isOpen api error：%s,%s",WalletResponseEnums.SYSTEM_ERROR.getCode(),WalletResponseEnums.SYSTEM_ERROR.getDesc()));
+				log.error(CommonUtil.format("view is0pen api fail：%s,%s",WalletResponseEnums.SYSTEM_ERROR.getCode(),WalletResponseEnums.SYSTEM_ERROR.getDesc()));
 				throw new ResponseEntityException(WalletResponseEnums.SYSTEM_ERROR);
 			}
 	}

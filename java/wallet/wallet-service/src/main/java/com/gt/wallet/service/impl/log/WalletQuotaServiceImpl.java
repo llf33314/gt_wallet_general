@@ -71,7 +71,7 @@ public class WalletQuotaServiceImpl extends BaseServiceImpl<WalletQuotaMapper, W
 	@Transactional(propagation = Propagation.REQUIRED,isolation = Isolation.DEFAULT,timeout=36000,rollbackFor=Exception.class)
 	@Override
 	public ServerResponse<?> review(ReviewResult reviewResult) {
-		log.info(CommonUtil.format("biz接口:审核结果回调,请求参数:%s", JsonUtil.toJSONString(reviewResult)));
+		log.info(CommonUtil.format("start biz review api params:%s", JsonUtil.toJSONString(reviewResult)));
 		if(CommonUtil.isEmpty(reviewResult)){
 			throw new BusinessException(WalletResponseEnums.NULL_ERROR);
 		}
@@ -88,29 +88,31 @@ public class WalletQuotaServiceImpl extends BaseServiceImpl<WalletQuotaMapper, W
 		WalletMember walletMember=walletMemberMapper.selectById(walletQuota.getWMemberId());
 		walletMember.setWithdrawQuota(walletQuota.getQuotaValue().doubleValue());
 		walletMemberMapper.updateById(walletMember);
-		log.info(CommonUtil.format("影响行数:%s",count));
+		log.info(CommonUtil.format("biz review api count:%s",count));
 		try {
 			walletMessageService.add(walletMember.getId(), WalletMsgEnums.MSGTYPE_QUOTAREVIEW.getCode(), reviewResult.getQuotaDesc(), walletQuota.getId());
 		} catch (Exception e) {
-			log.error("write msg api error");
+			log.error("biz review api write msg api fail");
 			e.printStackTrace();
 		}
 		if(count==1){
 			return ServerResponse.createBySuccess();
 		}else{
+			log.error("biz review api system log");
 			throw new BusinessException(WalletResponseEnums.SYSTEM_ERROR);
 		}
 	}
 
 	@Override
 	public ServerResponse<MyPageUtil<WalletQuota>> getPage(Page<WalletQuota> page,Integer status) {
-		log.info(CommonUtil.format("biz接口:分页查询,请求参数:%s", JsonUtil.toJSONString(page)));
+		log.info(CommonUtil.format("start biz getPage api params:%s", JsonUtil.toJSONString(page)));
 		EntityWrapper<WalletQuota> wrapper=new EntityWrapper<WalletQuota>() ;
 		if(CommonUtil.isNotEmpty(status)){
 			wrapper.where("status={0}", status);			
 		}
 		Integer total=walletQuotaMapper.selectCount(wrapper);
 		if(CommonUtil.isEmpty(total)||total==0){
+			log.error(CommonUtil.format("biz getPage api fail"));
 			throw new BusinessException(WalletResponseEnums.DATA_NULL_ERROR);
 		}
 		
@@ -126,7 +128,7 @@ public class WalletQuotaServiceImpl extends BaseServiceImpl<WalletQuotaMapper, W
 				myPageUtil.getRecords().get(i).setMemberNum(walletMember.getMemberNum());
 			}
 		}
-		log.info(CommonUtil.format("page:%s", JsonUtil.toJSONString(myPageUtil)));
+		log.info(CommonUtil.format("biz getPage api page:%s", JsonUtil.toJSONString(myPageUtil)));
 		return ServerResponse.createBySuccessCodeData(myPageUtil);
 	}
 	

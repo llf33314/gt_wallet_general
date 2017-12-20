@@ -64,7 +64,7 @@ public class WalletMoneyServiceImpl extends BaseServiceImpl<WalletMoneyMapper, W
 
 	@Override
 	public ServerResponse<MyPageUtil<WalletMoney>> getPage(Page<?> page, SearchPayOrderPage searchPayOrderPage) throws Exception{
-		log.info(CommonUtil.format("biz接口:分页查询,请求参数:%s", JsonUtil.toJSONString(page)));
+		log.info(CommonUtil.format("start biz getPage api params:%s", JsonUtil.toJSONString(page)));
 		EntityWrapper<WalletMoney> wrapper=new EntityWrapper<WalletMoney>() ;
 		wrapper.where("status={0}",searchPayOrderPage.getStatus());		
 		wrapper.where("w_member_id={0}",searchPayOrderPage.getWmemberId());
@@ -89,30 +89,32 @@ public class WalletMoneyServiceImpl extends BaseServiceImpl<WalletMoneyMapper, W
 		for(int i=0;i<myPageUtil.getRecords().size();i++){
 			myPageUtil.getRecords().get(i).setBankCardNo(BankUtil.hide(YunSoaMemberUtil.rsaDecrypt(myPageUtil.getRecords().get(i).getBankCardNo())));
 		}
-		log.info(CommonUtil.format("page:%s", JsonUtil.toJSONString(page)));
+		log.info(CommonUtil.format("biz getPage api page:%s", JsonUtil.toJSONString(page)));
 		return ServerResponse.createBySuccessCodeData(myPageUtil);
 	}
 
 	@Override
 	public ServerResponse<IndexStatistics> getTotal(Integer wmemberId) {
-		log.info(CommonUtil.format("biz接口:获取首页统计数据(实时),请求参数:%s", JsonUtil.toJSONString(wmemberId)));
+		log.info(CommonUtil.format("start biz getTotal api params:%s", JsonUtil.toJSONString(wmemberId)));
 		IndexStatistics indexStatistics=walletMoneyMapper.getStatisticsByWmemberId(wmemberId);
-		log.info(CommonUtil.format("biz接口:indexStatistics,结果:%s", JsonUtil.toJSONString(indexStatistics)));
+		log.info(CommonUtil.format("biz getTotal api indexStatistics:%s", JsonUtil.toJSONString(indexStatistics)));
 		return ServerResponse.createBySuccessCodeData(indexStatistics);
 	}
 
 	@Override
 	public ServerResponse<Integer> withdrawApply(Integer busId, double money, Integer bankId) throws Exception{
-		log.info(CommonUtil.format("biz接口:withdrawApply,请求参数:%s,%s,%s",busId,money,bankId));
+		log.info(CommonUtil.format("start biz withdrawApply api params:%s,%s,%s",busId,money,bankId));
 		if(money<1000){
 			throw new BusinessException("请输入大于1000的金额");
 		}
 		ServerResponse<List<WalletMember>> responseMember=walletMemberService.findMember(busId);
 		if(ServerResponse.judgeSuccess(responseMember)==false||responseMember.getData().size()<=0){
+			log.error("biz withdrawApply api fail:请先注册多粉钱包会员");
 			throw new BusinessException("请先注册多粉钱包会员");
 		}
 		WalletMember walletMember=responseMember.getData().get(0);
 		if(walletMember.getIsBindingPhone()==0){
+			log.error("biz withdrawApply api fail:请先绑定手机号码");
 			throw new BusinessException("请先绑定手机号码");
 		}else if(walletMember.getStatus()!=3){
 			String desc="";
@@ -130,19 +132,25 @@ public class WalletMoneyServiceImpl extends BaseServiceImpl<WalletMoneyMapper, W
 			default:
 				break;
 			}
+			log.error("biz withdrawApply api fail:账号状态("+desc+")异常,禁止提现");
 			throw new BusinessException("账号状态("+desc+")异常,禁止提现");
 		}
 		if(walletMember.getMemberType()==3&&(CommonUtil.isEmpty(walletMember.getWalletIndividual())||walletMember.getWalletIndividual().getIdentityChecked()==0)){//个人未实名认证
+			log.error("biz withdrawApply api fail:请先实名认证");
 			throw new BusinessException("请先实名认证");
 		}else if(walletMember.getMemberType()==3&&(CommonUtil.isEmpty(walletMember.getWalletCompany()))){//企业
+			log.error("biz withdrawApply api fail:请先完成企业认证");
 			throw new BusinessException("请先完成企业认证");
 		}
 		WalletBank walletBank=	walletBankService.selectById(bankId);
 		if(CommonUtil.isEmpty(walletBank)){
+			log.error("biz withdrawApply api fail:银行卡不存在");
 			throw new BusinessException("银行卡不存在");
 		}else if(walletBank.getCardState()==0){
+			log.error("biz withdrawApply api fail:银行卡无效");
 			throw new BusinessException("银行卡无效");
 		}else if(walletBank.getStatus()!=1){
+			log.error("biz withdrawApply api fail:此银行卡还没绑定");
 			throw new BusinessException("此银行卡还没绑定");
 		}
 		String bizOrderNo="TX"+System.currentTimeMillis();
@@ -153,12 +161,12 @@ public class WalletMoneyServiceImpl extends BaseServiceImpl<WalletMoneyMapper, W
 		String desc= "商家提现";
 		TWithdrawOrder consumeOrder=new TWithdrawOrder(bizOrderNo, walletMember.getMemberNum(), money, 2.0, walletBank.getCardNo(), bankCardPro, "T0", desc);
 		ServerResponse<String>  serverResponse=YunSoaMemberUtil.applyWithdraw(consumeOrder);
-		log.info(CommonUtil.format("通联提现接口结果: %s", JsonUtil.toJSONString(serverResponse)));
+		log.info(CommonUtil.format("biz withdrawApply api 通联提现接口结果: %s", JsonUtil.toJSONString(serverResponse)));
 		try {
 			ServerResponse<?> logServerResponse=walletApiLogService.save(JsonUtil.toJSONString(consumeOrder), serverResponse, walletMember.getId(), null, bizOrderNo, WalletLogConstants.LOG_WITHDRAW);
-			log.info(CommonUtil.format("log生成结果: %s", JsonUtil.toJSONString(logServerResponse)));
+			log.info(CommonUtil.format("biz withdrawApply api log生成结果: %s", JsonUtil.toJSONString(logServerResponse)));
 		} catch (Exception e) {
-			log.error("生成api日志接口异常");
+			log.error("biz withdrawApply api fail:生成api日志接口异常");
 			// TODO: handle exception
 			e.printStackTrace();
 		}
@@ -187,7 +195,7 @@ public class WalletMoneyServiceImpl extends BaseServiceImpl<WalletMoneyMapper, W
 				log.info("success");
 				return	ServerResponse.createBySuccessCodeData(walletMoney.getId());
 			}else{
-				log.info("error");
+				log.error("biz withdrawApply api error");
 				return	ServerResponse.createByError();
 			}
 		}else{
@@ -198,20 +206,21 @@ public class WalletMoneyServiceImpl extends BaseServiceImpl<WalletMoneyMapper, W
 
 	@Override
 	public ServerResponse<WalletMoney> getInfoBySysOrderNo(String sysOrderNo) throws Exception {
+		log.info("start biz getInfoBySysOrderNo api params:%s"+sysOrderNo);
 		WalletMoney params=new  WalletMoney();
 		params.setSysOrderNo(sysOrderNo);
 		WalletMoney walletMoney=walletMoneyMapper.selectOne(params);
 		if(CommonUtil.isEmpty(walletMoney)){
+			log.info("biz getInfoBySysOrderNo api error:%s"+WalletResponseEnums.DATA_NULL_ERROR.getDesc());
 			return ServerResponse.createByErrorCode(WalletResponseEnums.DATA_NULL_ERROR);
 		}else{
-			
 			return ServerResponse.createBySuccessCodeData(walletMoney);
 		}
 	}
 
 	@Override
 	public ServerResponse<?> withdrawSuccessNotify(JSONObject params) throws Exception {
-		log.info(CommonUtil.format("start withdrawSuccessNotify api:%s",JsonUtil.toJSONString(params)));
+		log.info(CommonUtil.format("start biz withdrawSuccessNotify api params:%s",JsonUtil.toJSONString(params)));
 		JSONObject rps=params.getJSONObject("rps");
 		String status=rps.getString("status");
 		String payfailmessage="提现成功成功";
@@ -238,7 +247,7 @@ public class WalletMoneyServiceImpl extends BaseServiceImpl<WalletMoneyMapper, W
 			walletApiLogService.save(JsonUtil.toJSONString(params), null, null, null, bizOrderNo,WalletLogConstants.LOG_PAYNOTITY);
 		} catch (Exception e) {
 			e.printStackTrace();
-			log.error("write api log error");
+			log.error(" biz withdrawSuccessNotify api fail:write api log error");
 		}
 		/*****************************记录回调结果**********************************/
 		log.info(CommonUtil.format("WalletPayOrder: %s", JsonUtil.toJSONString(serverResponse)));
@@ -254,7 +263,7 @@ public class WalletMoneyServiceImpl extends BaseServiceImpl<WalletMoneyMapper, W
 				return ServerResponse.createByErrorMessage("更新状态失败");
 			}
 		}else{//订单不存在
-			log.error("订单不存在");
+			log.error(" biz withdrawSuccessNotify api fail:订单不存在");
 			return ServerResponse.createByErrorMessage("订单不存在");
 		}
 		
@@ -262,27 +271,29 @@ public class WalletMoneyServiceImpl extends BaseServiceImpl<WalletMoneyMapper, W
 
 	@Override
 	public ServerResponse<Integer> confirm(Integer busId, Integer id, String verificationCode,String ip) throws Exception {
-
-		log.info(CommonUtil.format("biz接口:withdrawApply,请求参数:%s,%s,%s",busId,id,verificationCode));
+		log.info(CommonUtil.format("start biz confirm api params:%s,%s,%s",busId,id,verificationCode));
 		WalletMoney walletMoney=walletMoneyMapper.selectById(id);
 		WalletMember walletMember=walletMemberMapper.selectById(walletMoney.getWMemberId());
 		if(CommonUtil.isEmpty(walletMoney)){
+			log.error("biz confirm api fail:订单不存在");
 			throw new BusinessException("订单不存在");
 		}
 		if(CommonUtil.isEmpty(walletMember)){
+			log.error("biz confirm api fail:请先注册多粉钱包会员");
 			throw new BusinessException("请先注册多粉钱包会员");
 		}
 		if(walletMember.getMemberId()!=busId){
+			log.error("biz confirm api fail:当前多粉钱包会员与当前商家不匹配");
 			throw new BusinessException("当前多粉钱包会员与当前商家不匹配");
 		}
 		String sysOrderNo=walletMoney.getSysOrderNo();
 		ServerResponse<JSONObject>  serverResponse=YunSoaMemberUtil.pay(walletMember.getMemberNum(),sysOrderNo, verificationCode, ip);
-		log.info(CommonUtil.format("通联提现接口结果: %s", JsonUtil.toJSONString(serverResponse)));
+		log.info(CommonUtil.format("biz confirm api 通联提现接口结果: %s", JsonUtil.toJSONString(serverResponse)));
 		try {
 			ServerResponse<?> logServerResponse=walletApiLogService.save(JsonUtil.toJSONString(serverResponse), serverResponse, walletMember.getId(), null, sysOrderNo, WalletLogConstants.LOG_PAYCONFIRM);
 			log.info(CommonUtil.format("log生成结果: %s", JsonUtil.toJSONString(logServerResponse)));
 		} catch (Exception e) {
-			log.error("生成api日志接口异常");
+			log.error("biz confirm api fail:生成api日志接口异常");
 			e.printStackTrace();
 		}
 		if(ServerResponse.judgeSuccess(serverResponse)){
@@ -293,10 +304,10 @@ public class WalletMoneyServiceImpl extends BaseServiceImpl<WalletMoneyMapper, W
 			}
 			Integer count=	walletMoneyMapper.updateById(walletMoney);
 			if(count==1){
-				log.info("success");
+				log.info("biz confirm api result:success");
 				return	ServerResponse.createBySuccessCodeData(walletMoney.getId());
 			}else{
-				log.info("error");
+				log.info("biz confirm api fail");
 				return	ServerResponse.createByError();
 			}
 		}else{

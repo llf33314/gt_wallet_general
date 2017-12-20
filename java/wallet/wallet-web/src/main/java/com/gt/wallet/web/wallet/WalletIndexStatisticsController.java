@@ -48,17 +48,17 @@ public class WalletIndexStatisticsController extends BaseController {
 	@RequestMapping(value="getIndexStatistics",method=RequestMethod.GET)
 	 @ApiOperation(value="获取首页总计数据", notes="获取首页总计数据，但必须登录多粉商家后台",produces="application/json")
 	public ServerResponse<IndexStatistics> getIndexStatistics(HttpServletRequest request){
-		log.info(CommonUtil.format("触发获取首页总计数据接口"));
+		log.info(CommonUtil.format("start view getIndexStatistics api"));
 		try {
 			BusUser busUser=CommonUtil.getLoginUser(request);
 			ServerResponse<IndexStatistics> serverResponse2=walletIndexStatisticsService.getIndexStatistics(busUser.getId());
 			return serverResponse2;
 			} catch ( BusinessException e) {
-				log.error(CommonUtil.format("获取首页总计数据接口异常：%s,%s",e.getCode(),e.getMessage()));
+				log.error(CommonUtil.format("view getIndexStatistics api fail ：%s,%s",e.getCode(),e.getMessage()));
 				throw new ResponseEntityException(e.getCode(),e.getMessage());
 			} catch ( Exception e) {
 				e.printStackTrace();
-				log.error(CommonUtil.format("获取首页总计数据接口异常：%s,%s",WalletResponseEnums.SYSTEM_ERROR.getCode(),WalletResponseEnums.SYSTEM_ERROR.getDesc()));
+				log.error(CommonUtil.format("view getIndexStatistics api fail：%s,%s",WalletResponseEnums.SYSTEM_ERROR.getCode(),WalletResponseEnums.SYSTEM_ERROR.getDesc()));
 				throw new ResponseEntityException(WalletResponseEnums.SYSTEM_ERROR);
 			}
 	}

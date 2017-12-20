@@ -67,17 +67,17 @@ public class WalletPayUserController extends BaseController {
         // path, query, body, header, form
 	})
 	public ServerResponse<?> add(HttpServletRequest request,@RequestBody WalletPayUser entity){
-		log.info(CommonUtil.format("触发新增记录接口: %s",JsonUtil.toJSONString(entity)));
+		log.info(CommonUtil.format("start view add api params: %s",JsonUtil.toJSONString(entity)));
 		try {
 			ServerResponse<?> serverResponse=null;
 			serverResponse=walletPayUserService.add(entity);
 			return serverResponse;
 			} catch ( BusinessException e) {
-				log.error(CommonUtil.format("新增记录接口异常：%s,%s",e.getCode(),e.getMessage()));
+				log.error(CommonUtil.format("view add api fail：%s,%s",e.getCode(),e.getMessage()));
 				throw new ResponseEntityException(e.getCode(),e.getMessage());
 			} catch ( Exception e) {
 				e.printStackTrace();
-				log.error(CommonUtil.format("新增记录接口异常：%s,%s",WalletResponseEnums.SYSTEM_ERROR.getCode(),WalletResponseEnums.SYSTEM_ERROR.getDesc()));
+				log.error(CommonUtil.format("view add api fail：%s,%s",WalletResponseEnums.SYSTEM_ERROR.getCode(),WalletResponseEnums.SYSTEM_ERROR.getDesc()));
 				throw new ResponseEntityException(WalletResponseEnums.SYSTEM_ERROR);
 			}
 	}

@@ -69,7 +69,7 @@ public class WalletCompanyServiceImpl extends BaseServiceImpl<WalletCompanyMappe
 	@Transactional(propagation = Propagation.REQUIRED,isolation = Isolation.DEFAULT,timeout=36000,rollbackFor=Exception.class)
 	@Override
 	public ServerResponse<?> save(WalletCompanyAdd walletCompanyAdd,BusUser busUser) throws Exception {
-		log.info(CommonUtil.format("biz接口:save ,params:%s", JsonUtil.toJSONString(walletCompanyAdd)));
+		log.info(CommonUtil.format("start biz save api params:%s", JsonUtil.toJSONString(walletCompanyAdd)));
 		ServerResponse<Integer> serverResponse=null;
 		if(CommonUtil.isEmpty(walletCompanyAdd)){
 			throw new BusinessException(WalletResponseEnums.NULL_ERROR);
@@ -87,15 +87,17 @@ public class WalletCompanyServiceImpl extends BaseServiceImpl<WalletCompanyMappe
 		
 		ResponseUtils<List<Map<String, Object>>> province=HttpClienUtils.reqPostUTF8(JsonUtil.toJSONString(requestUtils), path, ResponseUtils.class, key);
 		if(CommonUtil.isEmpty(province)||province.getCode()!=0||CommonUtil.isEmpty(province.getData())||province.getData().size()!=1){
-			throw new BusinessException("获取地址api异常,请联系管理员");
+			log.error("biz save api fail");
+			throw new BusinessException("biz save api fail");
 		}
 //		String pro=homeUrl+"8A5DA52E/shopapi/6F6D9AD2/79B4DE7C/queryBasisByCodes.do";
 //		ResponseUtils<List<Map<String, Object>>> province=HttpClienUtils.reqGetUTF8(JsonUtil.toJSONString(requestUtils),pro, ResponseUtils.class, key);
-		log.info(CommonUtil.format("province:%s", JsonUtil.toJSONString(province)));
+		log.info(CommonUtil.format("biz save api province:%s", JsonUtil.toJSONString(province)));
 		requestUtils=new RequestUtils<>();
 		requestUtils.setReqdata(walletCompanyAdd.getArea());
 		ResponseUtils<List<Map<String, Object>>> city=HttpClienUtils.reqPostUTF8(JsonUtil.toJSONString(requestUtils),path, ResponseUtils.class,key);
 		if(CommonUtil.isEmpty(city)||city.getCode()!=0||CommonUtil.isEmpty(city.getData())||city.getData().size()!=1){
+			log.error("biz save api fail");
 			throw new BusinessException("获取地址api异常,请联系管理员");
 		}
 		address=CommonUtil.toString(province.getData().get(0).get("city_name"))+CommonUtil.toString(city.getData().get(0).get("city_name"))+walletCompanyAdd.getCompanyAddress();
@@ -103,7 +105,8 @@ public class WalletCompanyServiceImpl extends BaseServiceImpl<WalletCompanyMappe
 		/*******************************判断db记录是否异常**************************************/
 		List<WalletCompany> walletCompanies=walletCompanyMapper.selectList(wrapper);
 		if(CommonUtil.isEmpty(walletCompanies)||walletCompanies.size()>1){
-			throw new BusinessException("数据异常，请联系管理员");
+			log.error("biz save api fail:data exception call admin");
+			throw new BusinessException("biz save api fail:data exception call admin");
 		}
 		WalletCompany walletCompany=null;
 		if(walletCompanies.size()==0){
@@ -116,7 +119,7 @@ public class WalletCompanyServiceImpl extends BaseServiceImpl<WalletCompanyMappe
 		
 		/*******************************调用设置企业信息api**************************************/
 		ServerResponse<?> response=YunSoaMemberUtil.setCompanyInfo(walletCompanyAdd, walletMember.getMemberNum());
- 		log.info(CommonUtil.format("设置企业信息api结果:%s", JsonUtil.toJSONString(response)));
+ 		log.info(CommonUtil.format("biz save api response:%s", JsonUtil.toJSONString(response)));
 		if(!ServerResponse.judgeSuccess(response)){//返回异常
 			throw new BusinessException(WalletResponseEnums.API_ERROR);
 		}
@@ -148,14 +151,14 @@ public class WalletCompanyServiceImpl extends BaseServiceImpl<WalletCompanyMappe
 			walletCompanyMapper.updateById(walletCompany);
 		}
 		serverResponse=ServerResponse.createBySuccess();
-		log.info(CommonUtil.format("biz接口:save serverResponse:%s", JsonUtil.toJSONString(serverResponse)));
+		log.info(CommonUtil.format("biz save api serverResponse:%s", JsonUtil.toJSONString(serverResponse)));
 		return serverResponse=ServerResponse.createBySuccess();
 	}
 
 
 	@Override
 	public ServerResponse<?> uploadFile(CompanyUploadFile companyUploadFile,BusUser busUser) throws Exception {
-		log.info(CommonUtil.format("uploadFile api ,companyUploadFile:%s", JsonUtil.toJSONString(companyUploadFile)));
+		log.info(CommonUtil.format("start biz uploadFile api companyUploadFile:%s", JsonUtil.toJSONString(companyUploadFile)));
 		/*******************************发送邮件**************************************/
 		Wrapper<WalletCompany> wrapper=new EntityWrapper<>();
 		wrapper.where("w_member_id={0}", companyUploadFile.getMemberId());
@@ -170,6 +173,7 @@ public class WalletCompanyServiceImpl extends BaseServiceImpl<WalletCompanyMappe
 		walletCompany.setLicenseUrl(companyUploadFile.getLicenseUrl());
 		int count=walletCompanyMapper.updateById(walletCompany);
 		if(count<1){
+			log.error("biz uploadFile api fail:db exception");
 			throw new BusinessException("上传失败,db操作异常");
 		}
 		List<String> files=new ArrayList<>();
@@ -183,7 +187,7 @@ public class WalletCompanyServiceImpl extends BaseServiceImpl<WalletCompanyMappe
 		if(!ServerResponse.judgeSuccess(mailServerResponse)){
 			throw new BusinessException(mailServerResponse.getCode(),mailServerResponse.getMsg());
 		}
-		log.info(CommonUtil.format("uploadFile api serverResponse:%s", JsonUtil.toJSONString(mailServerResponse)));
+		log.info(CommonUtil.format("biz uploadFile api serverResponse:%s", JsonUtil.toJSONString(mailServerResponse)));
 		/*******************************发送邮件**************************************/
 		return mailServerResponse;
 	}
@@ -191,9 +195,11 @@ public class WalletCompanyServiceImpl extends BaseServiceImpl<WalletCompanyMappe
 
 	@Override
 	public ServerResponse<WalletCompany> findByMemberId(Integer memberId) {
+		log.info(CommonUtil.format("start biz findByMemberId api params:%s", JsonUtil.toJSONString(memberId)));
 		WalletCompany params=new WalletCompany();
 		params.setWMemberId(memberId);
 		WalletCompany walletIndividual=walletCompanyMapper.selectOne(params);
+		log.info(CommonUtil.format("biz findByMemberId api walletIndividual:%s", JsonUtil.toJSONString(walletIndividual)));
 		return ServerResponse.createBySuccessCodeData(walletIndividual);
 	}
 	

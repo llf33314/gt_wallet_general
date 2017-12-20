@@ -61,7 +61,7 @@ public class WalletBankController extends BaseController {
 	@RequestMapping(value="getWalletBanksByMemberId",method=RequestMethod.GET)
 	 @ApiOperation(value="获取会员银行卡列表", notes="获取会员银行卡列表")
 	public ServerResponse<List<WalletBank>> getWalletBanksByMemberId(HttpServletRequest request,Integer wmemberId){
-		log.info(CommonUtil.format("触发getWalletBanksByMemberId api"));
+		log.info(CommonUtil.format("start view getWalletBanksByMemberId api params:%s",wmemberId));
 		try {
 				ServerResponse<List<WalletBank>> serverResponse=walletBankService.getWalletBanksByMemberId(wmemberId);
 				
@@ -71,11 +71,11 @@ public class WalletBankController extends BaseController {
 				log.info("serverResponse:%s",JsonUtil.toJSONString(serverResponse));
 				return serverResponse;
 			} catch ( BusinessException e) {
-				log.error(CommonUtil.format("getWalletBanksByMemberId api异常：%s,%s",e.getCode(),e.getMessage()));
+				log.error(CommonUtil.format("view getWalletBanksByMemberId api fail：%s,%s",e.getCode(),e.getMessage()));
 				throw new ResponseEntityException(e.getCode(),e.getMessage());
 			} catch ( Exception e) {
 				e.printStackTrace();
-				log.error(CommonUtil.format("getWalletBanksByMemberId api异常：%s,%s",WalletResponseEnums.SYSTEM_ERROR.getCode(),WalletResponseEnums.SYSTEM_ERROR.getDesc()));
+				log.error(CommonUtil.format("view getWalletBanksByMemberId api fail：%s,%s",WalletResponseEnums.SYSTEM_ERROR.getCode(),WalletResponseEnums.SYSTEM_ERROR.getDesc()));
 				throw new ResponseEntityException(WalletResponseEnums.SYSTEM_ERROR);
 			}
 	}
@@ -94,7 +94,7 @@ public class WalletBankController extends BaseController {
 	})
 	public ServerResponse<?> bindBankCard(HttpServletRequest request,Integer id, String verificationCode 
 		){
-		log.info(CommonUtil.format("触发bindBankCard api,参数:%s%s",id,verificationCode));
+		log.info(CommonUtil.format("start view bindBankCard api,params:%s%s",id,verificationCode));
 		try {
 			BusUser busUser=CommonUtil.getLoginUser(request);
 			ServerResponse<?> serverResponse=null;
@@ -102,11 +102,11 @@ public class WalletBankController extends BaseController {
 			log.info(CommonUtil.format("serverResponse:%s",JsonUtil.toJSONString(serverResponse)));
 			return serverResponse;
 			} catch ( BusinessException e) {
-				log.error(CommonUtil.format("bindBankCard api异常：%s,%s",e.getCode(),e.getMessage()));
+				log.error(CommonUtil.format("view bindBankCard api fail：%s,%s",e.getCode(),e.getMessage()));
 				throw new ResponseEntityException(e.getCode(),e.getMessage());
 			} catch ( Exception e) {
 				e.printStackTrace();
-				log.error(CommonUtil.format("bindBankCard api异常：%s,%s",WalletResponseEnums.SYSTEM_ERROR.getCode(),WalletResponseEnums.SYSTEM_ERROR.getDesc()));
+				log.error(CommonUtil.format("bindBankCard api fail：%s,%s",WalletResponseEnums.SYSTEM_ERROR.getCode(),WalletResponseEnums.SYSTEM_ERROR.getDesc()));
 				throw new ResponseEntityException(WalletResponseEnums.SYSTEM_ERROR);
 			}
 	} 
@@ -135,7 +135,7 @@ public class WalletBankController extends BaseController {
 	})
 	public ServerResponse<Integer> addBank(HttpServletRequest request,@RequestBody WalletBankAdd walletBankAdd
 			){
-		log.info(CommonUtil.format("触发addBank api:%s",JsonUtil.toJSONString(walletBankAdd)));
+		log.info(CommonUtil.format("start view  addBank api:%s",JsonUtil.toJSONString(walletBankAdd)));
 		try {
 			ServerResponse<Integer> serverResponse=null;
 			WalletIndividualAdd walletIndividualAdd=new WalletIndividualAdd();
@@ -148,10 +148,11 @@ public class WalletBankController extends BaseController {
 			log.info(CommonUtil.format("serverResponse:%s",JsonUtil.toJSONString(serverResponse)));
 			return serverResponse;
 			} catch ( BusinessException e) {
+				log.error(CommonUtil.format("view addBank api fail：%s,%s",e.getCode(),e.getMessage()));
 				throw new ResponseEntityException(e.getCode(),e.getMessage());
 			} catch ( Exception e) {
 				e.printStackTrace();
-				log.error(CommonUtil.format("addBank api异常：%s,%s",WalletResponseEnums.SYSTEM_ERROR.getCode(),WalletResponseEnums.SYSTEM_ERROR.getDesc()));
+				log.error(CommonUtil.format("view addBank api fail：%s,%s",WalletResponseEnums.SYSTEM_ERROR.getCode(),WalletResponseEnums.SYSTEM_ERROR.getDesc()));
 				throw new ResponseEntityException(WalletResponseEnums.SYSTEM_ERROR);
 			}
 	}
@@ -167,17 +168,18 @@ public class WalletBankController extends BaseController {
 	
 	public ServerResponse<TCardBin> getBankCardBin(HttpServletRequest request,@ApiParam(required=true,name="bankCardNo" ,value="银行卡号") @RequestParam(required=true) String bankCardNo
 			){
-		log.info(CommonUtil.format("触发getBankCardBin api:%s",bankCardNo));
+		log.info(CommonUtil.format("start view getBankCardBin api:%s",bankCardNo));
 		try {
 			ServerResponse<TCardBin> serverResponse=null;
 			serverResponse=walletBankService.getBankCardBin(bankCardNo);
 			log.info(CommonUtil.format("serverResponse:%s",JsonUtil.toJSONString(serverResponse)));
 			return serverResponse;
 			} catch ( BusinessException e) {
+				log.error(CommonUtil.format("view getBankCardBin api fail：%s,%s",e.getCode(),e.getMessage()));
 				throw new ResponseEntityException(e.getCode(),e.getMessage());
 			} catch ( Exception e) {
 				e.printStackTrace();
-				log.error(CommonUtil.format("getBankCardBin api异常：%s,%s",WalletResponseEnums.SYSTEM_ERROR.getCode(),WalletResponseEnums.SYSTEM_ERROR.getDesc()));
+				log.error(CommonUtil.format("view getBankCardBin api fail：%s,%s",WalletResponseEnums.SYSTEM_ERROR.getCode(),WalletResponseEnums.SYSTEM_ERROR.getDesc()));
 				throw new ResponseEntityException(WalletResponseEnums.SYSTEM_ERROR);
 			}
 	}

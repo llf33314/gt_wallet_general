@@ -41,19 +41,19 @@ public class WalletMessageServiceImpl extends BaseServiceImpl<WalletMessageMappe
 	@Override
 	public ServerResponse<?> add(Integer wMemberId, Integer msgType, String descContent, Integer orderId)
 			throws Exception {
-		log.info(CommonUtil.format("biz接口:add api,params:%s,%s,%s,%s", wMemberId,msgType,descContent,orderId));
+		log.info(CommonUtil.format("start biz add api params:%s,%s,%s,%s", wMemberId,msgType,descContent,orderId));
 		ServerResponse<Integer> serverResponse=null;
 		WalletMessage walletMessage=new WalletMessage(wMemberId, msgType, descContent, orderId);
 		walletMessageMapper.insert(walletMessage);
 		serverResponse=ServerResponse.createBySuccess();
-		log.info(CommonUtil.format("serverResponse:%s", JsonUtil.toJSONString(serverResponse)));
+		log.info(CommonUtil.format("biz add api serverResponse:%s", JsonUtil.toJSONString(serverResponse)));
 		return ServerResponse.createBySuccess();
 	}
 
 	@Override
 	public ServerResponse<?> upstate(String listStr) throws Exception {
-		log.info(CommonUtil.format("biz接口:add api,params:%s", JsonUtil.toJSONString(listStr)));
-		ServerResponse<Integer> serverResponse=null;
+		log.info(CommonUtil.format("start biz upstate api params:%s", JsonUtil.toJSONString(listStr)));
+		ServerResponse<?> serverResponse=null;
 		String[] array=	listStr.split(",");
 		for (String string : array) {
 			if(CommonUtil.isInteger(string)&&!string.equals("0")){
@@ -65,13 +65,13 @@ public class WalletMessageServiceImpl extends BaseServiceImpl<WalletMessageMappe
 			}
 		}
 		serverResponse=ServerResponse.createBySuccess();
-		log.info(CommonUtil.format("serverResponse:%s", JsonUtil.toJSONString(serverResponse)));
-		return ServerResponse.createBySuccess();
+		log.info(CommonUtil.format("biz upstate api serverResponse:%s", JsonUtil.toJSONString(serverResponse)));
+		return serverResponse;
 	}
 	
 	@Override
 	public ServerResponse<MyPageUtil<WalletMessage>> getPage(SearchMsgPage searchMsgPage) {
-		log.info(CommonUtil.format("biz接口:getPage api,params:%s", JsonUtil.toJSONString(searchMsgPage)));
+		log.info(CommonUtil.format("start biz getPage api params:%s", JsonUtil.toJSONString(searchMsgPage)));
 		EntityWrapper<WalletMessage> wrapper=new EntityWrapper<WalletMessage>() ;
 		if(CommonUtil.isNotEmpty(searchMsgPage.getMsgType())){
 			wrapper.where("msg_type={0}", searchMsgPage.getMsgType());			
@@ -79,6 +79,7 @@ public class WalletMessageServiceImpl extends BaseServiceImpl<WalletMessageMappe
 		wrapper.where("w_member_id={0}", searchMsgPage.getWmemberId());		
 		Integer total=walletMessageMapper.selectCount(wrapper);
 		if(CommonUtil.isEmpty(total)||total==0){
+			log.error("biz getPage api is empty");
 			throw new BusinessException(WalletResponseEnums.DATA_NULL_ERROR);
 		}
 		
@@ -94,13 +95,13 @@ public class WalletMessageServiceImpl extends BaseServiceImpl<WalletMessageMappe
 				myPageUtil.getRecords().get(i).setStateDesc(CommonUtil.getMsgStatusDesc(myPageUtil.getRecords().get(i).getState()));
 			}
 		}
-		log.info(CommonUtil.format("myPageUtil:%s", JsonUtil.toJSONString(myPageUtil)));
+		log.info(CommonUtil.format("biz getPage api myPageUtil:%s", JsonUtil.toJSONString(myPageUtil)));
 		return ServerResponse.createBySuccessCodeData(myPageUtil);
 	}
 
 	@Override
 	public ServerResponse<Integer> getReadState(Integer wMemberId) throws Exception {
-		log.info(CommonUtil.format("biz接口:getReadState api,params:%s", JsonUtil.toJSONString(wMemberId)));
+		log.info(CommonUtil.format(" start biz getReadState api params:%s", JsonUtil.toJSONString(wMemberId)));
 		EntityWrapper<WalletMessage> wrapper=new EntityWrapper<WalletMessage>() ;
 		wrapper.where("w_member_id={0}", wMemberId);	
 		wrapper.where("state={0}", 0);	
@@ -108,7 +109,7 @@ public class WalletMessageServiceImpl extends BaseServiceImpl<WalletMessageMappe
 		if(CommonUtil.isEmpty(total)){
 			total=0;
 		}
-		log.info(CommonUtil.format("total:%s", JsonUtil.toJSONString(total)));
+		log.info(CommonUtil.format("biz getReadState api total:%s", JsonUtil.toJSONString(total)));
 		return ServerResponse.createBySuccessCodeData(total);
 	}
 	
