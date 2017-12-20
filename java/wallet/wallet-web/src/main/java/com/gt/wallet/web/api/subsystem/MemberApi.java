@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.gt.api.util.RequestUtils;
 import com.gt.api.util.httpclient.JsonUtil;
+import com.gt.wallet.base.BaseController;
 import com.gt.wallet.dto.ServerResponse;
 import com.gt.wallet.enums.WalletResponseEnums;
 import com.gt.wallet.exception.BusinessException;
@@ -30,7 +31,7 @@ import lombok.extern.slf4j.Slf4j;
 @Slf4j
 @RestController
 @Api(value = "memberApi",description="多粉会员对外api ")  
-public class MemberApi {
+public class MemberApi extends BaseController{
 
 	@Autowired
 	private WalletMemberService walletMemberService; 

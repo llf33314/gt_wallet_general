@@ -60,7 +60,7 @@ public class WalletPayOrderController extends BaseController {
 	 * @throws Exception 
 	 */
 	@RequestMapping(value = "/79B4DE7C/paySuccessNotify", method = RequestMethod.POST)
-	@ApiOperation(value = "支付成功异步回调", notes = "支付成功异步回调")
+	@ApiOperation(value = "支付成功异步回调", notes = "支付成功异步回调",hidden=true)
 	public void paySuccessNotify(HttpServletRequest request,HttpServletResponse response, @RequestParam JSONObject params) throws Exception {
 		log.info(CommonUtil.format("支付成功异步回调,%s", JsonUtil.toJSONString(params)));
 		try {
@@ -90,7 +90,7 @@ public class WalletPayOrderController extends BaseController {
 	 * @return
 	 */
 	@RequestMapping(value = "/79B4DE7C/refundSuccessNotify", method = RequestMethod.POST)
-	@ApiOperation(value = "退款成功异步回调", notes = "退款成功异步回调")
+	@ApiOperation(value = "退款成功异步回调", notes = "退款成功异步回调",hidden=true)
 	public void refundSuccessNotify(HttpServletRequest request, @RequestParam Map<String, Object> params) {
 		log.info(CommonUtil.format("支付成功异步回调,%s", JsonUtil.toJSONString(params)));
 		try {
@@ -173,7 +173,7 @@ public class WalletPayOrderController extends BaseController {
 	 * @return
 	 */
 	@RequestMapping(value = "/79B4DE7C/applyDeposit", method = RequestMethod.POST)
-	@ApiOperation(value = "支付下单", notes = "支付下单")
+	@ApiOperation(value = "支付下单", notes = "支付下单",hidden=true)
 	@ApiImplicitParams({
         @ApiImplicitParam(name = "busId",value = "商家id",paramType = "form",dataType = "int",required=true,example="35"),
         @ApiImplicitParam(name = "bizOrderNo",value = "系统订单号",paramType = "form",dataType = "string",required=true,example="cy123456789")
@@ -196,19 +196,24 @@ public class WalletPayOrderController extends BaseController {
         ,
         @ApiImplicitParam(name = "sendUrl",value = "推送路径",paramType = "form",dataType = "string",required=false,defaultValue="1")
        })
-	public String applyDeposit(HttpServletRequest request, String  obj) {
+	public String applyDeposit(HttpServletRequest request, String  obj,String acct) {
 		log.info(CommonUtil.format("applyDeposit api,%s", JsonUtil.toJSONString(obj)));
 		try {
 			PayOrder payOrder=null;
 			String  json=KeysUtil.getDesString(obj);
+			
 			payOrder=JsonUtil.parseObject(json, PayOrder.class);
+			if(CommonUtil.isEmpty(acct)&&payOrder.getType()!=3){//H5支付不需要
+				throw new BusinessException("auth fail acct is empty!! call admin");
+			}
+			payOrder.setAcct(acct);
 			ServerResponse<com.alibaba.fastjson.JSONObject> serverResponse=walletPayOrderService.applyDeposit(payOrder);
 			log.info("serverResponse %s",JsonUtil.toJSONString(serverResponse));
 			request.setAttribute("serverResponse", serverResponse);
 			request.setAttribute("payOrder", payOrder);
 		} catch (Exception e) {
 			e.printStackTrace();
-			log.error(CommonUtil.format("applyDeposit api异常：%s,%s", WalletResponseEnums.SYSTEM_ERROR.getCode(),
+			log.error(CommonUtil.format("applyDeposit api error：%s,%s", WalletResponseEnums.SYSTEM_ERROR.getCode(),
 					WalletResponseEnums.SYSTEM_ERROR.getDesc()));
 			throw new ResponseEntityException(WalletResponseEnums.SYSTEM_ERROR);
 		}

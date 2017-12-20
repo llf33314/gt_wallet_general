@@ -128,6 +128,11 @@ public class WalletWebConfig {
 	 */
 	private static String appSecret;
 	
+	/**
+	 * 请求签名
+	 */
+	private static String walletKey;
+	
 	
 //	 // 注入配置属性 根据环境配置切换
 	public static String getDomain() {
@@ -296,6 +301,14 @@ public class WalletWebConfig {
 
 	public static void setAppSecret(String appSecret) {
 		WalletWebConfig.appSecret = appSecret;
+	}
+
+	public static String getWalletKey() {
+		return walletKey;
+	}
+
+	public static void setWalletKey(String walletKey) {
+		WalletWebConfig.walletKey = walletKey;
 	}
 
 

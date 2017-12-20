@@ -113,6 +113,17 @@ public enum WalletResponseEnums {
 	MEMBER_NULL_ERROR(1019, "还没开通多粉钱包" ),
 	
 	
+	/**
+	 * 签名错误
+	 */
+	SIGN_ERROR(1020, "签名错误" ),
+	
+	/**
+	 * 请求超时
+	 */
+	TIMEOUT_ERROR(1021, "请求超时" ),
+	
+	
 	;
 
     private final int    code;
