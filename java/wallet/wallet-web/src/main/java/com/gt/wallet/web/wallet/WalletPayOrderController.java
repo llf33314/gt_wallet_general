@@ -172,7 +172,7 @@ public class WalletPayOrderController extends BaseController {
 	 * 
 	 * @return
 	 */
-	@RequestMapping(value = "/79B4DE7C/applyDeposit", method = RequestMethod.POST)
+	@RequestMapping(value = "/79B4DE7C/applyDeposit", method = RequestMethod.GET)
 	@ApiOperation(value = "支付下单", notes = "支付下单",hidden=true)
 	@ApiImplicitParams({
         @ApiImplicitParam(name = "busId",value = "商家id",paramType = "form",dataType = "int",required=true,example="35"),
