@@ -31,7 +31,7 @@ export default {
               path: '/wallet/individual/auditing'
             })
           } else if (res.data.status == 3) {
-            res.data.memberType = 2
+            // res.data.memberType = 2
             if (res.data.memberType == 3) {
               this.$router.push({
                 path: '/wallet/individual/index'

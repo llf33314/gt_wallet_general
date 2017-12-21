@@ -37,7 +37,7 @@
       },
       companyOpen(memberId) {
         this.$router.push({
-          path: '/wallet/company/open/' + memberId
+          path: '/wallet/company/open/base/' + memberId
         })
       },
       //获取会员id
