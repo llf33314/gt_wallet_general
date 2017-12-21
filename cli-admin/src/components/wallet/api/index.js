@@ -1,6 +1,6 @@
 import axios from './../../../http/index'
 //http://dfpay.yifriend.net/swagger-ui.html
-let base = 'http://dfpay.yifriend.net'
+let base = window.DFPAYDOMAIN
 // let base = 'http://192.168.3.98:8301'
 
 export const wallet = {

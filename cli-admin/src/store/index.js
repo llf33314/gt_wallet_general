@@ -4,12 +4,13 @@ Vue.use(Vuex)
 const store = new Vuex.Store({
   state: {
     wallet: {
-      vipMsg:{}
+      id:''
     }
   },
   mutations: {
-    getVipMsg(state, data) {
-      state.wallet.vipMsg = data
+    getWalletId(state, data) {
+      console.log(data,'*****')
+      state.wallet.id = data
     }
   }
 })
