@@ -118,7 +118,7 @@
         <div class="gray">
           <div class="public-fl">
             <div class="row1 public-c333">
-              <span class="title title-i">企业名称：</span>
+              <span class="title title-i">个人名称：</span>
               <span v-text="name">撒个</span>
             </div>
             <div class="row1 public-c333">
@@ -182,7 +182,7 @@
           </p>
         </el-form-item>
         <el-form-item>
-          <el-button type="primary" @click="submitForm('ruleForm')" :loading="loading">提交</el-button>
+          <el-button type="primary" @click="submitForm('ruleForm')" :loading="loading">提现</el-button>
           <el-button onclick="window.history.go(-1)">返回</el-button>
         </el-form-item>
       </el-form>
@@ -195,7 +195,7 @@
         <p>答：1-3个工作日。</p>
       </div>
     </div>
-    <el-dialog title="提现短信验证" :visible.sync="dialogApply2" :close-on-click-modal="false" :close-on-press-escape="false" :show-close="false" custom-class="wallet-drawcash-dialog">
+    <el-dialog title="提现短信验证" :visible.sync="dialogApply2" @close="loading2=false" :close-on-click-modal="false" :close-on-press-escape="false" :show-close="false" custom-class="wallet-drawcash-dialog">
       <el-form :model="ruleForm2" :rules="rules2" ref="ruleForm2" label-width="155px" class="demo-ruleForm">
         <el-form-item label="短信验证码：" prop="verificationCode">
           <el-input v-model="ruleForm2.verificationCode" placeholder="请输入手机短信验证码"></el-input>
@@ -206,7 +206,7 @@
       </el-form>
     </el-dialog>
 
-    <el-dialog title="申请提额" :visible.sync="dialogApply" custom-class="wallet-drawcash-dialog">
+    <el-dialog title="申请提额" :visible.sync="dialogApply" @close="loading3=false" custom-class="wallet-drawcash-dialog">
       <el-form :model="ruleForm3" :rules="rules3" ref="ruleForm3" label-width="155px" class="demo-ruleForm">
         <el-form-item label="银行卡额度：">
           <span style="color:#ff4949" v-text="withdrawQuota">100,000</span>元
@@ -224,7 +224,7 @@
       </el-form>
     </el-dialog>
 
-    <el-dialog title="添加个人账户" :visible.sync="dialogApply4" custom-class="wallet-drawcash-dialog">
+    <el-dialog title="添加个人账户" :visible.sync="dialogApply4" @close="loading4=false" custom-class="wallet-drawcash-dialog">
       <el-form :model="ruleForm4" :rules="rules4" ref="ruleForm4" label-width="125px" class="demo-ruleForm">
         <el-form-item label="法人姓名：">
           <span v-text="legalName">法人姓名</span>
@@ -245,7 +245,7 @@
         </el-form-item>
       </el-form>
     </el-dialog>
-    <el-dialog title="确认绑定银行卡" :close-on-click-modal="false" :close-on-press-escape="false" :show-close="false" :visible.sync="bindBankCardDialog" custom-class="wallet-drawcash-dialog">
+    <el-dialog title="确认绑定银行卡" :close-on-click-modal="false" @close="loading5=false" :close-on-press-escape="false" :show-close="false" :visible.sync="bindBankCardDialog" custom-class="wallet-drawcash-dialog">
       <el-form :model="ruleForm5" :rules="rules5" ref="ruleForm5" label-width="125px" class="demo-ruleForm">
         <el-form-item label="短信验证：" prop="verificationCode">
           <el-input v-model="ruleForm5.verificationCode" placeholder="请输入手机验证码" style="width:318px;"></el-input>
@@ -273,63 +273,22 @@ export default {
         callback();
       }
     };
+    var quotaValueValidator = (rule, value, callback) => {
+      if (value == '') {
+        callback(new Error('请输入需求额度'));
+      } else if (value <= this.withdrawQuota) {
+        callback(new Error('最低需求额度为' + this.withdrawQuota));
+      } else {
+        callback();
+      }
+    }
     return {
       name: '',
       phone: '',
       total: 0,
       id: '',
-      walletBanks: [
-        // {
-        //   "bankCode": "string",
-        //   "bankName": "建设银行",
-        //   "cardCheck": 0,
-        //   "cardClass": 1,
-        //   "cardLenth": 0,
-        //   "cardNo": "4416467964644666",
-        //   "cardState": 1,
-        //   "cardType": 1,
-        //   "cvv2": "string",
-        //   "id": 1,
-        //   "identityNo": "string",
-        //   "identityType": 0,
-        //   "isSafeCard": 0,
-        //   "memberNum": "string",
-        //   "name": "string",
-        //   "phone": "string",
-        //   "status": 0,
-        //   "tranceNum": "string",
-        //   "transDate": "string",
-        //   "unionBank": "string",
-        //   "validate": "string",
-        //   "wmemberId": 0
-        // },
-        {
-          "bankCode": "string",
-          "bankName": "中国银行",
-          "cardCheck": 0,
-          "cardClass": 2,
-          "cardLenth": 0,
-          "cardNo": "4416467964644123",
-          "cardState": 0,
-          "cardType": 2,
-          "cvv2": "string",
-          "id": 0,
-          "identityNo": "string",
-          "identityType": 0,
-          "isSafeCard": 0,
-          "memberNum": "string",
-          "name": "string",
-          "phone": "string",
-          "status": 0,
-          "tranceNum": "string",
-          "transDate": "string",
-          "unionBank": "string",
-          "validate": "string",
-          "wmemberId": 0
-        }
-      ],
+      walletBanks: [],
       //
-
       walletBanksIndex: '',
       ruleForm: {
         money: '',
@@ -373,8 +332,9 @@ export default {
       },
       rules3: {
         quotaValue: [{
-          required: true,
-          message: '请输入申请额度',
+          // required: true,
+          // message: '请输入申请额度',
+          validator: quotaValueValidator,
           trigger: 'blur'
         }],
         quotaDesc: [{
@@ -437,8 +397,6 @@ export default {
     //获取bankId
     walletBanksIndex() {
       this.ruleForm.bankId = this.walletBanks[this.walletBanksIndex].id
-
-
     }
   },
   mounted() {
