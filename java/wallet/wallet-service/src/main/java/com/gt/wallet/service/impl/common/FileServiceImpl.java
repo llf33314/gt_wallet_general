@@ -25,14 +25,14 @@ public class FileServiceImpl implements FileService {
 	
 	@Override
 	public ServerResponse<String> upload(MultipartFile file,BusUser busUser)  throws Exception{
-		log.info(CommonUtil.format("biz接口:upload,params:%s,%s", JsonUtil.toJSONString(file), JsonUtil.toJSONString(busUser)));
+		log.info(CommonUtil.format("start biz upload api,params:%s,%s", JsonUtil.toJSONString(file), JsonUtil.toJSONString(busUser)));
 		ServerResponse<String> serverResponse=AttachmentUtil.uploadAttachment(file, busUser);
 		if(ServerResponse.judgeSuccess(serverResponse)){
 			String path=serverResponse.getData();
 			String newPath=WalletWebConfig.getFileDomain()+path.split("upload/")[1];
 			serverResponse=ServerResponse.createBySuccessCodeData(newPath);
 		}
-		log.info(CommonUtil.format("biz接口:upload,serverResponse:%s", JsonUtil.toJSONString(serverResponse)));
+		log.info(CommonUtil.format("biz upload api serverResponse:%s", JsonUtil.toJSONString(serverResponse)));
 		return serverResponse;
 	}
 

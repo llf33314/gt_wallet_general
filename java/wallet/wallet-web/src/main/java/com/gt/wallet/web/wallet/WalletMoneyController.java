@@ -69,7 +69,7 @@ public class WalletMoneyController extends BaseController {
         // path, query, body, header, form
 	})
 	public ServerResponse<MyPageUtil<WalletMoney>> getPage(HttpServletRequest request, SearchPayOrderPage searchPayOrderPage){
-		log.info(CommonUtil.format("触发分页查询接口 %s",JsonUtil.toJSONString(searchPayOrderPage)));
+		log.info(CommonUtil.format("start view getPage api params:%s",JsonUtil.toJSONString(searchPayOrderPage)));
 		try {
 			Page<?> page=new Page<>();
 			page.setSize(searchPayOrderPage.getSize());
@@ -78,11 +78,11 @@ public class WalletMoneyController extends BaseController {
 			log.info(CommonUtil.format("serverResponse:", JsonUtil.toJSONString(serverResponse)));
 			return serverResponse;
 			} catch ( BusinessException e) {
-				log.error(CommonUtil.format("分页查询接口异常：%s,%s",e.getCode(),e.getMessage()));
+				log.error(CommonUtil.format("view getPage api fail：%s,%s",e.getCode(),e.getMessage()));
 				throw new ResponseEntityException(e.getCode(),e.getMessage());
 			} catch ( Exception e) {
 				e.printStackTrace();
-				log.error(CommonUtil.format("分页查询接口异常：%s,%s",WalletResponseEnums.SYSTEM_ERROR.getCode(),WalletResponseEnums.SYSTEM_ERROR.getDesc()));
+				log.error(CommonUtil.format("view getPage api fail：%s,%s",WalletResponseEnums.SYSTEM_ERROR.getCode(),WalletResponseEnums.SYSTEM_ERROR.getDesc()));
 				throw new ResponseEntityException(WalletResponseEnums.SYSTEM_ERROR);
 			}
 	}
@@ -96,7 +96,7 @@ public class WalletMoneyController extends BaseController {
 	@RequestMapping(value = "/withdrawApply", method = RequestMethod.POST)
 	@ApiOperation(value = "withdrawApply", notes = "提现(成功后会返回订单id),支付确认时需要传递")
 	public String withdrawApply(HttpServletRequest request,@ApiParam(required=true,name="money" ,value="提现金额")@RequestParam double money,@ApiParam(required=true,name="bankId" ,value="银行卡id")@RequestParam Integer bankId) {
-		log.info(CommonUtil.format("applyDeposit api,%s,%s", JsonUtil.toJSONString(money),bankId));
+		log.info(CommonUtil.format("start view applyDeposit api params:%s,%s", JsonUtil.toJSONString(money),bankId));
 		try {
 			BusUser busUser=	CommonUtil.getLoginUser(request);
 			ServerResponse<?> serverResponse=walletMoneyService.withdrawApply(busUser.getId(), money, bankId);
@@ -104,7 +104,7 @@ public class WalletMoneyController extends BaseController {
 			request.setAttribute("serverResponse", serverResponse);
 		} catch (Exception e) {
 			e.printStackTrace();
-			log.error(CommonUtil.format("applyDeposit api异常：%s,%s", WalletResponseEnums.SYSTEM_ERROR.getCode(),
+			log.error(CommonUtil.format("view applyDeposit api fail：%s,%s", WalletResponseEnums.SYSTEM_ERROR.getCode(),
 					WalletResponseEnums.SYSTEM_ERROR.getDesc()));
 			throw new ResponseEntityException(WalletResponseEnums.SYSTEM_ERROR);
 		}
@@ -120,7 +120,7 @@ public class WalletMoneyController extends BaseController {
 	@RequestMapping(value = "/confirm", method = RequestMethod.POST)
 	@ApiOperation(value = "confirm", notes = "提现确认")
 	public String confirm(HttpServletRequest request,@ApiParam(required=true,name="id" ,value="订单id")Integer id,@ApiParam(required=true,name="verificationCode" ,value="验证码")String verificationCode) {
-		log.info(CommonUtil.format("confirm api,%s,%s", JsonUtil.toJSONString(id),verificationCode));
+		log.info(CommonUtil.format("start view confirm api params:%s,%s", JsonUtil.toJSONString(id),verificationCode));
 		try {
 			BusUser busUser=	CommonUtil.getLoginUser(request);
 			String ip=IPOrAddressUtils.getIpAddr(request);
@@ -129,7 +129,7 @@ public class WalletMoneyController extends BaseController {
 			request.setAttribute("serverResponse", serverResponse);
 		} catch (Exception e) {
 			e.printStackTrace();
-			log.error(CommonUtil.format("confirm api异常：%s,%s", WalletResponseEnums.SYSTEM_ERROR.getCode(),
+			log.error(CommonUtil.format("view confirm api fail：%s,%s", WalletResponseEnums.SYSTEM_ERROR.getCode(),
 					WalletResponseEnums.SYSTEM_ERROR.getDesc()));
 			throw new ResponseEntityException(WalletResponseEnums.SYSTEM_ERROR);
 		}
@@ -144,7 +144,7 @@ public class WalletMoneyController extends BaseController {
 	@RequestMapping(value="getTotal",method=RequestMethod.POST)
 	 @ApiOperation(value="getTotal", notes="获取余额(提现页面展示)")
 	public ServerResponse<Double> getTotal(HttpServletRequest request,@ApiParam(required=true,name="wMemberId" ,value="钱包会员id")Integer wMemberId){
-		log.info(CommonUtil.format("触发获取余额(提现页面展示)接口 %s",JsonUtil.toJSONString(wMemberId)));
+		log.info(CommonUtil.format("start  view getTotal api params: %s",JsonUtil.toJSONString(wMemberId)));
 		try {
 			ServerResponse<IndexStatistics> serverResponse=walletMoneyService.getTotal(wMemberId);
 			log.info(CommonUtil.format("serverResponse:%s", JsonUtil.toJSONString(serverResponse)));
@@ -154,11 +154,11 @@ public class WalletMoneyController extends BaseController {
 			}
 			return ServerResponse.createBySuccessCodeData(yue);
 			} catch ( BusinessException e) {
-				log.error(CommonUtil.format("获取余额(提现页面展示)接口异常：%s,%s",e.getCode(),e.getMessage()));
+				log.error(CommonUtil.format("view getTotal api fail：%s,%s",e.getCode(),e.getMessage()));
 				throw new ResponseEntityException(e.getCode(),e.getMessage());
 			} catch ( Exception e) {
 				e.printStackTrace();
-				log.error(CommonUtil.format("获取余额(提现页面展示)接口异常：%s,%s",WalletResponseEnums.SYSTEM_ERROR.getCode(),WalletResponseEnums.SYSTEM_ERROR.getDesc()));
+				log.error(CommonUtil.format("view getTotal api fail：%s,%s",WalletResponseEnums.SYSTEM_ERROR.getCode(),WalletResponseEnums.SYSTEM_ERROR.getDesc()));
 				throw new ResponseEntityException(WalletResponseEnums.SYSTEM_ERROR);
 			}
 	}
@@ -172,16 +172,16 @@ public class WalletMoneyController extends BaseController {
 	@RequestMapping(value = "/79B4DE7C/withdrawSuccessNotify", method = RequestMethod.POST)
 	@ApiOperation(value = "提现成功异步回调", notes = "提现成功异步回调")
 	public ServerResponse<?> withdrawSuccessNotify(HttpServletRequest request, @RequestParam JSONObject params) {
-		log.info(CommonUtil.format("支付成功异步回调,%s", JsonUtil.toJSONString(params)));
+		log.info(CommonUtil.format("start view withdrawSuccessNotify api,params:%s", JsonUtil.toJSONString(params)));
 		try {
 			ServerResponse<?> serverResponse=walletMoneyService.withdrawSuccessNotify(params);
 			return serverResponse;
 		} catch (BusinessException e) {
-			log.error(CommonUtil.format("提现成功异步回调异常：%s,%s", e.getCode(), e.getMessage()));
+			log.error(CommonUtil.format("view withdrawSuccessNotify api fail：%s,%s", e.getCode(), e.getMessage()));
 			throw new ResponseEntityException(e.getCode(), e.getMessage());
 		} catch (Exception e) {
 			e.printStackTrace();
-			log.error(CommonUtil.format("提现成功异步回调接口异常：%s,%s", WalletResponseEnums.SYSTEM_ERROR.getCode(),
+			log.error(CommonUtil.format("view withdrawSuccessNotify api fail：%s,%s", WalletResponseEnums.SYSTEM_ERROR.getCode(),
 					WalletResponseEnums.SYSTEM_ERROR.getDesc()));
 			throw new ResponseEntityException(WalletResponseEnums.SYSTEM_ERROR);
 		}

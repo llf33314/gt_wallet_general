@@ -43,7 +43,7 @@ public class WalletIndexStatisticsServiceImpl extends BaseServiceImpl<WalletInde
 	
 	@Override
 	public ServerResponse<IndexStatistics> getIndexStatistics(Integer busId) throws Exception {
-		log.info(CommonUtil.format("start getIndexStatistics api:%s",JsonUtil.toJSONString(busId)));
+		log.info(CommonUtil.format("start biz getIndexStatistics api params:%s",JsonUtil.toJSONString(busId)));
 		ServerResponse<List<WalletMember>> memberServerResponse=walletMemberService.findMember(busId);
 		if(ServerResponse.judgeSuccess(memberServerResponse)&&memberServerResponse.getData().size()>0){
 			WalletMember walletMember=memberServerResponse.getData().get(0);
@@ -67,7 +67,7 @@ public class WalletIndexStatisticsServiceImpl extends BaseServiceImpl<WalletInde
 			
 			return walletMoneyService.getTotal(walletMember.getId());
 		}else{
-			log.error("请先注册多粉会员");
+			log.error("biz getIndexStatistics api fail:请先注册多粉会员");
 			throw new BusinessException("请先注册多粉会员");
 		}
 		

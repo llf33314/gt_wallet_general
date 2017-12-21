@@ -70,7 +70,7 @@ public class WalletPayOrderServiceImpl extends BaseServiceImpl<WalletPayOrderMap
 //	@Transactional(propagation = Propagation.REQUIRED,isolation = Isolation.DEFAULT,timeout=36000,rollbackFor=Exception.class)
 	@Override
 	public ServerResponse<com.alibaba.fastjson.JSONObject> applyDeposit(PayOrder payOrder)throws Exception {
-		log.info(CommonUtil.format("start applyDeposit api:%s",JsonUtil.toJSONString(payOrder)));
+		log.info(CommonUtil.format("start biz applyDeposit api params:%s",JsonUtil.toJSONString(payOrder)));
 		ServerResponse<WalletPayOrder> serverResponseOrder=findByOrderNo(payOrder.getBizOrderNo());
 		WalletPayOrder walletPayOrder=null;
 		if(!ServerResponse.judgeSuccess(serverResponseOrder)){
@@ -78,6 +78,7 @@ public class WalletPayOrderServiceImpl extends BaseServiceImpl<WalletPayOrderMap
 		}else{
 			walletPayOrder=serverResponseOrder.getData();
 			if(walletPayOrder.getStatus().equals("success")){//已支付
+				log.error("applyDeposit api fail:"+WalletResponseEnums.PAY_SUCCESS.getDesc());
 				throw new BusinessException(WalletResponseEnums.PAY_SUCCESS);
 			}
 		}
@@ -86,9 +87,11 @@ public class WalletPayOrderServiceImpl extends BaseServiceImpl<WalletPayOrderMap
 		params.setMemberId(payOrder.getBusId());
 		WalletMember walletMember=walletMemberMapper.selectOne(params);
 		if(CommonUtil.isEmpty(walletMember)){
+			log.error("biz applyDeposit api fail:先请注册多粉钱包会员");
 			throw new BusinessException("先请注册多粉钱包会员");
 		}
 		if(walletMember.getStatus()!=3){//正常状态
+			log.error("biz applyDeposit api fail:多粉钱包会员账号异常，请联系管理员");
 			throw new BusinessException("多粉钱包会员账号异常，请联系管理员");
 		}
 		String format="yyyyMMddHHmmss";
@@ -101,7 +104,7 @@ public class WalletPayOrderServiceImpl extends BaseServiceImpl<WalletPayOrderMap
 		ServerResponse<com.alibaba.fastjson.JSONObject> serverResponse=YunSoaMemberUtil.applyDeposit(tPayOrder);
 		com.alibaba.fastjson.JSONObject payInfo=	serverResponse.getData().getJSONObject("payInfo");
 		/************通联下单************/
-		log.info(CommonUtil.format("serverResponse:%s", JsonUtil.toJSONString(serverResponse)));
+		log.info(CommonUtil.format("biz applyDeposit api serverResponse:%s", JsonUtil.toJSONString(serverResponse)));
 		/************记录日志************/
 		walletApiLogService.save(JsonUtil.toJSONString(tPayOrder), serverResponse, walletMember.getMemberId(), payOrder.getNotifyUrl(),submitNo,WalletLogConstants.LOG_PAY);
 		/************记录日志************/
@@ -119,7 +122,7 @@ public class WalletPayOrderServiceImpl extends BaseServiceImpl<WalletPayOrderMap
 	
 	@Override
 	public ServerResponse<com.alibaba.fastjson.JSONObject> codepay(PayOrder payOrder)throws Exception {
-		log.info(CommonUtil.format("start applyDeposit api:%s",JsonUtil.toJSONString(payOrder)));
+		log.info(CommonUtil.format("start biz codepay api params:%s",JsonUtil.toJSONString(payOrder)));
 		ServerResponse<WalletPayOrder> serverResponseOrder=findByOrderNo(payOrder.getBizOrderNo());
 		WalletPayOrder walletPayOrder=null;
 		if(!ServerResponse.judgeSuccess(serverResponseOrder)){
@@ -127,6 +130,7 @@ public class WalletPayOrderServiceImpl extends BaseServiceImpl<WalletPayOrderMap
 		}else{
 			walletPayOrder=serverResponseOrder.getData();
 			if(walletPayOrder.getStatus().equals("success")){//已支付
+				log.error("biz codepay api fail:"+WalletResponseEnums.PAY_SUCCESS.getDesc());
 				throw new BusinessException(WalletResponseEnums.PAY_SUCCESS);
 			}
 		}
@@ -135,9 +139,11 @@ public class WalletPayOrderServiceImpl extends BaseServiceImpl<WalletPayOrderMap
 		params.setMemberId(payOrder.getBusId());
 		WalletMember walletMember=walletMemberMapper.selectOne(params);
 		if(CommonUtil.isEmpty(walletMember)){
+			log.error("biz codepay api fail:先请注册多粉钱包会员");
 			throw new BusinessException("先请注册多粉钱包会员");
 		}
 		if(walletMember.getStatus()!=3){//正常状态
+			log.error("biz codepay api fail:多粉钱包会员账号异常，请联系管理员");
 			throw new BusinessException("多粉钱包会员账号异常，请联系管理员");
 		}
 		String format="yyyyMMddHHmmss";
@@ -166,15 +172,17 @@ public class WalletPayOrderServiceImpl extends BaseServiceImpl<WalletPayOrderMap
 	@Transactional(propagation = Propagation.REQUIRED,isolation = Isolation.DEFAULT,timeout=36000,rollbackFor=Exception.class)
 	@Override
 	public ServerResponse<?> save(PayOrder payOrder) throws Exception {
-		log.info(CommonUtil.format("start applyDeposit api:%s",JsonUtil.toJSONString(payOrder)));
+		log.info(CommonUtil.format("start biz save api params:%s",JsonUtil.toJSONString(payOrder)));
 		WalletMember params=new WalletMember();
 		params.setMemberClass(1);
 		params.setMemberId(payOrder.getBusId());
 		WalletMember walletMember=walletMemberMapper.selectOne(params);
 		if(CommonUtil.isEmpty(walletMember)){
+			log.error("biz save api fail:先请注册多粉钱包会员");
 			throw new BusinessException("先请注册多粉钱包会员");
 		}
 		if(walletMember.getStatus()!=3){//正常状态
+			log.error("biz save api fail:多粉钱包会员账号异常，请联系管理员");
 			throw new BusinessException("多粉钱包会员账号异常，请联系管理员");
 		}
 		ServerResponse<WalletPayOrder> serverResponse=findByOrderNo(payOrder.getBizOrderNo());
@@ -184,6 +192,7 @@ public class WalletPayOrderServiceImpl extends BaseServiceImpl<WalletPayOrderMap
 		}else{
 			walletPayOrder=serverResponse.getData();
 			if(walletPayOrder.getStatus().equals("success")){//已支付
+				log.error("biz save api fail:"+WalletResponseEnums.PAY_SUCCESS.getDesc());
 				throw new BusinessException(WalletResponseEnums.PAY_SUCCESS);
 			}
 		}
@@ -208,7 +217,7 @@ public class WalletPayOrderServiceImpl extends BaseServiceImpl<WalletPayOrderMap
 			walletPayOrder.setSubmitNo(payOrder.getSubmitNo());
 			count=walletPayOrderMapper.updateById(walletPayOrder);
 		}
-		log.info("count:"+count);
+		log.info("biz save api count:"+count);
 		if(count==1){
 			return ServerResponse.createBySuccess();
 		}else{
@@ -219,11 +228,12 @@ public class WalletPayOrderServiceImpl extends BaseServiceImpl<WalletPayOrderMap
 
 	@Override
 	public ServerResponse<WalletPayOrder> findByOrderNo(String orderNo) throws Exception {
-		log.info(CommonUtil.format("start findByOrderNo api:%s",orderNo));
+		log.info(CommonUtil.format("start biz findByOrderNo api:%s",orderNo));
 		WalletPayOrder entity=new WalletPayOrder();
 		entity.setSysOrderNo(orderNo);
 		WalletPayOrder walletPayOrder=walletPayOrderMapper.selectOne(entity);
 		if(CommonUtil.isEmpty(walletPayOrder)){
+			log.error("biz findByOrderNo api fail:"+WalletResponseEnums.DATA_NULL_ERROR.getDesc());
 			return ServerResponse.createByErrorCode(WalletResponseEnums.DATA_NULL_ERROR);
 		}
 		return ServerResponse.createBySuccessCodeData(walletPayOrder);
@@ -236,6 +246,7 @@ public class WalletPayOrderServiceImpl extends BaseServiceImpl<WalletPayOrderMap
 		entity.setSubmitNo(submitOrderNo);
 		WalletPayOrder walletPayOrder=walletPayOrderMapper.selectOne(entity);
 		if(CommonUtil.isEmpty(walletPayOrder)){
+			log.error("biz findBySubmitOrderNo api fail:"+WalletResponseEnums.DATA_NULL_ERROR.getDesc());
 			return ServerResponse.createByErrorCode(WalletResponseEnums.DATA_NULL_ERROR);
 		}
 		return ServerResponse.createBySuccessCodeData(walletPayOrder);
@@ -245,8 +256,7 @@ public class WalletPayOrderServiceImpl extends BaseServiceImpl<WalletPayOrderMap
 	@SuppressWarnings("unchecked")
 	@Override
 	public ServerResponse<?> paySuccessNotify(JSONObject params)throws Exception {
-		
-		log.info(CommonUtil.format("start paySuccessNotify api:%s",JsonUtil.toJSONString(params)));
+		log.info(CommonUtil.format("start biz paySuccessNotify api params:%s",JsonUtil.toJSONString(params)));
 		JSONObject rps=params.getJSONObject("rps");
 		String status=rps.getString("status");
 		String payfailmessage="支付成功";
@@ -274,7 +284,7 @@ public class WalletPayOrderServiceImpl extends BaseServiceImpl<WalletPayOrderMap
 			walletApiLogService.save(JsonUtil.toJSONString(params), null, null, null, bizOrderNo,WalletLogConstants.LOG_PAYNOTITY);
 		} catch (Exception e) {
 			e.printStackTrace();
-			log.error("write api log error");
+			log.error("biz paySuccessNotify api fail:write api log error");
 		}
 		/*****************************记录回调结果**********************************/
 		log.info(CommonUtil.format("WalletPayOrder: %s", JsonUtil.toJSONString(serverResponse)));
@@ -297,19 +307,20 @@ public class WalletPayOrderServiceImpl extends BaseServiceImpl<WalletPayOrderMap
 					walletApiLogService.save(JsonUtil.toJSONString(parms),ServerResponse.createByErrorCode(result), walletPayOrder.getWMemberId(), response.getData().getUrl(), bizOrderNo,WalletLogConstants.LOG_PAYNOTITYERP);
 				} catch (Exception e) {
 					e.printStackTrace();
-					log.error("write api log error");
+					log.error("biz paySuccessNotify api fail:write api log error");
 				}
 				/*****************************通知子系统**********************************/
 			}else{
-				log.error("无异步回调通知url");
+				log.error("biz paySuccessNotify api fail:无异步回调通知url");
 			}
 			if(count==1){
 				return ServerResponse.createBySuccess();
 			}else{
+				log.error("biz paySuccessNotify api fail:更新状态失败");
 				return ServerResponse.createByErrorMessage("更新状态失败");
 			}
 		}else{//订单不存在
-			log.error("订单不存在");
+			log.error("biz paySuccessNotify api fail:订单不存在");
 			return ServerResponse.createByErrorMessage("订单不存在");
 		}
 		
@@ -318,7 +329,7 @@ public class WalletPayOrderServiceImpl extends BaseServiceImpl<WalletPayOrderMap
 
 	@Override
 	public ServerResponse<MyPageUtil<WalletPayOrder>> getPage(Page<?> page,SearchPayOrderPage searchPayOrderPage) {
-		log.info(CommonUtil.format("biz接口:分页查询,请求参数:%s", JsonUtil.toJSONString(page)));
+		log.info(CommonUtil.format("start biz getPage api params:%s", JsonUtil.toJSONString(page)));
 		EntityWrapper<WalletPayOrder> wrapper=new EntityWrapper<WalletPayOrder>() ;
 		wrapper.where("status={0}",searchPayOrderPage.getStatus());		
 		wrapper.where("w_member_id={0}",searchPayOrderPage.getWmemberId());
@@ -331,6 +342,7 @@ public class WalletPayOrderServiceImpl extends BaseServiceImpl<WalletPayOrderMap
 		}
 		Integer total=walletPayOrderMapper.selectCount(wrapper);
 		if(CommonUtil.isEmpty(total)||total==0){
+			log.error("biz getPage api fail:"+WalletResponseEnums.DATA_NULL_ERROR.getDesc());
 			throw new BusinessException(WalletResponseEnums.DATA_NULL_ERROR);
 		}
 		
@@ -341,14 +353,14 @@ public class WalletPayOrderServiceImpl extends BaseServiceImpl<WalletPayOrderMap
 		MyPageUtil<WalletPayOrder> myPageUtil=new MyPageUtil<WalletPayOrder>(page.getCurrent(), page.getSize());
 		myPageUtil.setRecords(walletPayOrderMapper.selectPage(myPageUtil,wrapper),total);
 //		MyPageUtil.getInit( page.getRecords().size(), page);
-		log.info(CommonUtil.format("page:%s", JsonUtil.toJSONString(page)));
+		log.info(CommonUtil.format("biz getPage api fail page:%s", JsonUtil.toJSONString(page)));
 		return ServerResponse.createBySuccessCodeData(myPageUtil);
 	}
 
 
 	@Override
 	public ServerResponse<?> refund(TRefundOrder refundOrder) throws Exception {
-		log.info(CommonUtil.format("biz接口:refund api,params:%s", JsonUtil.toJSONString(refundOrder)));
+		log.info(CommonUtil.format("start biz refund api params:%s", JsonUtil.toJSONString(refundOrder)));
 		ServerResponse<WalletPayOrder>  serverResponseWalletPayOrder=	walletPayOrderService.findByOrderNo(refundOrder.getBizOrderNo());
 		if(!ServerResponse.judgeSuccess(serverResponseWalletPayOrder)){
 			log.error("异常：订单号不存在!");
@@ -357,7 +369,7 @@ public class WalletPayOrderServiceImpl extends BaseServiceImpl<WalletPayOrderMap
 		WalletPayOrder walletPayOrder=serverResponseWalletPayOrder.getData();
 		WalletMember walletMember=walletMemberMapper.selectById(walletPayOrder.getWMemberId());
 		if(walletMember.getStatus()!=3){
-			log.error("会员账号异常("+CommonUtil.getMemberStatusDesc(walletMember.getStatus())+")，退款失败!");
+			log.error("biz refund api fail:会员账号异常("+CommonUtil.getMemberStatusDesc(walletMember.getStatus())+")，退款失败!");
 			throw new BusinessException("会员账号异常("+CommonUtil.getMemberStatusDesc(walletMember.getStatus())+")，退款失败!");
 		}
 		return null;

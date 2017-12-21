@@ -68,17 +68,17 @@ public class WalletMessageController extends BaseController {
         // path, query, body, header, form
 	})
 	public ServerResponse<MyPageUtil<WalletMessage>> getPage(HttpServletRequest request,SearchMsgPage searchMsgPage){
-		log.info(CommonUtil.format("触发分页查询接口 %s",JsonUtil.toJSONString(searchMsgPage)));
+		log.info(CommonUtil.format("start view getPage api  params:%s",JsonUtil.toJSONString(searchMsgPage)));
 		try {
 			ServerResponse<MyPageUtil<WalletMessage>> serverResponse=walletMessageService.getPage(searchMsgPage);
 			log.info(CommonUtil.format("serverResponse:", JsonUtil.toJSONString(serverResponse)));
 			return serverResponse;
 			} catch ( BusinessException e) {
-				log.error(CommonUtil.format("分页查询接口异常：%s,%s",e.getCode(),e.getMessage()));
+				log.error(CommonUtil.format("view getPage api fail：%s,%s",e.getCode(),e.getMessage()));
 				throw new ResponseEntityException(e.getCode(),e.getMessage());
 			} catch ( Exception e) {
 				e.printStackTrace();
-				log.error(CommonUtil.format("分页查询接口异常：%s,%s",WalletResponseEnums.SYSTEM_ERROR.getCode(),WalletResponseEnums.SYSTEM_ERROR.getDesc()));
+				log.error(CommonUtil.format("view getPage api fail：%s,%s",WalletResponseEnums.SYSTEM_ERROR.getCode(),WalletResponseEnums.SYSTEM_ERROR.getDesc()));
 				throw new ResponseEntityException(WalletResponseEnums.SYSTEM_ERROR);
 			}
 	}
@@ -91,17 +91,17 @@ public class WalletMessageController extends BaseController {
 	@ResponseBody
 	@RequestMapping(value="79B4DE7C/getReadState",method=RequestMethod.POST)
 	public ServerResponse<Integer> getReadState(HttpServletRequest request,@ApiParam(required=true,name="wMemberId" ,value="钱包会员id") @RequestParam Integer wMemberId){
-		log.info(CommonUtil.format("触发获取未读记录数接口 %s",JsonUtil.toJSONString(wMemberId)));
+		log.info(CommonUtil.format("start view getReadState api params %s",JsonUtil.toJSONString(wMemberId)));
 		try {
 			ServerResponse<Integer> serverResponse=walletMessageService.getReadState(wMemberId);
 			log.info(CommonUtil.format("serverResponse:", JsonUtil.toJSONString(serverResponse)));
 			return serverResponse;
 			} catch ( BusinessException e) {
-				log.error(CommonUtil.format("获取未读记录数接口异常：%s,%s",e.getCode(),e.getMessage()));
+				log.error(CommonUtil.format("view getReadState api fail：%s,%s",e.getCode(),e.getMessage()));
 				throw new ResponseEntityException(e.getCode(),e.getMessage());
 			} catch ( Exception e) {
 				e.printStackTrace();
-				log.error(CommonUtil.format("获取未读记录数接口异常：%s,%s",WalletResponseEnums.SYSTEM_ERROR.getCode(),WalletResponseEnums.SYSTEM_ERROR.getDesc()));
+				log.error(CommonUtil.format("view getReadState api fail：%s,%s",WalletResponseEnums.SYSTEM_ERROR.getCode(),WalletResponseEnums.SYSTEM_ERROR.getDesc()));
 				throw new ResponseEntityException(WalletResponseEnums.SYSTEM_ERROR);
 			}
 	}
@@ -113,17 +113,17 @@ public class WalletMessageController extends BaseController {
 	@ResponseBody
 	@RequestMapping(value="79B4DE7C/upstate",method=RequestMethod.POST)
 	public ServerResponse<?> upstate(HttpServletRequest request,@ApiParam(required=true,name="listStr" ,value="消息id，可填写多个，用逗号隔开")@RequestParam String listStr){
-		log.info(CommonUtil.format("触发修为已读状态接口 %s",JsonUtil.toJSONString(listStr)));
+		log.info(CommonUtil.format("start view upstate api params: %s",JsonUtil.toJSONString(listStr)));
 		try {
 			ServerResponse<?> serverResponse=walletMessageService.upstate(listStr);
 			log.info(CommonUtil.format("serverResponse:", JsonUtil.toJSONString(serverResponse)));
 			return serverResponse;
 		} catch ( BusinessException e) {
-			log.error(CommonUtil.format("修为已读状态接口异常：%s,%s",e.getCode(),e.getMessage()));
+			log.error(CommonUtil.format("view upstate api fail：%s,%s",e.getCode(),e.getMessage()));
 			throw new ResponseEntityException(e.getCode(),e.getMessage());
 		} catch ( Exception e) {
 			e.printStackTrace();
-			log.error(CommonUtil.format("修为已读状态接口异常：%s,%s",WalletResponseEnums.SYSTEM_ERROR.getCode(),WalletResponseEnums.SYSTEM_ERROR.getDesc()));
+			log.error(CommonUtil.format("view upstate api fail：%s,%s",WalletResponseEnums.SYSTEM_ERROR.getCode(),WalletResponseEnums.SYSTEM_ERROR.getDesc()));
 			throw new ResponseEntityException(WalletResponseEnums.SYSTEM_ERROR);
 		}
 	}
@@ -136,7 +136,7 @@ public class WalletMessageController extends BaseController {
 	@ResponseBody
 	@RequestMapping(value="79B4DE7C/getMsgTypeResult",method=RequestMethod.POST)
 	public ServerResponse<List<MsgTypeResult>> getMsgTypeResult(HttpServletRequest request){
-		log.info(CommonUtil.format("触发获取消息类型接口 %s",JsonUtil.toJSONString(CommonUtil.getLoginUser(request))));
+		log.info(CommonUtil.format("start view getMsgTypeResult api params: %s",JsonUtil.toJSONString(CommonUtil.getLoginUser(request))));
 		try {
 			List<MsgTypeResult> results=new ArrayList<>();
 			MsgTypeResult result2=new MsgTypeResult(WalletMsgEnums.MSGTYPE_QUOTAREVIEW);
@@ -151,11 +151,11 @@ public class WalletMessageController extends BaseController {
 			log.info(CommonUtil.format("serverResponse:", JsonUtil.toJSONString(serverResponse)));
 			return serverResponse;
 		} catch ( BusinessException e) {
-			log.error(CommonUtil.format("获取消息类型接口异常：%s,%s",e.getCode(),e.getMessage()));
+			log.error(CommonUtil.format("view getMsgTypeResult api fail：%s,%s",e.getCode(),e.getMessage()));
 			throw new ResponseEntityException(e.getCode(),e.getMessage());
 		} catch ( Exception e) {
 			e.printStackTrace();
-			log.error(CommonUtil.format("获取消息类型接口异常：%s,%s",WalletResponseEnums.SYSTEM_ERROR.getCode(),WalletResponseEnums.SYSTEM_ERROR.getDesc()));
+			log.error(CommonUtil.format("view getMsgTypeResult api fail：%s,%s",WalletResponseEnums.SYSTEM_ERROR.getCode(),WalletResponseEnums.SYSTEM_ERROR.getDesc()));
 			throw new ResponseEntityException(WalletResponseEnums.SYSTEM_ERROR);
 		}
 	}

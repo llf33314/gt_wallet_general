@@ -59,7 +59,7 @@ public class WalletBankServiceImpl extends BaseServiceImpl<WalletBankMapper, Wal
 	@Override
 	public ServerResponse<List<WalletBank>> getWalletBanksByMemberId(Integer wmemberId) {
 		if(CommonUtil.isEmpty(wmemberId)){
-			log.error(CommonUtil.format("biz接口:获取会员银行卡列表异常:%s",WalletResponseEnums.CODE_ERROR.getDesc()));
+			log.error(CommonUtil.format("start biz getWalletBanksByMemberId api params:%s",WalletResponseEnums.CODE_ERROR.getDesc()));
 			throw new BusinessException(WalletResponseEnums.CODE_ERROR);
 		}
 		EntityWrapper<WalletBank> wrapper=new EntityWrapper<WalletBank>();
@@ -69,7 +69,7 @@ public class WalletBankServiceImpl extends BaseServiceImpl<WalletBankMapper, Wal
 		if(CommonUtil.isNotEmpty(list)&&list.size()>0){
 			return ServerResponse.createBySuccessCodeData(list);
 		}else{
-			log.error(CommonUtil.format("biz接口:获取会员银行卡列表异常:%s",WalletResponseEnums.DATA_NULL_ERROR.getDesc()));
+			log.error(CommonUtil.format("biz getWalletBanksByMemberId api fail:%s",WalletResponseEnums.DATA_NULL_ERROR.getDesc()));
 			throw new BusinessException(WalletResponseEnums.DATA_NULL_ERROR);
 		}
 	}
@@ -77,7 +77,7 @@ public class WalletBankServiceImpl extends BaseServiceImpl<WalletBankMapper, Wal
 	@Transactional(propagation = Propagation.REQUIRED,isolation = Isolation.DEFAULT,timeout=36000,rollbackFor=Exception.class)
 	@Override
 	public ServerResponse<Integer> add(WalletIndividualAdd walletIndividualAdd,Integer isSafeCard)throws Exception {
-		log.info(CommonUtil.format("biz接口:绑定银行卡,请求参数:%s", JsonUtil.toJSONString(walletIndividualAdd)));
+		log.info(CommonUtil.format("start biz add api params:%s", JsonUtil.toJSONString(walletIndividualAdd)));
 		/****************************************银行卡操作********************************************/
 		WalletMember walletMember=walletMemberMapper.selectById(walletIndividualAdd.getMemberId());
 		String carNoMi=YunSoaMemberUtil.rsaEncrypt(walletIndividualAdd.getCardNo());
@@ -87,8 +87,8 @@ public class WalletBankServiceImpl extends BaseServiceImpl<WalletBankMapper, Wal
 			entity.setIsSafeCard(0);
 			WalletBank walletBank=walletBankMapper.selectOne(entity);
 			if(CommonUtil.isNotEmpty(walletBank)&&!walletBank.getCardNo().equals(carNoMi)){//
-				log.error(CommonUtil.format("已设置安全卡,只能添加非安全卡"));
-				throw new BusinessException("已设置安全卡,只能添加非安全卡");
+				log.error(CommonUtil.format("biz add api fail:已设置安全卡,只能添加非安全卡"));
+				throw new BusinessException("biz add api fail:已设置安全卡,只能添加非安全卡");
 			}
 		}
 		if(walletMember.getMemberType()==3){//个人会员
@@ -96,8 +96,8 @@ public class WalletBankServiceImpl extends BaseServiceImpl<WalletBankMapper, Wal
 			params.setWMemberId(walletMember.getId());
 			WalletIndividual walletIndividual=	walletIndividualMapper.selectOne(params);
 			if(!walletIndividualAdd.getBankName().equals(walletIndividual.getName())){
-				log.error(CommonUtil.format("持卡人姓名与会员姓名不一致"));
-				throw new BusinessException("持卡人姓名与会员姓名不一致");
+				log.error(CommonUtil.format("biz add api fail:持卡人姓名与会员姓名不一致"));
+				throw new BusinessException("biz add api fail:持卡人姓名与会员姓名不一致");
 			}
 			
 		}else{
@@ -105,8 +105,8 @@ public class WalletBankServiceImpl extends BaseServiceImpl<WalletBankMapper, Wal
 			params.setWMemberId(walletMember.getId());
 			WalletCompany walletCompany=walletCompanyMapper.selectOne(params);
 			if(!walletIndividualAdd.getBankName().equals(walletCompany.getLegalName())){
-				log.error(CommonUtil.format("持卡人姓名与法人姓名不一致"));
-				throw new BusinessException("持卡人姓名与法人姓名不一致");
+				log.error(CommonUtil.format("biz add api fail:持卡人姓名与法人姓名不一致"));
+				throw new BusinessException("biz add api fail:持卡人姓名与法人姓名不一致");
 			}
 		}
 		ServerResponse<TCardBin>  serverResponseBin=YunSoaMemberUtil.getBankCardBin(walletIndividualAdd.getCardNo());
@@ -124,12 +124,12 @@ public class WalletBankServiceImpl extends BaseServiceImpl<WalletBankMapper, Wal
 		cardState =tCardBin.getCardState().intValue();
 		walletIndividualAdd.getMemberId();
 		if(cardType!=1){//
-			log.error("biz接口:银行卡类型异常,请填写借记卡");
-			throw new BusinessException("银行卡类型异常,请填写借记卡");
+			log.error("biz add api fail:请填写借记卡");
+			throw new BusinessException("biz add api fail:请填写借记卡");
 		}
 		if(cardState!=1){//
-			log.error("biz接口:银行卡类型异常,银行卡已失效");
-			throw new BusinessException("银行卡类型异常,银行卡已失效");
+			log.error("biz add api fail:银行卡已失效");
+			throw new BusinessException("biz add api fail:银行卡已失效");
 		}
 		ServerResponse<com.alibaba.fastjson.JSONObject> serverResponseBind=YunSoaMemberUtil.applyBindBankCard(walletIndividualAdd, walletMember.getMemberNum(), true, bankCode, cardType);
 		log.info(CommonUtil.format("serverResponseBind:%s", JsonUtil.toJSONString(serverResponseBind)));
@@ -175,7 +175,7 @@ public class WalletBankServiceImpl extends BaseServiceImpl<WalletBankMapper, Wal
 		/********************************新增银行卡*********************************/
 		/****************************************银行卡操作********************************************/
 		ServerResponse<Integer> response=	ServerResponse.createBySuccessCodeData(walletBank.getId());
-		log.info("biz接口:获取会员银行卡:"+JsonUtil.toJSONString(response));
+		log.info("biz add api response:%s"+JsonUtil.toJSONString(response));
 		
 		return response;
 	}
@@ -183,7 +183,7 @@ public class WalletBankServiceImpl extends BaseServiceImpl<WalletBankMapper, Wal
 	@Transactional(propagation = Propagation.REQUIRED,isolation = Isolation.DEFAULT,timeout=36000,rollbackFor=Exception.class)
 	@Override
 	public ServerResponse<Integer> addPublic(WalletCompanyAdd walletCompanyAdd)throws Exception {
-		log.info(CommonUtil.format("start addPublic api:%s", JsonUtil.toJSONString(walletCompanyAdd)));
+		log.info(CommonUtil.format("start biz addPublic api params:%s", JsonUtil.toJSONString(walletCompanyAdd)));
 		/****************************************银行卡操作********************************************/
 		ServerResponse<TCardBin>  serverResponseBin=YunSoaMemberUtil.getBankCardBin(walletCompanyAdd.getAccountNo());
 		log.info(CommonUtil.format("serverResponseBin:%s", JsonUtil.toJSONString(serverResponseBin)));
@@ -201,12 +201,12 @@ public class WalletBankServiceImpl extends BaseServiceImpl<WalletBankMapper, Wal
 		cardLenth =tCardBin.getCardLenth().intValue();
 		cardState =tCardBin.getCardState().intValue();
 		if(cardType!=1){//
-			log.error("biz接口:银行卡类型异常,请填写借记卡");
-			throw new BusinessException("银行卡类型异常,请填写借记卡");
+			log.error("biz addPublic api fail:请填写借记卡");
+			throw new BusinessException("biz addPublic api fail:请填写借记卡");
 		}
 		if(cardState!=1){//
-			log.error("biz接口:银行卡类型异常,银行卡已失效");
-			throw new BusinessException("银行卡类型异常,银行卡已失效");
+			log.error("biz addPublic api fail:银行卡已失效");
+			throw new BusinessException("biz addPublic api fail:银行卡已失效");
 		}
 		/********************************新增银行卡*********************************/
 		WalletBank walletBank=null;
@@ -249,15 +249,16 @@ public class WalletBankServiceImpl extends BaseServiceImpl<WalletBankMapper, Wal
 	@Transactional(propagation = Propagation.REQUIRED,isolation = Isolation.DEFAULT,timeout=36000,rollbackFor=Exception.class)
 	@Override
 	public ServerResponse<?> bindBankCard(Integer busId,Integer id,String verificationCode) throws Exception {
-		log.info(CommonUtil.format("start bindBankCard api:%s",id));
+		log.info(CommonUtil.format("start biz bindBankCard api params:%s",id));
 		WalletBank walletBank=walletBankMapper.selectById(id);
 		if(CommonUtil.isEmpty(walletBank)){
+			log.error(CommonUtil.format("biz bindBankCard api fail:请先填写银行卡信息"));
 			throw new BusinessException("请先填写银行卡信息");
 		}
 		WalletMember walletMember=walletMemberMapper.selectById(walletBank.getWMemberId());
 		if(walletMember.getMemberClass()==1&&walletMember.getMemberId()!=busId){
-			log.error("操作异常，此钱包会员不属于当前登录商家");
-			throw new BusinessException("操作异常，此钱包会员不属于当前登录商家");
+			log.error("biz bindBankCard api fail:此钱包会员不属于当前登录商家");
+			throw new BusinessException("biz bindBankCard api fail:此钱包会员不属于当前登录商家");
 		}
 		ServerResponse<?> serverResponse=YunSoaMemberUtil.bindBankCard(walletMember.getMemberNum(), walletBank.getTranceNum(), walletBank.getTransDate(), walletBank.getPhone(), verificationCode);
 		log.info(CommonUtil.format("serverResponse:%s", JsonUtil.toJSONString(serverResponse)));
@@ -271,28 +272,34 @@ public class WalletBankServiceImpl extends BaseServiceImpl<WalletBankMapper, Wal
 
 	@Override
 	public ServerResponse<TCardBin> getBankCardBin(String bankCardNo) {
+		log.info(CommonUtil.format("start biz getBankCardBin api params:%s",bankCardNo));
 		ServerResponse<TCardBin> serverResponse=YunSoaMemberUtil.getBankCardBin(bankCardNo);
+		log.info(CommonUtil.format("start biz getBankCardBin api serverResponse:%s",JsonUtil.toJSONString(serverResponse)));
 		return serverResponse;
 	}
 
 	@Override
 	public ServerResponse<WalletBank> getWalletSafeBankByMemberId(Integer wmemberId) {
+		log.info(CommonUtil.format("start biz getWalletSafeBankByMemberId api params:%s",wmemberId));
 		WalletBank params=new WalletBank();
 		params.setWMemberId(wmemberId);
 		params.setStatus(0);
 		params.setCardClass(1);
 		params.setCardState(1);
 		WalletBank walletBank=walletBankMapper.selectOne(params);
+		log.info(CommonUtil.format("start biz getWalletSafeBankByMemberId api walletBank:%s",JsonUtil.toJSONString(walletBank)));
 		return ServerResponse.createBySuccessCodeData(walletBank);
 	}
 
 	@Override
 	public ServerResponse<WalletBank> getWalletPublicBankByMemberId(Integer wmemberId) {
+		log.info(CommonUtil.format("start biz getWalletPublicBankByMemberId api params:%s",wmemberId));
 		WalletBank params=new WalletBank();
 		params.setWMemberId(wmemberId);
 		params.setStatus(0);
 		params.setCardClass(2);
 		WalletBank walletBank=walletBankMapper.selectOne(params);
+		log.info(CommonUtil.format("start biz getWalletPublicBankByMemberId api walletBank:%s",JsonUtil.toJSONString(walletBank)));
 		return ServerResponse.createBySuccessCodeData(walletBank);
 	}
 }

@@ -34,7 +34,7 @@ public class WalletPayUserServiceImpl extends BaseServiceImpl<WalletPayUserMappe
 	@Transactional(propagation = Propagation.REQUIRED,isolation = Isolation.DEFAULT,timeout=36000,rollbackFor=Exception.class)
 	@Override
 	public ServerResponse<?> add(WalletPayUser walletPayUser) {
-		log.info(CommonUtil.format("biz:add api params:%s", JsonUtil.toJSONString(walletPayUser)));
+		log.info(CommonUtil.format("start biz add api params:%s", JsonUtil.toJSONString(walletPayUser)));
 		ServerResponse<WalletPayUser> responseWalletPayUser=findByOpenidAndUserType(walletPayUser.getOpenid(), walletPayUser.getUserType());
 		log.info(CommonUtil.format("responseWalletPayUser:%s", JsonUtil.toJSONString(walletPayUser)));
 		Integer count=null;
@@ -43,12 +43,13 @@ public class WalletPayUserServiceImpl extends BaseServiceImpl<WalletPayUserMappe
 		}else{
 			count=walletPayUserMapper.insert(walletPayUser);
 		}
-		log.info(CommonUtil.format("count:%s", count));
+		log.info(CommonUtil.format("biz add api count:%s", count));
 		return ServerResponse.createBySuccess();
 	}
 
 	@Override
 	public ServerResponse<WalletPayUser> findByOpenidAndUserType(String openid, Integer userType) {
+		log.info(CommonUtil.format("start biz findByOpenidAndUserType api params:%s,%s", openid,userType));
 		WalletPayUser entity=new  WalletPayUser();
 		entity.setOpenid(openid);
 		entity.setUserType(userType);

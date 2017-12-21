@@ -4,10 +4,8 @@ package com.gt.wallet.web.wallet;
 import javax.servlet.http.HttpServletRequest;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.MediaType;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
@@ -78,7 +76,7 @@ public class WalletIndividualController extends BaseController {
 	})
 	public ServerResponse<Integer> saveIndividual(HttpServletRequest request,   WalletIndividualAdd walletIndividualAdd
 			){
-		log.info(CommonUtil.format("触发保存个人会员信息接口,walletIndividualAdd:%s",JsonUtil.toJSONString(walletIndividualAdd)));
+		log.info(CommonUtil.format("start view saveIndividual api,params:%s",JsonUtil.toJSONString(walletIndividualAdd)));
 		try {
 			ServerResponse<Integer> serverResponse=null;
 			serverResponse=walletIndividualService.add(walletIndividualAdd,CommonUtil.getLoginUser(request));
@@ -89,10 +87,11 @@ public class WalletIndividualController extends BaseController {
 			log.info(CommonUtil.format("serverResponse:%s",JsonUtil.toJSONString(serverResponse)));
 			return serverResponse;
 			} catch ( BusinessException e) {
+				log.error(CommonUtil.format("view saveIndividual api fail：%s,%s",e.getCode(),e.getMessage()));
 				throw new ResponseEntityException(e.getCode(),e.getMessage());
 			} catch ( Exception e) {
 				e.printStackTrace();
-				log.error(CommonUtil.format("保存个人会员信息接口异常：%s,%s",WalletResponseEnums.SYSTEM_ERROR.getCode(),WalletResponseEnums.SYSTEM_ERROR.getDesc()));
+				log.error(CommonUtil.format("view saveIndividual api fail：%s,%s",WalletResponseEnums.SYSTEM_ERROR.getCode(),WalletResponseEnums.SYSTEM_ERROR.getDesc()));
 				throw new ResponseEntityException(WalletResponseEnums.SYSTEM_ERROR);
 			}
 	}
@@ -118,18 +117,18 @@ public class WalletIndividualController extends BaseController {
 	})
 	public ServerResponse<?> set(HttpServletRequest request,WalletSet walletSet
 		){
-		log.info(CommonUtil.format("触发钱包设置(个人会员)接口,walletSet:%s",JsonUtil.toJSONString(walletSet)));
+		log.info(CommonUtil.format("start view set api ,params:%s",JsonUtil.toJSONString(walletSet)));
 		try {
 			ServerResponse<?> serverResponse=null;
 			serverResponse=walletIndividualService.set(walletSet,CommonUtil.getLoginUser(request));
 			log.info(CommonUtil.format("serverResponse:%s",JsonUtil.toJSONString(serverResponse)));
 			return serverResponse;
 			} catch ( BusinessException e) {
-				log.error(CommonUtil.format("钱包设置(个人会员)接口异常：%s,%s",e.getCode(),e.getMessage()));
+				log.error(CommonUtil.format("view set api fail：%s,%s",e.getCode(),e.getMessage()));
 				throw new ResponseEntityException(e.getCode(),e.getMessage());
 			} catch ( Exception e) {
 				e.printStackTrace();
-				log.error(CommonUtil.format("钱包设置(个人会员)接口异常：%s,%s",WalletResponseEnums.SYSTEM_ERROR.getCode(),WalletResponseEnums.SYSTEM_ERROR.getDesc()));
+				log.error(CommonUtil.format("view set api fail：%s,%s",WalletResponseEnums.SYSTEM_ERROR.getCode(),WalletResponseEnums.SYSTEM_ERROR.getDesc()));
 				throw new ResponseEntityException(WalletResponseEnums.SYSTEM_ERROR);
 			}
 	} 

@@ -56,20 +56,21 @@ public class WalletCommonController {
 		try {
 			boolean isMultipart = ServletFileUpload.isMultipartContent(request);
 			if(isMultipart){
-				log.info(CommonUtil.format("触发文件上传接口,file:%s",file.getSize()));
+				log.info(CommonUtil.format("start view upload,file:%s",file.getSize()));
 				ServerResponse<String> serverResponse=null;
 				serverResponse=fileService.upload(file,CommonUtil.getLoginUser(request));
 				
 				log.info(CommonUtil.format("serverResponse:%s",JsonUtil.toJSONString(serverResponse)));
 				return serverResponse;
 			}else{
-				throw new ResponseEntityException("请上传文件");
+				throw new ResponseEntityException("view upload faill:file is empty");
 			}
 			} catch ( BusinessException e) {
+				log.error(CommonUtil.format("view upload api fail：%s,%s",e.getCode(),e.getMessage()));
 				throw new ResponseEntityException(e.getCode(),e.getMessage());
 			} catch ( Exception e) {
 				e.printStackTrace();
-				log.error(CommonUtil.format("文件上传接口异常：%s,%s",WalletResponseEnums.SYSTEM_ERROR.getCode(),WalletResponseEnums.SYSTEM_ERROR.getDesc()));
+				log.error(CommonUtil.format("view upload api fail：%s,%s",WalletResponseEnums.SYSTEM_ERROR.getCode(),WalletResponseEnums.SYSTEM_ERROR.getDesc()));
 				throw new ResponseEntityException(WalletResponseEnums.SYSTEM_ERROR);
 			}
 	}
@@ -83,7 +84,7 @@ public class WalletCommonController {
 	 @ApiOperation(value="获取省份数据", notes="获取省份数据")
 	public ResponseUtils<List<Map<String, Object>>> getProvince(HttpServletRequest request){
 		try {
-			log.info(CommonUtil.format("触发获取省份数据接口"));
+			log.info(CommonUtil.format("start view getProvince api"));
 			ResponseUtils<List<Map<String, Object>>> serverResponse=null;
 			RequestUtils<Integer> requestUtils=new RequestUtils<>();
 			requestUtils.setReqdata(2);	
@@ -91,10 +92,11 @@ public class WalletCommonController {
 			log.info(CommonUtil.format("serverResponse:%s",JsonUtil.toJSONString(serverResponse)));
 			return serverResponse;
 			} catch ( BusinessException e) {
+				log.error(CommonUtil.format("view getProvince api fail：%s,%s",e.getCode(),e.getMessage()));
 				throw new ResponseEntityException(e.getCode(),e.getMessage());
 			} catch ( Exception e) {
 				e.printStackTrace();
-				log.error(CommonUtil.format("获取省份数据接口异常：%s,%s",WalletResponseEnums.SYSTEM_ERROR.getCode(),WalletResponseEnums.SYSTEM_ERROR.getDesc()));
+				log.error(CommonUtil.format("view getProvince api fail：%s,%s",WalletResponseEnums.SYSTEM_ERROR.getCode(),WalletResponseEnums.SYSTEM_ERROR.getDesc()));
 				throw new ResponseEntityException(WalletResponseEnums.SYSTEM_ERROR);
 			}
 	}
@@ -109,7 +111,7 @@ public class WalletCommonController {
 	@ApiOperation(value="获取省份数据", notes="根据父级ID查询城市数据")
 	public ResponseUtils<List<Map<String, Object>>> queryCityByParentId(HttpServletRequest request,@ApiParam(required=true,name="parentId" ,value="父级id") @RequestParam(required=true) Integer  parentId){
 		try {
-			log.info(CommonUtil.format("触发根据父级ID查询城市数据接口"));
+			log.info(CommonUtil.format("start view queryCityByParentId api "));
 			ResponseUtils<List<Map<String, Object>>> serverResponse=null;
 			RequestUtils<Integer> requestUtils=new RequestUtils<>();
 			requestUtils.setReqdata(parentId);	
@@ -117,10 +119,11 @@ public class WalletCommonController {
 			log.info(CommonUtil.format("serverResponse:%s",JsonUtil.toJSONString(serverResponse)));
 			return serverResponse;
 		} catch ( BusinessException e) {
+			log.error(CommonUtil.format("view queryCityByParentId api fail：%s,%s",e.getCode(),e.getMessage()));
 			throw new ResponseEntityException(e.getCode(),e.getMessage());
 		} catch ( Exception e) {
 			e.printStackTrace();
-			log.error(CommonUtil.format("根据父级ID查询城市数据异常：%s,%s",WalletResponseEnums.SYSTEM_ERROR.getCode(),WalletResponseEnums.SYSTEM_ERROR.getDesc()));
+			log.error(CommonUtil.format("view queryCityByParentId api fail：%s,%s",WalletResponseEnums.SYSTEM_ERROR.getCode(),WalletResponseEnums.SYSTEM_ERROR.getDesc()));
 			throw new ResponseEntityException(WalletResponseEnums.SYSTEM_ERROR);
 		}
 	}

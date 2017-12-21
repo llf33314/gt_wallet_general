@@ -43,7 +43,7 @@ public class MailServiceImpl implements MailService {
 
 	@Override
 	public ServerResponse<?> sendAttachmentsMail(SendMail sendMail) throws Exception {
-		log.info(CommonUtil.format("biz接口:邮箱发送(带附件),请求参数:%s", JsonUtil.toJSONString(sendMail)));
+		log.info(CommonUtil.format("start biz sendAttachmentsMail api params:%s", JsonUtil.toJSONString(sendMail)));
 		if(CommonUtil.isEmpty(sendMail)||CommonUtil.isEmpty(sendMail.getTitle())||CommonUtil.isEmpty(sendMail.getContent())){
 			throw new BusinessException(WalletResponseEnums.NULL_ERROR);
 		}

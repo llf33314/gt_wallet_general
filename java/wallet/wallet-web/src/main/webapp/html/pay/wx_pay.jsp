@@ -36,23 +36,23 @@
 function onBridgeReady(){
 	   WeixinJSBridge.invoke(
 	       'getBrandWCPayRequest', {
-	           "appId":"wx2421b1c4370ec43b",     //公众号名称，由商户传入     
-	           "timeStamp":"1395712654",         //时间戳，自1970年以来的秒数     
-	           "nonceStr":"e61463f8efa94090b1f366cccfbbb444", //随机串     
-	           "package":"prepay_id=u802345jgfjsdfgsdg888",     
+	           "appId":"${data.appId}",     //公众号名称，由商户传入     
+	           "timeStamp":"${data.timeStamp}",         //时间戳，自1970年以来的秒数     
+	           "nonceStr":"${data.nonceStr}", //随机串     
+	           "package":"${data.package}",     
 	           "signType":"MD5",         //微信签名方式：     
-	           "paySign":"70EA570631E4BB79628FBCA90534C63FF7FADD89" //微信签名 
+	           "paySign":"${data.paySign}" //微信签名 
 	       },
 	       function(res){     
 	           if(res.err_msg == "get_brand_wcpay_request:ok" ) {
 	        	   
-	        	   if ("${record.get('sendUrl')}" !="") {//支付成功推送消息
-                     	 sendMessage("http://yifriend.net","${record.get('sendUrl')}");
+	        	   if ("${payOrder.sendUrl}" !="") {//支付成功推送消息
+                     	 sendMessage("${homeDomain}","${payOrder.sendUrl}");
                      }
 	        	   
 	           // 使用以上方式判断前端返回,微信团队郑重提示：res.err_msg将在用户支付成功后返回    ok，但并不保证它绝对可靠。 
-	        	    if ("${record.get('returnUrl')}" !="") {//支付成功跳转回调地址
-                        	location.href ="${record.get('returnUrl')}";
+	        	    if ("${payOrder.returnUrl}" !="") {//支付成功跳转回调地址
+                        	location.href ="${payOrder.returnUrl}";
                         }else{//不需要回调操作
                         	//关闭微信浏览器
                             WeixinJSBridge.call('closeWindow');

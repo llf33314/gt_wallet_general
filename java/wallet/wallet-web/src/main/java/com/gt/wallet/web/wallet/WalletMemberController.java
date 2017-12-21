@@ -63,7 +63,7 @@ public class WalletMemberController extends BaseController {
 	@RequestMapping(value="findMember",method=RequestMethod.GET)
 	 @ApiOperation(value="查询多粉会员信息", notes="此接口不需要传入参数，但必须登录多粉商家后台",produces="application/json")
 	public ServerResponse<WalletMember> findMember(HttpServletRequest request){
-		log.info(CommonUtil.format("触发查询多粉会员信息接口"));
+		log.info(CommonUtil.format("start view findMember api"));
 		try {
 			BusUser busUser=CommonUtil.getLoginUser(request);
 			ServerResponse<WalletMember> serverResponse=null;
@@ -75,11 +75,11 @@ public class WalletMemberController extends BaseController {
 				throw new ResponseEntityException(WalletResponseEnums.SYSTEM_ERROR);
 			}
 			} catch ( BusinessException e) {
-				log.error(CommonUtil.format("查询多粉会员信息接口异常：%s,%s",e.getCode(),e.getMessage()));
+				log.error(CommonUtil.format("view findMember api fail：%s,%s",e.getCode(),e.getMessage()));
 				throw new ResponseEntityException(e.getCode(),e.getMessage());
 			} catch ( Exception e) {
 				e.printStackTrace();
-				log.error(CommonUtil.format("查询多粉会员信息接口异常：%s,%s",WalletResponseEnums.SYSTEM_ERROR.getCode(),WalletResponseEnums.SYSTEM_ERROR.getDesc()));
+				log.error(CommonUtil.format("view findMember api fail：%s,%s",WalletResponseEnums.SYSTEM_ERROR.getCode(),WalletResponseEnums.SYSTEM_ERROR.getDesc()));
 				throw new ResponseEntityException(WalletResponseEnums.SYSTEM_ERROR);
 			}
 	}
@@ -93,17 +93,17 @@ public class WalletMemberController extends BaseController {
 	@RequestMapping(value="isPassWallet",method=RequestMethod.GET)
 	 @ApiOperation(value="判断商家是否开通多粉钱包(内部接口)", notes="此接口不需要传入参数，但必须登录多粉商家后台,返回值中data表示0 :已开通, 1:未开通",produces="application/json")
 	public ServerResponse<Integer> isPassWallet(HttpServletRequest request){
-		log.info(CommonUtil.format("触发查询多粉会员信息接口"));
+		log.info(CommonUtil.format("start view isPassWallet api"));
 		try {
 			BusUser busUser=CommonUtil.getLoginUser(request);
 			ServerResponse<Integer> serverResponse=walletMemberService.isPassWallet(busUser.getId());
 			return serverResponse;
 			} catch ( BusinessException e) {
-				log.error(CommonUtil.format("判断商家是否开通多粉钱包接口异常：%s,%s",e.getCode(),e.getMessage()));
+				log.error(CommonUtil.format("view isPassWallet api fail：%s,%s",e.getCode(),e.getMessage()));
 				throw new ResponseEntityException(e.getCode(),e.getMessage());
 			} catch ( Exception e) {
 				e.printStackTrace();
-				log.error(CommonUtil.format("判断商家是否开通多粉钱包接口异常：%s,%s",WalletResponseEnums.SYSTEM_ERROR.getCode(),WalletResponseEnums.SYSTEM_ERROR.getDesc()));
+				log.error(CommonUtil.format("view isPassWallet api fail：%s,%s",WalletResponseEnums.SYSTEM_ERROR.getCode(),WalletResponseEnums.SYSTEM_ERROR.getDesc()));
 				throw new ResponseEntityException(WalletResponseEnums.SYSTEM_ERROR);
 			}
 	}
@@ -118,17 +118,17 @@ public class WalletMemberController extends BaseController {
 	 @ApiOperation(value="开通会员", notes="开通会员",produces="application/json")
 	
 	public ServerResponse<Integer> register(HttpServletRequest request,@ApiParam(required=true,name="memberType" ,value="会员类型(3:个人会员 2:企业会员),返回值data：表示会员id") @RequestParam(required=true) Integer memberType){
-		log.info(CommonUtil.format("触发开通会员接口,参数%s",memberType));
+		log.info(CommonUtil.format("start view register api,params%s",memberType));
 		try {
 			BusUser busUser=CommonUtil.getLoginUser(request);
 			ServerResponse<Integer> serverResponse=walletMemberService.register(memberType,IPOrAddressUtils.getIpAddr(request),busUser.getId());
 			return serverResponse;
 			} catch ( BusinessException e) {
-				log.error(CommonUtil.format("开通会员接口异常：%s,%s",e.getCode(),e.getMessage()));
+				log.error(CommonUtil.format("view register api fail：%s,%s",e.getCode(),e.getMessage()));
 				throw new ResponseEntityException(e.getCode(),e.getMessage());
 			} catch ( Exception e) {
 				e.printStackTrace();
-				log.error(CommonUtil.format("开通会员接口异常：%s,%s",WalletResponseEnums.SYSTEM_ERROR.getCode(),WalletResponseEnums.SYSTEM_ERROR.getDesc()));
+				log.error(CommonUtil.format("view register api fail：%s,%s",WalletResponseEnums.SYSTEM_ERROR.getCode(),WalletResponseEnums.SYSTEM_ERROR.getDesc()));
 				throw new ResponseEntityException(WalletResponseEnums.SYSTEM_ERROR);
 			}
 	} 
@@ -153,18 +153,18 @@ public class WalletMemberController extends BaseController {
 	})
 	public ServerResponse<?> setpwd(HttpServletRequest request,WalletPasswordSet walletPasswordSet
 		){
-		log.info(CommonUtil.format("触发修改密码接口,walletSet:%s",JsonUtil.toJSONString(walletPasswordSet)));
+		log.info(CommonUtil.format("start view setpwd api ,params:%s",JsonUtil.toJSONString(walletPasswordSet)));
 		try {
 			ServerResponse<?> serverResponse=null;
 			serverResponse=walletMemberService.setpwd(walletPasswordSet,CommonUtil.getLoginUser(request));
 			log.info(CommonUtil.format("serverResponse:%s",JsonUtil.toJSONString(serverResponse)));
 			return serverResponse;
 			} catch ( BusinessException e) {
-				log.error(CommonUtil.format("修改密码接口异常：%s,%s",e.getCode(),e.getMessage()));
+				log.error(CommonUtil.format("view setpwd api fail：%s,%s",e.getCode(),e.getMessage()));
 				throw new ResponseEntityException(e.getCode(),e.getMessage());
 			} catch ( Exception e) {
 				e.printStackTrace();
-				log.error(CommonUtil.format("修改密码接口异常：%s,%s",WalletResponseEnums.SYSTEM_ERROR.getCode(),WalletResponseEnums.SYSTEM_ERROR.getDesc()));
+				log.error(CommonUtil.format("view setpwd api fail：%s,%s",WalletResponseEnums.SYSTEM_ERROR.getCode(),WalletResponseEnums.SYSTEM_ERROR.getDesc()));
 				throw new ResponseEntityException(WalletResponseEnums.SYSTEM_ERROR);
 			}
 	} 
@@ -183,7 +183,7 @@ public class WalletMemberController extends BaseController {
 	})
 	public ServerResponse<?> sendVerificationCode(HttpServletRequest request,String phone,Integer wmemberId
 		){
-		log.info(CommonUtil.format("触发发送短信验证码接口,参数:%s,%s",phone,wmemberId));
+		log.info(CommonUtil.format("start view sendVerificationCode api,params:%s,%s",phone,wmemberId));
 		try {
 			Integer verificationCodeType=9;
 			BusUser busUser=CommonUtil.getLoginUser(request);
@@ -192,11 +192,11 @@ public class WalletMemberController extends BaseController {
 			log.info(CommonUtil.format("serverResponse:%s",JsonUtil.toJSONString(serverResponse)));
 			return serverResponse;
 			} catch ( BusinessException e) {
-				log.error(CommonUtil.format("发送短信验证码接口异常：%s,%s",e.getCode(),e.getMessage()));
+				log.error(CommonUtil.format("view sendVerificationCode api fail：%s,%s",e.getCode(),e.getMessage()));
 				throw new ResponseEntityException(e.getCode(),e.getMessage());
 			} catch ( Exception e) {
 				e.printStackTrace();
-				log.error(CommonUtil.format("发送短信验证码接口异常：%s,%s",WalletResponseEnums.SYSTEM_ERROR.getCode(),WalletResponseEnums.SYSTEM_ERROR.getDesc()));
+				log.error(CommonUtil.format("view sendVerificationCode api fail：%s,%s",WalletResponseEnums.SYSTEM_ERROR.getCode(),WalletResponseEnums.SYSTEM_ERROR.getDesc()));
 				throw new ResponseEntityException(WalletResponseEnums.SYSTEM_ERROR);
 			}
 	} 
@@ -215,18 +215,18 @@ public class WalletMemberController extends BaseController {
 	@ApiOperation(value="锁定用户", notes="锁定用户")
 	public ServerResponse<?> lockMember(HttpServletRequest request,@RequestBody Map<String, Object> params
 			){
-		log.info(CommonUtil.format("触发锁定用户接口,参数:%s",JsonUtil.toJSONString(params)));
+		log.info(CommonUtil.format("start view lockMember api params:%s",JsonUtil.toJSONString(params)));
 		try {
 			ServerResponse<?> serverResponse=null;
 			serverResponse=walletMemberService.lockMember(CommonUtil.toInteger(params.get("wmemberId")));//YunSoaMemberUtil.sendVerificationCode(bizUserId, phone, verificationCodeType);
 			log.info(CommonUtil.format("serverResponse:%s",JsonUtil.toJSONString(serverResponse)));
 			return serverResponse;
 		} catch ( BusinessException e) {
-			log.error(CommonUtil.format("锁定用户接口异常：%s,%s",e.getCode(),e.getMessage()));
+			log.error(CommonUtil.format("view lockMember api fail：%s,%s",e.getCode(),e.getMessage()));
 			throw new ResponseEntityException(e.getCode(),e.getMessage());
 		} catch ( Exception e) {
 			e.printStackTrace();
-			log.error(CommonUtil.format("锁定用户接口异常：%s,%s",WalletResponseEnums.SYSTEM_ERROR.getCode(),WalletResponseEnums.SYSTEM_ERROR.getDesc()));
+			log.error(CommonUtil.format("view lockMember api fail：%s,%s",WalletResponseEnums.SYSTEM_ERROR.getCode(),WalletResponseEnums.SYSTEM_ERROR.getDesc()));
 			throw new ResponseEntityException(WalletResponseEnums.SYSTEM_ERROR);
 		}
 	} 
@@ -244,18 +244,18 @@ public class WalletMemberController extends BaseController {
 	@ApiOperation(value="解锁用户", notes="解锁用户")
 	public ServerResponse<?> unlockMember(HttpServletRequest request,@RequestBody Map<String, Object> params
 			){
-		log.info(CommonUtil.format("触发解锁用户接口,参数:%s",JsonUtil.toJSONString(params)));
+		log.info(CommonUtil.format("start view unlockMember api fail,params:%s",JsonUtil.toJSONString(params)));
 		try {
 			ServerResponse<?> serverResponse=null;
 			serverResponse=walletMemberService.unlockMember(CommonUtil.toInteger(params.get("wmemberId")));
 			log.info(CommonUtil.format("serverResponse:%s",JsonUtil.toJSONString(serverResponse)));
 			return serverResponse;
 		} catch ( BusinessException e) {
-			log.error(CommonUtil.format("解锁用户接口异常：%s,%s",e.getCode(),e.getMessage()));
+			log.error(CommonUtil.format("view unlockMember api fail：%s,%s",e.getCode(),e.getMessage()));
 			throw new ResponseEntityException(e.getCode(),e.getMessage());
 		} catch ( Exception e) {
 			e.printStackTrace();
-			log.error(CommonUtil.format("解锁用户接口异常：%s,%s",WalletResponseEnums.SYSTEM_ERROR.getCode(),WalletResponseEnums.SYSTEM_ERROR.getDesc()));
+			log.error(CommonUtil.format("view unlockMember api fail：%s,%s",WalletResponseEnums.SYSTEM_ERROR.getCode(),WalletResponseEnums.SYSTEM_ERROR.getDesc()));
 			throw new ResponseEntityException(WalletResponseEnums.SYSTEM_ERROR);
 		}
 	} 
@@ -273,7 +273,7 @@ public class WalletMemberController extends BaseController {
 	@ApiOperation(value="会员列表分页", notes="会员列表分页")
 	public ServerResponse<MyPageUtil<WalletMember>> memberListPage(HttpServletRequest request,@RequestBody com.alibaba.fastjson.JSONObject params
 			){
-		log.info(CommonUtil.format("触发会员列表分页接口,参数:%s",JsonUtil.toJSONString(params)));
+		log.info(CommonUtil.format("start view memberListPage api params:%s",JsonUtil.toJSONString(params)));
 		try {
 			 Page<WalletMember> page=new Page<WalletMember>();
 			 page.setSize(params.getInteger("size"));
@@ -294,11 +294,11 @@ public class WalletMemberController extends BaseController {
 			log.info(CommonUtil.format("serverResponse:%s",JsonUtil.toJSONString(serverResponse)));
 			return serverResponse;
 		} catch ( BusinessException e) {
-			log.error(CommonUtil.format("会员列表分页接口异常：%s,%s",e.getCode(),e.getMessage()));
+			log.error(CommonUtil.format("view memberListPage api fail：%s,%s",e.getCode(),e.getMessage()));
 			throw new ResponseEntityException(e.getCode(),e.getMessage());
 		} catch ( Exception e) {
 			e.printStackTrace();
-			log.error(CommonUtil.format("会员列表分页接口异常：%s,%s",WalletResponseEnums.SYSTEM_ERROR.getCode(),WalletResponseEnums.SYSTEM_ERROR.getDesc()));
+			log.error(CommonUtil.format("view memberListPage api fail：%s,%s",WalletResponseEnums.SYSTEM_ERROR.getCode(),WalletResponseEnums.SYSTEM_ERROR.getDesc()));
 			throw new ResponseEntityException(WalletResponseEnums.SYSTEM_ERROR);
 		}
 	} 
@@ -314,17 +314,17 @@ public class WalletMemberController extends BaseController {
 	
 	public ServerResponse<?> reset(HttpServletRequest request,@ApiParam(required=true,name="newPhone" ,value="新手机号码") @RequestParam(required=true) String newPhone
 			,@ApiParam(required=true,name="verificationCode" ,value="验证码") @RequestParam(required=true) String verificationCode,@ApiParam(required=true,name="wmemberId" ,value="钱包会员id") @RequestParam(required=true) Integer wmemberId){
-		log.info(CommonUtil.format("触发重置手机接口,参数%s,%s",newPhone,verificationCode));
+		log.info(CommonUtil.format("start view reset api params:%s,%s",newPhone,verificationCode));
 		try {
 			BusUser busUser=CommonUtil.getLoginUser(request);
 			ServerResponse<?> serverResponse=walletMemberService.reset(busUser.getId(), newPhone, verificationCode, wmemberId);
 			return serverResponse;
 			} catch ( BusinessException e) {
-				log.error(CommonUtil.format("重置手机接口异常：%s,%s",e.getCode(),e.getMessage()));
+				log.error(CommonUtil.format("view reset api fail：%s,%s",e.getCode(),e.getMessage()));
 				throw new ResponseEntityException(e.getCode(),e.getMessage());
 			} catch ( Exception e) {
 				e.printStackTrace();
-				log.error(CommonUtil.format("重置手机接口异常：%s,%s",WalletResponseEnums.SYSTEM_ERROR.getCode(),WalletResponseEnums.SYSTEM_ERROR.getDesc()));
+				log.error(CommonUtil.format("view reset api fail：%s,%s",WalletResponseEnums.SYSTEM_ERROR.getCode(),WalletResponseEnums.SYSTEM_ERROR.getDesc()));
 				throw new ResponseEntityException(WalletResponseEnums.SYSTEM_ERROR);
 			}
 	}  

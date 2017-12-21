@@ -10,6 +10,7 @@ import javax.servlet.http.HttpServletResponse;
 
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
 
 import com.alipay.api.AlipayApiException;
 import com.alipay.api.AlipayConstants;
@@ -21,6 +22,7 @@ import com.gt.wallet.utils.alipay.Dispatcher;
 import com.gt.wallet.utils.alipay.RequestUtil;
 import com.gt.wallet.utils.alipay.executor.ActionExecutor;
 
+import io.swagger.annotations.Api;
 import lombok.extern.slf4j.Slf4j;
 
 /**
@@ -29,11 +31,12 @@ import lombok.extern.slf4j.Slf4j;
  */
 @Slf4j
 @Controller
-@RequestMapping("alipGateway")
+@RequestMapping(value="alipGateway")
+@Api(value="alipGateway",description="支付宝网关 ")
 public class GatewayController {
 
-	@RequestMapping("79B4DE7C/gateway")
-	protected void doPost(HttpServletRequest request, HttpServletResponse response)
+	@RequestMapping(value="79B4DE7C/gateway",method={RequestMethod.POST,RequestMethod.HEAD})
+	public void gateway(HttpServletRequest request, HttpServletResponse response)
 			throws ServletException, IOException {
 		// 支付宝响应消息
 		String responseMsg = "";
