@@ -132,14 +132,14 @@
     data() {
       return {
         ruleForm: {
-          identitycardUrl1File: 'http://113.106.202.53:14884/upload/image/2/wallet/null/1511871076687.png',
-          identitycardUrl2File: 'http://113.106.202.53:14884/upload/image/2/wallet/null/1511871076687.png',
+          identitycardUrl1File: '',
+          identitycardUrl2File: '',
           memberId: '',
-          name: '贺荣周', //注册人姓名
-          identityNo: '441302197611134037', //身份证号码
-          cardNo: '6228481139158261672', //银行卡号
-          phone: '13500178335', //银行预留手机
-          bankName: '贺荣周', //银行卡开户人姓名(必须与注册人姓名一致)
+          name: '', //注册人姓名
+          identityNo: '', //身份证号码
+          cardNo: '', //银行卡号
+          phone: '', //银行预留手机
+          bankName: '', //银行卡开户人姓名(必须与注册人姓名一致)
           unionBank: '' //支付行号
         },
         rules: {

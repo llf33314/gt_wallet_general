@@ -1,0 +1,1 @@
+# 入口路径 http://localhost:8080/#/wallet/index

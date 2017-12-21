@@ -149,7 +149,7 @@
         ruleForm2: {
           legalName: '',
           legalIds: '',
-          legalPhone: '15902042654',
+          legalPhone: '',
         },
         rules2: {
           legalName: [{
@@ -176,7 +176,7 @@
           }],
         },
         ruleForm3: {
-          accountNo: '6217212008009165086',
+          accountNo: '',
           unionBank: '',
         },
         rules3: {
@@ -227,6 +227,7 @@
             console.log(res, '****')
             if (res.code != 0) {
               this.$message.error(res.msg);
+              
             } else {
               if (res.data.cardState == 1) {
                 this.isUnionBank(res.data.bankName)
