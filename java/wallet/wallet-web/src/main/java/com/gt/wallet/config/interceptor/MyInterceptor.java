@@ -45,6 +45,8 @@ public class MyInterceptor implements HandlerInterceptor {
         urls.put("/html/prompt/system_err.jsp", "/html/prompt/system_err.jsp");
         urls.put("/jsp/error/error.jsp", "/jsp/error/error.jsp");
         urls.put("/error/warning.jsp", "/error/warning.jsp");
+        urls.put("/", "/html/index.html");
+        urls.put("/html/index.html", "/html/index.html");
         suffixs.add("js");
         suffixs.add("css");
         suffixs.add("gif");
@@ -86,7 +88,11 @@ public class MyInterceptor implements HandlerInterceptor {
             String tmp = url.substring(0, url.lastIndexOf("/"));
             urlwx = tmp.substring(tmp.lastIndexOf("/") + 1, tmp.length());
         }
-     
+        
+//        if(url.equals("/")){
+//        	response.sendRedirect("/html/index.html");
+//        }
+//     
         //商城登陆拦截
         if (urlwx.equals("79B4DE7C") || url.contains("79B4DE7C")) {//移动端
             Member member = FilterMemberUtils.getLoginMember(request);
