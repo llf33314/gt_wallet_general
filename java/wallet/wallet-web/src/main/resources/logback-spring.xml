@@ -1,0 +1,129 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<configuration>
+    <!-- 默认配置路径 -->
+    <property name="LOG_HOME" value="/home/server/log/tomcat/wallet/"/>
+    <!-- 配置日志 -->
+    <!-- 彩色日志依赖的渲染类 -->
+    <conversionRule conversionWord="clr" converterClass="org.springframework.boot.logging.logback.ColorConverter"/>
+    <conversionRule conversionWord="wex"
+                    converterClass="org.springframework.boot.logging.logback.WhitespaceThrowableProxyConverter"/>
+    <conversionRule conversionWord="wEx"
+                    converterClass="org.springframework.boot.logging.logback.ExtendedWhitespaceThrowableProxyConverter"/>
+    <!-- 彩色日志格式 -->
+    <property name="CONSOLE_LOG_PATTERN"
+              value="${CONSOLE_LOG_PATTERN:-%clr(%d{yyyy-MM-dd HH:mm:ss.SSS}){faint} %clr(${LOG_LEVEL_PATTERN:-%5p}) %clr(${PID:- }){magenta} %clr(--){faint} %clr([%15.15t]){faint} %clr(%-40.40logger{39}){cyan} %clr(:){faint} %m%n${LOG_EXCEPTION_CONVERSION_WORD:-%wEx}}"/>
+    <!-- Console 输出设置 -->
+    <appender name="console" class="ch.qos.logback.core.ConsoleAppender">
+        <encoder>
+            <!--格式化输出：%d表示日期，%thread表示线程名，%-5level：级别从左显示5个字符宽度%msg：日志消息，%n是换行符-->
+            <!--<pattern>%d{yyyy-MM-dd HH:mm:ss.SSS} [%thread] %-5level %logger{36} - %msg%n</pattern>-->
+            <pattern>${CONSOLE_LOG_PATTERN}</pattern>
+        </encoder>
+    </appender>
+
+
+    <!-- 按照每天生成日志文件 -->
+<!--     <appender name="file" class="ch.qos.logback.core.rolling.RollingFileAppender">
+        <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+            日志文件输出的文件名
+            <fileNamePattern>${LOG_HOME}/mixedSys.%d{yyyy-MM-dd}.%i.log</fileNamePattern>
+            <timeBasedFileNamingAndTriggeringPolicy
+                   class="ch.qos.logback.core.rolling.SizeAndTimeBasedFNATP">
+                   最大100MB 超过最大值，会重新建一个文件
+                   <maxFileSize>100 MB</maxFileSize>
+              </timeBasedFileNamingAndTriggeringPolicy>
+        </rollingPolicy>
+        <encoder>
+            <pattern>%d{yyyy-MM-dd HH:mm:ss.SSS} [%thread] %-5level %logger{36} - %msg%n</pattern>
+        </encoder>
+    </appender> -->
+    
+    <appender name="file"
+        class="ch.qos.logback.core.rolling.RollingFileAppender">
+        <!-- 日志日常打印文件 -->
+        <file>logs/mylog.log</file>
+        <!-- 配置日志所生成的目录以及生成文件名的规则 在logs/mylog-2017-06-31.0.log.zip -->        
+        <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+            <fileNamePattern>${LOG_HOME}/mixedSys-%d{yyyy-MM-dd}.%i.log.zip</fileNamePattern>
+            <!-- 如果按天来回滚，则最大保存时间为365天，365天之前的都将被清理掉 -->
+            <maxHistory>365</maxHistory>
+            <!-- 日志总保存量为10GB -->
+            <totalSizeCap>10GB</totalSizeCap>
+            <timeBasedFileNamingAndTriggeringPolicy
+                class="ch.qos.logback.core.rolling.SizeAndTimeBasedFNATP">
+                <!--文件达到 最大128MB时会被压缩和切割 -->
+                <maxFileSize>128MB</maxFileSize>
+            </timeBasedFileNamingAndTriggeringPolicy>
+        </rollingPolicy>
+
+
+        <filter class="ch.qos.logback.classic.filter.ThresholdFilter">
+            <level>DEBUG</level>
+        </filter>
+        <!-- 文件输出的日志 的格式 -->
+        <encoder>
+            <pattern>
+                %d{yyyy-MM-dd HH:mm:ss.SSS} [%thread] %-5level %logger{36} - %msg%n
+            </pattern>
+            <charset>UTF-8</charset> <!-- 此处设置字符集 -->
+        </encoder>
+        <!-- Safely log to the same file from multiple JVMs. Degrades performance! -->
+        <prudent>false</prudent>
+    </appender>
+
+    <!-- 设置不同模式下，启用不同的日志级别 -->
+
+    <!-- 开发模式 console -->
+    <springProfile name="dev">
+        <!-- 日志logger(包.类)的输出级别 -->
+          <root level="INFO"> <!-- 此时debug级别的信息会被过滤 -->
+            <appender-ref ref="console"/>
+            <appender-ref ref="file"/>
+        </root>
+
+        <!-- 日志输出级别 -->
+      <!--   <root level="INFO"> 此时debug级别的信息会被过滤
+            <appender-ref ref="console"/>
+        </root> -->
+    </springProfile>
+
+    <!-- 测试模式 console/file -->
+    <springProfile name="test">
+        <!-- 日志输出级别 -->
+        <root level="INFO"> <!-- 此时debug级别的信息会被过滤 -->
+            <appender-ref ref="console"/>
+            <appender-ref ref="file"/>
+        </root>
+    </springProfile>
+
+    <springProfile name="prod">
+        <!--定义日志文件的存储地址 勿在 LogBack 的配置中使用相对路径-->
+       <!--  <property name="LOG_HOME" value="logs/prod/"/> -->
+
+        <!-- 日志输出级别 -->
+        <root level="INFO"> <!-- 此时debug级别的信息会被过滤 -->
+            <appender-ref ref="console"/>
+            <appender-ref ref="file"/>
+        </root>
+
+    </springProfile>
+    <!--日志异步到数据库 -->
+    <!-- <appender name="DB" class="ch.qos.logback.classic.db.DBAppender">
+        日志异步到数据库
+        <connectionSource class="ch.qos.logback.core.db.DriverManagerConnectionSource">
+            连接池
+            <dataSource class="com.mchange.v2.c3p0.ComboPooledDataSource">
+              <driverClass>com.mysql.jdbc.Driver</driverClass>
+              <url>jdbc:mysql://127.0.0.1:3306/databaseName</url>
+              <user>root</user>
+              <password>root</password>
+            </dataSource>
+        </connectionSource>
+    </appender> -->
+    <!-- 日志logger(包.类)的输出级别 -->
+    <!--<logger name="org.springframework.web.servlet.mvc.method.annotation.ExceptionHandlerExceptionResolver" level="DEBUG">
+        <appender-ref ref="console"/>
+        <appender-ref ref="file"/>
+    </logger>-->
+
+</configuration>

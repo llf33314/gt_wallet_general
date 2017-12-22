@@ -136,7 +136,7 @@ public class MyInterceptor implements HandlerInterceptor {
 //        Method method = handlerMethod.getMethod();
 	/*if ( log.isDebugEnabled() ) {*/
 //        log.error("方法:" + handlerMethod.getBean() + "." + method.getName() + "  ；  请求参数：" + handlerMethod.getMethodParameters());
-        log.error("访问的执行时间 : " + executeTime + "ms");
+        log.info("访问的执行时间 : " + executeTime + "ms");
 	/*}*/
 
     }
