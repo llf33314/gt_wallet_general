@@ -60,7 +60,7 @@ public class WalletQuotaController extends BaseController {
         @ApiImplicitParam(name = "quotaDesc",value = "申请描述",paramType = "form",dataType = "string",required=true,example="申请描述")
         // path, query, body, header, form
 	})
-	public ServerResponse<?> add(HttpServletRequest request, @RequestBody WalletQuota walletQuota){
+	public ServerResponse<?> add(HttpServletRequest request,  WalletQuota walletQuota){
 		log.info(CommonUtil.format("start view add api params: %s",JsonUtil.toJSONString(walletQuota)));
 		try {
 			ServerResponse<?> serverResponse=null;

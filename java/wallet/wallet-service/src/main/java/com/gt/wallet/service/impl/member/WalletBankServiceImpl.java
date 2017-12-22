@@ -8,11 +8,12 @@ import org.springframework.transaction.annotation.Isolation;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
-import com.alibaba.fastjson.JSONObject;
 import com.baomidou.mybatisplus.mapper.EntityWrapper;
 import com.gt.api.util.httpclient.JsonUtil;
 import com.gt.wallet.base.BaseServiceImpl;
 import com.gt.wallet.data.api.tonglian.request.TCardBin;
+import com.gt.wallet.data.api.tonglian.response.CardBin;
+import com.gt.wallet.data.api.tonglian.response.CardBinInfo;
 import com.gt.wallet.data.wallet.request.WalletCompanyAdd;
 import com.gt.wallet.data.wallet.request.WalletIndividualAdd;
 import com.gt.wallet.dto.ServerResponse;
@@ -28,6 +29,7 @@ import com.gt.wallet.mapper.member.WalletIndividualMapper;
 import com.gt.wallet.mapper.member.WalletMemberMapper;
 import com.gt.wallet.service.member.WalletBankService;
 import com.gt.wallet.utils.CommonUtil;
+import com.gt.wallet.utils.httpclient.WalletHttpClienUtil;
 import com.gt.wallet.utils.yun.YunSoaMemberUtil;
 
 import lombok.extern.slf4j.Slf4j;
@@ -271,9 +273,16 @@ public class WalletBankServiceImpl extends BaseServiceImpl<WalletBankMapper, Wal
 	}
 
 	@Override
-	public ServerResponse<TCardBin> getBankCardBin(String bankCardNo) {
+	public ServerResponse<CardBinInfo> getBankCardBin(String bankCardNo) {
 		log.info(CommonUtil.format("start biz getBankCardBin api params:%s",bankCardNo));
-		ServerResponse<TCardBin> serverResponse=YunSoaMemberUtil.getBankCardBin(bankCardNo);
+		CardBin map=WalletHttpClienUtil.reqGet(bankCardNo, CardBin.class);
+		log.info("biz getBankCardBin api:"+JsonUtil.toJSONString(map));
+		ServerResponse<CardBinInfo> serverResponse=null;
+		if(map.getError_code()==0){
+			serverResponse=ServerResponse.createBySuccessCodeData(map.getResult());
+		}else{
+			serverResponse=ServerResponse.createByErrorCodeMessage(map.getError_code(), map.getReason());
+		}
 		log.info(CommonUtil.format("start biz getBankCardBin api serverResponse:%s",JsonUtil.toJSONString(serverResponse)));
 		return serverResponse;
 	}
