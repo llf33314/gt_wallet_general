@@ -16,7 +16,7 @@ import org.springframework.web.bind.annotation.RestController;
 import com.gt.api.bean.session.BusUser;
 import com.gt.api.util.httpclient.JsonUtil;
 import com.gt.wallet.base.BaseController;
-import com.gt.wallet.data.api.tonglian.request.TCardBin;
+import com.gt.wallet.data.api.tonglian.response.CardBinInfo;
 import com.gt.wallet.data.wallet.request.WalletBankAdd;
 import com.gt.wallet.data.wallet.request.WalletIndividualAdd;
 import com.gt.wallet.dto.ServerResponse;
@@ -166,11 +166,11 @@ public class WalletBankController extends BaseController {
 	@RequestMapping(value="getBankCardBin",method=RequestMethod.POST)
 	 @ApiOperation(value="查询银行卡bin信息", notes="查询银行卡bin信息")
 	
-	public ServerResponse<TCardBin> getBankCardBin(HttpServletRequest request,@ApiParam(required=true,name="bankCardNo" ,value="银行卡号") @RequestParam(required=true) String bankCardNo
+	public ServerResponse<CardBinInfo> getBankCardBin(HttpServletRequest request,@ApiParam(required=true,name="bankCardNo" ,value="银行卡号") @RequestParam(required=true) String bankCardNo
 			){
 		log.info(CommonUtil.format("start view getBankCardBin api:%s",bankCardNo));
 		try {
-			ServerResponse<TCardBin> serverResponse=null;
+			ServerResponse<CardBinInfo> serverResponse=null;
 			serverResponse=walletBankService.getBankCardBin(bankCardNo);
 			log.info(CommonUtil.format("serverResponse:%s",JsonUtil.toJSONString(serverResponse)));
 			return serverResponse;
