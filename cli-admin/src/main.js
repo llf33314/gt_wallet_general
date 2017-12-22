@@ -23,9 +23,8 @@ import {
 Vue.prototype.DateFormat = DateFormat
 Vue.prototype.isPhone = window.isPhone
 import 'gt-js/dist/gt.min.js'
-
-// import is_js from 'is_js'
-// Vue.prototype.is = is_js
+const GtDialog = () => import('./components/public/dialog/component')
+Vue.component('el-dialog',GtDialog)                // 弹出框
 /* eslint-disable no-new */
 new Vue({
   el: '#app',

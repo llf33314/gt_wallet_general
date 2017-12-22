@@ -3,7 +3,7 @@ package com.gt.wallet.service.member;
 import java.util.List;
 
 import com.gt.wallet.base.BaseService;
-import com.gt.wallet.data.api.tonglian.request.TCardBin;
+import com.gt.wallet.data.api.tonglian.response.CardBinInfo;
 import com.gt.wallet.data.wallet.request.WalletCompanyAdd;
 import com.gt.wallet.data.wallet.request.WalletIndividualAdd;
 import com.gt.wallet.dto.ServerResponse;
@@ -64,7 +64,7 @@ public interface WalletBankService extends BaseService<WalletBank> {
 	 * @param bankCardNo
 	 * @return
 	 */
-	ServerResponse<TCardBin> getBankCardBin(String bankCardNo);
+	ServerResponse<CardBinInfo> getBankCardBin(String bankCardNo);
 	
 	
 	

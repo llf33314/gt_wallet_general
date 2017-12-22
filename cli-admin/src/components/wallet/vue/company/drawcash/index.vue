@@ -267,59 +267,19 @@ export default {
         callback();
       }
     };
+    var quotaValueValidator = (rule, value, callback) => {
+      if (value == '') {
+        callback(new Error('请输入需求额度'));
+      } else if (value <= this.withdrawQuota) {
+        callback(new Error('最低需求额度为' + this.withdrawQuota));
+      } else {
+        callback();
+      }
+    }
     return {
       companyName: 'test',
       total: 0,
-      walletBanks: [
-        // {
-        //   "bankCode": "string",
-        //   "bankName": "建设银行",
-        //   "cardCheck": 0,
-        //   "cardClass": 1,
-        //   "cardLenth": 0,
-        //   "cardNo": "4416467964644666",
-        //   "cardState": 1,
-        //   "cardType": 1,
-        //   "cvv2": "string",
-        //   "id": 1,
-        //   "identityNo": "string",
-        //   "identityType": 0,
-        //   "isSafeCard": 0,
-        //   "memberNum": "string",
-        //   "name": "string",
-        //   "phone": "string",
-        //   "status": 0,
-        //   "tranceNum": "string",
-        //   "transDate": "string",
-        //   "unionBank": "string",
-        //   "validate": "string",
-        //   "wmemberId": 0
-        // },
-        {
-          "bankCode": "string",
-          "bankName": "中国银行",
-          "cardCheck": 0,
-          "cardClass": 2,
-          "cardLenth": 0,
-          "cardNo": "4416467964644123",
-          "cardState": 0,
-          "cardType": 2,
-          "cvv2": "string",
-          "id": 0,
-          "identityNo": "string",
-          "identityType": 0,
-          "isSafeCard": 0,
-          "memberNum": "string",
-          "name": "string",
-          "phone": "string",
-          "status": 0,
-          "tranceNum": "string",
-          "transDate": "string",
-          "unionBank": "string",
-          "validate": "string",
-          "wmemberId": 0
-        }
-      ],
+      walletBanks: [],
       //
 
       walletBanksIndex: '',
@@ -365,8 +325,9 @@ export default {
       },
       rules3: {
         quotaValue: [{
-          required: true,
-          message: '请输入申请额度',
+          validator:quotaValueValidator,
+          // required: true,
+          // message: '请输入申请额度',
           trigger: 'blur'
         }],
         quotaDesc: [{

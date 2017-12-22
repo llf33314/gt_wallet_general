@@ -17,7 +17,7 @@ li{
 
 .public-crumbs {
   height: 50px;
-  line-height: 50px;
+  line-height: 50px !important;
   border-top: 1px solid #ededed;
   border-bottom: 1px solid #ededed;
   padding-left: 60px;

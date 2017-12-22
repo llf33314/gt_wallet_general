@@ -1,7 +1,6 @@
 package com.gt.wallet.utils.httpclient;
 
 import java.nio.charset.Charset;
-import java.util.Map;
 
 import org.apache.http.Header;
 import org.apache.http.HttpHeaders;
@@ -13,11 +12,9 @@ import org.apache.http.message.BasicHeader;
 
 import com.alibaba.fastjson.JSONObject;
 import com.gt.api.bean.sign.SignBean;
-import com.gt.api.util.HttpClienUtils;
 import com.gt.api.util.KeysUtil;
-import com.gt.api.util.httpclient.JsonUtil;
 import com.gt.api.util.httpclient.LocalHttpClient;
-import com.gt.wallet.data.wallet.request.WalletIndividualAdd;
+import com.gt.wallet.data.api.tonglian.response.CardBin;
 
 /** 
 * @author lifengxi(gt_sky@qq.com)
@@ -104,6 +101,27 @@ public class WalletHttpClienUtil {
         return signBean;
     }
 	
+    /**
+	 * post请求
+	 * @param messageJson
+	 * @return
+	 */
+	public static  <T> T reqGet(String bankcard ,Class<T> clazz){
+
+//		AppKey：24627762     
+//		AppSecret：78a81c7f07f0fca37125b9a59342fe0b
+//		AppCode：0814548601264324a242e691c95e800e
+		String url="http://api43.market.alicloudapi.com/api/c43";
+		String appcode="0814548601264324a242e691c95e800e";
+		HttpUriRequest httpUriRequest = RequestBuilder.get()
+										.setHeader(jsonHeader)
+										.setHeader("Authorization", "APPCODE " + appcode)
+										.setUri(url)
+										.addParameter("bankcard", bankcard)
+										.build();
+		return LocalHttpClient.executeJsonResult(httpUriRequest,clazz);
+	}
+    
 	public static void main(String arg[]) throws Exception{
 //		RequestUtils<Integer> baseParam=new RequestUtils<Integer>();
 //		
@@ -112,9 +130,8 @@ public class WalletHttpClienUtil {
 //		System.out.println(ss);
 //		ResponseUtils map=reqPostUTF8( ss,"http://127.0.0.1:8440/8A5DA52E/shopapi/6F6D9AD2/79B4DE7C/queryWxShopByBusId.do",ResponseUtils.class,"WXMP2017");
 //		System.out.println(com.alibaba.fastjson.JSONObject.toJSONString(map));
-		
-		String url="https://mess.deeptel.com.cn/messMobile/36/79B4DE7C/getMessMainByBusId";
-		Map map=HttpClienUtils.reqGet(null, url, Map.class);
+		String url="http://api43.market.alicloudapi.com/api/c43";
+		CardBin map=reqGet("6228481139158261672", CardBin.class);
 		System.out.println(JSONObject.toJSONString(map));
 //		WalletIndividualAdd walletIndividualAdd=new WalletIndividualAdd();
 //		walletIndividualAdd.setBankName("1312");

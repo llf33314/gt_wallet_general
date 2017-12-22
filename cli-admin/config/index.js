@@ -50,10 +50,10 @@ module.exports = {
 
   build: {
     // Template for index.html
-    index: path.resolve(__dirname, '../../java/wallet/wallet-web/src/main/webapp/html/wallet/index.html'),
+    index: path.resolve(__dirname, '../../java/wallet/wallet-web/src/main/webapp/html/manage/index.html'),
 
     // Paths
-    assetsRoot: path.resolve(__dirname, '../../java/wallet/wallet-web/src/main/webapp/html/wallet'),
+    assetsRoot: path.resolve(__dirname, '../../java/wallet/wallet-web/src/main/webapp/html/manage'),
     assetsSubDirectory: 'static',
     assetsPublicPath: './',
 
