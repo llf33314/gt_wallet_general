@@ -101,6 +101,13 @@
     text-align: right;
     display: inline-block;
   }
+  .cardmsg {
+    font-weight: 700;
+    padding-right: 10px;
+    display: inline-block;
+    width: 95px;
+    text-align: right;
+  }
 }
 
 .wallet-drawcash-dialog {
@@ -163,7 +170,8 @@
             </el-radio-group>
           </div>
           <p v-if="walletBanks.length == 1 && walletBanks[0].cardClass != 1" @click="dialogApply4=true" style="color:#409EFF;cursor:pointer;display: inline-block;">添加个人账户</p>
-          <p class="public-c999" style="padding-top:10px;">
+          <!-- <p @click="dialogApply4=true">添加个人账户</p> -->
+          <p class="public-c999">
             <span>此账户提现额度为
               <span style="color:#ff4949" v-text="withdrawQuota">100,000</span>元，如需提高提现金额，请点击</span>
             <el-button @click="dialogApply=true" type="primary" size="small">申请</el-button>
@@ -218,7 +226,7 @@
       </el-form>
     </el-dialog>
 
-    <el-dialog title="添加个人账户" :visible.sync="dialogApply4" custom-class="wallet-drawcash-dialog" @close="loading4=false">
+    <el-dialog title="添加个人账户" :visible.sync="dialogApply4" custom-class="wallet-drawcash-dialog" @close="dialogApply4Close">
       <el-form :model="ruleForm4" :rules="rules4" ref="ruleForm4" label-width="125px" class="demo-ruleForm">
         <el-form-item label="法人姓名：">
           <span v-text="legalName">法人姓名</span>
@@ -226,6 +234,21 @@
         <el-form-item label="法人账户：" prop="cardNo">
           <el-input v-model="ruleForm4.cardNo" placeholder="请输入法人个人账户"></el-input>
         </el-form-item>
+        <el-form-item v-if="CardBinInfo">
+          <p style="line-height:30px;">
+            <span class="cardmsg">发卡银行：</span>
+            <span v-text="CardBinInfo.bankname"></span>
+          </p>
+          <p style="line-height: 30px;">
+            <span class="cardmsg">银行卡名称：</span>
+            <span v-text="CardBinInfo.cardname"></span>
+          </p>
+          <p style="line-height: 30px;">
+            <span class="cardmsg">银行卡类型：</span>
+            <span v-text="CardBinInfo.cardtype"></span>
+          </p>
+        </el-form-item>
+
         <el-form-item label="手机号码：" prop="phone">
           <el-input v-model="ruleForm4.phone" placeholder="请输入银行卡预留手机号码"></el-input>
         </el-form-item>
@@ -274,6 +297,32 @@ export default {
         callback(new Error('最低需求额度为' + this.withdrawQuota));
       } else {
         callback();
+      }
+    }
+    var rules4CardNo = (rule, value, callback) => {
+      if (value == '') {
+        callback(new Error('请输入法人个人账户'));
+      } else {
+        $.ajax({
+          url: this.DFPAYDOMAIN + '/walletQuota/add',
+          type: 'POST',
+          dataType: 'JSON',
+          data: { bankCardNo: value },
+          success: res => {
+            if (res.code == 0) {
+              if (res.data.CardBinInfo.iscreditcard == 2) {
+                this.CardBinInfo = null
+                callback(new Error('法人个人账户不能为信用卡'));
+              } else {
+                this.CardBinInfo = res.data.CardBinInfo
+                callback();
+              }
+            } else {
+              this.CardBinInfo = null
+              callback(new Error(res.msg));
+            }
+          }
+        })
       }
     }
     return {
@@ -325,7 +374,7 @@ export default {
       },
       rules3: {
         quotaValue: [{
-          validator:quotaValueValidator,
+          validator: quotaValueValidator,
           // required: true,
           // message: '请输入申请额度',
           trigger: 'blur'
@@ -349,8 +398,9 @@ export default {
       },
       rules4: {
         cardNo: [{
-          required: true,
-          message: '请输入法人个人账户',
+          // required: true,
+          // message: '请输入法人个人账户',
+          validator: rules4CardNo,
           trigger: 'blur'
         }],
         phone: [{
@@ -367,6 +417,7 @@ export default {
         ],
       },
       loading4: false,
+      CardBinInfo: null,
       //确认绑定银行卡
       bindBankCardDialog: false,
       bindBankCardParams: {
@@ -399,6 +450,13 @@ export default {
     this.findMember()
   },
   methods: {
+    //dialogApply4Open
+    dialogApply4Close() {
+      this.loading4 = false
+      this.CardBinInfo = null
+      this.$refs['ruleForm4'].resetFields();
+
+    },
     //申请额度提交
     walletQuotaAdd() {
 

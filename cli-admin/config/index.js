@@ -11,12 +11,12 @@ module.exports = {
     assetsSubDirectory: 'static',
     assetsPublicPath: '/',
     proxyTable: {
-      // '/': {
-      //   target: 'http://dfpay.yifriend.net',
-      //   pathRewrite: {
-      //     '':'http://dfpay.yifriend.net'
-      //   }
-      // }
+      '/': {
+        target: 'http://dfpay.yifriend.net',
+        pathRewrite: {
+          '^/':'/'
+        }
+      }
     },
 
     // Various Dev Server settings

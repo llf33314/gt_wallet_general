@@ -49,6 +49,13 @@
   .public-c666 {
     line-height: 1;
   }
+  .cardmsg {
+    font-weight: 700;
+    padding-right: 10px;
+    display: inline-block;
+    width: 95px;
+    text-align: right;
+  }
 }
 </style>
 <template>
@@ -95,6 +102,20 @@
         <el-form-item label="个人账户：" prop="cardNo">
           <el-input v-model="ruleForm.cardNo" placeholder="请输入个人账户" class="input-width"></el-input>
         </el-form-item>
+        <el-form-item v-if="CardBinInfo">
+          <p style="line-height:30px;">
+            <span class="cardmsg">发卡银行：</span>
+            <span v-text="CardBinInfo.bankname"></span>
+          </p>
+          <p style="line-height: 30px;">
+            <span class="cardmsg">银行卡名称：</span>
+            <span v-text="CardBinInfo.cardname"></span>
+          </p>
+          <p style="line-height: 30px;">
+            <span class="cardmsg">银行卡类型：</span>
+            <span v-text="CardBinInfo.cardtype"></span>
+          </p>
+        </el-form-item>
         <el-form-item label="开户人姓名：">
           <div>{{ruleForm.name}}</div>
         </el-form-item>
@@ -127,7 +148,30 @@ import {
 } from './../../api/index'
 export default {
   data() {
+    var rulesCardNo = (rule, value, callback) => {
+      $.ajax({
+        url: this.DFPAYDOMAIN + '/walletQuota/add',
+        type: 'POST',
+        dataType: 'JSON',
+        data: { bankCardNo: value },
+        success: res => {
+          if (res.code == 0) {
+            if (res.data.CardBinInfo.iscreditcard == 2) {
+              this.CardBinInfo = null
+              callback(new Error('法人个人账户不能为信用卡'));
+            } else {
+              this.CardBinInfo = res.data.CardBinInfo
+              callback();
+            }
+          } else {
+            this.CardBinInfo = null
+            callback(new Error(res.msg));
+          }
+        }
+      })
+    }
     return {
+      CardBinInfo: null,
       ruleForm: {
         identitycardUrl1File: '',
         identitycardUrl2File: '',
@@ -167,8 +211,9 @@ export default {
           trigger: 'change'
         }],
         cardNo: [{
-          required: true,
-          message: '请输入银行卡号',
+          // required: true,
+          // message: '请输入银行卡号',
+          validator: rulesCardNo,
           trigger: 'blur'
         }],
         phone: [{
@@ -239,7 +284,7 @@ export default {
             dataType: 'json',
             data: this.ruleForm2,
             success: (res) => {
-              res.code = 0
+              // res.code = 0
               if (res.code != 0) {
                 this.$message.error(res.msg);
               } else {
@@ -276,12 +321,11 @@ export default {
             data: this.ruleForm,
             success: (res) => {
               console.log(res, 'res')
-              res.code = 0
-              if (res.code != 0) {
-                this.$message.error(res.msg);
-              } else {
+              if (res.code == 0 && res.data) {
                 this.dialogVisible = true
                 this.ruleForm2.id = res.data
+              } else {
+                this.$message.error(res.msg);
               }
               this.loading1 = false
             }
