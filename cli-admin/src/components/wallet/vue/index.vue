@@ -18,29 +18,36 @@ export default {
         dataType: 'json',
         success: (res) => {
           console.log(res, '查询会员信息')
-          //-2:删除,-1:锁定用户,0:创建,1:审核中,3:正常使用)
-          // res.data.status = 3
-          window.sessionStorage.walletId = res.data.id
-          console.log(window.sessionStorage.walletId, 'window.sessionStorage.walletId')
-          if (res.data.status == 0) {
-            this.$router.push({
-              path: '/wallet/individual/open/' + res.data.id
-            })
-          } else if (res.data.status == 1) {
-            this.$router.push({
-              path: '/wallet/individual/auditing'
-            })
-          } else if (res.data.status == 3) {
-            // res.data.memberType = 2
-            if (res.data.memberType == 3) {
-              this.$router.push({
-                path: '/wallet/individual/index'
-              })
-            } else {
-              this.$router.push({
-                path: '/wallet/company/index'
-              })
+          // 开通
+          if (res.code == 0) {
+            window.sessionStorage.walletId = res.data.id
+            if (res.data.memberType == 3) { //个人会员
+              if (res.data.status == 0) { //创建
+                this.$router.push({
+                  path: '/wallet/individual/open/' + res.data.id
+                })
+              } else { //正常使用
+                this.$router.push({
+                  path: '/wallet/individual/index'
+                })
+              }
+            } else { //企业会员
+              if (res.data.status == 0) {  //创建
+                this.$router.push({
+                  path: '/wallet/company/open/base/' + res.data.id
+                })
+              } else { //正常使用
+                this.$router.push({
+                  path: '/wallet/company/index'
+                })
+              }
             }
+          } else if (res.code == 1009) { // 未开通
+            this.$router.push({
+              path: '/wallet/noOpen'
+            })
+          } else { //异常的错误
+            this.$message.error(res.msg)
           }
         }
       })
@@ -54,13 +61,16 @@ export default {
         success: (res) => {
           console.log(res, '判断商家是否开通多粉钱包')
           //0 :已开通, 1:未开通
-          // res.code = 1
           if (res.code == 0) {
-            this.getVipMsg()
+            if (res.data == 0) {
+              this.getVipMsg()
+            } else {
+              this.$router.push({
+                path: '/wallet/noOpen'
+              })
+            }
           } else {
-            this.$router.push({
-              path: '/wallet/noOpen'
-            })
+            this.$message.error(res.msg)
           }
         }
       })

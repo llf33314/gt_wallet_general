@@ -7,20 +7,6 @@
   <title>多粉钱包</title>
   <script>
     var DFPAYDOMAIN = 'http://dfpay.yifriend.net';
-    function getParentUrl() {
-      var url = null;
-      if (parent !== window) {
-        try {
-          url = parent.location.href;
-        } catch (e) {
-          url = document.referrer;
-        }
-      }
-      return url;
-    }
-    // 遮罩层的父级域名
-    var PARANETMASKMAIN = getParentUrl()
-
   </script>
 </head>
 

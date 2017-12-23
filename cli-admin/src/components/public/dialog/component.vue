@@ -111,7 +111,7 @@
           this.closed = false;
           this.$emit('open');
           console.log('open')
-          parent.window.postMessage('openMask()', window.PARANETMASKMAIN);
+          parent.window.postMessage('openMask()', '*');
           this.$el.addEventListener('scroll', this.updatePopper);
           this.$nextTick(() => {
             this.$refs.dialog.scrollTop = 0;
@@ -121,7 +121,7 @@
           }
         } else {
           console.log('close')
-          parent.window.postMessage('closeMask()', window.PARANETMASKMAIN);
+          parent.window.postMessage('closeMask()','*');
           this.$el.removeEventListener('scroll', this.updatePopper);
           if (!this.closed) this.$emit('close');
         }

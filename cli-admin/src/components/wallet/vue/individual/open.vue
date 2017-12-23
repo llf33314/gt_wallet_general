@@ -156,11 +156,11 @@ export default {
         data: { bankCardNo: value },
         success: res => {
           if (res.code == 0) {
-            if (res.data.CardBinInfo.iscreditcard == 2) {
+            if (res.data.iscreditcard == 2) {
               this.CardBinInfo = null
               callback(new Error('法人个人账户不能为信用卡'));
             } else {
-              this.CardBinInfo = res.data.CardBinInfo
+              this.CardBinInfo = res.data
               callback();
             }
           } else {
