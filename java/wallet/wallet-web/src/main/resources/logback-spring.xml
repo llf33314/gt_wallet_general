@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<configuration>
+<configuration >
     <!-- 默认配置路径 -->
-    <property name="LOG_HOME" value="/home/server/log/tomcat/wallet/"/>
+    <property name="LOG_HOME" value="/home/server/log/tomcat/wallet"/>
     <!-- 配置日志 -->
     <!-- 彩色日志依赖的渲染类 -->
     <conversionRule conversionWord="clr" converterClass="org.springframework.boot.logging.logback.ColorConverter"/>
@@ -20,31 +20,18 @@
             <pattern>${CONSOLE_LOG_PATTERN}</pattern>
         </encoder>
     </appender>
-
-
-    <!-- 按照每天生成日志文件 -->
-<!--     <appender name="file" class="ch.qos.logback.core.rolling.RollingFileAppender">
-        <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
-            日志文件输出的文件名
-            <fileNamePattern>${LOG_HOME}/mixedSys.%d{yyyy-MM-dd}.%i.log</fileNamePattern>
-            <timeBasedFileNamingAndTriggeringPolicy
-                   class="ch.qos.logback.core.rolling.SizeAndTimeBasedFNATP">
-                   最大100MB 超过最大值，会重新建一个文件
-                   <maxFileSize>100 MB</maxFileSize>
-              </timeBasedFileNamingAndTriggeringPolicy>
-        </rollingPolicy>
-        <encoder>
-            <pattern>%d{yyyy-MM-dd HH:mm:ss.SSS} [%thread] %-5level %logger{36} - %msg%n</pattern>
-        </encoder>
-    </appender> -->
-    
+     <!-- com.alibaba.dubbo是dubbo服务的包，在如何是info一下的级别会产生大量的启动日志，调成WARN减少日志输出 -->
+     <logger name="org.springframework" level="WARN" />
+     <logger name="com.alibaba.dubbo" level="WARN" />
+     <!-- dao层的包，把这个包的打印日志级别调成 DEBUG级别可以看到sql执行 -->
     <appender name="file"
         class="ch.qos.logback.core.rolling.RollingFileAppender">
         <!-- 日志日常打印文件 -->
-        <file>logs/mylog.log</file>
+       <!--  <file>logs/mylog.log</file> -->
         <!-- 配置日志所生成的目录以及生成文件名的规则 在logs/mylog-2017-06-31.0.log.zip -->        
         <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
-            <fileNamePattern>${LOG_HOME}/mixedSys-%d{yyyy-MM-dd}.%i.log.zip</fileNamePattern>
+        	<!-- <fileNamePattern>${LOG_HOME}/mylog-%d{yyyy-MM-dd}.%i.log</fileNamePattern> -->
+           <fileNamePattern>${LOG_HOME}/wallet-%d{yyyy-MM-dd}.%i.log.zip</fileNamePattern>
             <!-- 如果按天来回滚，则最大保存时间为365天，365天之前的都将被清理掉 -->
             <maxHistory>365</maxHistory>
             <!-- 日志总保存量为10GB -->
@@ -75,55 +62,24 @@
 
     <!-- 开发模式 console -->
     <springProfile name="dev">
-        <!-- 日志logger(包.类)的输出级别 -->
-          <root level="INFO"> <!-- 此时debug级别的信息会被过滤 -->
+          <root level="info"> <!-- 此时debug级别的信息会被过滤 -->
             <appender-ref ref="console"/>
-            <appender-ref ref="file"/>
+            <appender-ref ref="file" />
         </root>
-
-        <!-- 日志输出级别 -->
-      <!--   <root level="INFO"> 此时debug级别的信息会被过滤
-            <appender-ref ref="console"/>
-        </root> -->
     </springProfile>
 
     <!-- 测试模式 console/file -->
     <springProfile name="test">
-        <!-- 日志输出级别 -->
-        <root level="INFO"> <!-- 此时debug级别的信息会被过滤 -->
-            <appender-ref ref="console"/>
-            <appender-ref ref="file"/>
+        <root level="info"> <!-- 此时debug级别的信息会被过滤 -->
+           <appender-ref ref="console"/>
+            <appender-ref ref="file" />
         </root>
     </springProfile>
 
     <springProfile name="prod">
-        <!--定义日志文件的存储地址 勿在 LogBack 的配置中使用相对路径-->
-       <!--  <property name="LOG_HOME" value="logs/prod/"/> -->
-
-        <!-- 日志输出级别 -->
-        <root level="INFO"> <!-- 此时debug级别的信息会被过滤 -->
+        <root level="info"> <!-- 此时debug级别的信息会被过滤 -->
             <appender-ref ref="console"/>
-            <appender-ref ref="file"/>
+            <appender-ref ref="file" />
         </root>
-
     </springProfile>
-    <!--日志异步到数据库 -->
-    <!-- <appender name="DB" class="ch.qos.logback.classic.db.DBAppender">
-        日志异步到数据库
-        <connectionSource class="ch.qos.logback.core.db.DriverManagerConnectionSource">
-            连接池
-            <dataSource class="com.mchange.v2.c3p0.ComboPooledDataSource">
-              <driverClass>com.mysql.jdbc.Driver</driverClass>
-              <url>jdbc:mysql://127.0.0.1:3306/databaseName</url>
-              <user>root</user>
-              <password>root</password>
-            </dataSource>
-        </connectionSource>
-    </appender> -->
-    <!-- 日志logger(包.类)的输出级别 -->
-    <!--<logger name="org.springframework.web.servlet.mvc.method.annotation.ExceptionHandlerExceptionResolver" level="DEBUG">
-        <appender-ref ref="console"/>
-        <appender-ref ref="file"/>
-    </logger>-->
-
 </configuration>

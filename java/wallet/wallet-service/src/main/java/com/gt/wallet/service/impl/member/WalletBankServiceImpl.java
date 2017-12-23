@@ -116,13 +116,16 @@ public class WalletBankServiceImpl extends BaseServiceImpl<WalletBankMapper, Wal
 		if(serverResponseBin.getCode()!=0){//
 			throw new BusinessException(serverResponseBin.getCode(),serverResponseBin.getMsg());
 		}
+		CardBin cardBin=WalletHttpClienUtil.reqGet(walletIndividualAdd.getCardNo(), CardBin.class);
+		if(cardBin.getError_code()!=0){
+			throw new BusinessException(cardBin.getError_code(),cardBin.getReason());
+		}
 		String bankCode ="";
-		Long cardType =0L;
+		Integer cardType =cardBin.getResult().getIscreditcard();
 		Integer cardLenth =0;
 		Integer cardState =0;
-		bankCode =tCardBin.getBankCode();
-		cardType =tCardBin.getCardType();
-		cardLenth =tCardBin.getCardLenth().intValue();
+		bankCode =cardBin.getResult().getBanknum();
+		cardLenth =walletIndividualAdd.getCardNo().length();
 		cardState =tCardBin.getCardState().intValue();
 		walletIndividualAdd.getMemberId();
 		if(cardType!=1){//
@@ -133,7 +136,7 @@ public class WalletBankServiceImpl extends BaseServiceImpl<WalletBankMapper, Wal
 			log.error("biz add api fail:银行卡已失效");
 			throw new BusinessException("biz add api fail:银行卡已失效");
 		}
-		ServerResponse<com.alibaba.fastjson.JSONObject> serverResponseBind=YunSoaMemberUtil.applyBindBankCard(walletIndividualAdd, walletMember.getMemberNum(), true, bankCode, cardType);
+		ServerResponse<com.alibaba.fastjson.JSONObject> serverResponseBind=YunSoaMemberUtil.applyBindBankCard(walletIndividualAdd, walletMember.getMemberNum(), true, bankCode, cardType.longValue());
 		log.info(CommonUtil.format("serverResponseBind:%s", JsonUtil.toJSONString(serverResponseBind)));
 		if(serverResponseBind.getCode()!=0){
 			log.error("biz接口:"+serverResponseBind.getMsg());
@@ -162,6 +165,7 @@ public class WalletBankServiceImpl extends BaseServiceImpl<WalletBankMapper, Wal
 		walletBank.setCardType(1);
 		walletBank.setIdentityNo(YunSoaMemberUtil.rsaEncrypt(walletIndividualAdd.getIdentityNo()));
 		walletBank.setIsSafeCard(0);
+		walletBank.setIconUrl(cardBin.getResult().getBankimage());
 		//支付行号
 //		walletBank.setUnionBank(unionBank);
 		walletBank.setTranceNum(tranceNum);
@@ -169,6 +173,7 @@ public class WalletBankServiceImpl extends BaseServiceImpl<WalletBankMapper, Wal
 		walletBank.setBankName(bankName);
 		walletBank.setCardLenth(cardLenth);
 		walletBank.setCardState(cardState);
+		walletBank.setBankName(bankName);
 		if(CommonUtil.isEmpty(walletBank.getId())||walletBank.getId()==0){
 			walletBankMapper.insert(walletBank);
 		}else{
