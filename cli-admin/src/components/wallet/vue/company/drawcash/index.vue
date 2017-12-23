@@ -304,7 +304,7 @@ export default {
         callback(new Error('请输入法人个人账户'));
       } else {
         $.ajax({
-          url: this.DFPAYDOMAIN + '/walletQuota/add',
+          url: this.DFPAYDOMAIN + '/getBankCardBin',
           type: 'POST',
           dataType: 'JSON',
           data: { bankCardNo: value },

@@ -150,7 +150,7 @@ export default {
   data() {
     var rulesCardNo = (rule, value, callback) => {
       $.ajax({
-        url: this.DFPAYDOMAIN + '/walletQuota/add',
+        url: this.DFPAYDOMAIN + '/getBankCardBin',
         type: 'POST',
         dataType: 'JSON',
         data: { bankCardNo: value },
