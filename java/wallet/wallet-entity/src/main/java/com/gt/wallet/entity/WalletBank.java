@@ -174,6 +174,13 @@ public class WalletBank extends Model<WalletBank> {
 	@TableField("status")
 	private Integer status;
 
+	/**
+	 * 银行卡logo url
+	 */
+	@ApiModelProperty(name="logo url",notes="银行卡logo url")
+	@TableField("icon_url")
+	private String iconUrl;
+	
 
 	@Override
 	protected Serializable pkVal() {

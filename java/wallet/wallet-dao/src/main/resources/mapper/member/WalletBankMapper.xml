@@ -26,6 +26,7 @@
 		<result column="card_state" property="cardState" />
 		<result column="name" property="name" />
 		<result column="status" property="status" />
+		<result column="icon_url" property="iconUrl" />
 	</resultMap>
 
     <!-- 通用查询结果列 -->
@@ -33,7 +34,7 @@
         id, w_member_id AS wMemberId, member_num AS memberNum, cardNo, phone, card_check AS cardCheck, 
         identityType, identityNo, validate, cvv2, is_safe_card AS isSafeCard, union_bank AS unionBank, tranceNum,
          transDate, bank_name AS bankName, bank_code AS bankCode, card_type AS cardType, card_class AS cardClass, 
-         card_lenth AS cardLenth, card_state AS cardState,name,status
+         card_lenth AS cardLenth, card_state AS cardState,name,status,icon_url as iconUrl
     </sql>
 
 </mapper>

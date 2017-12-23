@@ -39,12 +39,12 @@ public class DruidDataSourceConfig  {
     //注册地址
     private static final String[] URL_MAPINGS      = { "/druid/*" };
     //白名单：
-    private static final String   ALLOW            = "127.0.0.1,192.168.2.16";
+    private static final String   ALLOW            = "127.0.0.1,192.168.2.17,113.106.202.53,113.106.202.51";
     //IP黑名单 (存在共同时，deny优先于allow) : 如果满足deny的话提示:Sorry, you are not permitted to view this page.
     private static final String   DENY             = "192.168.2.150";
     //登录查看信息的账号密码.
-    private static final String   LOGIN_USERNAME   = "admin";
-    private static final String   LOGIN_PASSWORD   = "123456";
+    private static final String   LOGIN_USERNAME   = "lfx";
+    private static final String   LOGIN_PASSWORD   = "Admin123456";
     //是否能够重置数据.
     private static final String   RESETENABLE      = "false";
     //添加过滤规则.
