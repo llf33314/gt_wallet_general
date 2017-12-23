@@ -1,6 +1,7 @@
 package com.gt.wallet.config;
 
 import org.springframework.context.annotation.Configuration;
+import org.springframework.core.Ordered;
 import org.springframework.web.servlet.config.annotation.CorsRegistry;
 import org.springframework.web.servlet.config.annotation.ResourceHandlerRegistry;
 import org.springframework.web.servlet.config.annotation.ViewControllerRegistry;
@@ -18,7 +19,8 @@ public class MyWebAppConfigurer extends WebMvcConfigurerAdapter {
 	@Override
 	 public void addViewControllers(ViewControllerRegistry registry)
 	  {
-	    registry.addViewController("/").setViewName("/index.html");
+	    registry.addViewController("/").setViewName("/index");
+	    registry.setOrder( Ordered.HIGHEST_PRECEDENCE );
 	    registry.addViewController("/prompt").setViewName("/prompt/system_err");
 	  }
 	@Override
@@ -37,7 +39,7 @@ public class MyWebAppConfigurer extends WebMvcConfigurerAdapter {
      */
     @Override
     public void addCorsMappings( CorsRegistry registry ) {
-	registry.addMapping( "/**" ).allowedHeaders( "*" ).allowedMethods( "*" ).allowedOrigins( "*" );
+//	registry.addMapping( "/**" ).allowedHeaders( "*" ).allowedMethods( "*" ).allowedOrigins( "*" );
 	super.addCorsMappings( registry );
     }
 }
