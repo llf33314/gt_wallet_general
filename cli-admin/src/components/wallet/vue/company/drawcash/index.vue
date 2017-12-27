@@ -157,7 +157,7 @@
                     <span>
                       <el-radio :label="index">&nbsp;</el-radio>
                     </span>
-                    <img :src="item.iconUrl" alt="logo">
+                    <!-- <img :src="item.iconUrl" alt="logo"> -->
                     <span class="font-size name" v-text="item.bankName">建设银行</span>
                   </p>
                   <p class="font-size">尾号

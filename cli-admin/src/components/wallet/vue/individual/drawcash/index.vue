@@ -154,7 +154,7 @@
                     <span>
                       <el-radio :label="index">&nbsp;</el-radio>
                     </span>
-                    <img :src="item.iconUrl" alt="logo">
+                    <!-- <img :src="item.iconUrl" alt="logo"> -->
                     <span class="font-size name" v-text="item.bankName">建设银行</span>
                   </p>
                   <p class="font-size">尾号
@@ -594,9 +594,6 @@ export default {
         if (valid) {
           this.loading4 = true
           //成功fn
-
-          this.bindBankCardDialog = true
-          this.bindBankCardParams.id = res.data || 0
           //
           $.ajax({
             url: this.DFPAYDOMAIN + '/addBank',
@@ -626,11 +623,6 @@ export default {
         if (valid) {
           this.loading5 = true
           //成功fn
-          this.getTotal()
-          this.getWalletBanksByMemberId()
-          this.findMember()
-          this.bindBankCardDialog = false
-          this.dialogApply4 = false
           //
           $.ajax({
             url: this.DFPAYDOMAIN + '/bindBankCard',
