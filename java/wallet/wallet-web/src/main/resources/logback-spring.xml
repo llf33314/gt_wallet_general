@@ -31,7 +31,6 @@
     <appender name="file"
         class="ch.qos.logback.core.rolling.RollingFileAppender">
         <!-- 日志日常打印文件 -->
-       <!--  <file>logs/mylog.log</file> -->
         <!-- 配置日志所生成的目录以及生成文件名的规则 在logs/mylog-2017-06-31.0.log.zip -->        
         <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
         	<!-- <fileNamePattern>${LOG_HOME}/mylog-%d{yyyy-MM-dd}.%i.log</fileNamePattern> -->
@@ -49,7 +48,8 @@
 
 
         <filter class="ch.qos.logback.classic.filter.ThresholdFilter">
-            <level>DEBUG</level>
+            <!-- <level>DEBUG</level> -->
+            <level>INFO</level>
         </filter>
         <!-- 文件输出的日志 的格式 -->
         <encoder>
