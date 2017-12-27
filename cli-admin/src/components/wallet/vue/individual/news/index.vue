@@ -33,14 +33,19 @@
       </el-table-column>
       <el-table-column prop="ctime" label="日期" width="180">
         <template slot-scope="scope">
-          <span v-text="DateFormat(scope.row.ctime,'yyyy-MM-dd hh:mm')"></span>
+          <span v-if="scope.row.state==0" style="color: #000;" v-text="DateFormat(scope.row.ctime,'yyyy-MM-dd hh:mm')"></span>
+          <span v-if="scope.row.state==1" v-text="DateFormat(scope.row.ctime,'yyyy-MM-dd hh:mm')"></span>
         </template>
       </el-table-column>
       <el-table-column prop="descContent" label="内容">
+        <template slot-scope="scope">
+          <span v-if="scope.row.state==0" style="color: #000;" v-text="scope.row.descContent"></span>
+          <span v-if="scope.row.state==1" v-text="scope.row.descContent"></span>
+        </template>
       </el-table-column>
       <el-table-column prop="state " label="状态" width="180">
         <template slot-scope="scope">
-          <span v-if="scope.row.state==0">未读</span>
+          <span v-if="scope.row.state==0" style="color: #000;">未读</span>
           <span v-if="scope.row.state==1">已读</span>
         </template>
       </el-table-column>
