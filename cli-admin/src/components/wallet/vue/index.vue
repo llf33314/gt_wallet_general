@@ -20,13 +20,14 @@ export default {
           console.log(res, '查询会员信息')
           // 开通
           if (res.code == 0) {
-            window.sessionStorage.walletId = res.data.id
+
             if (res.data.memberType == 3) { //个人会员
               if (res.data.status == 0) { //创建
                 this.$router.push({
                   path: '/wallet/individual/open/' + res.data.id
                 })
               } else { //正常使用
+                window.sessionStorage.walletId = res.data.id
                 this.$router.push({
                   path: '/wallet/individual/index'
                 })
@@ -37,6 +38,7 @@ export default {
                   path: '/wallet/company/open/base/' + res.data.id
                 })
               } else { //正常使用
+                window.sessionStorage.walletId = res.data.id
                 this.$router.push({
                   path: '/wallet/company/index'
                 })
