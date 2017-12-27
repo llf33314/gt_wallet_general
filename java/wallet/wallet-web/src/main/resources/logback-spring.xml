@@ -24,9 +24,10 @@
      <logger name="org.springframework" level="WARN" />
      <logger name="com.alibaba.dubbo" level="WARN" />
      
+      <!-- dao层的包，把这个包的打印日志级别调成 DEBUG级别可以看到sql执行 -->
      <logger name="com.gt.wallet.mapper" level="DEBUG" />
      
-     <!-- dao层的包，把这个包的打印日志级别调成 DEBUG级别可以看到sql执行 -->
+    
     <appender name="file"
         class="ch.qos.logback.core.rolling.RollingFileAppender">
         <!-- 日志日常打印文件 -->
