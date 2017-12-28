@@ -9,7 +9,7 @@ require('./assets/css/wallet.less')
 import _$ from 'jquery'
 window.$ = _$
 import axios from './http/index'
-Vue.config.productionTip = true
+Vue.config.productionTip = false
 Vue.prototype.axios = axios
 Vue.prototype.qs = qs
 Vue.prototype.store = store
