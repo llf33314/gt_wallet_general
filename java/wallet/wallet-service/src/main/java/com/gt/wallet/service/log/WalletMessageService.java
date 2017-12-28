@@ -1,5 +1,7 @@
 package com.gt.wallet.service.log;
 
+import java.util.List;
+
 import com.gt.wallet.base.BaseService;
 import com.gt.wallet.data.wallet.request.SearchMsgPage;
 import com.gt.wallet.dto.ServerResponse;
@@ -33,7 +35,7 @@ public interface WalletMessageService extends BaseService<WalletMessage> {
 	 * @return
 	 * @throws Exception
 	 */
-	public ServerResponse<?> upstate(String listStr) throws Exception;
+	public ServerResponse<?> upstate(List<String> listStr) throws Exception;
 	
 	
 	
