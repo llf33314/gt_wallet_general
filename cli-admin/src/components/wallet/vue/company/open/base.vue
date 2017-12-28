@@ -107,17 +107,15 @@ export default {
           },
           success: (res) => {
             console.log(res, '****')
-            if (res.code != 0) {
-              // this.$message.error(res.msg);
-              callback(new Error(res.msg))
-            } else {
-              if (res.data.cardState == 1) {
-                callback();
-                this.isUnionBank(res.data.bankName)
+            if (res.code == 0) {
+              if (res.data.CardBinInfo.iscreditcard == 2) {
+                callback(new Error('对公帐号不能为信用卡'));
               } else {
-                callback(new Error('无效帐号'))
-                //this.$message.error('无效帐号');
+                this.isUnionBank(res.data.bankName)
+                callback();
               }
+            } else {
+              callback(new Error(res.msg));
             }
           }
         })
@@ -235,35 +233,12 @@ export default {
         '中国工商银行', '中国农业银行', '中国建设银行', '中信银行', '平安银行', '招商银行', '兴业银行',
         '南京银行', '农信银行'
       ]
+      this.isUnionBankFlag = false
       bankList.forEach((item) => {
         if (name == item) {
           this.isUnionBankFlag = false
         } else {
           this.isUnionBankFlag = true
-        }
-      })
-    },
-    //查询银行卡bin信息
-    getBankCardBin() {
-      $.ajax({
-        url: this.DFPAYDOMAIN + '/getBankCardBin',
-        type: 'POST',
-        dataType: 'json',
-        data: {
-          bankCardNo: this.ruleForm3.accountNo
-        },
-        success: (res) => {
-          console.log(res, '****')
-          if (res.code != 0) {
-            this.$message.error(res.msg);
-
-          } else {
-            if (res.data.cardState == 1) {
-              this.isUnionBank(res.data.bankName)
-            } else {
-              this.$message.error('无效帐号');
-            }
-          }
         }
       })
     },
