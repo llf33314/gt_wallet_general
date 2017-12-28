@@ -1,7 +1,5 @@
 package com.gt.wallet.data.wallet.request;
 
-import java.util.Date;
-
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;

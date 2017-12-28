@@ -30,6 +30,6 @@ public class YunResponse {
 	 */
 	private String v;
 	
-	private Rps rps;
+	private Rps<?> rps;
 
 }

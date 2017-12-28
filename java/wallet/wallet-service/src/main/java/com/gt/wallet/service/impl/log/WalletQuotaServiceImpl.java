@@ -22,7 +22,6 @@ import com.gt.wallet.mapper.log.WalletQuotaMapper;
 import com.gt.wallet.mapper.member.WalletMemberMapper;
 import com.gt.wallet.service.log.WalletMessageService;
 import com.gt.wallet.service.log.WalletQuotaService;
-import com.gt.wallet.service.member.WalletMemberService;
 import com.gt.wallet.utils.CommonUtil;
 import com.gt.wallet.utils.MyPageUtil;
 

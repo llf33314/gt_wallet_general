@@ -7,6 +7,7 @@ import java.util.Map;
 import org.springframework.web.multipart.MultipartFile;
 
 import com.gt.api.bean.session.BusUser;
+import com.gt.api.util.httpclient.JsonUtil;
 import com.gt.wallet.dto.ServerResponse;
 import com.gt.wallet.enums.WalletResponseEnums;
 import com.gt.wallet.exception.BusinessException;
@@ -49,7 +50,7 @@ public class AttachmentUtil {
 	        out.flush();
 	        out.close();
 	    Map<String, Object> obj=myFtp.upload(path);
-	    
+	    log.info("obj:"+JsonUtil.toJSONString(obj));
 		result=ServerResponse.createBySuccessCodeData(path);
 		return result;
 	}
