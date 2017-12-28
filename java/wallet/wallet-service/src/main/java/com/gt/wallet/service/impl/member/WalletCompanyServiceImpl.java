@@ -18,6 +18,7 @@ import com.gt.api.util.HttpClienUtils;
 import com.gt.api.util.RequestUtils;
 import com.gt.api.util.httpclient.JsonUtil;
 import com.gt.wallet.base.BaseServiceImpl;
+import com.gt.wallet.data.api.tonglian.response.CardBin;
 import com.gt.wallet.data.wallet.request.CompanyUploadFile;
 import com.gt.wallet.data.wallet.request.SendMail;
 import com.gt.wallet.data.wallet.request.WalletCompanyAdd;
@@ -32,6 +33,7 @@ import com.gt.wallet.service.member.WalletCompanyService;
 import com.gt.wallet.service.member.WalletMemberService;
 import com.gt.wallet.utils.CommonUtil;
 import com.gt.wallet.utils.WalletWebConfig;
+import com.gt.wallet.utils.httpclient.WalletHttpClienUtil;
 import com.gt.wallet.utils.yun.YunSoaMemberUtil;
 
 import lombok.extern.slf4j.Slf4j;
@@ -118,6 +120,12 @@ public class WalletCompanyServiceImpl extends BaseServiceImpl<WalletCompanyMappe
 		/*******************************判断db记录是否异常**************************************/
 		
 		/*******************************调用设置企业信息api**************************************/
+		CardBin cardBin=WalletHttpClienUtil.reqGet(walletCompanyAdd.getAccountNo(), CardBin.class);
+		log.info(CommonUtil.format("biz save api cardBin:%s", JsonUtil.toJSONString(cardBin)));
+		if(cardBin.getError_code()!=0){
+			throw new BusinessException(cardBin.getError_code(),cardBin.getReason());
+		}
+		walletCompanyAdd.setParentBankName(cardBin.getResult().getBankname());
 		ServerResponse<?> response=YunSoaMemberUtil.setCompanyInfo(walletCompanyAdd, walletMember.getMemberNum());
  		log.info(CommonUtil.format("biz save api response:%s", JsonUtil.toJSONString(response)));
 		if(!ServerResponse.judgeSuccess(response)){//返回异常
