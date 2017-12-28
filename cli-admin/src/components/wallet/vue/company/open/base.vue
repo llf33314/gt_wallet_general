@@ -32,7 +32,7 @@
         <el-form-item label="营业执照号：" prop="businessLicense">
           <el-input v-model="ruleForm1.businessLicense" placeholder="请输入营业执照号" class="input-width"></el-input>
         </el-form-item>
-        <el-form-item label="企业地址：">
+        <el-form-item label="企业地址：" prop="addressNull">
           <el-form-item prop="province" style="display:inline-block;width:218px;">
             <el-select v-model="ruleForm1.province" placeholder="请选择" @change="getareas">
               <el-option v-for="item in provinceOptins" :key="item.id" :label="item.city_name" :value="item.id+''">
@@ -61,7 +61,7 @@
           <el-input v-model="ruleForm2.legalIds" placeholder="请输入法人证件号码" class="input-width"></el-input>
         </el-form-item>
         <el-form-item label="法人手机号码：" prop="legalPhone">
-          <el-input v-model="ruleForm2.legalPhone" placeholder="请输入法人手机号码" class="input-width"></el-input>
+          <el-input v-model="ruleForm2.legalPhone" placeholder="请输入法人手机号码" type="number" class="input-width"></el-input>
         </el-form-item>
       </el-form>
       <div class="public-table-title">
@@ -120,19 +120,36 @@ export default {
         })
       }
     }
+    var validatorIsPhone = (rule, value, callback) => {
+      if (value == '') {
+        callback(new Error('请输入法人手机号码'))
+      } else {
+        if (this.isPhone(value)) {
+          callback();
+        } else {
+          callback(new Error('请输入正确法人手机号码'))
+        }
+      }
+    }
     return {
       ruleForm1: {
         companyName: '',
         businessLicense: '',
         companyAddress: '',
         area: '',
-        province: ''
+        province: '',
+        addressNull:''
       },
       rules1: {
         area: [{
           required: true,
           message: '请选择市县区',
           trigger: 'change'
+        }],
+        addressNull: [{
+          required: true,
+          message: ' ',
+          trigger: 'blur'
         }],
         province: [{
           required: true,
@@ -202,13 +219,8 @@ export default {
         }],
         legalPhone: [{
           required: true,
-          message: '请输入法人手机号码',
-          trigger: 'blur'
-        },
-        {
-          min: 11,
-          max: 11,
-          message: '请输入正确法人手机号码',
+          // message: '请输入法人手机号码',
+          validator: validatorIsPhone,
           trigger: 'blur'
         }],
       },
@@ -218,7 +230,7 @@ export default {
       },
       rules3: {
         accountNo: [{
-          // required: true,
+          required: true,
           // message: '请输入对公账号',
           validator: validatorAccountNo,
           trigger: 'blur'
@@ -233,10 +245,23 @@ export default {
       isUnionBankFlag: false
     }
   },
+  watch:{
+    'ruleForm1.companyAddress'(){
+      this.ruleForm1.addressNull = this.ruleForm1.companyAddress
+    }
+  },
   mounted() {
     this.getProvince()
   },
   methods: {
+    isPhone(obj) {
+      var result = true;
+      var isPhone = /^((\+?86)|(\(\+86\)))?(13[0123456789][0-9]{8}|15[0123456789][0-9]{8}|17[0123456789][0-9]{8}|18[0123456789][0-9]{8}|147[0-9]{8}|1349[0-9]{7})$/;
+      if (!isPhone.test(obj)) {
+        result = false;
+      }
+      return result;
+    },
     isChina(s) {  //判断字符是否是中文字符 
       var patrn = /[\u4E00-\u9FA5]|[\uFE30-\uFFA0]/gi;
       if (!patrn.exec(s)) {
@@ -248,7 +273,7 @@ export default {
     //判断是否要填支付行号
     isUnionBank(name) {
       console.log(name, 'name')
-     
+
       const bankList = [
         '中国工商银行', '中国农业银行', '中国建设银行', '中信银行', '平安银行', '招商银行', '兴业银行',
         '南京银行', '农信银行'
