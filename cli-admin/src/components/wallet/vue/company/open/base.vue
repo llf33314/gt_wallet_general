@@ -108,7 +108,7 @@ export default {
           success: (res) => {
             console.log(res, '****')
             if (res.code == 0) {
-              if (res.data.CardBinInfo.iscreditcard == 2) {
+              if (res.data.iscreditcard == 2) {
                 callback(new Error('对公帐号不能为信用卡'));
               } else {
                 this.isUnionBank(res.data.bankName)
