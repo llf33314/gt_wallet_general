@@ -112,7 +112,7 @@ public class WalletMessageController extends BaseController {
 	@ApiOperation(value="修为已读状态", notes="修为已读状态")
 	@ResponseBody
 	@RequestMapping(value="79B4DE7C/upstate",method=RequestMethod.POST)
-	public ServerResponse<?> upstate(HttpServletRequest request,@ApiParam(required=true,name="listStr" ,value="消息id，可填写多个，用逗号隔开")@RequestParam List<String> listStr){
+	public ServerResponse<?> upstate(HttpServletRequest request,@ApiParam(required=true,name="listStr" ,value="消息id，可填写多个，用逗号隔开")@RequestParam String listStr){
 		log.info(CommonUtil.format("start view upstate api params: %s",JsonUtil.toJSONString(listStr)));
 		try {
 			ServerResponse<?> serverResponse=walletMessageService.upstate(listStr);
