@@ -205,7 +205,7 @@ export default {
           url: this.DFPAYDOMAIN + "/walletMessage/79B4DE7C/upstate",
           type: "POST",
           dataType: "JSON",
-          data: { listStr: window.JSON.stringify(listStr) },
+          data: { listStr:listStr.join(",") },
           success: res => {
             console.log(res, "已读");
             if (res.code == 0) {
