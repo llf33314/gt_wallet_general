@@ -111,7 +111,15 @@ public class WalletHttpClienUtil {
 //		AppKey：24627762     
 //		AppSecret：78a81c7f07f0fca37125b9a59342fe0b
 //		AppCode：0814548601264324a242e691c95e800e
-		String url="http://api43.market.alicloudapi.com/api/c43";
+		
+//		AppKey：24627762
+//		AppSecret：78a81c7f07f0fca37125b9a59342fe0b
+//		AppCode：0814548601264324a242e691c95e800e
+
+		
+		
+		String url="http://aliyun.apistore.cn/7";
+//		String url="http://api43.market.alicloudapi.com/api/c43";
 		String appcode="0814548601264324a242e691c95e800e";
 		HttpUriRequest httpUriRequest = RequestBuilder.get()
 										.setHeader(jsonHeader)
