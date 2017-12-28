@@ -60,11 +60,10 @@
       float: left;
       &:nth-of-type(1) {
         img {
-          width: 40px;
           height: 40px;
           position: absolute;
           top: 0;
-          left: 50px;
+          left: 20px;
         }
       }
       &:nth-of-type(2) {
@@ -78,7 +77,7 @@
       font-size: 14px;
     }
     .name {
-      padding-left: 80px;
+      padding-left: 130px;
     }
   }
   .card-type-tips {
@@ -157,7 +156,7 @@
                     <span>
                       <el-radio :label="index">&nbsp;</el-radio>
                     </span>
-                    <!-- <img :src="item.iconUrl" alt="logo"> -->
+                    <img :src="item.iconUrl" alt="logo">
                     <span class="font-size name" v-text="item.bankName">建设银行</span>
                   </p>
                   <p class="font-size">尾号
