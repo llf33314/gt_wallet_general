@@ -1,7 +1,6 @@
 package com.gt.wallet.service.order;
 
 import com.gt.wallet.base.BaseService;
-import com.gt.wallet.data.wallet.request.PayOrder;
 import com.gt.wallet.data.wallet.response.IndexStatistics;
 import com.gt.wallet.dto.ServerResponse;
 import com.gt.wallet.entity.WalletIndexStatistics;

@@ -92,7 +92,8 @@ public class WalletHttpClienUtil {
      * @return SignBean 签名类JavaBean
 	 * @throws Exception 
      */
-    public static SignBean sign(String signKey, String param) throws Exception{
+    @SuppressWarnings("static-access")
+	public static SignBean sign(String signKey, String param) throws Exception{
     	KeysUtil keysUtil=new KeysUtil();
         String timeStamp = String.valueOf(System.currentTimeMillis());
         String randNum = String.valueOf((int)((Math.random()*9+1)*10000));
@@ -138,7 +139,7 @@ public class WalletHttpClienUtil {
 //		System.out.println(ss);
 //		ResponseUtils map=reqPostUTF8( ss,"http://127.0.0.1:8440/8A5DA52E/shopapi/6F6D9AD2/79B4DE7C/queryWxShopByBusId.do",ResponseUtils.class,"WXMP2017");
 //		System.out.println(com.alibaba.fastjson.JSONObject.toJSONString(map));
-		String url="http://api43.market.alicloudapi.com/api/c43";
+	//	String url="http://api43.market.alicloudapi.com/api/c43";
 		CardBin map=reqGet("6228481139158261672", CardBin.class);
 		System.out.println(JSONObject.toJSONString(map));
 //		WalletIndividualAdd walletIndividualAdd=new WalletIndividualAdd();
