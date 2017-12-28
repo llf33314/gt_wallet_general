@@ -1,5 +1,7 @@
 package com.gt.wallet.service.impl.log;
 
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Isolation;
@@ -51,11 +53,11 @@ public class WalletMessageServiceImpl extends BaseServiceImpl<WalletMessageMappe
 	}
 
 	@Override
-	public ServerResponse<?> upstate(String listStr) throws Exception {
+	public ServerResponse<?> upstate(List<String> listStr) throws Exception {
 		log.info(CommonUtil.format("start biz upstate api params:%s", JsonUtil.toJSONString(listStr)));
 		ServerResponse<?> serverResponse=null;
-		String[] array=	listStr.split(",");
-		for (String string : array) {
+	//	String[] array=	listStr.split(",");
+		for (String string : listStr) {
 			if(CommonUtil.isInteger(string)&&!string.equals("0")){
 				WalletMessage walletMessage=new WalletMessage();
 				walletMessage.setId(CommonUtil.toInteger(CommonUtil.toInteger(string)));
