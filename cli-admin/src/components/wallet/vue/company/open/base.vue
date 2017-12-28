@@ -75,10 +75,9 @@
           <el-input v-model="ruleForm3.unionBank" placeholder="请输入支付行号" class="input-width"></el-input>
           <el-tooltip placement="right" effect="light">
             <div slot="content">如非以下银行，则需要填写支付行号。
-              <br/> （工商银行、农业银行、中国银行、建设银行、
-              <br/> 中信银行、广大银行、华夏银行、平安银行、
-              <br/> 招商银行、兴业银行、浦发银行、邮储银行、
-              <br/> 宁波银行、南京银行、农信湖南）
+              <br/> （中国工商银行、中国农业银行、中国建设银行、中信银行、
+              <br/> 平安银行、招商银行、兴业银行、南京银行、
+              <br/> 农信银行）
             </div>
             <i class="el-icon-question" style="position: absolute; color: #666; right: -20px;top: 13px;"></i>
           </el-tooltip>
@@ -111,7 +110,7 @@ export default {
               if (res.data.iscreditcard == 2) {
                 callback(new Error('对公帐号不能为信用卡'));
               } else {
-                this.isUnionBank(res.data.bankName)
+                this.isUnionBank(res.data.bankname)
                 callback();
               }
             } else {
@@ -194,10 +193,22 @@ export default {
           required: true,
           message: '请输入法人证件号码',
           trigger: 'blur'
+        },
+        {
+          min: 18,
+          max: 18,
+          message: '请输入正确法人证件号码',
+          trigger: 'blur'
         }],
         legalPhone: [{
           required: true,
           message: '请输入法人手机号码',
+          trigger: 'blur'
+        },
+        {
+          min: 11,
+          max: 11,
+          message: '请输入正确法人手机号码',
           trigger: 'blur'
         }],
       },
@@ -226,21 +237,31 @@ export default {
     this.getProvince()
   },
   methods: {
+    isChina(s) {  //判断字符是否是中文字符 
+      var patrn = /[\u4E00-\u9FA5]|[\uFE30-\uFFA0]/gi;
+      if (!patrn.exec(s)) {
+        return false;
+      } else {
+        return true;
+      }
+    },
     //判断是否要填支付行号
     isUnionBank(name) {
       console.log(name, 'name')
+     
       const bankList = [
         '中国工商银行', '中国农业银行', '中国建设银行', '中信银行', '平安银行', '招商银行', '兴业银行',
         '南京银行', '农信银行'
       ]
       this.isUnionBankFlag = false
-      bankList.forEach((item) => {
-        if (name == item) {
-          this.isUnionBankFlag = false
-        } else {
-          this.isUnionBankFlag = true
-        }
-      })
+      var m = bankList.join('')
+      var t = m.indexOf(name)
+      if (t > 0) {
+        this.isUnionBankFlag = false
+      } else {
+        this.isUnionBankFlag = true
+      }
+      debugger
     },
     //获取省份数据
     getProvince() {
@@ -324,7 +345,7 @@ export default {
           data: obj,
           success: (res) => {
             console.log(res, 'res')
-            if (res.code !== 0) {
+            if (res.code == 0) {
               this.$router.push({
                 path: '/wallet/company/open/uploadFile/' + this.$route.params.memberId
               })
