@@ -96,45 +96,5 @@ public class WalletIndividualController extends BaseController {
 			}
 	}
 	
-	
-	
-	/**
-	 * 钱包设置(个人会员)
-	 * @return
-	 */
-	@ResponseBody
-	@RequestMapping(value="set",method=RequestMethod.POST)
-	 @ApiOperation(value="钱包设置(个人会员)", notes="钱包设置(个人会员)")
-	@ApiImplicitParams({
-		@ApiImplicitParam(name = "wmemberId",value = "多粉钱包会员id",paramType = "form",dataType = "int",required=true,example="多粉钱包会员id",defaultValue="123456"),
-        @ApiImplicitParam(name = "pwd",value = "密码(6位数字)",paramType = "form",dataType = "int",required=true,example="密码",defaultValue="123456"),
-        @ApiImplicitParam(name = "confirm",value = "确认密码",paramType = "form",dataType = "string",required=true,example="确认密码",defaultValue="123456")
-        ,
-        @ApiImplicitParam(name = "phone",value = "手机号码",paramType = "form",dataType = "string",required=true,example="手机号码",defaultValue="13888888888")
-        ,
-        @ApiImplicitParam(name = "code",value = "短信验证码(开发默认8888)",paramType = "form",dataType = "string",required=true,defaultValue="8888")
-        // path, query, body, header, form
-	})
-	public ServerResponse<?> set(HttpServletRequest request,WalletSet walletSet
-		){
-		log.info(CommonUtil.format("start view set api ,params:%s",JsonUtil.toJSONString(walletSet)));
-		try {
-			ServerResponse<?> serverResponse=null;
-			serverResponse=walletIndividualService.set(walletSet,CommonUtil.getLoginUser(request));
-			log.info(CommonUtil.format("serverResponse:%s",JsonUtil.toJSONString(serverResponse)));
-			return serverResponse;
-			} catch ( BusinessException e) {
-				log.error(CommonUtil.format("view set api fail：%s,%s",e.getCode(),e.getMessage()));
-				throw new ResponseEntityException(e.getCode(),e.getMessage());
-			} catch ( Exception e) {
-				e.printStackTrace();
-				log.error(CommonUtil.format("view set api fail：%s,%s",WalletResponseEnums.SYSTEM_ERROR.getCode(),WalletResponseEnums.SYSTEM_ERROR.getDesc()));
-				throw new ResponseEntityException(WalletResponseEnums.SYSTEM_ERROR);
-			}
-	} 
-	
-	
-	
-	
 	 
 }

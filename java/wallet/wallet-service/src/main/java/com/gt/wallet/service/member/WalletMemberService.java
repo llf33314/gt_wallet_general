@@ -6,6 +6,7 @@ import com.baomidou.mybatisplus.plugins.Page;
 import com.gt.api.bean.session.BusUser;
 import com.gt.wallet.base.BaseService;
 import com.gt.wallet.data.wallet.request.WalletPasswordSet;
+import com.gt.wallet.data.wallet.request.WalletSet;
 import com.gt.wallet.dto.ServerResponse;
 import com.gt.wallet.entity.WalletMember;
 import com.gt.wallet.utils.MyPageUtil;
@@ -61,15 +62,14 @@ public interface WalletMemberService extends BaseService<WalletMember> {
 	public ServerResponse<Integer> register(Integer memberType,String ip,Integer busId) throws Exception;
 	
 	
-	
 	/**
-	 * 修改密码
+	 * 钱包设置
 	 * @param walletSet 需要设置的信息
 	 * @param busUser 商家信息
 	 * @return
 	 * @throws Exception
 	 */
-	public ServerResponse<?> setpwd(WalletPasswordSet walletPasswordSet,BusUser busUser) throws Exception;
+	public ServerResponse<?> bindingPhone(WalletSet walletSet,BusUser busUser) throws Exception;
 	
 	
 	/**

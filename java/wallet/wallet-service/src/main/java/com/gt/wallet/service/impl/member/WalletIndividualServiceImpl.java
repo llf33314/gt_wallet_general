@@ -152,39 +152,6 @@ public class WalletIndividualServiceImpl extends BaseServiceImpl<WalletIndividua
 		return serverResponse;
 	}
 
-	@Override
-	public ServerResponse<?> set(WalletSet walletSet, BusUser busUser) throws Exception {
-		log.info(CommonUtil.format("start biz set api params:%s,%s", JsonUtil.toJSONString(walletSet), JsonUtil.toJSONString(busUser)));
-		// TODO Auto-generated method stub
-//		if(!walletSet.getPwd().equals(walletSet.getConfirm())){
-//			log.error(CommonUtil.format("biz接口:钱包设置异常:%s",WalletResponseEnums.PWD_ERROR.getDesc()));
-//			throw new BusinessException(WalletResponseEnums.PWD_ERROR);
-//		}
-		Wrapper<WalletMember> wrapper=new EntityWrapper<WalletMember>() ;
-		wrapper.where("member_id={0}",busUser.getId()).and("member_class={0}", 1);
-		List<WalletMember> walletMembers=walletMemberMapper.selectList(wrapper);
-		if(CommonUtil.isNotEmpty(walletMembers)&&walletMembers.size()>0){
-			WalletMember walletMember=walletMembers.get(0);
-			if(walletMember.getMemberClass()==1&&walletMember.getMemberId()!=busUser.getId()){
-				log.error("biz set api fail:此钱包会员不属于当前登录商家");
-				throw new BusinessException("biz set api fail:此钱包会员不属于当前登录商家");
-			}
-			ServerResponse<?> serverResponse=YunSoaMemberUtil.bindPhone(walletMember.getMemberNum(), walletSet.getPhone(), walletSet.getCode());
-			if(ServerResponse.judgeSuccess(serverResponse)){
-//			walletMember.setPayPass(MD5Utils.getMD5(walletSet.getPwd()));
-//			walletMember.setSetPayPwd(1);
-				walletMember.setPhone(WalletKeyUtil.getEncString(walletSet.getPhone()));
-				walletMemberMapper.updateById(walletMember);
-				return ServerResponse.createBySuccess();
-
-			}else{
-				return serverResponse;
-			}
-		}else{
-			log.error(CommonUtil.format("biz set api fail:%s",WalletResponseEnums.DATA_NULL_ERROR.getDesc()));
-			throw new BusinessException(WalletResponseEnums.DATA_NULL_ERROR);
-		}
-	}
 
 	@Override
 	public ServerResponse<WalletIndividual> findByMemberId(Integer memberId) {

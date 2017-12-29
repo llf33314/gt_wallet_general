@@ -79,7 +79,7 @@ public enum WalletResponseEnums {
     /**
      * 验证码错误
      */
-    CODE_ERROR(1013, "验证码错误" ),
+    CODE_ERROR(1013, "验证码为空" ),
     
     /**
      * 两次密码输入不一致

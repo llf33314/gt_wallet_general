@@ -27,14 +27,6 @@ public interface WalletIndividualService extends BaseService<WalletIndividual> {
 	
 	
 	
-	/**
-	 * 钱包设置
-	 * @param walletSet 需要设置的信息
-	 * @param busUser 商家信息
-	 * @return
-	 * @throws Exception
-	 */
-	public ServerResponse<?> set(WalletSet walletSet,BusUser busUser) throws Exception;
 	
 	
 	/**

@@ -20,6 +20,7 @@ import com.gt.api.util.IPOrAddressUtils;
 import com.gt.api.util.httpclient.JsonUtil;
 import com.gt.wallet.base.BaseController;
 import com.gt.wallet.data.wallet.request.WalletPasswordSet;
+import com.gt.wallet.data.wallet.request.WalletSet;
 import com.gt.wallet.dto.ServerResponse;
 import com.gt.wallet.entity.WalletMember;
 import com.gt.wallet.enums.WalletResponseEnums;
@@ -136,36 +137,66 @@ public class WalletMemberController extends BaseController {
 	
 	
 	
+//	/**
+//	 * 绑定手机
+//	 * @return
+//	 */
+//	@ResponseBody
+//	@RequestMapping(value="bindingPhone",method=RequestMethod.POST)
+//	 @ApiOperation(value="修改密码", notes="修改密码")
+//	@ApiImplicitParams({
+//        @ApiImplicitParam(name = "phone",value = "手机号码",paramType = "form",dataType = "string",required=true),
+//        @ApiImplicitParam(name = "wmemberId",value = "会员id",paramType = "form",dataType = "int",required=true,example="会员id")
+//        ,
+//        @ApiImplicitParam(name = "code",value = "短信验证码",paramType = "form",dataType = "string",required=true)
+//        // path, query, body, header, form
+//	})
+//	public ServerResponse<?> bindingPhone(HttpServletRequest request,WalletPasswordSet walletPasswordSet
+//		){
+//		log.info(CommonUtil.format("start view setpwd api ,params:%s",JsonUtil.toJSONString(walletPasswordSet)));
+//		try {
+//			ServerResponse<?> serverResponse=null;
+//			serverResponse=walletMemberService.bindingPhone(walletPasswordSet,CommonUtil.getLoginUser(request));
+//			log.info(CommonUtil.format("serverResponse:%s",JsonUtil.toJSONString(serverResponse)));
+//			return serverResponse;
+//			} catch ( BusinessException e) {
+//				log.error(CommonUtil.format("view setpwd api fail：%s,%s",e.getCode(),e.getMessage()));
+//				throw new ResponseEntityException(e.getCode(),e.getMessage());
+//			} catch ( Exception e) {
+//				e.printStackTrace();
+//				log.error(CommonUtil.format("view setpwd api fail：%s,%s",WalletResponseEnums.SYSTEM_ERROR.getCode(),WalletResponseEnums.SYSTEM_ERROR.getDesc()));
+//				throw new ResponseEntityException(WalletResponseEnums.SYSTEM_ERROR);
+//			}
+//	} 
+	
+	
 	/**
-	 * 修改密码
+	 * 绑定手机
 	 * @return
 	 */
 	@ResponseBody
-	@RequestMapping(value="setpwd",method=RequestMethod.POST)
-	 @ApiOperation(value="修改密码", notes="修改密码")
+	@RequestMapping(value="bindingPhone",method=RequestMethod.POST)
+	 @ApiOperation(value="绑定手机", notes="钱包设置(个人会员)",hidden=true)
 	@ApiImplicitParams({
-        @ApiImplicitParam(name = "pwd",value = "密码(6位数字)",paramType = "form",dataType = "int",required=true,example="密码"),
-        @ApiImplicitParam(name = "confirm",value = "确认密码",paramType = "form",dataType = "string",required=true,example="确认密码")
+		@ApiImplicitParam(name = "wmemberId",value = "多粉钱包会员id",paramType = "form",dataType = "int",required=true,example="多粉钱包会员id"),
+        @ApiImplicitParam(name = "phone",value = "手机号码",paramType = "form",dataType = "string",required=true,example="手机号码")
         ,
-        @ApiImplicitParam(name = "wmemberId",value = "会员id",paramType = "form",dataType = "int",required=true,example="会员id")
-        ,
-        @ApiImplicitParam(name = "code",value = "短信验证码(开发默认8888)",paramType = "form",dataType = "string",required=true,defaultValue="8888")
-        // path, query, body, header, form
+        @ApiImplicitParam(name = "code",value = "短信验证码",paramType = "form",dataType = "string",required=true,defaultValue="8888")
 	})
-	public ServerResponse<?> setpwd(HttpServletRequest request,WalletPasswordSet walletPasswordSet
+	public ServerResponse<?> bindingPhone(HttpServletRequest request,WalletSet walletSet
 		){
-		log.info(CommonUtil.format("start view setpwd api ,params:%s",JsonUtil.toJSONString(walletPasswordSet)));
+		log.info(CommonUtil.format("start view bindingPhone api ,params:%s",JsonUtil.toJSONString(walletSet)));
 		try {
 			ServerResponse<?> serverResponse=null;
-			serverResponse=walletMemberService.setpwd(walletPasswordSet,CommonUtil.getLoginUser(request));
+			serverResponse=walletMemberService.bindingPhone(walletSet,CommonUtil.getLoginUser(request));
 			log.info(CommonUtil.format("serverResponse:%s",JsonUtil.toJSONString(serverResponse)));
 			return serverResponse;
 			} catch ( BusinessException e) {
-				log.error(CommonUtil.format("view setpwd api fail：%s,%s",e.getCode(),e.getMessage()));
+				log.error(CommonUtil.format("view bindingPhone api fail：%s,%s",e.getCode(),e.getMessage()));
 				throw new ResponseEntityException(e.getCode(),e.getMessage());
 			} catch ( Exception e) {
 				e.printStackTrace();
-				log.error(CommonUtil.format("view setpwd api fail：%s,%s",WalletResponseEnums.SYSTEM_ERROR.getCode(),WalletResponseEnums.SYSTEM_ERROR.getDesc()));
+				log.error(CommonUtil.format("view bindingPhone api fail：%s,%s",WalletResponseEnums.SYSTEM_ERROR.getCode(),WalletResponseEnums.SYSTEM_ERROR.getDesc()));
 				throw new ResponseEntityException(WalletResponseEnums.SYSTEM_ERROR);
 			}
 	} 

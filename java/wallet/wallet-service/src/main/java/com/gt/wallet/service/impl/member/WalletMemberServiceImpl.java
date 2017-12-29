@@ -18,6 +18,7 @@ import com.gt.api.util.httpclient.JsonUtil;
 import com.gt.wallet.base.BaseServiceImpl;
 import com.gt.wallet.constant.WalletLogConstants;
 import com.gt.wallet.data.wallet.request.WalletPasswordSet;
+import com.gt.wallet.data.wallet.request.WalletSet;
 import com.gt.wallet.dto.ServerResponse;
 import com.gt.wallet.entity.WalletBank;
 import com.gt.wallet.entity.WalletCompany;
@@ -232,30 +233,34 @@ public class WalletMemberServiceImpl extends BaseServiceImpl<WalletMemberMapper,
 	}
 	
 	
-	@Transactional(propagation = Propagation.REQUIRED,isolation = Isolation.DEFAULT,timeout=36000,rollbackFor=Exception.class)
+
+	
 	@Override
-	public ServerResponse<?> setpwd(WalletPasswordSet walletPasswordSet, BusUser busUser) throws Exception {
-		log.info(CommonUtil.format("start biz setpwd api params:%s,%s",JsonUtil.toJSONString(walletPasswordSet),JsonUtil.toJSONString(busUser)));
-		if(!walletPasswordSet.getCode().equals("8888")){
-			log.error(CommonUtil.format("biz接口:修改密码异常:%s",WalletResponseEnums.CODE_ERROR.getDesc()));
-			throw new BusinessException(WalletResponseEnums.CODE_ERROR);
-		}
-		if(!walletPasswordSet.getPwd().equals(walletPasswordSet.getConfirm())){
-			log.error(CommonUtil.format("biz接口:修改密码异常:%s",WalletResponseEnums.PWD_ERROR.getDesc()));
-			throw new BusinessException(WalletResponseEnums.PWD_ERROR);
-		}
+	public ServerResponse<?> bindingPhone(WalletSet walletSet, BusUser busUser) throws Exception {
+		log.info(CommonUtil.format("start biz bindingPhone api params:%s,%s", JsonUtil.toJSONString(walletSet), JsonUtil.toJSONString(busUser)));
 		Wrapper<WalletMember> wrapper=new EntityWrapper<WalletMember>() ;
 		wrapper.where("member_id={0}",busUser.getId()).and("member_class={0}", 1);
 		List<WalletMember> walletMembers=walletMemberMapper.selectList(wrapper);
 		if(CommonUtil.isNotEmpty(walletMembers)&&walletMembers.size()>0){
 			WalletMember walletMember=walletMembers.get(0);
-			walletMember.setPayPass(MD5Utils.getMD5(walletPasswordSet.getPwd()));
-			walletMemberMapper.updateById(walletMember);
+			if(walletMember.getMemberClass()==1&&walletMember.getMemberId()!=busUser.getId()){
+				log.error("biz set api fail:此钱包会员不属于当前登录商家");
+				throw new BusinessException("biz bindingPhone api fail:此钱包会员不属于当前登录商家");
+			}
+			ServerResponse<?> serverResponse=YunSoaMemberUtil.bindPhone(walletMember.getMemberNum(), walletSet.getPhone(), walletSet.getCode());
+			log.info("serverResponse:"+JsonUtil.toJSONString(serverResponse));
+			if(ServerResponse.judgeSuccess(serverResponse)){
+				walletMember.setPhone(WalletKeyUtil.getEncString(walletSet.getPhone()));
+				walletMemberMapper.updateById(walletMember);
+				return ServerResponse.createBySuccess();
+
+			}else{
+				return serverResponse;
+			}
 		}else{
-			log.error(CommonUtil.format("biz setpwd api fail:%s",WalletResponseEnums.DATA_NULL_ERROR.getDesc()));
+			log.error(CommonUtil.format("biz bindingPhone api fail:%s",WalletResponseEnums.DATA_NULL_ERROR.getDesc()));
 			throw new BusinessException(WalletResponseEnums.DATA_NULL_ERROR);
 		}
-		return ServerResponse.createBySuccess();
 	}
 
 

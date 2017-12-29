@@ -25,16 +25,10 @@ public class WalletPasswordSet {
 	
 	
 	/**
-	 * 密码
+	 * 手机号码
 	 */
-	@ApiModelProperty(name="pwd",notes="密码",required=true)
-	private String pwd;
-	
-	/**
-	 * 确认密码
-	 */
-	@ApiModelProperty(name="confirm",notes="确认密码",required=true)
-	private String confirm;
+	@ApiModelProperty(name="phone",notes="手机号码",required=true)
+	private String phone;
 	
 	
 
