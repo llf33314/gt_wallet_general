@@ -20,7 +20,6 @@ export default {
           console.log(res, '查询会员信息')
           // 开通
           if (res.code == 0) {
-
             if (res.data.memberType == 3) { //个人会员
               if (res.data.status == 0) { //创建
                 this.$router.push({
@@ -34,13 +33,13 @@ export default {
               }
             } else { //企业会员
               if (res.data.status == 0) {  //创建
-                if (!res.data.walletCompany.licenseUrl) {
+                if (res.data.walletCompany.licenseUrl == null || res.data.walletCompany.licenseUrl == 'null') {
+                  this.$router.push({
+                    path: '/wallet/company/open/uploadFile/' + res.data.id
+                  })
+                } else {
                   this.$router.push({
                     path: '/wallet/company/open/base/' + res.data.id
-                  })
-                }else{
-                   this.$router.push({
-                    path: '/wallet/company/open/uploadFile/' + res.data.id
                   })
                 }
               } else { //正常使用
