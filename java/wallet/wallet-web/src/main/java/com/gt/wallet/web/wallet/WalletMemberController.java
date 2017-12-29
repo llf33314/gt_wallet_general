@@ -68,6 +68,7 @@ public class WalletMemberController extends BaseController {
 			BusUser busUser=CommonUtil.getLoginUser(request);
 			ServerResponse<WalletMember> serverResponse=null;
 			ServerResponse<List<WalletMember>> temp=walletMemberService.findMember(busUser.getId());
+			log.info("view findMember serverResponse:"+JsonUtil.toJSONString(temp));
 			if(CommonUtil.isNotEmpty(temp)&&temp.getCode()==0&&CommonUtil.isNotEmpty(temp.getData())&&temp.getData().size()==1){
 				serverResponse=ServerResponse.createBySuccessCodeData(temp.getData().get(0));
 				return serverResponse;
