@@ -138,7 +138,7 @@ export default {
         companyAddress: '',
         area: '',
         province: '',
-        addressNull:''
+        addressNull: ''
       },
       rules1: {
         area: [{
@@ -245,8 +245,8 @@ export default {
       isUnionBankFlag: false
     }
   },
-  watch:{
-    'ruleForm1.companyAddress'(){
+  watch: {
+    'ruleForm1.companyAddress'() {
       this.ruleForm1.addressNull = this.ruleForm1.companyAddress
     }
   },
