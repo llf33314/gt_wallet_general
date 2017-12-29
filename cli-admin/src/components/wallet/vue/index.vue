@@ -28,12 +28,12 @@ export default {
                     path: '/wallet/individual/open/' + res.data.id
                   })
                 }
-                if (res.data.WalletMember.isBindingPhone == 0) { //步骤2
+                if (res.data.isBindingPhone == 0) { //步骤2
                   this.$router.push({
                     path: '/wallet/individual/open/bindPhone/' + res.data.id
                   })
                 }
-                if (res.data.WalletMember.isBindingPhone == 1 && res.data.status == -1) {  //正常使用
+                if (res.data.isBindingPhone == 1 && res.data.status == -1) {  //正常使用
                   window.sessionStorage.walletId = res.data.id
                   this.$router.push({
                     path: '/wallet/individual/index'
@@ -57,12 +57,12 @@ export default {
                     path: '/wallet/company/open/uploadFil/' + res.data.id
                   })
                 }
-                if (res.data.WalletMember.isBindingPhone == 0) { //步骤3
+                if (res.data.isBindingPhone == 0) { //步骤3
                   this.$router.push({
                     path: '/wallet/company/open/bindPhone/' + res.data.id
                   })
                 }
-                if (res.data.WalletMember.isBindingPhone == 1 && res.data.status == -1) { //正常使用
+                if (res.data.isBindingPhone == 1 && res.data.status == -1) { //正常使用
                   window.sessionStorage.walletId = res.data.id
                   this.$router.push({
                     path: '/wallet/company/index'
