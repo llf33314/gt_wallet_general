@@ -179,14 +179,14 @@ public class WalletMemberController extends BaseController {
 	 @ApiOperation(value="发送短信验证码", notes="发送短信验证码")
 	@ApiImplicitParams({
         @ApiImplicitParam(name = "phone",value = "手机号码",paramType = "form",dataType = "int",required=true,example="手机号码"),
-        @ApiImplicitParam(name = "wmemberId",value = "钱包会员id",paramType = "form",dataType = "int",required=true,example="钱包会员id")
+        @ApiImplicitParam(name = "wmemberId",value = "钱包会员id",paramType = "form",dataType = "int",required=true,example="钱包会员id"),
+        @ApiImplicitParam(name = "verificationCodeType",value = "验证码类型(绑定、修改手机)verificationCodeType=9",paramType = "form",dataType = "int",required=true,defaultValue="9")
         // path, query, body, header, form
 	})
-	public ServerResponse<?> sendVerificationCode(HttpServletRequest request,String phone,Integer wmemberId
+	public ServerResponse<?> sendVerificationCode(HttpServletRequest request,String phone,Integer wmemberId,Integer verificationCodeType
 		){
 		log.info(CommonUtil.format("start view sendVerificationCode api,params:%s,%s",phone,wmemberId));
 		try {
-			Integer verificationCodeType=9;
 			BusUser busUser=CommonUtil.getLoginUser(request);
 			ServerResponse<?> serverResponse=null;
 			serverResponse=walletMemberService.sendVerificationCode(busUser.getId(), phone, wmemberId,verificationCodeType);//YunSoaMemberUtil.sendVerificationCode(bizUserId, phone, verificationCodeType);
