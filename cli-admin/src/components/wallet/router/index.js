@@ -12,7 +12,15 @@ export const individual = [{
     name: 'individualOpen',
     title: '个人开通',
     component: resolve => {
-      require(['@/components/wallet/vue/individual/open'], resolve)
+      require(['@/components/wallet/vue/individual/open/index'], resolve)
+    }
+  },
+  {
+    path: '/wallet/individual/open/bindPhone/:memberId',
+    name: 'company_open_uploadFile',
+    title: '个人开通-绑定手机',
+    component: resolve => {
+      require(['@/components/wallet/vue/individual/open/bindPhone'], resolve)
     }
   },
   {
@@ -79,6 +87,14 @@ export const company = [{
     title: '企业开通-上传文件',
     component: resolve => {
       require(['@/components/wallet/vue/company/open/uploadFile'], resolve)
+    }
+  },
+  {
+    path: '/wallet/company/open/bindPhone/:memberId',
+    name: 'company_open_uploadFile',
+    title: '企业开通-绑定手机',
+    component: resolve => {
+      require(['@/components/wallet/vue/company/open/bindPhone'], resolve)
     }
   },
   {

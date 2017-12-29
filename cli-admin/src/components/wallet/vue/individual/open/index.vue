@@ -82,7 +82,7 @@
           </el-upload>
           <div class="dome-img public-c333">
             <span>示例：</span>
-            <img src="./../../img/c1.jpg" alt="">
+            <img src="./../../../img/c1.jpg" alt="">
           </div>
         </el-form-item>
         <el-form-item label="身份证反面：" prop="identitycardUrl2File">
@@ -92,7 +92,7 @@
           </el-upload>
           <div class="dome-img public-c333">
             <span>示例：</span>
-            <img src="./../../img/c2.jpg" alt="">
+            <img src="./../../../img/c2.jpg" alt="">
           </div>
         </el-form-item>
         <!-- <el-form-item label="短信验证：" prop="name">
@@ -145,7 +145,7 @@
 <script>
 import {
   wallet
-} from './../../api/index'
+} from './../../../api/index'
 export default {
   data() {
     var rulesCardNo = (rule, value, callback) => {
