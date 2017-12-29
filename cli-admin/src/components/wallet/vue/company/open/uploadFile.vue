@@ -207,17 +207,6 @@
                 } else {
                   this.$message.error(res.msg);
                 }
-                this.$message({
-                  message: res.msg,
-                  type: 'success',
-                  duration: 2000,
-                  onClose: () => {
-                    this.$router.push({
-                      path: '/wallet/company/index'
-                    })
-                  }
-                });
-
               }
             })
           } else {
