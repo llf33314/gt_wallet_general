@@ -308,7 +308,24 @@ public class WalletMemberServiceImpl extends BaseServiceImpl<WalletMemberMapper,
 		}
 		ServerResponse<?> serverResponse=YunSoaMemberUtil.unlockMember(walletMember.getMemberNum());
 		if(ServerResponse.judgeSuccess(serverResponse)){
+			ServerResponse<WalletBank> serverResponseWalletBank=	walletBankService.getWalletSafeBankByMemberId(wmemberId);
 			walletMember.setStatus(3);
+			if(walletMember.getIsBindingPhone()==0||!ServerResponse.judgeSuccess(serverResponseWalletBank)||CommonUtil.isEmpty(serverResponseWalletBank.getData())){//未绑定手机
+				walletMember.setStatus(0);
+			}else{
+				if(walletMember.getMemberType()==3){//个人会员
+					ServerResponse<WalletIndividual> responseWalletIndividual=walletIndividualService.findByMemberId(wmemberId);
+					if(!ServerResponse.judgeSuccess(responseWalletIndividual)||CommonUtil.isEmpty(responseWalletIndividual.getData())){//对象为空
+						walletMember.setStatus(0);
+					}
+				}else{//企业
+					ServerResponse<WalletCompany> serverResponseWalletCompany=	walletCompanyService.findByMemberId(wmemberId);
+					WalletCompany walletCompany=	serverResponseWalletCompany.getData();
+					if(!ServerResponse.judgeSuccess(serverResponseWalletCompany)||CommonUtil.isEmpty(walletCompany)||CommonUtil.isEmpty(walletCompany.getLegalName())||CommonUtil.isEmpty(walletCompany.getDoBusinessUrl())){//对象为空
+						walletMember.setStatus(0);
+					}
+				}
+			}
 			walletMemberMapper.updateById(walletMember);
 		}
 		try {
