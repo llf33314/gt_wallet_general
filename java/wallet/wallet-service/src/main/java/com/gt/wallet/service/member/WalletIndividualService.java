@@ -3,7 +3,6 @@ package com.gt.wallet.service.member;
 import com.gt.api.bean.session.BusUser;
 import com.gt.wallet.base.BaseService;
 import com.gt.wallet.data.wallet.request.WalletIndividualAdd;
-import com.gt.wallet.data.wallet.request.WalletSet;
 import com.gt.wallet.dto.ServerResponse;
 import com.gt.wallet.entity.WalletIndividual;
 
