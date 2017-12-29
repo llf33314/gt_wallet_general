@@ -42,7 +42,6 @@ export default {
                     path: '/wallet/company/open/base/' + res.data.id
                   })
                 }
-                console.log(666)
               } else { //正常使用
                 window.sessionStorage.walletId = res.data.id
                 this.$router.push({
