@@ -33,7 +33,7 @@ export default {
               }
             } else { //企业会员
               if (res.data.status == 0) {  //创建
-                if (!res.data.walletCompany.doBusinessUrl||!res.data.walletCompany.identitycardUrl1||!res.data.walletCompany.identitycardUrl2||!res.data.walletCompany.licenseUrl) {
+                if (!res.data.walletCompany.doBusinessUrl || !res.data.walletCompany.identitycardUrl1 || !res.data.walletCompany.identitycardUrl2 || !res.data.walletCompany.licenseUrl) {
                   this.$router.push({
                     path: '/wallet/company/open/uploadFile/' + res.data.id
                   })
