@@ -23,6 +23,7 @@
      <!-- com.alibaba.dubbo是dubbo服务的包，在如何是info一下的级别会产生大量的启动日志，调成WARN减少日志输出 -->
      <logger name="org.springframework" level="WARN" />
      <logger name="com.alibaba.dubbo" level="WARN" />
+     <logger name="org.springframework.session.web.http" level="INFO" />
      
       <!-- dao层的包，把这个包的打印日志级别调成 DEBUG级别可以看到sql执行 -->
      <logger name="com.gt.wallet.mapper" level="DEBUG" />

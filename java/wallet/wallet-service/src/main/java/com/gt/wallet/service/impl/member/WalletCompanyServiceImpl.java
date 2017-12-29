@@ -167,6 +167,7 @@ public class WalletCompanyServiceImpl extends BaseServiceImpl<WalletCompanyMappe
 	}
 
 
+	@Transactional(propagation = Propagation.REQUIRED,isolation = Isolation.DEFAULT,timeout=36000,rollbackFor=Exception.class)
 	@Override
 	public ServerResponse<?> uploadFile(CompanyUploadFile companyUploadFile,BusUser busUser) throws Exception {
 		log.info(CommonUtil.format("start biz uploadFile api companyUploadFile:%s", JsonUtil.toJSONString(companyUploadFile)));
