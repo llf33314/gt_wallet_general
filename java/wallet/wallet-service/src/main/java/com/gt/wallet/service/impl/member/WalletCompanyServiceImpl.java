@@ -188,7 +188,6 @@ public class WalletCompanyServiceImpl extends BaseServiceImpl<WalletCompanyMappe
 		walletCompany.setIdentitycardUrl2(companyUploadFile.getIdentitycardUrl2());
 		walletCompany.setLicenseUrl(companyUploadFile.getLicenseUrl());
 		WalletMember walletMember=walletMemberMapper.selectById(walletCompany.getWMemberId());
-		walletMember.setStatus(3);
 		walletMemberMapper.updateById(walletMember);
 		int count=walletCompanyMapper.updateById(walletCompany);
 		if(count<1){
