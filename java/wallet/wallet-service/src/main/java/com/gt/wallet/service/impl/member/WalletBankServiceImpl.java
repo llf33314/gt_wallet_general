@@ -28,6 +28,7 @@ import com.gt.wallet.mapper.member.WalletCompanyMapper;
 import com.gt.wallet.mapper.member.WalletIndividualMapper;
 import com.gt.wallet.mapper.member.WalletMemberMapper;
 import com.gt.wallet.service.member.WalletBankService;
+import com.gt.wallet.service.member.WalletCompanyService;
 import com.gt.wallet.utils.CommonUtil;
 import com.gt.wallet.utils.httpclient.WalletHttpClienUtil;
 import com.gt.wallet.utils.yun.YunSoaMemberUtil;
@@ -57,6 +58,9 @@ public class WalletBankServiceImpl extends BaseServiceImpl<WalletBankMapper, Wal
 	
 	@Autowired
 	private WalletIndividualMapper walletIndividualMapper;
+	
+	@Autowired
+	private WalletCompanyService walletCompanyService;
 	
 	@Override
 	public ServerResponse<List<WalletBank>> getWalletBanksByMemberId(Integer wmemberId) {
@@ -199,12 +203,20 @@ public class WalletBankServiceImpl extends BaseServiceImpl<WalletBankMapper, Wal
 			throw new BusinessException(serverResponseBin.getCode(),serverResponseBin.getMsg());
 		}
 		WalletMember walletMember=walletMemberMapper.selectById(walletCompanyAdd.getMemberId());
+		
+		
+		CardBin cardBin=WalletHttpClienUtil.reqGet(walletCompanyAdd.getAccountNo(), CardBin.class);
+		log.info("cardBin:"+JsonUtil.toJSONString(cardBin));
+		if(cardBin.getError_code()!=0){
+			throw new BusinessException(cardBin.getError_code(),cardBin.getReason());
+		}
 		String bankCode ="";
-		Long cardType =0L;
+		Integer cardType =cardBin.getResult().getIscreditcard();
 		Integer cardLenth =0;
 		Integer cardState =0;
-		bankCode =tCardBin.getBankCode();
-		cardType =tCardBin.getCardType();
+		bankCode =cardBin.getResult().getBanknum();
+		cardLenth =walletCompanyAdd.getAccountNo().length();
+		cardState =tCardBin.getCardState().intValue();
 		cardLenth =tCardBin.getCardLenth().intValue();
 		cardState =tCardBin.getCardState().intValue();
 		if(cardType!=1){//
@@ -231,10 +243,15 @@ public class WalletBankServiceImpl extends BaseServiceImpl<WalletBankMapper, Wal
 		walletBank.setBankCode(bankCode);
 		walletBank.setCardNo(carNoMi);
 		walletBank.setCardCheck(2);
-	//	walletBank.setPhone(YunSoaMemberUtil.rsaEncrypt(walletIndividualAdd.getPhone()));
 		walletBank.setCardClass(2);
 		walletBank.setCardType(1);
-//		walletBank.setIdentityNo(YunSoaMemberUtil.rsaEncrypt(walletIndividualAdd.getIdentityNo()));
+		ServerResponse<WalletCompany> serverResponseWalletCompany=walletCompanyService.findByMemberId(walletMember.getId());
+		log.info("serverResponseWalletCompany:"+JsonUtil.toJSONString(serverResponseWalletCompany));
+		if(cardBin.getError_code()!=0){
+			throw new BusinessException(serverResponseWalletCompany.getCode(),serverResponseWalletCompany.getMsg());
+		}
+		walletBank.setPhone(serverResponseWalletCompany.getData().getLegalPhone());
+		walletBank.setIdentityNo(serverResponseWalletCompany.getData().getLegalIds());
 		walletBank.setIsSafeCard(1);
 		//支付行号
 //		walletBank.setUnionBank(unionBank);

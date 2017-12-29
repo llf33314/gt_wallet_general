@@ -32,6 +32,7 @@ import com.gt.wallet.service.mail.MailService;
 import com.gt.wallet.service.member.WalletCompanyService;
 import com.gt.wallet.service.member.WalletMemberService;
 import com.gt.wallet.utils.CommonUtil;
+import com.gt.wallet.utils.WalletKeyUtil;
 import com.gt.wallet.utils.WalletWebConfig;
 import com.gt.wallet.utils.httpclient.WalletHttpClienUtil;
 import com.gt.wallet.utils.yun.YunSoaMemberUtil;
@@ -152,6 +153,8 @@ public class WalletCompanyServiceImpl extends BaseServiceImpl<WalletCompanyMappe
 		walletCompany.setProvince(walletCompanyAdd.getProvince());
 		walletCompany.setTelephone(walletCompanyAdd.getTelephone());
 		walletCompany.setUnionBank(walletCompanyAdd.getUnionBank());
+		
+		walletCompany.setLegalPhone(WalletKeyUtil.getEncString(walletCompanyAdd.getLegalPhone()));
 		walletCompany.setWMemberId(walletMember.getId());
 		if(CommonUtil.isEmpty(walletCompany.getId())){//新增
 			walletCompanyMapper.insert(walletCompany);

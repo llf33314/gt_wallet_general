@@ -128,9 +128,9 @@ public class WalletMemberServiceImpl extends BaseServiceImpl<WalletMemberMapper,
 					ServerResponse<WalletCompany> serverResponse=walletCompanyService.findByMemberId(walletMembers.get(i).getId());
 					if(CommonUtil.isNotEmpty(serverResponse.getData())){
 						walletMembers.get(i).setWalletCompany(serverResponse.getData());
-						walletMembers.get(i).getWalletCompany().setTelephone(PhoneUtil.hide(WalletKeyUtil.getDesString(walletMembers.get(i).getWalletCompany().getTelephone())));
-						walletMembers.get(i).getWalletCompany().setLegalIds(IdCardUtil.hide(WalletKeyUtil.getDesString(walletMembers.get(i).getWalletCompany().getLegalIds())));
-						walletMembers.get(i).getWalletCompany().setAccountNo(BankUtil.hide(WalletKeyUtil.getDesString(walletMembers.get(i).getWalletCompany().getAccountNo())));
+						walletMembers.get(i).getWalletCompany().setLegalPhone(PhoneUtil.hide(WalletKeyUtil.getDesString(walletMembers.get(i).getWalletCompany().getLegalPhone())));
+						walletMembers.get(i).getWalletCompany().setLegalIds(IdCardUtil.hide(YunSoaMemberUtil.rsaDecrypt(walletMembers.get(i).getWalletCompany().getLegalIds())));
+						walletMembers.get(i).getWalletCompany().setAccountNo(BankUtil.hide(YunSoaMemberUtil.rsaDecrypt(walletMembers.get(i).getWalletCompany().getAccountNo())));
 					}
 				}
 			}
