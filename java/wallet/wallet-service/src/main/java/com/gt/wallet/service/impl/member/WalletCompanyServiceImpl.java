@@ -28,6 +28,7 @@ import com.gt.wallet.entity.WalletMember;
 import com.gt.wallet.enums.WalletResponseEnums;
 import com.gt.wallet.exception.BusinessException;
 import com.gt.wallet.mapper.member.WalletCompanyMapper;
+import com.gt.wallet.mapper.member.WalletMemberMapper;
 import com.gt.wallet.service.mail.MailService;
 import com.gt.wallet.service.member.WalletCompanyService;
 import com.gt.wallet.service.member.WalletMemberService;
@@ -59,6 +60,9 @@ public class WalletCompanyServiceImpl extends BaseServiceImpl<WalletCompanyMappe
 	
 	@Autowired
 	private MailService mailService;
+	
+	@Autowired
+	private WalletMemberMapper walletMemberMapper;
 	
 
 	/**
@@ -183,6 +187,9 @@ public class WalletCompanyServiceImpl extends BaseServiceImpl<WalletCompanyMappe
 		walletCompany.setIdentitycardUrl1(companyUploadFile.getIdentitycardUrl1());
 		walletCompany.setIdentitycardUrl2(companyUploadFile.getIdentitycardUrl2());
 		walletCompany.setLicenseUrl(companyUploadFile.getLicenseUrl());
+		WalletMember walletMember=walletMemberMapper.selectById(walletCompany.getWMemberId());
+		walletMember.setStatus(3);
+		walletMemberMapper.updateById(walletMember);
 		int count=walletCompanyMapper.updateById(walletCompany);
 		if(count<1){
 			log.error("biz uploadFile api fail:db exception");
