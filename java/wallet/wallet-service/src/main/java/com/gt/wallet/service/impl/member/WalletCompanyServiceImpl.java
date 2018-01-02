@@ -139,7 +139,7 @@ public class WalletCompanyServiceImpl extends BaseServiceImpl<WalletCompanyMappe
 		}
 		/*******************************调用设置企业信息api**************************************/
 		walletCompany.setAccountNo(YunSoaMemberUtil.rsaEncrypt(walletCompanyAdd.getAccountNo()));
-		walletCompany.setCompanyAddress(address);
+		walletCompany.setCompanyAddress(walletCompanyAdd.getCompanyAddress());
 		walletCompany.setArea(walletCompanyAdd.getArea());
 		//walletCompany.setBankCtiyNo(bankCtiyNo);
 //		walletCompany.setOrganizationCode(organizationCode)
@@ -278,7 +278,7 @@ public class WalletCompanyServiceImpl extends BaseServiceImpl<WalletCompanyMappe
 		WalletMember walletMember=walletMemberService.selectById(companyAddress.getMemberId());
 		/*******************************判断db记录是否异常**************************************/
 		
-		walletCompany.setCompanyAddress(address);
+		walletCompany.setCompanyAddress(companyAddress.getCompanyAddress());
 		walletCompany.setArea(companyAddress.getArea());
 		walletCompany.setProvince(companyAddress.getProvince());
 		walletCompany.setWMemberId(walletMember.getId());
