@@ -164,7 +164,7 @@ export default {
         success: (res) => {
           console.log(res, '查询多粉会员信息')
           if (res.code == 0) {
-            this.WalletCompany = res.data.WalletCompany || WalletCompany
+            this.WalletCompany = res.data.walletCompany
             window.sessionStorage.walletId = res.data.id
             this.phone = res.data.phone
             this.$store.commit('getWalletId', res.data.id)
