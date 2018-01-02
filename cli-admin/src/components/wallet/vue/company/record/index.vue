@@ -83,7 +83,7 @@
           </template>
         </el-table-column>
       </el-table>
-      <div class="public-top20">
+      <div class="public-top20" v-if="getDrawCashList.records.length !=0">
         <div class="public-fr">
           <el-pagination @current-change="handleCurrentChange2" current-page.sync="getDrawCashList.pages" :page-size="10" layout="prev, pager, next, jumper" :total="getDrawCashList.total">
           </el-pagination>

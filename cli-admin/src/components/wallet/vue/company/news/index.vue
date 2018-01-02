@@ -40,7 +40,7 @@
       <el-table-column prop="descContent" label="内容">
         <template slot-scope="scope">
           <span v-if="scope.row.state==0" style="color: #000;" v-text="scope.row.descContent"></span>
-          <span v-if="scope.row.state==1"  v-text="scope.row.descContent"></span>
+          <span v-if="scope.row.state==1" v-text="scope.row.descContent"></span>
         </template>
       </el-table-column>
       <el-table-column prop="state" label="状态" width="180">
@@ -55,7 +55,7 @@
         </template>
       </el-table-column>
     </el-table>
-    <div style="margin-top: 20px">
+    <div style="margin-top: 20px" v-if="tableData3.length !=0">
       <el-button size="small" @click="toggleSelection(tableData3)">全选</el-button>
       <el-button size="small" @click="upstate">标记已读</el-button>
       <el-pagination style="float:right" @current-change="handleCurrentChange" :current-page.sync="form.current" :page-size="10" layout="prev, pager, next, jumper" :total="page.total">
@@ -205,7 +205,7 @@ export default {
           url: this.DFPAYDOMAIN + "/walletMessage/79B4DE7C/upstate",
           type: "POST",
           dataType: "JSON",
-          data: { listStr:listStr.join(",") },
+          data: { listStr: listStr.join(",") },
           success: res => {
             console.log(res, "已读");
             if (res.code == 0) {
