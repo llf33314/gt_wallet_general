@@ -14,7 +14,7 @@ import lombok.experimental.Accessors;
 @Data
 @Accessors(chain = true)
 @EqualsAndHashCode(callSuper=false)
-@ApiModel(description="企业会员新增")
+@ApiModel(description="企业会员修改地址")
 public class WalletCompanyAddress {
 	
 	
