@@ -55,8 +55,8 @@
       </div>
       <el-form :model="ruleForm1" :rules="rules1" ref="ruleForm1" label-width="150px" style="width:600px;">
         <el-form-item label="账户类型：">
-          <span v-text="memberType == 2">企业会员</span>
-          <span v-text="memberType == 3">个人会员</span>
+          <span v-if="memberType == 2">企业会员</span>
+          <span v-if="memberType == 3">个人会员</span>
         </el-form-item>
         <el-form-item label="绑定通联手机号码：">
           <span v-text="walletCompany.legalPhone"></span>
@@ -157,30 +157,30 @@ export default {
       provinceOptins: [],
       areaOptins: [],
       walletCompany: {
-        "accountNo": "string",
-        "area": "130100",
-        "bankCtiyNo": "开户行地区代码 ",
-        "bankName": "开户行支行名",
-        "businessLicense": "营业执照号",
-        "companyAddress": "地址",
-        "companyName": "企业名称",
-        "country": "string",
-        "doBusinessUrl": "string",
-        "id": 0,
-        "identityType": 0,
-        "identitycardUrl1": "string",
-        "identitycardUrl2": "string",
-        "legalIds": "法人证件号码",
-        "legalName": "法人姓名",
-        "legalPhone": "string",
-        "licenseUrl": "string",
-        "memberNum": "string",
-        "organizationCode": "string",
-        "parentBankName": "string",
-        "province": "省份",
-        "telephone": "联系电话",
-        "unionBank": "支付行号",
-        "wmemberId": 0
+        // "accountNo": "string",
+        // "area": "130100",
+        // "bankCtiyNo": "开户行地区代码 ",
+        // "bankName": "开户行支行名",
+        // "businessLicense": "营业执照号",
+        // "companyAddress": "地址",
+        // "companyName": "企业名称",
+        // "country": "string",
+        // "doBusinessUrl": "string",
+        // "id": 0,
+        // "identityType": 0,
+        // "identitycardUrl1": "string",
+        // "identitycardUrl2": "string",
+        // "legalIds": "法人证件号码",
+        // "legalName": "法人姓名",
+        // "legalPhone": "string",
+        // "licenseUrl": "string",
+        // "memberNum": "string",
+        // "organizationCode": "string",
+        // "parentBankName": "string",
+        // "province": "省份",
+        // "telephone": "联系电话",
+        // "unionBank": "支付行号",
+        // "wmemberId": 0
       },
       //重置手机
       ruleForm2: {
