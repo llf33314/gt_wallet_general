@@ -55,7 +55,7 @@
         </template>
       </el-table-column>
     </el-table>
-    <div style="margin-top: 20px">
+    <div style="margin-top: 20px" v-if="tableData3.length !=0">
       <el-button size="small" @click="toggleSelection(tableData3)">全选</el-button>
       <el-button size="small" @click="upstate">标记已读</el-button>
       <el-pagination style="float:right" @current-change="handleCurrentChange" :current-page.sync="form.current" :page-size="10" layout="prev, pager, next, jumper" :total="page.total">

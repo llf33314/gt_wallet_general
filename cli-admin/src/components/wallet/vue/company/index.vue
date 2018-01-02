@@ -74,7 +74,7 @@
             </li>
           </ul>
           <div class="bts">
-            <el-button @click="goToDrawCash" size="small" type="primary">提现</el-button>
+            <el-button @click="goToDrawCash" size="small" type="primary" style="min-width: 82px;margin-right: 2px;">提现</el-button>
             <!-- <el-button @click="addBank" type="primary">新增个人银行卡</el-button> -->
           </div>
         </div>

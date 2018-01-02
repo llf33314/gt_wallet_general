@@ -444,8 +444,6 @@ export default {
     }
   },
   mounted() {
-    this.getTotal()
-    this.getWalletBanksByMemberId()
     this.findMember()
   },
   methods: {
@@ -458,7 +456,6 @@ export default {
     },
     //申请额度提交
     walletQuotaAdd() {
-
       $.ajax({
         url: this.DFPAYDOMAIN + '/walletQuota/add',
         type: 'POST',
@@ -495,7 +492,6 @@ export default {
     },
     //短信验证提交
     confirm() {
-
       $.ajax({
         url: this.DFPAYDOMAIN + '/walletMoney/confirm',
         type: 'POST',
@@ -509,8 +505,6 @@ export default {
               type: 'success',
               duration: 2000,
               onClose: () => {
-                this.getTotal()
-                this.getWalletBanksByMemberId()
                 this.findMember()
                 this.dialogApply2 = false
               }
@@ -549,6 +543,8 @@ export default {
             this.withdrawQuota = res.data.withdrawQuota
             this.companyName = res.data.walletCompany.companyName
             this.legalName = res.data.walletCompany.legalName
+            this.getTotal()
+            this.getWalletBanksByMemberId()
           } else {
             this.$message.error(res.msg)
           }
@@ -568,7 +564,6 @@ export default {
     },
     //提现(成功后会返回订单id),支付确认时需要传递
     withdrawApply() {
-
       this.dialogApply2 = true
       $.ajax({
         url: this.DFPAYDOMAIN + '/walletMoney/withdrawApply',
@@ -598,7 +593,7 @@ export default {
         success: res => {
           console.log(res, '获取余额')
           if (res.code == 0) {
-            this.total = 666 || code.data
+            this.total = code.data
           } else {
             this.$message.error(res.msg)
           }
@@ -617,7 +612,7 @@ export default {
         success: res => {
           console.log(res)
           if (res.code == 0) {
-            this.walletBanks =res.data
+            this.walletBanks = res.data
           } else {
             this.$message.error(res.msg)
           }
@@ -678,8 +673,6 @@ export default {
                   type: 'success',
                   duration: 2000,
                   onClose: () => {
-                    this.getTotal()
-                    this.getWalletBanksByMemberId()
                     this.findMember()
                     this.bindBankCardDialog = false
                   }
