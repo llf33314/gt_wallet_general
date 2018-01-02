@@ -273,7 +273,6 @@ export default {
     //判断是否要填支付行号
     isUnionBank(name) {
       console.log(name, 'name')
-
       const bankList = [
         '中国工商银行', '中国农业银行', '中国建设银行', '中信银行', '平安银行', '招商银行', '兴业银行',
         '南京银行', '农信银行'
@@ -286,7 +285,6 @@ export default {
       } else {
         this.isUnionBankFlag = true
       }
-      debugger
     },
     //获取省份数据
     getProvince() {

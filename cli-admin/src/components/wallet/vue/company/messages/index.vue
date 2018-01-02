@@ -1,5 +1,11 @@
 <style lang="less">
 .wallet-company-messages {
+  .edit {
+    position: absolute;
+    left: -107px;
+    top: 13px;
+    cursor: pointer;
+  }
 }
 </style>
 <template>
@@ -23,22 +29,26 @@
           <span v-text="walletCompany.businessLicense"></span>
         </el-form-item>
         <el-form-item label="企业地址：">
+          <!-- <i :class="disabledAddress==true?'el-icon-edit edit':'el-icon-edit-outline edit'" @click="canDisableAddress('ruleForm1')" title="修改企业地址"></i> -->
           <el-form-item prop="province" style="display:inline-block;width:218px;">
-            <el-select v-model="ruleForm1.province" placeholder="请选择" @change="getareas">
+            <el-select v-model="ruleForm1.province" placeholder="请选择" :disabled="disabledAddress" @change="getareas">
               <el-option v-for="item in provinceOptins" :key="item.id" :label="item.city_name" :value="item.id+''">
               </el-option>
             </el-select>
           </el-form-item>
           <el-form-item prop="area" style="display:inline-block;width:218px;">
-            <el-select v-model="ruleForm1.area" placeholder="请选择">
+            <el-select v-model="ruleForm1.area" placeholder="请选择" :disabled="disabledAddress">
               <el-option v-for="item in areaOptins" :key="item.id" :label="item.city_name" :value="item.id+''">
               </el-option>
             </el-select>
           </el-form-item>
         </el-form-item>
         <el-form-item prop="companyAddress">
-          <el-input v-model="walletCompany.companyAddress" placeholder="请输入详细地址" class="input-width"></el-input>
+          <el-input v-model="walletCompany.companyAddress" :disabled="disabledAddress" placeholder="请输入详细地址" class="input-width"></el-input>
         </el-form-item>
+        <!-- <el-form-item>
+          <el-button type="primary" @click="submitRuleForm1('ruleForm1')">保存</el-button>
+        </el-form-item> -->
       </el-form>
       <div class="public-table-title public-c666" style="font-weight:500;margin: 40px 0;">
         银行卡信息
@@ -62,7 +72,7 @@
           <span v-text="walletCompany.unionBank || '——'"></span>
         </el-form-item>
         <el-form-item>
-          <!-- <el-button type="primary" @click="submitRuleForm1('ruleForm1')">保存</el-button> -->
+          <el-button type="primary" @click="submitRuleForm1('walletCompany')">保存</el-button>
           <el-button onclick="window.history.go(-1)">返回</el-button>
         </el-form-item>
       </el-form>
@@ -100,6 +110,7 @@ export default {
       }
     }
     return {
+      disabledAddress: false,
       dialogApply: false,
       ruleForm1: {
         companyName: '',
@@ -134,12 +145,6 @@ export default {
         companyAddress: [{
           required: true,
           message: '请输入企业地址',
-          trigger: 'blur'
-        },
-        {
-          min: 3,
-          max: 30,
-          message: '长度在 3 到 30 个字符',
           trigger: 'blur'
         }
         ],
@@ -202,7 +207,6 @@ export default {
   },
   mounted() {
     this.findMember()
-    // this.getProvince()
   },
   methods: {
     isPhone(obj) {
@@ -399,9 +403,44 @@ export default {
         }
       });
     },
-    //保存信息
-    submitRuleForm1() {
-
+    //保存修改企业地址
+    submitRuleForm1(formName) {
+      this.$refs[formName].validate((valid) => {
+        if (valid) {
+          const form1 = JSON.parse(JSON.stringify(this.ruleForm1))
+          this.provinceOptins.forEach((item) => {
+            if (this.ruleForm1.province == item.id) {
+              form1.province = item.city_code
+            }
+          })
+          this.areaOptins.forEach((item) => {
+            if (this.ruleForm1.area == item.id) {
+              form1.area = item.city_code
+            }
+          })
+          $.ajax({
+            url: this.DFPAYDOMAIN + '/walletCompany/updateAddress',
+            type: 'POST',
+            dataType: 'JSON',
+            data: {
+              companyAddress: this.walletCompany.companyAddress,
+              memberId: this.walletCompany.wmemberId,
+              province: form1.province,
+              area: form1.area
+            },
+            success: (res) => {
+              if (res.code == 0) {
+                this.findMember()
+              } else {
+                this.$message.error(res.msg + res.code)
+              }
+            }
+          })
+        } else {
+          console.log('error submit!!');
+          return false;
+        }
+      });
     }
   }
 }
