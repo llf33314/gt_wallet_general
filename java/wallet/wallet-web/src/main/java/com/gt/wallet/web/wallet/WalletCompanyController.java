@@ -13,6 +13,7 @@ import com.gt.api.util.httpclient.JsonUtil;
 import com.gt.wallet.base.BaseController;
 import com.gt.wallet.data.wallet.request.CompanyUploadFile;
 import com.gt.wallet.data.wallet.request.WalletCompanyAdd;
+import com.gt.wallet.data.wallet.request.WalletCompanyAddress;
 import com.gt.wallet.dto.ServerResponse;
 import com.gt.wallet.enums.WalletResponseEnums;
 import com.gt.wallet.exception.BusinessException;
@@ -74,13 +75,6 @@ public class WalletCompanyController extends BaseController {
         @ApiImplicitParam(name = "parentBankName",value = "开户银行名称",paramType = "form",dataType = "string",required=false),
         @ApiImplicitParam(name = "bankName",value = "开户行支行名称",paramType = "form",dataType = "string",required=false),
         @ApiImplicitParam(name = "unionBank",value = "支付行号",paramType = "form",dataType = "string",required=true),
-//        @ApiImplicitParam(name = "doBusinessUrl",value = "营业执照url",paramType = "form",dataType = "string",required=true),
-//        @ApiImplicitParam(name = "identitycardUrl1",value = "身份证正面",paramType = "form",dataType = "string",required=true),
-//        @ApiImplicitParam(name = "identitycardUrl2",value = "身份证反面",paramType = "form",dataType = "string",required=true),
-//        @ApiImplicitParam(name = "licenseUrl",value = "开户许可证url",paramType = "form",dataType = "string",required=true),
-//        ,
-//        @ApiImplicitParam(name = "code",value = "短信验证码",paramType = "form",dataType = "string",required=true)
-        // path, query, body, header, form
 	})
 	public ServerResponse<?> save(HttpServletRequest request,WalletCompanyAdd walletCompanyAdd){
 		log.info(CommonUtil.format("start view save api params :%s",JsonUtil.toJSONString(walletCompanyAdd)));
@@ -137,4 +131,36 @@ public class WalletCompanyController extends BaseController {
 			}
 	}
 	
+	
+	
+	/**
+	 * 修改地址
+	 * @return
+	 */
+	@ResponseBody
+	@RequestMapping(value="updateAddress",method=RequestMethod.POST)
+	 @ApiOperation(value="修改地址", notes="修改地址")
+	@ApiImplicitParams({
+        @ApiImplicitParam(name = "memberId",value = "会员id(调用开通会员接口有返回)",paramType = "form",dataType = "int",required=true,example="调用开通会员接口有返回"),
+        @ApiImplicitParam(name = "companyAddress",value = "企业地址",paramType = "form",dataType = "string",required=true,example="企业地址")
+        ,
+        @ApiImplicitParam(name = "province",value = "省份(code)",paramType = "form",dataType = "string",required=true),
+        @ApiImplicitParam(name = "area",value = "县市(code)",paramType = "form",dataType = "string",required=true),
+	})
+	public ServerResponse<?> updateAddress(HttpServletRequest request,WalletCompanyAddress walletCompanyAddress){
+		log.info(CommonUtil.format("start view save api params :%s",JsonUtil.toJSONString(walletCompanyAddress)));
+		try {
+			ServerResponse<?> serverResponse=null;
+			serverResponse=walletCompanyService.updateAddress(walletCompanyAddress,CommonUtil.getLoginUser(request));
+			log.info(CommonUtil.format("serverResponse:%s",JsonUtil.toJSONString(serverResponse)));
+			return serverResponse;
+			} catch ( BusinessException e) {
+				log.error(CommonUtil.format("view save api fail：%s,%s",e.getCode(),e.getMessage()));
+				throw new ResponseEntityException(e.getCode(),e.getMessage());
+			} catch ( Exception e) {
+				e.printStackTrace();
+				log.error(CommonUtil.format("view save api fail：%s,%s",WalletResponseEnums.SYSTEM_ERROR.getCode(),WalletResponseEnums.SYSTEM_ERROR.getDesc()));
+				throw new ResponseEntityException(WalletResponseEnums.SYSTEM_ERROR);
+			}
+	}
 }

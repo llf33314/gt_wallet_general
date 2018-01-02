@@ -4,6 +4,7 @@ import com.gt.api.bean.session.BusUser;
 import com.gt.wallet.base.BaseService;
 import com.gt.wallet.data.wallet.request.CompanyUploadFile;
 import com.gt.wallet.data.wallet.request.WalletCompanyAdd;
+import com.gt.wallet.data.wallet.request.WalletCompanyAddress;
 import com.gt.wallet.dto.ServerResponse;
 import com.gt.wallet.entity.WalletCompany;
 
@@ -42,5 +43,16 @@ public interface WalletCompanyService extends BaseService<WalletCompany> {
 	 * @return
 	 */
 	ServerResponse<WalletCompany> findByMemberId(Integer memberId);
+	
+	
+	/**
+	 * 修改地址
+	 * @param walletCompany 企业信息
+	 * @param busUser 商家信息
+	 * @return
+	 * @throws Exception
+	 */
+	public ServerResponse<?> updateAddress(WalletCompanyAddress walletCompany,BusUser busUser) throws Exception;
+	
 	
 }
