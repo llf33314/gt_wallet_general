@@ -246,7 +246,6 @@ export default {
   },
   mounted() {
     this.resetForm.memberId = this.$route.params.memberId
-
   },
   methods: {
     // 选择正面
@@ -293,8 +292,8 @@ export default {
                   type: 'success',
                   duration: 2000,
                   onClose: () => {
-                    this.$router.push({
-                      path: '/wallet/individual/index'
+                    this.$router.replace({
+                      path: '/wallet/individual/open/bindPhone/' + this.$route.params.memberId
                     })
                   }
                 });

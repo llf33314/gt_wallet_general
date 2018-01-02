@@ -210,7 +210,8 @@ export default {
             dataType: 'JSON',
             data: {
               phone: this.ruleForm2.phone,
-              wmemberId: this.walletIndividual.wmemberId
+              wmemberId: this.walletIndividual.wmemberId,
+              verificationCodeType:9,
             },
             success: (res) => {
               console.log(res, '获取短信验证码')

@@ -330,7 +330,8 @@
               dataType: 'JSON',
               data: {
                 phone: this.ruleForm2.phone,
-                wmemberId: this.walletCompany.wmemberId
+                wmemberId: this.walletCompany.wmemberId,
+                verificationCodeType:9,
               },
               success: (res) => {
                 console.log(res, '获取短信验证码')
