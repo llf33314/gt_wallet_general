@@ -1,7 +1,5 @@
 package com.gt.wallet.service.impl.member;
 
-import java.util.List;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Isolation;
@@ -9,13 +7,10 @@ import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.alibaba.fastjson.JSONObject;
-import com.baomidou.mybatisplus.mapper.EntityWrapper;
-import com.baomidou.mybatisplus.mapper.Wrapper;
 import com.gt.api.bean.session.BusUser;
 import com.gt.api.util.httpclient.JsonUtil;
 import com.gt.wallet.base.BaseServiceImpl;
 import com.gt.wallet.data.wallet.request.WalletIndividualAdd;
-import com.gt.wallet.data.wallet.request.WalletSet;
 import com.gt.wallet.dto.ServerResponse;
 import com.gt.wallet.entity.WalletIndividual;
 import com.gt.wallet.entity.WalletMember;
@@ -25,7 +20,6 @@ import com.gt.wallet.mapper.member.WalletIndividualMapper;
 import com.gt.wallet.mapper.member.WalletMemberMapper;
 import com.gt.wallet.service.member.WalletIndividualService;
 import com.gt.wallet.utils.CommonUtil;
-import com.gt.wallet.utils.WalletKeyUtil;
 import com.gt.wallet.utils.yun.YunSoaMemberUtil;
 
 import lombok.extern.slf4j.Slf4j;

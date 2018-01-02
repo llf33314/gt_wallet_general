@@ -13,11 +13,9 @@ import com.baomidou.mybatisplus.mapper.EntityWrapper;
 import com.baomidou.mybatisplus.mapper.Wrapper;
 import com.baomidou.mybatisplus.plugins.Page;
 import com.gt.api.bean.session.BusUser;
-import com.gt.api.util.MD5Utils;
 import com.gt.api.util.httpclient.JsonUtil;
 import com.gt.wallet.base.BaseServiceImpl;
 import com.gt.wallet.constant.WalletLogConstants;
-import com.gt.wallet.data.wallet.request.WalletPasswordSet;
 import com.gt.wallet.data.wallet.request.WalletSet;
 import com.gt.wallet.dto.ServerResponse;
 import com.gt.wallet.entity.WalletBank;
@@ -251,6 +249,7 @@ public class WalletMemberServiceImpl extends BaseServiceImpl<WalletMemberMapper,
 			log.info("serverResponse:"+JsonUtil.toJSONString(serverResponse));
 			if(ServerResponse.judgeSuccess(serverResponse)){
 				walletMember.setPhone(WalletKeyUtil.getEncString(walletSet.getPhone()));
+				walletMember.setStatus(3);
 				walletMemberMapper.updateById(walletMember);
 				return ServerResponse.createBySuccess();
 

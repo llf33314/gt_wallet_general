@@ -19,7 +19,6 @@ import com.gt.api.bean.session.BusUser;
 import com.gt.api.util.IPOrAddressUtils;
 import com.gt.api.util.httpclient.JsonUtil;
 import com.gt.wallet.base.BaseController;
-import com.gt.wallet.data.wallet.request.WalletPasswordSet;
 import com.gt.wallet.data.wallet.request.WalletSet;
 import com.gt.wallet.dto.ServerResponse;
 import com.gt.wallet.entity.WalletMember;
@@ -176,7 +175,7 @@ public class WalletMemberController extends BaseController {
 	 */
 	@ResponseBody
 	@RequestMapping(value="bindingPhone",method=RequestMethod.POST)
-	 @ApiOperation(value="绑定手机", notes="钱包设置(个人会员)",hidden=true)
+	 @ApiOperation(value="绑定手机", notes="绑定手机")
 	@ApiImplicitParams({
 		@ApiImplicitParam(name = "wmemberId",value = "多粉钱包会员id",paramType = "form",dataType = "int",required=true,example="多粉钱包会员id"),
         @ApiImplicitParam(name = "phone",value = "手机号码",paramType = "form",dataType = "string",required=true,example="手机号码")

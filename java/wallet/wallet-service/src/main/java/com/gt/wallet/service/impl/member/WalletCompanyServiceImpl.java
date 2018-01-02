@@ -188,12 +188,11 @@ public class WalletCompanyServiceImpl extends BaseServiceImpl<WalletCompanyMappe
 		walletCompany.setIdentitycardUrl2(companyUploadFile.getIdentitycardUrl2());
 		walletCompany.setLicenseUrl(companyUploadFile.getLicenseUrl());
 		WalletMember walletMember=walletMemberMapper.selectById(walletCompany.getWMemberId());
-		walletMember.setStatus(3);
 		walletMemberMapper.updateById(walletMember);
 		int count=walletCompanyMapper.updateById(walletCompany);
 		if(count<1){
 			log.error("biz uploadFile api fail:db exception");
-			throw new BusinessException("上传失败,db操作异常");
+			throw new BusinessException("uploadFile fail：db fail");
 		}
 		List<String> files=new ArrayList<>();
 		files.add(WalletWebConfig.getPathImage()+companyUploadFile.getDoBusinessUrl().split("image/")[1]);

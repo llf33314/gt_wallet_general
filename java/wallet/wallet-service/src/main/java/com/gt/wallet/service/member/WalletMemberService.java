@@ -5,7 +5,6 @@ import java.util.List;
 import com.baomidou.mybatisplus.plugins.Page;
 import com.gt.api.bean.session.BusUser;
 import com.gt.wallet.base.BaseService;
-import com.gt.wallet.data.wallet.request.WalletPasswordSet;
 import com.gt.wallet.data.wallet.request.WalletSet;
 import com.gt.wallet.dto.ServerResponse;
 import com.gt.wallet.entity.WalletMember;

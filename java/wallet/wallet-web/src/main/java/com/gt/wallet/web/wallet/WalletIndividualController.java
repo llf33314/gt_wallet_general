@@ -7,13 +7,11 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.gt.api.util.httpclient.JsonUtil;
 import com.gt.wallet.base.BaseController;
 import com.gt.wallet.data.wallet.request.WalletIndividualAdd;
-import com.gt.wallet.data.wallet.request.WalletSet;
 import com.gt.wallet.dto.ServerResponse;
 import com.gt.wallet.enums.WalletResponseEnums;
 import com.gt.wallet.exception.BusinessException;
