@@ -22,6 +22,7 @@ import com.gt.wallet.data.api.tonglian.response.CardBin;
 import com.gt.wallet.data.wallet.request.CompanyUploadFile;
 import com.gt.wallet.data.wallet.request.SendMail;
 import com.gt.wallet.data.wallet.request.WalletCompanyAdd;
+import com.gt.wallet.data.wallet.request.WalletCompanyAddress;
 import com.gt.wallet.dto.ServerResponse;
 import com.gt.wallet.entity.WalletCompany;
 import com.gt.wallet.entity.WalletMember;
@@ -219,6 +220,72 @@ public class WalletCompanyServiceImpl extends BaseServiceImpl<WalletCompanyMappe
 		WalletCompany walletIndividual=walletCompanyMapper.selectOne(params);
 		log.info(CommonUtil.format("biz findByMemberId api walletIndividual:%s", JsonUtil.toJSONString(walletIndividual)));
 		return ServerResponse.createBySuccessCodeData(walletIndividual);
+	}
+
+
+	/**
+	 * 使用事务控制
+	 * REQUIRED:当前没有其他事务控制则新增一个，有则引用当前事务(事务控制)
+	 * Isolation.DEFAULT：存在多个事务时，A事务读取了一条记录时，B事务将不能修改记录,防止脏读(事务隔离级别)
+	 * timeout
+	 * rollbackFor：指定事务回滚异常类型
+	 */
+	@SuppressWarnings("unchecked")
+	@Transactional(propagation = Propagation.REQUIRED,isolation = Isolation.DEFAULT,timeout=36000,rollbackFor=Exception.class)
+	@Override
+	public ServerResponse<?> updateAddress(WalletCompanyAddress companyAddress,BusUser busUser) throws Exception {
+		log.info(CommonUtil.format("start biz updateAddress api params:%s", JsonUtil.toJSONString(companyAddress)));
+		ServerResponse<Integer> serverResponse=null;
+		if(CommonUtil.isEmpty(companyAddress)){
+			throw new BusinessException(WalletResponseEnums.NULL_ERROR);
+		}
+		/*******************************拼接地址**************************************/
+		Wrapper<WalletCompany> wrapper=new EntityWrapper<>();
+		wrapper.where("w_member_id={0}", companyAddress.getMemberId());
+		String address="";
+		RequestUtils<String> requestUtils=new RequestUtils<>();
+		requestUtils.setReqdata(companyAddress.getProvince());
+		String path=WalletWebConfig.getHomeUrl()+"8A5DA52E/shopapi/6F6D9AD2/79B4DE7C/queryBasisByCodes.do";
+		String key=WalletWebConfig.getWxmpKey();
+		
+		ResponseUtils<List<Map<String, Object>>> province=HttpClienUtils.reqPostUTF8(JsonUtil.toJSONString(requestUtils), path, ResponseUtils.class, key);
+		if(CommonUtil.isEmpty(province)||province.getCode()!=0||CommonUtil.isEmpty(province.getData())||province.getData().size()!=1){
+			log.error("biz save api fail");
+			throw new BusinessException("biz updateAddress api fail");
+		}
+		log.info(CommonUtil.format("biz updateAddress api province:%s", JsonUtil.toJSONString(province)));
+		requestUtils=new RequestUtils<>();
+		requestUtils.setReqdata(companyAddress.getArea());
+		ResponseUtils<List<Map<String, Object>>> city=HttpClienUtils.reqPostUTF8(JsonUtil.toJSONString(requestUtils),path, ResponseUtils.class,key);
+		if(CommonUtil.isEmpty(city)||city.getCode()!=0||CommonUtil.isEmpty(city.getData())||city.getData().size()!=1){
+			log.error("biz updateAddress api fail");
+			throw new BusinessException("获取地址api异常,请联系管理员");
+		}
+		address=CommonUtil.toString(province.getData().get(0).get("city_name"))+CommonUtil.toString(city.getData().get(0).get("city_name"))+companyAddress.getCompanyAddress();
+		/*******************************拼接地址**************************************/
+		/*******************************判断db记录是否异常**************************************/
+		List<WalletCompany> walletCompanies=walletCompanyMapper.selectList(wrapper);
+		if(CommonUtil.isEmpty(walletCompanies)||walletCompanies.size()>1){
+			log.error("biz updateAddress api fail:data exception call admin");
+			throw new BusinessException("biz updateAddress api fail:data exception call admin");
+		}
+		WalletCompany walletCompany=null;
+		if(walletCompanies.size()==0){
+			walletCompany=new WalletCompany();
+		}else{
+			walletCompany=walletCompanies.get(0);
+		}
+		WalletMember walletMember=walletMemberService.selectById(companyAddress.getMemberId());
+		/*******************************判断db记录是否异常**************************************/
+		
+		walletCompany.setCompanyAddress(address);
+		walletCompany.setArea(companyAddress.getArea());
+		walletCompany.setProvince(companyAddress.getProvince());
+		walletCompany.setWMemberId(walletMember.getId());
+		walletCompanyMapper.updateById(walletCompany);
+		serverResponse=ServerResponse.createBySuccess();
+		log.info(CommonUtil.format("biz updateAddress api serverResponse:%s", JsonUtil.toJSONString(serverResponse)));
+		return serverResponse=ServerResponse.createBySuccess();
 	}
 	
 }
