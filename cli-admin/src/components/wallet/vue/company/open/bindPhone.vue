@@ -42,7 +42,7 @@ export default {
         return {
             //重置手机
             ruleForm2: {
-                phone: '15902042654',
+                phone: '',
                 code: ''
             },
             rules2: {

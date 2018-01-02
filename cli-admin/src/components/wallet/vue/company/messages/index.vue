@@ -298,9 +298,8 @@
           success: (res) => {
             console.log(res, '查询多粉会员信息')
             if (res.code == 0) {
-              //this.walletCompany = res.data.walletCompany
-              // this.getCityCode(res.data.walletCompany.province)
-              this.getCityCode(130000)
+              this.walletCompany = res.data.walletCompany
+              this.getCityCode(res.data.walletCompany.province)
             } else {
               this.$message.error(res.msg)
             }
