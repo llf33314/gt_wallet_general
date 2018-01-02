@@ -60,7 +60,6 @@
         float: left;
         &:nth-of-type(1) {
           img {
-            width: 40px;
             height: 40px;
             position: absolute;
             top: 0;
