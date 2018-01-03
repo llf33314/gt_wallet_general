@@ -53,8 +53,8 @@
           <ul class="public-fl public-c333 list">
             <li>
               <p class="name">资产总额
-                <el-tooltip effect="light" content="资产总额=待结算+可用提现余额" placement="right">
-                  <i class="iconfont gt-bangzhudisc"></i>
+                <el-tooltip class="item" effect="light" content="资产总额=待结算+可用余额" placement="right">
+                  <i class="el-icon-question" style="color: #bebebe;"></i>
                 </el-tooltip>
               </p>
               <p>
@@ -72,7 +72,7 @@
             </li>
           </ul>
           <div class="bts">
-            <el-button @click="goToDrawCash" size="small" type="primary">提现</el-button>
+            <el-button @click="goToDrawCash" size="small" type="primary" style="min-width: 82px;margin-right: 2px;">提现</el-button>
             <!-- <el-button @click="addBank" type="primary">新增个人银行卡</el-button> -->
           </div>
         </div>
@@ -181,7 +181,8 @@ export default {
     getIndexStatistics() {
       $.ajax({
         url: this.DFPAYDOMAIN + '/walletIndexStatistics/getIndexStatistics',
-        type: 'get',
+        type: 'GET',
+        dataType: 'JSON',
         success: (res) => {
           console.log(res, "获取首页总计数据")
           if (res.code == 0) {

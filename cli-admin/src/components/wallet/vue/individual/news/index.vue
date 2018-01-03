@@ -114,8 +114,8 @@ export default {
         },
         success: res => {
           console.log(res, "获取未读记录数");
-          if (res.code == 0) {
-            this.readstate = res.data;
+          if (res.code == 0 || res.code == 1009) {
+            this.readstate = res.data || [];
           } else {
             this.$message.error(res.msg);
           }
@@ -135,9 +135,11 @@ export default {
         data: this.form,
         success: res => {
           console.log(res, "分页查询list");
-          if (res.code == 0) {
-            this.tableData3 = res.data.records;
-            this.page.total = res.data.total
+          if (res.code == 0 || res.code == 1009) {
+            if (res.data) {
+              this.tableData3 = res.data.records || [];
+              this.page.total = res.data.total
+            }
           } else {
             this.$message.error(res.msg);
             this.tableData3 = []
@@ -153,8 +155,8 @@ export default {
         dataType: "JSON",
         success: res => {
           console.log(res, "获取消息类型");
-          if (res.code == 0) {
-            const d = res.data;
+          if (res.code == 0 || res.code == 1009) {
+            const d = res.data || [];
             const n = []
             d.forEach((item) => {
               n.push({
@@ -205,10 +207,10 @@ export default {
           url: this.DFPAYDOMAIN + "/walletMessage/79B4DE7C/upstate",
           type: "POST",
           dataType: "JSON",
-          data: { listStr:listStr.join(",") },
+          data: { listStr: listStr.join(",") },
           success: res => {
             console.log(res, "已读");
-            if (res.code == 0) {
+            if (res.code == 0 || res.code == 1009) {
               this.form.current = 1
               this.$message({
                 message: res.msg,

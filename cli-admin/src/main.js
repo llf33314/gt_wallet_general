@@ -19,8 +19,10 @@ import 'element-ui/lib/theme-chalk/index.css'
 Vue.use(ElementUI)
 import {
   DateFormat,
+  escapeHTML
 } from './assets/js/index'
 Vue.prototype.DateFormat = DateFormat
+Vue.prototype.escapeHTML = escapeHTML
 Vue.prototype.isPhone = window.isPhone
 import 'gt-js/dist/gt.min.js'
 const GtDialog = () => import('./components/public/dialog/component')

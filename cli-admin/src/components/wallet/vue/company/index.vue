@@ -55,8 +55,8 @@
           <ul class="public-fl public-c333 list">
             <li>
               <p class="name">资产总额
-                <el-tooltip effect="light" content="资产总额=待结算+可用提现余额" placement="right">
-                  <i class="iconfont gt-bangzhudisc"></i>
+                <el-tooltip class="item" effect="light" content="资产总额=待结算+可用余额" placement="right">
+                  <i class="el-icon-question" style="color: #bebebe;"></i>
                 </el-tooltip>
               </p>
               <p>
@@ -104,7 +104,7 @@ export default {
       activeName: 'record',
       IndexStatistics: {},
       WalletCompany: {
-        companyName: 'companyName'
+        companyName: ''
       },
       phone: '',
       readstate: 0
@@ -190,7 +190,8 @@ export default {
     getIndexStatistics() {
       $.ajax({
         url: this.DFPAYDOMAIN + '/walletIndexStatistics/getIndexStatistics',
-        type: 'get',
+        type: 'GET',
+        dataType: 'JSON',
         success: (res) => {
           console.log(res, "获取首页总计数据")
           if (res.code == 0) {

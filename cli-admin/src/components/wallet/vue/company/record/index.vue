@@ -44,7 +44,7 @@
           </template>
         </el-table-column>
       </el-table>
-      <div class="public-top20"  v-if="payOrderList.records.length!=0">
+      <div class="public-top20"  v-if="payOrderList.records">
         <div class="public-fr">
           <el-pagination @current-change="handleCurrentChange" current-page.sync="payOrderList.pages" :page-size="10" layout="prev, pager, next, jumper" :total="payOrderList.total">
           </el-pagination>
@@ -83,7 +83,7 @@
           </template>
         </el-table-column>
       </el-table>
-      <div class="public-top20" v-if="getDrawCashList.records.length!=0">
+      <div class="public-top20" v-if="getDrawCashList.records">
         <div class="public-fr">
           <el-pagination @current-change="handleCurrentChange2" current-page.sync="getDrawCashList.pages" :page-size="10" layout="prev, pager, next, jumper" :total="getDrawCashList.total">
           </el-pagination>
@@ -195,7 +195,7 @@ export default {
         data: this.drawListParams,
         success: res => {
           console.log(res, "获取消费list");
-          if (res.code == 0) {
+          if (res.code == 0 || res.code == 1009) {
             this.payOrderList = res.data||[];
           } else {
             this.$message.error(res.msg);
@@ -236,7 +236,7 @@ export default {
         data: this.drawListParams,
         success: res => {
           console.log(res, "提现 分页查询");
-          if (res.code == 0) {
+          if (res.code == 0 || res.code == 1009) {
             this.getDrawCashList = res.data||[];
           } else {
             this.$message.error(res.msg);

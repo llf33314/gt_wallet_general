@@ -12,10 +12,10 @@
         </el-breadcrumb>
         <el-form :model="ruleForm2" :rules="rules2" ref="ruleForm2" label-width="155px" class="demo-ruleForm">
             <el-form-item label="手机号码：" prop="phone">
-                <el-input v-model="ruleForm2.phone" placeholder="请输入绑定的手机号码" style="width:367px;"></el-input>
+                <el-input v-model="ruleForm2.phone" type="number" placeholder="请输入绑定的手机号码" style="width:367px;"></el-input>
             </el-form-item>
             <el-form-item label="短信验证：" prop="code">
-                <el-input v-model="ruleForm2.code" placeholder="请输入短信验证" style="width:250px;"></el-input>
+                <el-input v-model="ruleForm2.code" type="number" placeholder="请输入短信验证" style="width:250px;"></el-input>
                 <el-button type="primary" @click="getVerificationCode" :loading="loading2">{{getCodeText}}</el-button>
             </el-form-item>
             <el-form-item>

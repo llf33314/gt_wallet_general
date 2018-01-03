@@ -50,7 +50,7 @@
           <el-button type="primary" @click="submitRuleForm1('ruleForm1')">保存</el-button>
         </el-form-item> -->
       </el-form>
-      <div class="public-table-title public-c666" style="font-weight:500;margin: 40px 0;">
+      <div class="public-table-title public-c666" style="margin: 40px 0;">
         银行卡信息
       </div>
       <el-form :model="ruleForm1" :rules="rules1" ref="ruleForm1" label-width="150px" style="width:600px;">
@@ -58,17 +58,18 @@
           <span v-if="memberType == 2">企业会员</span>
           <span v-if="memberType == 3">个人会员</span>
         </el-form-item>
-        <el-form-item label="绑定通联手机号码：">
+        <el-form-item label="手机号码：">
           <span v-text="walletCompany.legalPhone"></span>
-          <el-button type="primary" size="small" style="margin-left: 110px;" @click="dialogApply=true">修改</el-button>
+          <span style="color: #ccc;">(已绑定通联)</span>
+          <el-button type="primary" size="small" style="margin-left: 10px;" @click="dialogApply=true">修改</el-button>
         </el-form-item>
-        <el-form-item label="开户行地区代码：">
+        <el-form-item label="开户行地区代码：" v-if="walletCompany.bankCtiyNo">
           <span v-text="walletCompany.bankCtiyNo || '——'"></span>
         </el-form-item>
-        <el-form-item label="开户行支行名称：">
+        <el-form-item label="开户行支行名称：" v-if="walletCompany.bankName">
           <span v-text="walletCompany.bankName || '——'"></span>
         </el-form-item>
-        <el-form-item label="支付行号：">
+        <el-form-item label="支付行号：" v-if="walletCompany.unionBank">
           <span v-text="walletCompany.unionBank || '——'"></span>
         </el-form-item>
         <el-form-item>
@@ -77,13 +78,13 @@
         </el-form-item>
       </el-form>
     </div>
-    <el-dialog title="绑定通联手机号码" :visible.sync="dialogApply" custom-class="wallet-drawcash-dialog">
+    <el-dialog title="绑定通联手机号码" :visible.sync="dialogApply" custom-class="wallet-drawcash-dialog" @close="loading22=false">
       <el-form :model="ruleForm2" :rules="rules2" ref="ruleForm2" label-width="155px" class="demo-ruleForm">
-        <el-form-item label="新手机号码：" prop="phone">
-          <el-input v-model="ruleForm2.phone" placeholder="请输入新手机号码"></el-input>
+        <el-form-item label="手机号码：" prop="phone">
+          <el-input v-model="ruleForm2.phone"  type="number" placeholder="请输入新手机号码"></el-input>
         </el-form-item>
         <el-form-item label="短信验证：" prop="code">
-          <el-input v-model="ruleForm2.code" placeholder="请输入短信验证" style="width:200px;"></el-input>
+          <el-input v-model="ruleForm2.code" placeholder="请输入短信验证" type="number" style="width:200px;"></el-input>
           <el-button type="primary" @click="getVerificationCode" :loading="loading2">{{getCodeText}}</el-button>
         </el-form-item>
         <el-form-item style="text-align: right;margin-top: 50px;">

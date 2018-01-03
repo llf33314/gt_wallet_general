@@ -120,7 +120,7 @@
           <div>{{ruleForm.name}}</div>
         </el-form-item>
         <el-form-item label="银行卡预留手机号：" prop="phone">
-          <el-input v-model="ruleForm.phone" placeholder="请输入银行卡预留手机号" class="input-width"></el-input>
+          <el-input v-model="ruleForm.phone" type="number" placeholder="请输入银行卡预留手机号" class="input-width"></el-input>
         </el-form-item>
         <el-form-item>
           <el-button type="primary" @click="submitForm('ruleForm')" :loading="loading1">下一步</el-button>
@@ -132,7 +132,7 @@
             <div>{{ruleForm.phone}}</div>
           </el-form-item> -->
           <el-form-item label="短信验证：" prop="verificationCode">
-            <el-input v-model="ruleForm2.verificationCode" placeholder="请输入手机验证码"></el-input>
+            <el-input v-model="ruleForm2.verificationCode" type="number" placeholder="请输入手机验证码"></el-input>
           </el-form-item>
         </el-form>
         <div style="text-align: right;">
@@ -191,7 +191,8 @@ export default {
         },
         {
           min: 2,
-          message: '长度在2个字符以上',
+          max: 15,
+          message: '长度在2-15个字符以内',
           trigger: 'blur'
         }
         ],
