@@ -1,5 +1,12 @@
 <style lang="less">
 .wallet-company-messages {
+  .el-icon-edit-outline {
+    padding: 0 10px;
+    cursor: pointer;
+    font-size: 19px;
+    position: absolute;
+    top: 10px;
+  }
 }
 </style>
       <template>
@@ -23,14 +30,14 @@
         <el-form-item label="手机号码：">
           <span v-text="phone"></span>
           <span style="color: #ccc;">(已绑定通联)</span>
-          <el-button type="primary" size="small" style="margin-left: 10px;" @click="dialogApply=true">修改</el-button>
+          <i class="el-icon-edit-outline" @click="dialogApply=true" title="修改手机号码"></i>
         </el-form-item>
         <el-form-item>
           <el-button onclick="window.history.go(-1)">返回</el-button>
         </el-form-item>
       </el-form>
     </div>
-    <el-dialog title="绑定通联手机号码" :visible.sync="dialogApply" @close="loading22=false" custom-class="wallet-drawcash-dialog">
+    <el-dialog title="绑定通联手机号码" :visible.sync="dialogApply" @close="loading22=false,loading2=false" custom-class="wallet-drawcash-dialog">
       <el-form :model="ruleForm2" :rules="rules2" ref="ruleForm2" label-width="155px" class="demo-ruleForm">
         <el-form-item label="手机号码：" prop="phone">
           <el-input v-model="ruleForm2.phone" type="number" placeholder="请输入新手机号码"></el-input>

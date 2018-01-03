@@ -6,6 +6,13 @@
     top: 13px;
     cursor: pointer;
   }
+  .el-icon-edit-outline {
+    padding: 0 10px;
+    cursor: pointer;
+    font-size: 19px;
+    position: absolute;
+    top: 10px;
+  }
 }
 </style>
 <template>
@@ -61,7 +68,7 @@
         <el-form-item label="手机号码：">
           <span v-text="walletCompany.legalPhone"></span>
           <span style="color: #ccc;">(已绑定通联)</span>
-          <el-button type="primary" size="small" style="margin-left: 10px;" @click="dialogApply=true">修改</el-button>
+          <i class="el-icon-edit-outline" @click="dialogApply=true" title="修改手机号码"></i>
         </el-form-item>
         <el-form-item label="开户行地区代码：" v-if="walletCompany.bankCtiyNo">
           <span v-text="walletCompany.bankCtiyNo || '——'"></span>
@@ -78,10 +85,10 @@
         </el-form-item>
       </el-form>
     </div>
-    <el-dialog title="绑定通联手机号码" :visible.sync="dialogApply" custom-class="wallet-drawcash-dialog" @close="loading22=false">
+    <el-dialog title="绑定通联手机号码" :visible.sync="dialogApply" custom-class="wallet-drawcash-dialog" @close="loading22=false,loading2=false">
       <el-form :model="ruleForm2" :rules="rules2" ref="ruleForm2" label-width="155px" class="demo-ruleForm">
         <el-form-item label="手机号码：" prop="phone">
-          <el-input v-model="ruleForm2.phone"  type="number" placeholder="请输入新手机号码"></el-input>
+          <el-input v-model="ruleForm2.phone" type="number" placeholder="请输入新手机号码"></el-input>
         </el-form-item>
         <el-form-item label="短信验证：" prop="code">
           <el-input v-model="ruleForm2.code" placeholder="请输入短信验证" type="number" style="width:200px;"></el-input>

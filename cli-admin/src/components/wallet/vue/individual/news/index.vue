@@ -115,7 +115,7 @@ export default {
         success: res => {
           console.log(res, "获取未读记录数");
           if (res.code == 0 || res.code == 1009) {
-            this.readstate = res.data || [];
+            this.readstate = res.data || 0;
           } else {
             this.$message.error(res.msg);
           }
