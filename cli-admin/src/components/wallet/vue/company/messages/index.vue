@@ -165,30 +165,30 @@ export default {
       provinceOptins: [],
       areaOptins: [],
       walletCompany: {
-        // "accountNo": "string",
-        // "area": "130100",
-        // "bankCtiyNo": "开户行地区代码 ",
-        // "bankName": "开户行支行名",
-        // "businessLicense": "营业执照号",
-        // "companyAddress": "地址",
-        // "companyName": "企业名称",
-        // "country": "string",
-        // "doBusinessUrl": "string",
-        // "id": 0,
-        // "identityType": 0,
-        // "identitycardUrl1": "string",
-        // "identitycardUrl2": "string",
-        // "legalIds": "法人证件号码",
-        // "legalName": "法人姓名",
-        // "legalPhone": "string",
-        // "licenseUrl": "string",
-        // "memberNum": "string",
-        // "organizationCode": "string",
-        // "parentBankName": "string",
-        // "province": "省份",
-        // "telephone": "联系电话",
-        // "unionBank": "支付行号",
-        // "wmemberId": 0
+        "accountNo": "",
+        "area": "",
+        "bankCtiyNo": " ",
+        "bankName": "",
+        "businessLicense": "",
+        "companyAddress": "",
+        "companyName": "",
+        "country": "",
+        "doBusinessUrl": "",
+        "id": 0,
+        "identityType": 0,
+        "identitycardUrl1": "",
+        "identitycardUrl2": "",
+        "legalIds": "",
+        "legalName": "",
+        "legalPhone": "",
+        "licenseUrl": "",
+        "memberNum": "",
+        "organizationCode": "",
+        "parentBankName": "",
+        "province": "",
+        "telephone": "",
+        "unionBank": "",
+        "wmemberId": 0
       },
       //重置手机
       ruleForm2: {
@@ -413,6 +413,7 @@ export default {
     },
     //保存修改企业地址
     submitRuleForm1(formName) {
+      console.log(this.ruleForm1,'this.ruleForm1')
       this.$refs[formName].validate((valid) => {
         if (valid) {
           const form1 = JSON.parse(JSON.stringify(this.ruleForm1))
@@ -426,6 +427,7 @@ export default {
               form1.area = item.city_code
             }
           })
+          if(!form1.area) return
           $.ajax({
             url: this.DFPAYDOMAIN + '/walletCompany/updateAddress',
             type: 'POST',

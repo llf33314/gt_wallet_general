@@ -189,7 +189,8 @@
         <p>提现手续费怎么收取？</p>
         <p>答：每次提现算做一笔，提现手续费按每笔2元收取。</p>
         <p>提现限额为多少？</p>
-        <p>答：单笔最低100元，最高<span v-text="withdrawQuota"></span>元，单日无限制。</p>
+        <p>答：单笔最低100元，最高
+          <span v-text="withdrawQuota"></span>元，单日无限制。</p>
         <p>提现到账时间？</p>
         <p>答：1-3个工作日。</p>
       </div>
@@ -283,6 +284,17 @@ export default {
         callback();
       }
     }
+    var isValitrPhone = (rule, value, callback) => {
+      if (value == '') {
+        callback(new Error('请输入银行卡预留手机号码'))
+      } else {
+        if (this.isPhone(value)) {
+          callback();
+        } else {
+          callback(new Error('请输入正确手机号码'))
+        }
+      }
+    }
     return {
       name: '',
       phone: '',
@@ -368,7 +380,7 @@ export default {
         }],
         phone: [{
           required: true,
-          message: '请输入银行卡预留手机号码',
+          validator: isValitrPhone,
           trigger: 'blur'
         },
         {
@@ -406,12 +418,17 @@ export default {
     }
   },
   mounted() {
-
-    //this.getWalletBanksByMemberId()
     this.findMember()
-
   },
   methods: {
+    isPhone(obj) {
+      var result = true;
+      var isPhone = /^((\+?86)|(\(\+86\)))?(13[0123456789][0-9]{8}|15[0123456789][0-9]{8}|17[0123456789][0-9]{8}|18[0123456789][0-9]{8}|147[0-9]{8}|1349[0-9]{7})$/;
+      if (!isPhone.test(obj)) {
+        result = false;
+      }
+      return result;
+    },
     //申请额度提交
     walletQuotaAdd() {
       this.ruleForm3.quotaDesc = this.escapeHTML(this.ruleForm3.quotaDesc)
@@ -552,13 +569,13 @@ export default {
       })
     },
     //获取余额(提现页面展示)
-    getTotal() {
+    getTotal(id) {
       $.ajax({
         url: this.DFPAYDOMAIN + '/walletMoney/getTotal',
         type: 'POST',
         dataType: 'JSON',
         data: {
-          wMemberId: 7
+          wMemberId: id
         },
         success: res => {
           console.log(res, '获取余额')

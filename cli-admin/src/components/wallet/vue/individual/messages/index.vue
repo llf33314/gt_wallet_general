@@ -57,7 +57,6 @@
       <script>
 export default {
   data() {
-    console.log(window)
     var isValitrPhone = (rule, value, callback) => {
       if (value == '') {
         callback(new Error('请输入新手机号码'))

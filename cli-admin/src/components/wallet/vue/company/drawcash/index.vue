@@ -605,7 +605,7 @@ export default {
         success: res => {
           console.log(res, '获取余额')
           if (res.code == 0) {
-            this.total = code.data
+            this.total = res.data
           } else {
             this.$message.error(res.msg)
           }
