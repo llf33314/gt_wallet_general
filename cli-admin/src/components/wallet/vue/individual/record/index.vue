@@ -18,7 +18,9 @@
     <div v-show="tType==0">
       <el-table ref="multipleTable" :data="payOrderList.records" class="public-top20">
         <el-table-column label="创建时间" show-overflow-tooltip align="center">
-          <template slot-scope="scope">{{ scope.row.ctime }}</template>
+          <template slot-scope="scope">
+            <span v-text="DateFormat(scope.row.ctime,'yyyy-MM-dd hh:mm')"></span>
+          </template>
         </el-table-column>
         <el-table-column prop="externalNo" label="订单号" show-overflow-tooltip align="center">
         </el-table-column>
@@ -54,7 +56,9 @@
     <div v-show="tType==1">
       <el-table ref="multipleTable" :data="getDrawCashList.records" class="public-top20">
         <el-table-column label="申请时间" show-overflow-tooltip align="center">
-          <template slot-scope="scope">{{ scope.row.ctime}}</template>
+          <template slot-scope="scope">
+            <span v-text="DateFormat(scope.row.ctime,'yyyy-MM-dd hh:mm')"></span>
+          </template>
         </el-table-column>
         <el-table-column prop="externalOrderNo" label="流水号" show-overflow-tooltip align="center">
         </el-table-column>

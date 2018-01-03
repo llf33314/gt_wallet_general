@@ -37,7 +37,7 @@
         </el-form-item>
       </el-form>
     </div>
-    <el-dialog title="绑定通联手机号码" :visible.sync="dialogApply" @close="loading22=false,loading2=false" custom-class="wallet-drawcash-dialog">
+    <el-dialog title="绑定通联手机号码" :visible.sync="dialogApply" @close="closeBind" custom-class="wallet-drawcash-dialog">
       <el-form :model="ruleForm2" :rules="rules2" ref="ruleForm2" label-width="155px" class="demo-ruleForm">
         <el-form-item label="手机号码：" prop="phone">
           <el-input v-model="ruleForm2.phone" type="number" placeholder="请输入新手机号码"></el-input>
@@ -168,7 +168,8 @@ export default {
       },
       loading2: false,
       getCodeText: '获取验证码',
-      loading22: false
+      loading22: false,
+      clearIntervalTime:null
     }
   },
   mounted() {
@@ -201,17 +202,24 @@ export default {
         }
       })
     },
+    //
+    closeBind(){
+      this.loading22=false
+      this.loading2=false
+      clearInterval(this.clearIntervalTime)
+      this.getCodeText = '获取验证码'
+    },
     //获取短信验证码
     getVerificationCode() {
       const time = () => {
         let t = 60
         this.getCodeText = t + 's'
-        var s = setInterval(() => {
+        this.clearIntervalTime = setInterval(() => {
           this.getCodeText = t-- + 's'
           if (t < 0) {
             this.loading2 = false
             this.getCodeText = '获取验证码'
-            clearInterval(s)
+            clearInterval(this.clearIntervalTime)
           }
         }, 1000)
       }
