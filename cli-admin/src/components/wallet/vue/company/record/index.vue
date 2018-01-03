@@ -18,7 +18,9 @@
     <div v-show="tType==0">
       <el-table ref="multipleTable" :data="payOrderList.records" class="public-top20">
         <el-table-column label="创建时间" show-overflow-tooltip align="center">
-          <template slot-scope="scope">{{ scope.row.ctime }}</template>
+          <template slot-scope="scope">
+            <span v-text="DateFormat(scope.row.ctime,'yyyy-MM-dd hh:mm')"></span>
+          </template>
         </el-table-column>
         <el-table-column prop="externalNo" label="订单号" show-overflow-tooltip align="center">
         </el-table-column>
@@ -44,7 +46,7 @@
           </template>
         </el-table-column>
       </el-table>
-      <div class="public-top20"  v-if="payOrderList.records.length!=0">
+      <div class="public-top20" v-if="payOrderList.records">
         <div class="public-fr">
           <el-pagination @current-change="handleCurrentChange" current-page.sync="payOrderList.pages" :page-size="10" layout="prev, pager, next, jumper" :total="payOrderList.total">
           </el-pagination>
@@ -54,7 +56,9 @@
     <div v-show="tType==1">
       <el-table ref="multipleTable" :data="getDrawCashList.records" class="public-top20">
         <el-table-column label="申请时间" show-overflow-tooltip align="center">
-          <template slot-scope="scope">{{ scope.row.ctime}}</template>
+          <template slot-scope="scope">
+            <span v-text="DateFormat(scope.row.ctime,'yyyy-MM-dd hh:mm')"></span>
+          </template>
         </el-table-column>
         <el-table-column prop="externalOrderNo" label="流水号" show-overflow-tooltip align="center">
         </el-table-column>
@@ -83,7 +87,7 @@
           </template>
         </el-table-column>
       </el-table>
-      <div class="public-top20" v-if="getDrawCashList.records.length!=0">
+      <div class="public-top20" v-if="getDrawCashList.records">
         <div class="public-fr">
           <el-pagination @current-change="handleCurrentChange2" current-page.sync="getDrawCashList.pages" :page-size="10" layout="prev, pager, next, jumper" :total="getDrawCashList.total">
           </el-pagination>
@@ -195,8 +199,8 @@ export default {
         data: this.drawListParams,
         success: res => {
           console.log(res, "获取消费list");
-          if (res.code == 0) {
-            this.payOrderList = res.data||[];
+          if (res.code == 0 || res.code == 1009) {
+            this.payOrderList = res.data || [];
           } else {
             this.$message.error(res.msg);
           }
@@ -236,8 +240,8 @@ export default {
         data: this.drawListParams,
         success: res => {
           console.log(res, "提现 分页查询");
-          if (res.code == 0) {
-            this.getDrawCashList = res.data||[];
+          if (res.code == 0 || res.code == 1009) {
+            this.getDrawCashList = res.data || [];
           } else {
             this.$message.error(res.msg);
           }

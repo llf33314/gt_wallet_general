@@ -6,6 +6,13 @@
     top: 13px;
     cursor: pointer;
   }
+  .el-icon-edit-outline {
+    padding: 0 10px;
+    cursor: pointer;
+    font-size: 19px;
+    position: absolute;
+    top: 10px;
+  }
 }
 </style>
 <template>
@@ -50,7 +57,7 @@
           <el-button type="primary" @click="submitRuleForm1('ruleForm1')">保存</el-button>
         </el-form-item> -->
       </el-form>
-      <div class="public-table-title public-c666" style="font-weight:500;margin: 40px 0;">
+      <div class="public-table-title public-c666" style="margin: 40px 0;">
         银行卡信息
       </div>
       <el-form :model="ruleForm1" :rules="rules1" ref="ruleForm1" label-width="150px" style="width:600px;">
@@ -58,17 +65,18 @@
           <span v-if="memberType == 2">企业会员</span>
           <span v-if="memberType == 3">个人会员</span>
         </el-form-item>
-        <el-form-item label="绑定通联手机号码：">
+        <el-form-item label="手机号码：">
           <span v-text="walletCompany.legalPhone"></span>
-          <el-button type="primary" size="small" style="margin-left: 110px;" @click="dialogApply=true">修改</el-button>
+          <span style="color: #ccc;">(已绑定通联)</span>
+          <i class="el-icon-edit-outline" @click="dialogApply=true" title="修改手机号码"></i>
         </el-form-item>
-        <el-form-item label="开户行地区代码：">
+        <el-form-item label="开户行地区代码：" v-if="walletCompany.bankCtiyNo">
           <span v-text="walletCompany.bankCtiyNo || '——'"></span>
         </el-form-item>
-        <el-form-item label="开户行支行名称：">
+        <el-form-item label="开户行支行名称：" v-if="walletCompany.bankName">
           <span v-text="walletCompany.bankName || '——'"></span>
         </el-form-item>
-        <el-form-item label="支付行号：">
+        <el-form-item label="支付行号：" v-if="walletCompany.unionBank">
           <span v-text="walletCompany.unionBank || '——'"></span>
         </el-form-item>
         <el-form-item>
@@ -77,13 +85,13 @@
         </el-form-item>
       </el-form>
     </div>
-    <el-dialog title="绑定通联手机号码" :visible.sync="dialogApply" custom-class="wallet-drawcash-dialog">
+    <el-dialog title="绑定通联手机号码" :visible.sync="dialogApply" custom-class="wallet-drawcash-dialog" @close="closeBind">
       <el-form :model="ruleForm2" :rules="rules2" ref="ruleForm2" label-width="155px" class="demo-ruleForm">
-        <el-form-item label="新手机号码：" prop="phone">
-          <el-input v-model="ruleForm2.phone" placeholder="请输入新手机号码"></el-input>
+        <el-form-item label="手机号码：" prop="phone">
+          <el-input v-model="ruleForm2.phone" type="number" placeholder="请输入新手机号码"></el-input>
         </el-form-item>
         <el-form-item label="短信验证：" prop="code">
-          <el-input v-model="ruleForm2.code" placeholder="请输入短信验证" style="width:200px;"></el-input>
+          <el-input v-model="ruleForm2.code" placeholder="请输入短信验证" type="number" style="width:200px;"></el-input>
           <el-button type="primary" @click="getVerificationCode" :loading="loading2">{{getCodeText}}</el-button>
         </el-form-item>
         <el-form-item style="text-align: right;margin-top: 50px;">
@@ -157,30 +165,30 @@ export default {
       provinceOptins: [],
       areaOptins: [],
       walletCompany: {
-        // "accountNo": "string",
-        // "area": "130100",
-        // "bankCtiyNo": "开户行地区代码 ",
-        // "bankName": "开户行支行名",
-        // "businessLicense": "营业执照号",
-        // "companyAddress": "地址",
-        // "companyName": "企业名称",
-        // "country": "string",
-        // "doBusinessUrl": "string",
-        // "id": 0,
-        // "identityType": 0,
-        // "identitycardUrl1": "string",
-        // "identitycardUrl2": "string",
-        // "legalIds": "法人证件号码",
-        // "legalName": "法人姓名",
-        // "legalPhone": "string",
-        // "licenseUrl": "string",
-        // "memberNum": "string",
-        // "organizationCode": "string",
-        // "parentBankName": "string",
-        // "province": "省份",
-        // "telephone": "联系电话",
-        // "unionBank": "支付行号",
-        // "wmemberId": 0
+        "accountNo": "",
+        "area": "",
+        "bankCtiyNo": " ",
+        "bankName": "",
+        "businessLicense": "",
+        "companyAddress": "",
+        "companyName": "",
+        "country": "",
+        "doBusinessUrl": "",
+        "id": 0,
+        "identityType": 0,
+        "identitycardUrl1": "",
+        "identitycardUrl2": "",
+        "legalIds": "",
+        "legalName": "",
+        "legalPhone": "",
+        "licenseUrl": "",
+        "memberNum": "",
+        "organizationCode": "",
+        "parentBankName": "",
+        "province": "",
+        "telephone": "",
+        "unionBank": "",
+        "wmemberId": 0
       },
       //重置手机
       ruleForm2: {
@@ -203,6 +211,7 @@ export default {
       getCodeText: '获取验证码',
       loading22: false,
       memberType: '',
+      clearIntervalTime: null
     }
   },
   mounted() {
@@ -321,17 +330,24 @@ export default {
         }
       })
     },
+    //
+    closeBind() {
+      this.loading22 = false
+      this.loading2 = false
+      clearInterval(this.clearIntervalTime)
+      this.getCodeText = '获取验证码'
+    },
     //获取短信验证码
     getVerificationCode() {
       const time = () => {
         let t = 60
         this.getCodeText = t + 's'
-        var s = setInterval(() => {
+        this.clearIntervalTime = setInterval(() => {
           this.getCodeText = t-- + 's'
           if (t < 0) {
             this.loading2 = false
             this.getCodeText = '获取验证码'
-            clearInterval(s)
+            clearInterval(this.clearIntervalTime)
           }
         }, 1000)
       }
@@ -405,6 +421,7 @@ export default {
     },
     //保存修改企业地址
     submitRuleForm1(formName) {
+      console.log(this.ruleForm1, 'this.ruleForm1')
       this.$refs[formName].validate((valid) => {
         if (valid) {
           const form1 = JSON.parse(JSON.stringify(this.ruleForm1))
@@ -418,6 +435,10 @@ export default {
               form1.area = item.city_code
             }
           })
+          if (!form1.area) {
+            this.$message.error('请选择企业地址');
+            return
+          }
           $.ajax({
             url: this.DFPAYDOMAIN + '/walletCompany/updateAddress',
             type: 'POST',
@@ -430,6 +451,10 @@ export default {
             },
             success: (res) => {
               if (res.code == 0) {
+                this.$message({
+                  message: res.msg,
+                  type: 'success'
+                });
                 this.findMember()
               } else {
                 this.$message.error(res.msg + res.code)

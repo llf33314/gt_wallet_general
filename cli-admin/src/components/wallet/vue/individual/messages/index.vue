@@ -1,5 +1,12 @@
 <style lang="less">
 .wallet-company-messages {
+  .el-icon-edit-outline {
+    padding: 0 10px;
+    cursor: pointer;
+    font-size: 19px;
+    position: absolute;
+    top: 10px;
+  }
 }
 </style>
       <template>
@@ -20,22 +27,23 @@
           <span v-if="memberType==3">个人会员</span>
           <span v-if="memberType==2">企业会员</span>
         </el-form-item>
-        <el-form-item label="绑定通联手机号码：">
+        <el-form-item label="手机号码：">
           <span v-text="phone"></span>
-          <el-button type="primary" size="small" style="margin-left: 20px;" @click="dialogApply=true">修改</el-button>
+          <span style="color: #ccc;">(已绑定通联)</span>
+          <i class="el-icon-edit-outline" @click="dialogApply=true" title="修改手机号码"></i>
         </el-form-item>
         <el-form-item>
           <el-button onclick="window.history.go(-1)">返回</el-button>
         </el-form-item>
       </el-form>
     </div>
-    <el-dialog title="绑定通联手机号码" :visible.sync="dialogApply" @close="loading22=false" custom-class="wallet-drawcash-dialog">
+    <el-dialog title="绑定通联手机号码" :visible.sync="dialogApply" @close="closeBind" custom-class="wallet-drawcash-dialog">
       <el-form :model="ruleForm2" :rules="rules2" ref="ruleForm2" label-width="155px" class="demo-ruleForm">
-        <el-form-item label="新手机号码：" prop="phone">
-          <el-input v-model="ruleForm2.phone" placeholder="请输入新手机号码"></el-input>
+        <el-form-item label="手机号码：" prop="phone">
+          <el-input v-model="ruleForm2.phone" type="number" placeholder="请输入新手机号码"></el-input>
         </el-form-item>
         <el-form-item label="短信验证：" prop="code">
-          <el-input v-model="ruleForm2.code" placeholder="请输入短信验证" style="width:200px;"></el-input>
+          <el-input v-model="ruleForm2.code" type="number" placeholder="请输入短信验证" style="width:200px;"></el-input>
           <el-button type="primary" @click="getVerificationCode" :loading="loading2">{{getCodeText}}</el-button>
         </el-form-item>
         <el-form-item style="text-align: right;margin-top: 50px;">
@@ -49,19 +57,17 @@
       <script>
 export default {
   data() {
-    console.log(window)
     var isValitrPhone = (rule, value, callback) => {
-      if (!value) {
-        return callback(new Error('请输入新手机号码'));
-      }
-      setTimeout(() => {
-        if (value.length != 11) {
-          callback(new Error('请输入正确新手机号码'));
-        } else {
+      if (value == '') {
+        callback(new Error('请输入新手机号码'))
+      } else {
+        if (this.isPhone(value)) {
           callback();
+        } else {
+          callback(new Error('请输入正确新手机号码'))
         }
-      }, 1000);
-    };
+      }
+    }
     return {
       dialogApply: false,
       ruleForm1: {
@@ -118,30 +124,30 @@ export default {
       phone: "",
       memberType: '',
       walletCompany: {
-        "accountNo": "string",
-        "area": "130100",
-        "bankCtiyNo": "开户行地区代码 ",
-        "bankName": "开户行支行名",
-        "businessLicense": "营业执照号",
-        "companyAddress": "地址",
-        "companyName": "企业名称",
-        "country": "string",
-        "doBusinessUrl": "string",
-        "id": 0,
-        "identityType": 0,
-        "identitycardUrl1": "string",
-        "identitycardUrl2": "string",
-        "legalIds": "法人证件号码",
-        "legalName": "法人姓名",
-        "legalPhone": "string",
-        "licenseUrl": "string",
-        "memberNum": "string",
-        "organizationCode": "string",
-        "parentBankName": "string",
-        "province": "省份",
-        "telephone": "联系电话",
-        "unionBank": "支付行号",
-        "wmemberId": 0
+        // "accountNo": "string",
+        // "area": "130100",
+        // "bankCtiyNo": "开户行地区代码 ",
+        // "bankName": "开户行支行名",
+        // "businessLicense": "营业执照号",
+        // "companyAddress": "地址",
+        // "companyName": "企业名称",
+        // "country": "string",
+        // "doBusinessUrl": "string",
+        // "id": 0,
+        // "identityType": 0,
+        // "identitycardUrl1": "string",
+        // "identitycardUrl2": "string",
+        // "legalIds": "法人证件号码",
+        // "legalName": "法人姓名",
+        // "legalPhone": "string",
+        // "licenseUrl": "string",
+        // "memberNum": "string",
+        // "organizationCode": "string",
+        // "parentBankName": "string",
+        // "province": "省份",
+        // "telephone": "联系电话",
+        // "unionBank": "支付行号",
+        // "wmemberId": 0
       },
       //重置手机
       ruleForm2: {
@@ -162,13 +168,22 @@ export default {
       },
       loading2: false,
       getCodeText: '获取验证码',
-      loading22: false
+      loading22: false,
+      clearIntervalTime:null
     }
   },
   mounted() {
     this.findMember()
   },
   methods: {
+    isPhone(obj) {
+      var result = true;
+      var isPhone = /^((\+?86)|(\(\+86\)))?(13[0123456789][0-9]{8}|15[0123456789][0-9]{8}|17[0123456789][0-9]{8}|18[0123456789][0-9]{8}|147[0-9]{8}|1349[0-9]{7})$/;
+      if (!isPhone.test(obj)) {
+        result = false;
+      }
+      return result;
+    },
     //查询多粉会员信息
     findMember() {
       $.ajax({
@@ -187,17 +202,24 @@ export default {
         }
       })
     },
+    //
+    closeBind(){
+      this.loading22=false
+      this.loading2=false
+      clearInterval(this.clearIntervalTime)
+      this.getCodeText = '获取验证码'
+    },
     //获取短信验证码
     getVerificationCode() {
       const time = () => {
         let t = 60
         this.getCodeText = t + 's'
-        var s = setInterval(() => {
+        this.clearIntervalTime = setInterval(() => {
           this.getCodeText = t-- + 's'
           if (t < 0) {
             this.loading2 = false
             this.getCodeText = '获取验证码'
-            clearInterval(s)
+            clearInterval(this.clearIntervalTime)
           }
         }, 1000)
       }
@@ -211,7 +233,7 @@ export default {
             data: {
               phone: this.ruleForm2.phone,
               wmemberId: this.walletIndividual.wmemberId,
-              verificationCodeType:9,
+              verificationCodeType: 9,
             },
             success: (res) => {
               console.log(res, '获取短信验证码')

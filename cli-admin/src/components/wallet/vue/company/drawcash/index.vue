@@ -143,7 +143,7 @@
           </ul>
         </div>
       </div>
-      <div class="public-table-title public-c666" style="font-weight:500;margin: 40px 0;">
+      <div class="public-table-title public-c666" style="margin: 40px 0;">
         进行提现
       </div>
       <el-form :model="ruleForm" :rules="rules" ref="ruleForm" label-width="115px" class="demo-ruleForm">
@@ -191,7 +191,7 @@
         <p>提现手续费怎么收取？</p>
         <p>答：每次提现算做一笔，提现手续费按每笔2元收取。</p>
         <p>提现限额为多少？</p>
-        <p>答：单笔最低100元，最高50000元，单日无限制。</p>
+        <p>答：单笔最低100元，最高<span v-text="withdrawQuota"></span>元，单日无限制。</p>
         <p>提现到账时间？</p>
         <p>答：1-3个工作日。</p>
       </div>
@@ -213,10 +213,10 @@
           <span style="color:#ff4949" v-text="withdrawQuota">100,000</span>元
         </el-form-item>
         <el-form-item label="需求额度：" prop="quotaValue">
-          <el-input v-model="ruleForm3.quotaValue" class="RMBinput" placeholder="请输入金额" style="width:150px;"></el-input>
+          <el-input v-model="ruleForm3.quotaValue" class="RMBinput" type="number" placeholder="请输入金额" style="width:150px;"></el-input>
         </el-form-item>
         <el-form-item label="提额原因：" prop="quotaDesc">
-          <el-input type="textarea" v-model="ruleForm3.quotaDesc" placeholder="请输入原因" style="width:350px;"></el-input>
+          <el-input type="textarea" v-model="ruleForm3.quotaDesc" placeholder="请输入提额原因(50个字符以内)" style="width:350px;"></el-input>
         </el-form-item>
         <el-form-item style="text-align: right;">
           <el-button type="primary" @click="submitForm3('ruleForm3')" :loading="loading3">申请</el-button>
@@ -249,7 +249,7 @@
         </el-form-item>
 
         <el-form-item label="手机号码：" prop="phone">
-          <el-input v-model="ruleForm4.phone" placeholder="请输入银行卡预留手机号码"></el-input>
+          <el-input v-model="ruleForm4.phone" type="number" placeholder="请输入银行卡预留手机号码"></el-input>
         </el-form-item>
         <!-- <el-form-item label="短信验证：" prop="quotaDesc">
           <el-input v-model="ruleForm4.quotaDesc" placeholder="请输入手机验证码" style="width:318px;"></el-input>
@@ -264,7 +264,7 @@
     <el-dialog title="确认绑定银行卡" :close-on-click-modal="false" :close-on-press-escape="false" @close="loading5=false" :show-close="false" :visible.sync="bindBankCardDialog" custom-class="wallet-drawcash-dialog">
       <el-form :model="ruleForm5" :rules="rules5" ref="ruleForm5" label-width="125px" class="demo-ruleForm">
         <el-form-item label="短信验证：" prop="verificationCode">
-          <el-input v-model="ruleForm5.verificationCode" placeholder="请输入手机验证码" style="width:318px;"></el-input>
+          <el-input v-model="ruleForm5.verificationCode" type="number" placeholder="请输入手机验证码" style="width:318px;"></el-input>
         </el-form-item>
         <el-form-item style="text-align: right;">
           <el-button type="primary" @click="submitRuleForm5('ruleForm5')" :loading="loading5">确认</el-button>
@@ -292,8 +292,10 @@ export default {
     var quotaValueValidator = (rule, value, callback) => {
       if (value == '') {
         callback(new Error('请输入需求额度'));
-      } else if (value <= this.withdrawQuota) {
-        callback(new Error('最低需求额度为' + this.withdrawQuota));
+      } else if (value > this.withdrawQuota) {
+        callback(new Error('需求额度最大为' + this.withdrawQuota + '元'));
+      } else if (value < 1000 && 1000 < this.withdrawQuota) {
+        callback(new Error('需求额度最低为1000'));
       } else {
         callback();
       }
@@ -325,7 +327,7 @@ export default {
       }
     }
     return {
-      companyName: 'test',
+      companyName: '',
       total: 0,
       walletBanks: [],
       //
@@ -374,13 +376,18 @@ export default {
       rules3: {
         quotaValue: [{
           validator: quotaValueValidator,
-          // required: true,
+          required: true,
           // message: '请输入申请额度',
           trigger: 'blur'
         }],
         quotaDesc: [{
           required: true,
-          message: '请输入申请描述',
+          message: '请输入提额原因(50个字符以内)',
+          trigger: 'blur'
+        }, {
+          min: 3,
+          max: 50,
+          message: '请输入提额原因(50个字符以内)',
           trigger: 'blur'
         }],
       },
@@ -456,6 +463,8 @@ export default {
     },
     //申请额度提交
     walletQuotaAdd() {
+      this.ruleForm3.quotaDesc = this.escapeHTML(this.ruleForm3.quotaDesc)
+      this.ruleForm3.quotaValue = window.parseInt(this.ruleForm3.quotaValue)
       $.ajax({
         url: this.DFPAYDOMAIN + '/walletQuota/add',
         type: 'POST',
@@ -492,6 +501,7 @@ export default {
     },
     //短信验证提交
     confirm() {
+      this.loading2 = true
       $.ajax({
         url: this.DFPAYDOMAIN + '/walletMoney/confirm',
         type: 'POST',
@@ -520,7 +530,7 @@ export default {
     submitForm2(formName) {
       this.$refs[formName].validate((valid) => {
         if (valid) {
-          this.loading2 = true
+          
           this.confirm()
         } else {
           return false;
@@ -564,7 +574,8 @@ export default {
     },
     //提现(成功后会返回订单id),支付确认时需要传递
     withdrawApply() {
-      this.dialogApply2 = true
+      this.loading = true
+      this.ruleForm.money = window.parseInt(this.ruleForm.money)
       $.ajax({
         url: this.DFPAYDOMAIN + '/walletMoney/withdrawApply',
         type: 'POST',
@@ -574,6 +585,7 @@ export default {
           console.log(res, '提现')
           if (res.code == 0) {
             this.confirm.id = res.data
+            this.dialogApply2 = true
           } else {
             this.$message.error(res.msg)
           }
@@ -593,7 +605,7 @@ export default {
         success: res => {
           console.log(res, '获取余额')
           if (res.code == 0) {
-            this.total = code.data
+            this.total = res.data
           } else {
             this.$message.error(res.msg)
           }

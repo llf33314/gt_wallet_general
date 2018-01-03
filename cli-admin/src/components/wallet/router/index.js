@@ -17,7 +17,7 @@ export const individual = [{
   },
   {
     path: '/wallet/individual/open/bindPhone/:memberId',
-    name: 'company_open_uploadFile',
+    name: 'individual_open_bindPhone',
     title: '个人开通-绑定手机',
     component: resolve => {
       require(['@/components/wallet/vue/individual/open/bindPhone'], resolve)
@@ -33,14 +33,14 @@ export const individual = [{
     redirect: '/wallet/individual/record/',
     children: [{
       path: '/wallet/individual/record',
-      name: 'wallet-record',
+      name: 'wallet-individual-record',
       title: '交易记录',
       component: resolve => {
         require(['@/components/wallet/vue/individual/record/index'], resolve)
       },
     }, {
       path: '/wallet/individual/news',
-      name: 'wallet-news',
+      name: 'wallet-individual-news',
       title: '消息中心',
       component: resolve => {
         require(['@/components/wallet/vue/individual/news/index'], resolve)
@@ -91,7 +91,7 @@ export const company = [{
   },
   {
     path: '/wallet/company/open/bindPhone/:memberId',
-    name: 'company_open_uploadFile',
+    name: 'company_open_bindPhone',
     title: '企业开通-绑定手机',
     component: resolve => {
       require(['@/components/wallet/vue/company/open/bindPhone'], resolve)
@@ -106,14 +106,14 @@ export const company = [{
     },
     children: [{
       path: '/wallet/company/record',
-      name: 'wallet-record',
+      name: 'wallet-company-record',
       title: '交易记录',
       component: resolve => {
         require(['@/components/wallet/vue/company/record/index'], resolve)
       },
     }, {
       path: '/wallet/company/news',
-      name: 'wallet-news',
+      name: 'wallet-company-news',
       title: '消息中心',
       component: resolve => {
         require(['@/components/wallet/vue/company/news/index'], resolve)
