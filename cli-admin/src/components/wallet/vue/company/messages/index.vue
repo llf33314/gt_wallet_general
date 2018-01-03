@@ -430,6 +430,10 @@ export default {
             },
             success: (res) => {
               if (res.code == 0) {
+                this.$message({
+                  message: res.msg,
+                  type: 'success'
+                });
                 this.findMember()
               } else {
                 this.$message.error(res.msg + res.code)
