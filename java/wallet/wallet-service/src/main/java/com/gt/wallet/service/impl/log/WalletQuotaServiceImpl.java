@@ -23,6 +23,7 @@ import com.gt.wallet.mapper.member.WalletMemberMapper;
 import com.gt.wallet.service.log.WalletMessageService;
 import com.gt.wallet.service.log.WalletQuotaService;
 import com.gt.wallet.utils.CommonUtil;
+import com.gt.wallet.utils.HTMLSpirit;
 import com.gt.wallet.utils.MyPageUtil;
 
 import lombok.extern.slf4j.Slf4j;
@@ -56,6 +57,9 @@ public class WalletQuotaServiceImpl extends BaseServiceImpl<WalletQuotaMapper, W
 		ServerResponse<Integer> serverResponse=null;
 		if(CommonUtil.isEmpty(walletQuota)){
 			throw new BusinessException(WalletResponseEnums.NULL_ERROR);
+		}
+		if(HTMLSpirit.delHTMLTag(walletQuota.getQuotaDesc())){
+			throw new BusinessException(WalletResponseEnums.HTML_ERROR);
 		}
 		if(CommonUtil.isEmpty(walletQuota.getId())){//新增
 			walletQuotaMapper.insert(walletQuota);

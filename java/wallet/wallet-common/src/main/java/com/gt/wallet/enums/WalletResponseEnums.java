@@ -123,6 +123,17 @@ public enum WalletResponseEnums {
 	 */
 	TIMEOUT_ERROR(1021, "请求超时" ),
 	
+	/**
+	 * 请求数据存在HTML标签
+	 */
+	HTML_ERROR(1022, "数据异常，存在html标签" ),
+	
+	
+	/**
+	 * 敏感关键词
+	 */
+	SENSITIVE_ERROR(1023, "数据异常，敏感关键词" ),
+	
 	
 	;
 
