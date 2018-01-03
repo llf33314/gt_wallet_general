@@ -390,11 +390,11 @@ public class WalletMemberServiceImpl extends BaseServiceImpl<WalletMemberMapper,
 		}else if(walletMember.getStatus()!=3){
 			throw new BusinessException("biz reset api fail:多粉钱包会员账号状态异常("+CommonUtil.getMemberStatusDesc(walletMember.getStatus())+")");
 		}
-		ServerResponse<?> serverResponse=YunSoaMemberUtil.changeBindPhone(walletMember.getMemberNum(), YunSoaMemberUtil.rsaDecrypt(walletMember.getPhone()), newPhone, verificationCode);
+		ServerResponse<?> serverResponse=YunSoaMemberUtil.changeBindPhone(walletMember.getMemberNum(), WalletKeyUtil.getDesString(walletMember.getPhone()), newPhone, verificationCode);
 		log.info(CommonUtil.format("serverResponse:%s", JsonUtil.toJSONString(serverResponse)));
 		JSONObject jsonObject=new JSONObject();
 		jsonObject.put("memberNum", walletMember.getMemberNum());
-		jsonObject.put("oldPhone",YunSoaMemberUtil.rsaDecrypt(walletMember.getPhone()));
+		jsonObject.put("oldPhone",WalletKeyUtil.getDesString(walletMember.getPhone()));
 		jsonObject.put("newPhone",newPhone);
 		jsonObject.put("verificationCode",verificationCode);
 		try {
