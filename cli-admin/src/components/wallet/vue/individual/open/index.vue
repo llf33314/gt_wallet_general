@@ -126,7 +126,7 @@
           <el-button type="primary" @click="submitForm('ruleForm')" :loading="loading1">下一步</el-button>
         </el-form-item>
       </el-form>
-      <el-dialog title="手机验证" :visible.sync="dialogVisible" size="tiny">
+      <el-dialog title="手机验证" :visible.sync="dialogVisible" size="tiny" :show-close="false" :close-on-click-modal="false" :close-on-press-escape="false">
         <el-form :model="ruleForm2" :rules="rules2" ref="ruleForm2" label-width="100px" class="demo-ruleForm">
           <!-- <el-form-item label="银行卡预留手机号：">
             <div>{{ruleForm.phone}}</div>
@@ -274,7 +274,6 @@ export default {
     },
     //绑定银行卡
     addBank(formName) {
-      console.log(this.ruleForm2, 'this.ruleForm2')
       this.$refs[formName].validate((valid) => {
         this.loading2 = true
         if (valid) {
@@ -285,9 +284,7 @@ export default {
             data: this.ruleForm2,
             success: (res) => {
               // res.code = 0
-              if (res.code != 0) {
-                this.$message.error(res.msg);
-              } else {
+              if (res.code == 0) {
                 this.$message({
                   message: res.msg,
                   type: 'success',
@@ -298,6 +295,8 @@ export default {
                     })
                   }
                 });
+              } else {
+                this.$message.error(res.msg);
               }
               this.loading2 = false
             }
@@ -311,9 +310,6 @@ export default {
     submitForm(formName) {
       this.$refs[formName].validate((valid) => {
         if (valid) {
-          this.loading1 = true
-          this.ruleForm.memberId = this.$route.params.memberId
-          console.log(this.ruleForm, 'this.ruleForm')
           $.ajax({
             url: this.DFPAYDOMAIN + '/walletIndividual/saveIndividual',
             type: 'POST',

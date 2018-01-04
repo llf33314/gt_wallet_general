@@ -16,7 +16,7 @@
       <el-breadcrumb-item>个人信息</el-breadcrumb-item>
     </el-breadcrumb>
     <div class="public-content public-top20">
-      <el-form :model="walletCompany" :rules="rules1" ref="walletCompany" label-width="150px" style="width:600px;">
+      <el-form :model="walletCompany" :rules="rules1" ref="walletCompany" label-width="100px" style="width:600px;">
         <el-form-item label="姓名：">
           <span v-text="walletIndividual.name"></span>
         </el-form-item>

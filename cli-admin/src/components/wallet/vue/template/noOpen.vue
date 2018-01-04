@@ -1,18 +1,17 @@
 <style lang="less">
-  .no-open {
-    padding-top: 70px;
-    text-align: center;
-    p {
-      font-size: 14px;
-      color: #333333;
-      padding: 27px 0 70px;
-    }
-    i {
-      color: #f7ba2a;
-      font-size: 35px;
-    }
+.no-open {
+  padding-top: 70px;
+  text-align: center;
+  p {
+    font-size: 14px;
+    color: #333333;
+    padding: 27px 0 70px;
   }
-
+  i {
+    color: #f7ba2a;
+    font-size: 35px;
+  }
+}
 </style>
 <template>
   <div class="no-open">
@@ -25,45 +24,45 @@
   </div>
 </template>
 <script>
-  import {
-    wallet
-  } from './../../api/index'
-  export default {
-    methods: {
-      individualOpen(memberId) {
-        this.$router.push({
-          path: '/wallet/individual/open/' + memberId
-        })
-      },
-      companyOpen(memberId) {
-        this.$router.push({
-          path: '/wallet/company/open/base/' + memberId
-        })
-      },
-      //获取会员id
-      getVipNum(type) {
-        $.ajax({
-          url: this.DFPAYDOMAIN + '/walletMember/register',
-          type: 'GET',
-          dataType: 'json',
-          data: {
-            memberType: type
-          },
-          success: (res) => {
-            console.log(res, 'res')
-            if (res.code != 0) {
-              this.$message.error(res.msg);
+import {
+  wallet
+} from './../../api/index'
+export default {
+  methods: {
+    individualOpen(memberId) {
+      this.$router.push({
+        path: '/wallet/individual/open/' + memberId
+      })
+    },
+    companyOpen(memberId) {
+      this.$router.push({
+        path: '/wallet/company/open/base/' + memberId
+      })
+    },
+    //获取会员id
+    getVipNum(type) {
+      $.ajax({
+        url: this.DFPAYDOMAIN + '/walletMember/register',
+        type: 'GET',
+        dataType: 'json',
+        data: {
+          memberType: type
+        },
+        success: (res) => {
+          console.log(res, 'res')
+          if (res.code == 0) {
+            if (type == 2) {
+              this.companyOpen(res.data)
             } else {
-              if (type == 2) {
-                this.companyOpen(res.data)
-              } else {
-                this.individualOpen(res.data)
-              }
+              this.individualOpen(res.data)
             }
+          } else {
+            this.$message.error(res.msg);
           }
-        })
-      },
-    }
+        }
+      })
+    },
   }
+}
 
 </script>
