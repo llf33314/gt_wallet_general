@@ -170,7 +170,7 @@
             <span>此账户提现额度为
               <span style="color:#ff4949" v-text="withdrawQuota">100,000</span>元,</span>
             如需提高提现金额，请点击
-            <el-button @click="dialogApply=true" type="primary" size="small">申请</el-button>
+            <span @click="dialogApply=true" style="color:#66b1ff;cursor:pointer">申请</span>
           </p>
         </el-form-item>
 

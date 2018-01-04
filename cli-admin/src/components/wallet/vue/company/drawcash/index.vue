@@ -173,7 +173,8 @@
           <p class="public-c999">
             <span>此账户提现额度为
               <span style="color:#ff4949" v-text="withdrawQuota">100,000</span>元，如需提高提现金额，请点击</span>
-            <el-button @click="dialogApply=true" type="primary" size="small">申请</el-button>
+            <!-- <el-button @click="dialogApply=true" type="primary" size="small">申请</el-button> -->
+            <span @click="dialogApply=true" style="color:#66b1ff;cursor:pointer">申请</span>
           </p>
         </el-form-item>
         <el-form-item label="提现金额：" prop="money">
