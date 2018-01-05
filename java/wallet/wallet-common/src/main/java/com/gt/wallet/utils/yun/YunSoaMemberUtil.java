@@ -729,7 +729,7 @@ public class YunSoaMemberUtil {
 	 */
 	public static ServerResponse<com.alibaba.fastjson.JSONObject> applyDeposit(TPayOrder payOrder) {
 		try{
-			log.info("applyDeposit start");
+			log.info("applyDeposit start:"+JsonUtil.toJSONString(payOrder));
 			//支付方式
 			//快捷
 			String frontUrl =payOrder.getFrontUrl();
@@ -780,6 +780,13 @@ public class YunSoaMemberUtil {
 				alipay.put("amount", payOrder.getAmount()*100);
 				alipay.put("authcode", payOrder.getAcct());
 				payMethod.put("SCAN_ALIPAY",alipay);
+			}else  if(payOrder.getType()==8){
+				JSONObject alipay = new JSONObject();
+				alipay.put("bankCardNo",rsaEncrypt("6228481234567890123"));
+				alipay.put("amount",payOrder.getAmount()*100);
+//				alipay.put("payType",WalletWebConfig.getYunBizUserId());
+		//		alipay.put("amount", payOrder.getAmount()*100);
+				payMethod.put("REALNAMEPAY",alipay);
 			}
 //			payMethod.put("GATEWAY", gatewayPay);
 //			payMethod.put("DAIKOU", daikouPay);
@@ -794,8 +801,8 @@ public class YunSoaMemberUtil {
 			param.put("accountSetNo", WalletWebConfig.getYunBizUserId());
 			param.put("amount", payOrder.getAmount()*100);
 			param.put("fee", payOrder.getFee()*100);
-			param.put("frontUrl", frontUrl);
-			param.put("backUrl", backUrl);
+//			param.put("frontUrl",  "http://122.227.225.142:23661/service/gateway/frontTrans.do");
+			param.put("backUrl", "http://dfpay.yifriend.net/walletPayOrder/79B4DE7C/paySuccessNotify");
 //			param.put("ordErexpireDatetime", ordErexpireDatetime);
 			param.put("payMethod", payMethod);
 			param.put("industryCode", WalletConstants.INDUSTRYCODE);
@@ -1007,7 +1014,7 @@ public class YunSoaMemberUtil {
 				log.info("pay start");
 				JSONObject param = new JSONObject();
 				param.put("bizUserId", bizUserId);
-				param.put("bizOrderNo", "");
+				param.put("bizOrderNo", bizOrderNo);
 				param.put("verificationCode", verificationCode);
 				param.put("consumerIp", consumerIp);
 				log.info("request:" + param);

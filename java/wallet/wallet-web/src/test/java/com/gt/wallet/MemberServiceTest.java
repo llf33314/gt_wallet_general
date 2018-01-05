@@ -4,7 +4,7 @@ import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import com.gt.api.util.httpclient.JsonUtil;
-import com.gt.wallet.data.api.tonglian.request.TCardBin;
+import com.gt.wallet.data.api.tonglian.request.TPayOrder;
 import com.gt.wallet.dto.ServerResponse;
 import com.gt.wallet.service.member.WalletBankService;
 import com.gt.wallet.service.member.WalletCompanyService;
@@ -122,21 +122,56 @@ public class MemberServiceTest extends BasicTest {
 //	}
 //	
 //	
+//	/**
+//	 * 查询绑定银行卡
+//	 */
+//	@Test
+//	public void queryBankCard(){
+//		log.info(" start test queryBankCard api");
+//		try {
+//			ServerResponse<TCardBin> serverResponse=YunSoaMemberUtil.getBankCardBin("6228481139158261672");
+//			log.info(CommonUtil.format("serverResponse:%s", JsonUtil.toJSONString(serverResponse)));
+//		} catch (Exception e) {
+//			e.printStackTrace();
+//			log.error("test queryBankCard api error");
+//		}
+//		log.info(" end test queryBankCard api");
+//	}
+//	
+	
+	
 	/**
-	 * 查询绑定银行卡
+	 * 充值申请
 	 */
 	@Test
-	public void queryBankCard(){
-		log.info(" start test queryBankCard api");
+	public void applyDeposit(){
+		log.info(" start test applyDeposit api");
 		try {
-			ServerResponse<TCardBin> serverResponse=YunSoaMemberUtil.getBankCardBin("6228481139158261672");
+			TPayOrder payOrder=new TPayOrder(100.0, "df"+System.currentTimeMillis(), 1.0, "", "", 8, "测试支付", "ffad4737-44ed-4dc7-b2a6-fb61949af805");
+			ServerResponse<com.alibaba.fastjson.JSONObject> serverResponse=YunSoaMemberUtil.applyDeposit(payOrder);
 			log.info(CommonUtil.format("serverResponse:%s", JsonUtil.toJSONString(serverResponse)));
 		} catch (Exception e) {
 			e.printStackTrace();
-			log.error("test queryBankCard api error");
+			log.error("test applyDeposit api error");
 		}
-		log.info(" end test queryBankCard api");
+		log.info(" end test applyDeposit api");
 	}
 	
+
+	/**
+	 * 充值申请
+	 */
+//	@Test
+//	public void pay(){
+//		log.info(" start test pay api");
+//		try {
+//			ServerResponse<com.alibaba.fastjson.JSONObject> serverResponse=YunSoaMemberUtil.pay("ffad4737-44ed-4dc7-b2a6-fb61949af805", "df1515120708921", "941531", "127.0.0.1");
+//			log.info(CommonUtil.format("serverResponse:%s", JsonUtil.toJSONString(serverResponse)));
+//		} catch (Exception e) {
+//			e.printStackTrace();
+//			log.error("test pay api error");
+//		}
+//		log.info(" end test pay api");
+//	}
 	
 }

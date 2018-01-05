@@ -258,7 +258,7 @@ public class WalletPayOrderServiceImpl extends BaseServiceImpl<WalletPayOrderMap
 	@Override
 	public ServerResponse<?> paySuccessNotify(LinkedHashMap<String,Object> params)throws Exception {
 		log.info(CommonUtil.format("start biz paySuccessNotify api params:%s",JsonUtil.toJSONString(params)));
-		JSONObject rps=params.
+		JSONObject rps=(JSONObject) params.get("rps");
 		String status=rps.getString("status");
 		String payfailmessage="支付成功";
 		switch (status) {
