@@ -3,6 +3,7 @@ package com.gt.wallet.service.impl.order;
 import java.math.BigDecimal;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -255,9 +256,9 @@ public class WalletPayOrderServiceImpl extends BaseServiceImpl<WalletPayOrderMap
 
 	@SuppressWarnings("unchecked")
 	@Override
-	public ServerResponse<?> paySuccessNotify(JSONObject params)throws Exception {
+	public ServerResponse<?> paySuccessNotify(LinkedHashMap<String,Object> params)throws Exception {
 		log.info(CommonUtil.format("start biz paySuccessNotify api params:%s",JsonUtil.toJSONString(params)));
-		JSONObject rps=params.getJSONObject("rps");
+		JSONObject rps=params.
 		String status=rps.getString("status");
 		String payfailmessage="支付成功";
 		switch (status) {
