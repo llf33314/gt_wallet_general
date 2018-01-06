@@ -139,6 +139,9 @@ export default {
             if (res.data) {
               this.tableData3 = res.data.records || [];
               this.page.total = res.data.total
+            }else{
+              this.tableData3 = [];
+              this.page.total = 0
             }
           } else {
             this.$message.error(res.msg);
