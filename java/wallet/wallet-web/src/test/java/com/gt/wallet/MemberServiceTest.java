@@ -143,35 +143,35 @@ public class MemberServiceTest extends BasicTest {
 	/**
 	 * 充值申请
 	 */
-	@Test
-	public void applyDeposit(){
-		log.info(" start test applyDeposit api");
-		try {
-			TPayOrder payOrder=new TPayOrder(100.0, "df"+System.currentTimeMillis(), 1.0, "", "", 8, "测试支付", "ffad4737-44ed-4dc7-b2a6-fb61949af805");
-			ServerResponse<com.alibaba.fastjson.JSONObject> serverResponse=YunSoaMemberUtil.applyDeposit(payOrder);
-			log.info(CommonUtil.format("serverResponse:%s", JsonUtil.toJSONString(serverResponse)));
-		} catch (Exception e) {
-			e.printStackTrace();
-			log.error("test applyDeposit api error");
-		}
-		log.info(" end test applyDeposit api");
-	}
+//	@Test
+//	public void applyDeposit(){
+//		log.info(" start test applyDeposit api");
+//		try {
+//			TPayOrder payOrder=new TPayOrder(100.0, "df"+System.currentTimeMillis(), 1.0, "", "", 8, "测试支付", "ffad4737-44ed-4dc7-b2a6-fb61949af805");
+//			ServerResponse<com.alibaba.fastjson.JSONObject> serverResponse=YunSoaMemberUtil.applyDeposit(payOrder);
+//			log.info(CommonUtil.format("serverResponse:%s", JsonUtil.toJSONString(serverResponse)));
+//		} catch (Exception e) {
+//			e.printStackTrace();
+//			log.error("test applyDeposit api error");
+//		}
+//		log.info(" end test applyDeposit api");
+//	}
 	
 
 	/**
 	 * 充值申请
 	 */
-//	@Test
-//	public void pay(){
-//		log.info(" start test pay api");
-//		try {
-//			ServerResponse<com.alibaba.fastjson.JSONObject> serverResponse=YunSoaMemberUtil.pay("ffad4737-44ed-4dc7-b2a6-fb61949af805", "df1515120708921", "941531", "127.0.0.1");
-//			log.info(CommonUtil.format("serverResponse:%s", JsonUtil.toJSONString(serverResponse)));
-//		} catch (Exception e) {
-//			e.printStackTrace();
-//			log.error("test pay api error");
-//		}
-//		log.info(" end test pay api");
-//	}
+	@Test
+	public void pay(){
+		log.info(" start test pay api");
+		try {
+			ServerResponse<com.alibaba.fastjson.JSONObject> serverResponse=YunSoaMemberUtil.pay("ffad4737-44ed-4dc7-b2a6-fb61949af805", "df1515122289544", "282492", "127.0.0.1");
+			log.info(CommonUtil.format("serverResponse:%s", JsonUtil.toJSONString(serverResponse)));
+		} catch (Exception e) {
+			e.printStackTrace();
+			log.error("test pay api error");
+		}
+		log.info(" end test pay api");
+	}
 	
 }
