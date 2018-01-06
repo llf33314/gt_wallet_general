@@ -22,7 +22,7 @@
             <span v-text="DateFormat(scope.row.ctime,'yyyy-MM-dd hh:mm')"></span>
           </template>
         </el-table-column>
-        <el-table-column prop="externalNo" label="订单号" show-overflow-tooltip align="center">
+        <el-table-column prop="sysOrderNo" label="订单号" show-overflow-tooltip align="center">
         </el-table-column>
         <el-table-column prop="amount" label="消费金额（元）" align="center">
           <template slot-scope="scope">
