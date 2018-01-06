@@ -8,6 +8,7 @@ import javax.servlet.http.HttpServletResponse;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -94,7 +95,7 @@ public class WalletPayOrderController extends BaseController {
 	@RequestMapping(value = "/79B4DE7C/paySuccessNotify1", method = RequestMethod.POST)
 	@ApiOperation(value = "支付成功异步回调", notes = "支付成功异步回调",hidden=true)
 	@ResponseBody
-	public ServerResponse<?> paySuccessNotify1(HttpServletRequest request,HttpServletResponse response, @RequestParam Map<String,Object> params) throws Exception {
+	public ServerResponse<?> paySuccessNotify1(HttpServletRequest request,HttpServletResponse response, @RequestBody Map<String,Object> params) throws Exception {
 		log.info(CommonUtil.format("start view paySuccessNotify api params:%s", JsonUtil.toJSONString(params)));
 		try {
 			return ServerResponse.createBySuccess();
