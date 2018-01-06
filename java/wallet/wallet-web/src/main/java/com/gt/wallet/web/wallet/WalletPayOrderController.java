@@ -1,5 +1,6 @@
 package com.gt.wallet.web.wallet;
 
+import java.util.LinkedHashMap;
 import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
@@ -12,7 +13,6 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
-import com.alibaba.fastjson.JSONObject;
 import com.baomidou.mybatisplus.plugins.Page;
 import com.gt.api.util.KeysUtil;
 import com.gt.api.util.httpclient.JsonUtil;
@@ -62,7 +62,7 @@ public class WalletPayOrderController extends BaseController {
 	 */
 	@RequestMapping(value = "/79B4DE7C/paySuccessNotify", method = RequestMethod.POST)
 	@ApiOperation(value = "支付成功异步回调", notes = "支付成功异步回调",hidden=true)
-	public void paySuccessNotify(HttpServletRequest request,HttpServletResponse response, @RequestParam JSONObject params) throws Exception {
+	public void paySuccessNotify(HttpServletRequest request,HttpServletResponse response, @RequestParam LinkedHashMap<String,Object> params) throws Exception {
 		log.info(CommonUtil.format("start view paySuccessNotify api params:%s", JsonUtil.toJSONString(params)));
 		try {
 			ServerResponse<?> serverResponse=walletPayOrderService.paySuccessNotify(params);

@@ -1,5 +1,7 @@
 package com.gt.wallet.service.order;
 
+import java.util.LinkedHashMap;
+
 import com.alibaba.fastjson.JSONObject;
 import com.baomidou.mybatisplus.plugins.Page;
 import com.gt.wallet.base.BaseService;
@@ -66,7 +68,7 @@ public interface WalletPayOrderService extends BaseService<WalletPayOrder> {
 	 * @return
 	 * @throws Exception
 	 */
-	ServerResponse<?>	paySuccessNotify(JSONObject params)throws Exception;
+	ServerResponse<?>	paySuccessNotify(LinkedHashMap<String,Object> params)throws Exception;
 	
 	/**
 	 * 分页

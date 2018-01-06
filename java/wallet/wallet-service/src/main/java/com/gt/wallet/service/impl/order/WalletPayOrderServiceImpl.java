@@ -3,6 +3,7 @@ package com.gt.wallet.service.impl.order;
 import java.math.BigDecimal;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -67,7 +68,7 @@ public class WalletPayOrderServiceImpl extends BaseServiceImpl<WalletPayOrderMap
 	private WalletPayOrderService walletPayOrderService;
 	
 
-//	@Transactional(propagation = Propagation.REQUIRED,isolation = Isolation.DEFAULT,timeout=36000,rollbackFor=Exception.class)
+	@Transactional(propagation = Propagation.REQUIRED,isolation = Isolation.DEFAULT,timeout=36000,rollbackFor=Exception.class)
 	@Override
 	public ServerResponse<com.alibaba.fastjson.JSONObject> applyDeposit(PayOrder payOrder)throws Exception {
 		log.info(CommonUtil.format("start biz applyDeposit api params:%s",JsonUtil.toJSONString(payOrder)));
@@ -102,11 +103,17 @@ public class WalletPayOrderServiceImpl extends BaseServiceImpl<WalletPayOrderMap
 		TPayOrder tPayOrder=new TPayOrder(payOrder.getAmount(),submitNo, (walletMember.getFeePercent()*payOrder.getAmount())/100, payOrder.getAcct(), payOrder.getReturnUrl(), payOrder.getType(), payOrder.getDesc(), walletMember.getMemberNum());
 		/************通联下单************/
 		ServerResponse<com.alibaba.fastjson.JSONObject> serverResponse=YunSoaMemberUtil.applyDeposit(tPayOrder);
-		com.alibaba.fastjson.JSONObject payInfo=	serverResponse.getData().getJSONObject("payInfo");
+		com.alibaba.fastjson.JSONObject payInfo=	serverResponse.getData();
 		/************通联下单************/
 		log.info(CommonUtil.format("biz applyDeposit api serverResponse:%s", JsonUtil.toJSONString(serverResponse)));
 		/************记录日志************/
-		walletApiLogService.save(JsonUtil.toJSONString(tPayOrder), serverResponse, walletMember.getMemberId(), payOrder.getNotifyUrl(),submitNo,WalletLogConstants.LOG_PAY);
+		try {
+			walletApiLogService.save(JsonUtil.toJSONString(tPayOrder), serverResponse, walletMember.getMemberId(), payOrder.getNotifyUrl(),submitNo,WalletLogConstants.LOG_PAY);
+		} catch (Exception e) {
+			log.error("biz applyDeposit save log fail!!!");
+			e.printStackTrace();
+			
+		}
 		/************记录日志************/
 		if(ServerResponse.judgeSuccess(serverResponse)){//临时订单入库
 			ServerResponse<?> response=save(payOrder);
@@ -212,6 +219,7 @@ public class WalletPayOrderServiceImpl extends BaseServiceImpl<WalletPayOrderMap
 			walletPayOrder.setAcct(payOrder.getAcct());
 			walletPayOrder.setPayType(payOrder.getType());
 			walletPayOrder.setWMemberId(walletMember.getId());
+			walletPayOrder.setMemberId(payOrder.getMemberId());
 			count=walletPayOrderMapper.insert(walletPayOrder);
 		}else{//修改
 			walletPayOrder.setSubmitNo(payOrder.getSubmitNo());
@@ -255,9 +263,10 @@ public class WalletPayOrderServiceImpl extends BaseServiceImpl<WalletPayOrderMap
 
 	@SuppressWarnings("unchecked")
 	@Override
-	public ServerResponse<?> paySuccessNotify(JSONObject params)throws Exception {
+	public ServerResponse<?> paySuccessNotify(LinkedHashMap<String,Object> params)throws Exception {
 		log.info(CommonUtil.format("start biz paySuccessNotify api params:%s",JsonUtil.toJSONString(params)));
-		JSONObject rps=params.getJSONObject("rps");
+		
+		JSONObject rps=JsonUtil.parseObject(CommonUtil.toString(params.get("rps")), JSONObject.class);
 		String status=rps.getString("status");
 		String payfailmessage="支付成功";
 		switch (status) {

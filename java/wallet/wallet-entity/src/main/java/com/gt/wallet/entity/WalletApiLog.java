@@ -77,6 +77,7 @@ public class WalletApiLog extends Model<WalletApiLog> {
 	/**
 	 * 订单号(或唯一键)
 	 */
+	@TableField("order_no")
 	private String orderNo;
 
 
