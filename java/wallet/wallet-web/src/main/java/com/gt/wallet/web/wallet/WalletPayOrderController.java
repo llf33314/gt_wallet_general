@@ -93,21 +93,17 @@ public class WalletPayOrderController extends BaseController {
 	 */
 	@RequestMapping(value = "/79B4DE7C/paySuccessNotify1", method = RequestMethod.POST)
 	@ApiOperation(value = "支付成功异步回调", notes = "支付成功异步回调",hidden=true)
-	public void paySuccessNotify1(HttpServletRequest request,HttpServletResponse response, @RequestParam Map<String,Object> params) throws Exception {
+	@ResponseBody
+	public ServerResponse<?> paySuccessNotify1(HttpServletRequest request,HttpServletResponse response, @RequestParam Map<String,Object> params) throws Exception {
 		log.info(CommonUtil.format("start view paySuccessNotify api params:%s", JsonUtil.toJSONString(params)));
 		try {
-			response.getWriter().print("success");
-		} catch (BusinessException e) {
-			log.error(CommonUtil.format("view paySuccessNotify1 api fail：%s,%s", e.getCode(), e.getMessage()));
-			response.getWriter().print("error");
-		} catch (Exception e) {
+			return ServerResponse.createBySuccess();
+		}catch (Exception e) {
 			e.printStackTrace();
 			log.error(CommonUtil.format("view paySuccessNotify1 api fail：%s,%s", WalletResponseEnums.SYSTEM_ERROR.getCode(),
 					WalletResponseEnums.SYSTEM_ERROR.getDesc()));
-			response.getWriter().print("error");
+			return ServerResponse.createByError();
 		}
-		response.getWriter().flush();
-		response.getWriter().close();
 	}
 
 	/**
