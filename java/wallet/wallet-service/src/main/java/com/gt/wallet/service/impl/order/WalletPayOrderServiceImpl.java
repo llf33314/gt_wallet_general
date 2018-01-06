@@ -209,7 +209,7 @@ public class WalletPayOrderServiceImpl extends BaseServiceImpl<WalletPayOrderMap
 			walletPayOrder.setAmount(BigDecimal.valueOf(payOrder.getAmount()));
 			walletPayOrder.setBusId(walletMember.getMemberId());
 			walletPayOrder.setSysOrderNo(payOrder.getBizOrderNo());
-			walletPayOrder.setFee(BigDecimal.valueOf(walletMember.getFeePercent()*payOrder.getAmount()));
+			walletPayOrder.setFee(BigDecimal.valueOf(walletMember.getFeePercent()*payOrder.getAmount()/100));
 			walletPayOrder.setIndustryCode(CommonUtil.toInteger(WalletConstants.INDUSTRYCODE));
 			walletPayOrder.setIndustryName(WalletConstants.INDUSTRYNAME);
 			walletPayOrder.setVisitSource(1);
