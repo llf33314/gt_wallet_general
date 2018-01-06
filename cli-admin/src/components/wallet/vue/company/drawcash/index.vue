@@ -405,7 +405,7 @@ export default {
       },
       rules4: {
         cardNo: [{
-          // required: true,
+          required: true,
           // message: '请输入法人个人账户',
           validator: rules4CardNo,
           trigger: 'blur'
