@@ -108,7 +108,7 @@ public class WalletPayOrderServiceImpl extends BaseServiceImpl<WalletPayOrderMap
 		log.info(CommonUtil.format("biz applyDeposit api serverResponse:%s", JsonUtil.toJSONString(serverResponse)));
 		/************记录日志************/
 		try {
-			walletApiLogService.save(JsonUtil.toJSONString(tPayOrder), serverResponse, walletMember.getMemberId(), payOrder.getNotifyUrl(),submitNo,WalletLogConstants.LOG_PAY);
+			walletApiLogService.save(JsonUtil.toJSONString(tPayOrder), serverResponse, walletMember.getId(), payOrder.getNotifyUrl(),submitNo,WalletLogConstants.LOG_PAY);
 		} catch (Exception e) {
 			log.error("biz applyDeposit save log fail!!!");
 			e.printStackTrace();
@@ -164,7 +164,13 @@ public class WalletPayOrderServiceImpl extends BaseServiceImpl<WalletPayOrderMap
 		/************通联下单************/
 		log.info(CommonUtil.format("serverResponse:%s", JsonUtil.toJSONString(serverResponse)));
 		/************记录日志************/
-		walletApiLogService.save(JsonUtil.toJSONString(tPayOrder), serverResponse, walletMember.getMemberId(), payOrder.getNotifyUrl(),submitNo,WalletLogConstants.LOG_PAY);
+		try {
+			walletApiLogService.save(JsonUtil.toJSONString(tPayOrder), serverResponse, walletMember.getId(), payOrder.getNotifyUrl(),submitNo,WalletLogConstants.LOG_PAY);
+		} catch (Exception e) {
+			log.error("biz applyDeposit save log fail!!!");
+			e.printStackTrace();
+			
+		}
 		/************记录日志************/
 		if(ServerResponse.judgeSuccess(serverResponse)){//临时订单入库
 			ServerResponse<?> response=save(payOrder);
@@ -221,6 +227,8 @@ public class WalletPayOrderServiceImpl extends BaseServiceImpl<WalletPayOrderMap
 			walletPayOrder.setWMemberId(walletMember.getId());
 			walletPayOrder.setMemberId(payOrder.getMemberId());
 			walletPayOrder.setSubmitNo(payOrder.getSubmitNo());
+			walletPayOrder.setTakeState(payOrder.getTakeState());
+			walletPayOrder.setModel(payOrder.getModel());
 			count=walletPayOrderMapper.insert(walletPayOrder);
 		}else{//修改
 			walletPayOrder.setSubmitNo(payOrder.getSubmitNo());
@@ -291,7 +299,7 @@ public class WalletPayOrderServiceImpl extends BaseServiceImpl<WalletPayOrderMap
 		
 		/*****************************记录回调结果**********************************/
 		try {
-			walletApiLogService.save(JsonUtil.toJSONString(params), null, null, null, bizOrderNo,WalletLogConstants.LOG_PAYNOTITY);
+			walletApiLogService.save(JsonUtil.toJSONString(params), ServerResponse.createBySuccess(), serverResponse.getData().getWMemberId(), null, bizOrderNo,WalletLogConstants.LOG_PAYNOTITY);
 		} catch (Exception e) {
 			e.printStackTrace();
 			log.error("biz paySuccessNotify api fail:write api log error");

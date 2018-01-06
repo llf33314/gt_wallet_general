@@ -8,6 +8,7 @@ import javax.servlet.http.HttpServletResponse;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -84,6 +85,27 @@ public class WalletPayOrderController extends BaseController {
 		response.getWriter().close();
 	}
 
+	
+	/**
+	 * 支付成功异步回调
+	 * 
+	 * @return
+	 * @throws Exception 
+	 */
+	@RequestMapping(value = "/79B4DE7C/paySuccessNotify1", method = RequestMethod.POST)
+	@ApiOperation(value = "支付成功异步回调", notes = "支付成功异步回调",hidden=true)
+	@ResponseBody
+	public ServerResponse<?> paySuccessNotify1(HttpServletRequest request,HttpServletResponse response, @RequestBody Map<String,Object> params) throws Exception {
+		log.info(CommonUtil.format("start view paySuccessNotify api params:%s", JsonUtil.toJSONString(params)));
+		try {
+			return ServerResponse.createBySuccess();
+		}catch (Exception e) {
+			e.printStackTrace();
+			log.error(CommonUtil.format("view paySuccessNotify1 api fail：%s,%s", WalletResponseEnums.SYSTEM_ERROR.getCode(),
+					WalletResponseEnums.SYSTEM_ERROR.getDesc()));
+			return ServerResponse.createByError();
+		}
+	}
 
 	/**
 	 * 退款成功异步回调
