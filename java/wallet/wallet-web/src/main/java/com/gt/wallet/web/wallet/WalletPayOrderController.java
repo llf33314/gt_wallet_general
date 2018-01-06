@@ -84,6 +84,31 @@ public class WalletPayOrderController extends BaseController {
 		response.getWriter().close();
 	}
 
+	
+	/**
+	 * 支付成功异步回调
+	 * 
+	 * @return
+	 * @throws Exception 
+	 */
+	@RequestMapping(value = "/79B4DE7C/paySuccessNotify1", method = RequestMethod.POST)
+	@ApiOperation(value = "支付成功异步回调", notes = "支付成功异步回调",hidden=true)
+	public void paySuccessNotify1(HttpServletRequest request,HttpServletResponse response, @RequestParam Map<String,Object> params) throws Exception {
+		log.info(CommonUtil.format("start view paySuccessNotify api params:%s", JsonUtil.toJSONString(params)));
+		try {
+			response.getWriter().print("success");
+		} catch (BusinessException e) {
+			log.error(CommonUtil.format("view paySuccessNotify1 api fail：%s,%s", e.getCode(), e.getMessage()));
+			response.getWriter().print("error");
+		} catch (Exception e) {
+			e.printStackTrace();
+			log.error(CommonUtil.format("view paySuccessNotify1 api fail：%s,%s", WalletResponseEnums.SYSTEM_ERROR.getCode(),
+					WalletResponseEnums.SYSTEM_ERROR.getDesc()));
+			response.getWriter().print("error");
+		}
+		response.getWriter().flush();
+		response.getWriter().close();
+	}
 
 	/**
 	 * 退款成功异步回调
