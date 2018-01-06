@@ -61,9 +61,12 @@ public class WalletApiLogServiceImpl extends BaseServiceImpl<WalletApiLogMapper,
 	public ServerResponse<?> save(String paramJson, ServerResponse<?> serverResponse,Integer memberId,String url,String orderNo,Integer type) throws Exception {
 		log.info(CommonUtil.format("start biz save api params:%s,%s,%s,%s,%s,%s",paramJson, JsonUtil.toJSONString(serverResponse),memberId,url,orderNo,type));
 		WalletApiLog walletApiLog=new WalletApiLog();
-		walletApiLog.setMsg(serverResponse.getMsg());
+		if(CommonUtil.isNotEmpty(serverResponse)){
+			
+			walletApiLog.setMsg(serverResponse.getMsg());
+			walletApiLog.setResult(JsonUtil.toJSONString(serverResponse));
+		}
 		walletApiLog.setParamsJson(paramJson);
-		walletApiLog.setResult(JsonUtil.toJSONString(serverResponse));
 		walletApiLog.setType(type);
 		walletApiLog.setUrl(url);
 		walletApiLog.setWMemberId(memberId);
