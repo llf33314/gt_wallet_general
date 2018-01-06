@@ -314,8 +314,8 @@ public class WalletPayOrderServiceImpl extends BaseServiceImpl<WalletPayOrderMap
 			Integer count=walletPayOrderMapper.updateById(walletPayOrder);
 			
 			Map<String, Object> parms=new HashMap<>();
-			params.put("out_trade_no",sysorderno);
-			params.put("payType",0);
+			parms.put("out_trade_no",sysorderno);
+			parms.put("payType",0);
 			ServerResponse<WalletApiLog> response=	walletApiLogService.findById(bizOrderNo, WalletLogConstants.LOG_PAY);
 			if(ServerResponse.judgeSuccess(serverResponse)){
 				/*****************************通知子系统**********************************/
