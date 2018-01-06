@@ -68,7 +68,7 @@ public class WalletPayOrderServiceImpl extends BaseServiceImpl<WalletPayOrderMap
 	private WalletPayOrderService walletPayOrderService;
 	
 
-//	@Transactional(propagation = Propagation.REQUIRED,isolation = Isolation.DEFAULT,timeout=36000,rollbackFor=Exception.class)
+	@Transactional(propagation = Propagation.REQUIRED,isolation = Isolation.DEFAULT,timeout=36000,rollbackFor=Exception.class)
 	@Override
 	public ServerResponse<com.alibaba.fastjson.JSONObject> applyDeposit(PayOrder payOrder)throws Exception {
 		log.info(CommonUtil.format("start biz applyDeposit api params:%s",JsonUtil.toJSONString(payOrder)));
@@ -107,7 +107,13 @@ public class WalletPayOrderServiceImpl extends BaseServiceImpl<WalletPayOrderMap
 		/************通联下单************/
 		log.info(CommonUtil.format("biz applyDeposit api serverResponse:%s", JsonUtil.toJSONString(serverResponse)));
 		/************记录日志************/
-		walletApiLogService.save(JsonUtil.toJSONString(tPayOrder), serverResponse, walletMember.getMemberId(), payOrder.getNotifyUrl(),submitNo,WalletLogConstants.LOG_PAY);
+		try {
+			walletApiLogService.save(JsonUtil.toJSONString(tPayOrder), serverResponse, walletMember.getMemberId(), payOrder.getNotifyUrl(),submitNo,WalletLogConstants.LOG_PAY);
+		} catch (Exception e) {
+			log.error("biz applyDeposit save log fail!!!");
+			e.printStackTrace();
+			
+		}
 		/************记录日志************/
 		if(ServerResponse.judgeSuccess(serverResponse)){//临时订单入库
 			ServerResponse<?> response=save(payOrder);
@@ -213,6 +219,7 @@ public class WalletPayOrderServiceImpl extends BaseServiceImpl<WalletPayOrderMap
 			walletPayOrder.setAcct(payOrder.getAcct());
 			walletPayOrder.setPayType(payOrder.getType());
 			walletPayOrder.setWMemberId(walletMember.getId());
+			walletPayOrder.setMemberId(payOrder.getMemberId());
 			count=walletPayOrderMapper.insert(walletPayOrder);
 		}else{//修改
 			walletPayOrder.setSubmitNo(payOrder.getSubmitNo());
