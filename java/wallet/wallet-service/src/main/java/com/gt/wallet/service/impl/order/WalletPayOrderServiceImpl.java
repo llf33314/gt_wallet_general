@@ -220,6 +220,7 @@ public class WalletPayOrderServiceImpl extends BaseServiceImpl<WalletPayOrderMap
 			walletPayOrder.setPayType(payOrder.getType());
 			walletPayOrder.setWMemberId(walletMember.getId());
 			walletPayOrder.setMemberId(payOrder.getMemberId());
+			walletPayOrder.setSubmitNo(payOrder.getSubmitNo());
 			count=walletPayOrderMapper.insert(walletPayOrder);
 		}else{//修改
 			walletPayOrder.setSubmitNo(payOrder.getSubmitNo());
