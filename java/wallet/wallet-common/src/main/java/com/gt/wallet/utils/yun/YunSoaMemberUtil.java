@@ -801,8 +801,8 @@ public class YunSoaMemberUtil {
 			param.put("accountSetNo", WalletWebConfig.getYunBizUserId());
 			param.put("amount", payOrder.getAmount()*100);
 			param.put("fee", payOrder.getFee()*100);
-//			param.put("frontUrl",  "http://122.227.225.142:23661/service/gateway/frontTrans.do");
-			param.put("backUrl", "http://dfpay.yifriend.net/walletPayOrder/79B4DE7C/paySuccessNotify");
+			param.put("frontUrl", frontUrl);
+			param.put("backUrl", backUrl);
 //			param.put("ordErexpireDatetime", ordErexpireDatetime);
 			param.put("payMethod", payMethod);
 			param.put("industryCode", WalletConstants.INDUSTRYCODE);
