@@ -299,7 +299,7 @@ public class WalletPayOrderServiceImpl extends BaseServiceImpl<WalletPayOrderMap
 		
 		/*****************************记录回调结果**********************************/
 		try {
-			walletApiLogService.save(JsonUtil.toJSONString(params), null, serverResponse.getData().getWMemberId(), null, bizOrderNo,WalletLogConstants.LOG_PAYNOTITY);
+			walletApiLogService.save(JsonUtil.toJSONString(params), ServerResponse.createBySuccess(), serverResponse.getData().getWMemberId(), null, bizOrderNo,WalletLogConstants.LOG_PAYNOTITY);
 		} catch (Exception e) {
 			e.printStackTrace();
 			log.error("biz paySuccessNotify api fail:write api log error");
