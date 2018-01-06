@@ -60,7 +60,13 @@ public class WalletApiLogServiceImpl extends BaseServiceImpl<WalletApiLogMapper,
 	@Override
 	public ServerResponse<?> save(String paramJson, ServerResponse<?> serverResponse,Integer memberId,String url,String orderNo,Integer type) throws Exception {
 		log.info(CommonUtil.format("start biz save api params:%s,%s,%s,%s,%s,%s",paramJson, JsonUtil.toJSONString(serverResponse),memberId,url,orderNo,type));
+		ServerResponse<WalletApiLog> response=	findById(orderNo,  type);
 		WalletApiLog walletApiLog=new WalletApiLog();
+		if(CommonUtil.isNotEmpty(response)&&response.getCode()==0&&CommonUtil.isNotEmpty(response.getData())){
+			walletApiLog=response.getData();
+		}else{
+			walletApiLog=new WalletApiLog();
+		}
 		if(CommonUtil.isNotEmpty(serverResponse)){
 			
 			walletApiLog.setMsg(serverResponse.getMsg());
