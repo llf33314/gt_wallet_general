@@ -92,4 +92,21 @@ public class WalletQuota extends Model<WalletQuota> {
 			", failReason=" + failReason +
 			"}";
 	}
+
+	public WalletQuota(Integer wMemberId, BigDecimal quotaValue, String quotaDesc, Integer status,
+			String failReason, String memberNum) {
+		super();
+		this.wMemberId = wMemberId;
+		this.quotaValue = quotaValue;
+		this.quotaDesc = quotaDesc;
+		this.status = status;
+		this.failReason = failReason;
+		this.memberNum = memberNum;
+	}
+	
+	
+	public WalletQuota() {
+		super();
+	}
+	
 }
