@@ -12,7 +12,6 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.alibaba.fastjson.JSONObject;
 import com.baomidou.mybatisplus.plugins.Page;
 import com.gt.api.bean.session.BusUser;
 import com.gt.api.util.IPOrAddressUtils;
@@ -34,6 +33,8 @@ import io.swagger.annotations.ApiImplicitParam;
 import io.swagger.annotations.ApiImplicitParams;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
+import io.swagger.annotations.ApiResponse;
+import io.swagger.annotations.ApiResponses;
 import lombok.extern.slf4j.Slf4j;
 
 /**
@@ -95,6 +96,9 @@ public class WalletMoneyController extends BaseController {
 	 */
 	@RequestMapping(value = "/withdrawApply", method = RequestMethod.POST)
 	@ApiOperation(value = "withdrawApply", notes = "提现(成功后会返回订单id),支付确认时需要传递")
+	 @ApiResponses({ @ApiResponse(code =0, message = "操作成功"),
+         @ApiResponse(code = 1000, message = "服务器内部异常")
+       })
 	public ServerResponse<Integer> withdrawApply(HttpServletRequest request,@ApiParam(required=true,name="money" ,value="提现金额")@RequestParam double money,@ApiParam(required=true,name="bankId" ,value="银行卡id")@RequestParam Integer bankId) {
 		log.info(CommonUtil.format("start view applyDeposit api params:%s,%s", JsonUtil.toJSONString(money),bankId));
 		try {
@@ -119,21 +123,27 @@ public class WalletMoneyController extends BaseController {
 	 */
 	@RequestMapping(value = "/confirm", method = RequestMethod.POST)
 	@ApiOperation(value = "confirm", notes = "提现确认")
-	public String confirm(HttpServletRequest request,@ApiParam(required=true,name="id" ,value="订单id")Integer id,@ApiParam(required=true,name="verificationCode" ,value="验证码")String verificationCode) {
+	 @ApiResponses({ @ApiResponse(code =0, message = "操作成功"),
+         @ApiResponse(code = 1000, message = "服务器内部异常")
+       })
+	@ApiImplicitParams({ 
+		@ApiImplicitParam(paramType = "form", dataType = "int", name = "id", value = "订单id", required = true),
+		 @ApiImplicitParam(paramType = "form", dataType = "string", name = "verificationCode", value = "验证码", required = true)
+	}) 
+	public ServerResponse<?> confirm(HttpServletRequest request,Integer id,@ApiParam(required=true,name="verificationCode" ,value="验证码") String verificationCode) {
 		log.info(CommonUtil.format("start view confirm api params:%s,%s", JsonUtil.toJSONString(id),verificationCode));
 		try {
 			BusUser busUser=	CommonUtil.getLoginUser(request);
 			String ip=IPOrAddressUtils.getIpAddr(request);
 			ServerResponse<?> serverResponse=walletMoneyService.confirm(busUser.getId(), id, verificationCode,ip);
 			log.info("serverResponse %s",JsonUtil.toJSONString(serverResponse));
-			request.setAttribute("serverResponse", serverResponse);
+			return serverResponse;
 		} catch (Exception e) {
 			e.printStackTrace();
 			log.error(CommonUtil.format("view confirm api fail：%s,%s", WalletResponseEnums.SYSTEM_ERROR.getCode(),
 					WalletResponseEnums.SYSTEM_ERROR.getDesc()));
 			throw new ResponseEntityException(WalletResponseEnums.SYSTEM_ERROR);
 		}
-		return "";
 	}
 	
 	/**
