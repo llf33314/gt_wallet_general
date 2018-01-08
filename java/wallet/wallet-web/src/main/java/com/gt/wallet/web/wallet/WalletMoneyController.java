@@ -95,20 +95,20 @@ public class WalletMoneyController extends BaseController {
 	 */
 	@RequestMapping(value = "/withdrawApply", method = RequestMethod.POST)
 	@ApiOperation(value = "withdrawApply", notes = "提现(成功后会返回订单id),支付确认时需要传递")
-	public String withdrawApply(HttpServletRequest request,@ApiParam(required=true,name="money" ,value="提现金额")@RequestParam double money,@ApiParam(required=true,name="bankId" ,value="银行卡id")@RequestParam Integer bankId) {
+	public ServerResponse<Integer> withdrawApply(HttpServletRequest request,@ApiParam(required=true,name="money" ,value="提现金额")@RequestParam double money,@ApiParam(required=true,name="bankId" ,value="银行卡id")@RequestParam Integer bankId) {
 		log.info(CommonUtil.format("start view applyDeposit api params:%s,%s", JsonUtil.toJSONString(money),bankId));
 		try {
 			BusUser busUser=	CommonUtil.getLoginUser(request);
-			ServerResponse<?> serverResponse=walletMoneyService.withdrawApply(busUser.getId(), money, bankId);
+			ServerResponse<Integer> serverResponse=walletMoneyService.withdrawApply(busUser.getId(), money, bankId);
 			log.info("serverResponse %s",JsonUtil.toJSONString(serverResponse));
-			request.setAttribute("serverResponse", serverResponse);
+			return serverResponse;
 		} catch (Exception e) {
 			e.printStackTrace();
 			log.error(CommonUtil.format("view applyDeposit api fail：%s,%s", WalletResponseEnums.SYSTEM_ERROR.getCode(),
 					WalletResponseEnums.SYSTEM_ERROR.getDesc()));
 			throw new ResponseEntityException(WalletResponseEnums.SYSTEM_ERROR);
 		}
-		return "";
+		
 	}
 	
 	
