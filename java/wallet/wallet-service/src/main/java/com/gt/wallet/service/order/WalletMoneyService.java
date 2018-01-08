@@ -1,5 +1,7 @@
 package com.gt.wallet.service.order;
 
+import java.util.LinkedHashMap;
+
 import com.alibaba.fastjson.JSONObject;
 import com.baomidou.mybatisplus.plugins.Page;
 import com.gt.wallet.base.BaseService;
@@ -58,7 +60,7 @@ public interface WalletMoneyService extends BaseService<WalletMoney> {
 		 * @return
 		 * @throws Exception
 		 */
-		ServerResponse<?>	withdrawSuccessNotify(JSONObject params)throws Exception;
+		ServerResponse<?>	withdrawSuccessNotify(LinkedHashMap<String,Object> params)throws Exception;
 	 
 		/**
 		 * 提现确认

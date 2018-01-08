@@ -851,8 +851,8 @@ public class YunSoaMemberUtil {
 			param.put("fee", consumeOrder.getFee());
 			param.put("backUrl", backUrl);
 		//	param.put("ordErexpireDatetime", ordErexpireDatetime);
-//			param.put("bankCardNo", YunSoaMemberUtil.rsaEncrypt(consumeOrder.getBankCardNo()));
-			param.put("bankCardNo", consumeOrder.getBankCardNo());
+			param.put("bankCardNo", YunSoaMemberUtil.rsaEncrypt("6228481234567890123"));
+//			param.put("bankCardNo", consumeOrder.getBankCardNo());
 			param.put("industryCode", WalletConstants.INDUSTRYCODE);
 			param.put("industryName",WalletConstants.INDUSTRYNAME);
 			param.put("source", 1);

@@ -56,6 +56,6 @@ public class TRefundOrder {
 	/**
 	 * 商家id
 	 */
-	@ApiModelProperty(name="busId",notes="商家id",required=true,hidden=true)
+	@ApiModelProperty(name="busId",notes="商家id",required=true)
 	private Integer busId;
 }

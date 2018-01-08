@@ -1,5 +1,6 @@
 package com.gt.wallet.service.impl.order;
 
+import java.util.LinkedHashMap;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -219,9 +220,10 @@ public class WalletMoneyServiceImpl extends BaseServiceImpl<WalletMoneyMapper, W
 	}
 
 	@Override
-	public ServerResponse<?> withdrawSuccessNotify(JSONObject params) throws Exception {
+	public ServerResponse<?> withdrawSuccessNotify(LinkedHashMap<String,Object> params) throws Exception {
 		log.info(CommonUtil.format("start biz withdrawSuccessNotify api params:%s",JsonUtil.toJSONString(params)));
-		JSONObject rps=params.getJSONObject("rps");
+		
+		JSONObject rps=JsonUtil.parseObject(CommonUtil.toString(params.get("rps")), JSONObject.class);
 		String status=rps.getString("status");
 		String payfailmessage="提现成功成功";
 		switch (status) {

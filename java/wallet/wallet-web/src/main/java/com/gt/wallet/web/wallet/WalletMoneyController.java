@@ -1,6 +1,8 @@
 package com.gt.wallet.web.wallet;
 
 
+import java.util.LinkedHashMap;
+
 import javax.servlet.http.HttpServletRequest;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -169,7 +171,7 @@ public class WalletMoneyController extends BaseController {
 	 */
 	@RequestMapping(value = "/79B4DE7C/withdrawSuccessNotify", method = RequestMethod.POST)
 	@ApiOperation(value = "提现成功异步回调", notes = "提现成功异步回调")
-	public ServerResponse<?> withdrawSuccessNotify(HttpServletRequest request, @RequestParam JSONObject params) {
+	public ServerResponse<?> withdrawSuccessNotify(HttpServletRequest request, @RequestParam LinkedHashMap<String,Object> params) {
 		log.info(CommonUtil.format("start view withdrawSuccessNotify api,params:%s", JsonUtil.toJSONString(params)));
 		try {
 			ServerResponse<?> serverResponse=walletMoneyService.withdrawSuccessNotify(params);
