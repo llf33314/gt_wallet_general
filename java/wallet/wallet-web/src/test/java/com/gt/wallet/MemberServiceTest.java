@@ -161,17 +161,17 @@ public class MemberServiceTest extends BasicTest {
 	/**
 	 * 充值申请
 	 */
-//	@Test
-//	public void pay(){
-//		log.info(" start test pay api");
-//		try {
-//			ServerResponse<com.alibaba.fastjson.JSONObject> serverResponse=YunSoaMemberUtil.pay("ffad4737-44ed-4dc7-b2a6-fb61949af805", "DCB63230__HY1515230313704", "347969", "127.0.0.1");
-//			log.info(CommonUtil.format("serverResponse:%s", JsonUtil.toJSONString(serverResponse)));
-//		} catch (Exception e) {
-//			e.printStackTrace();
-//			log.error("test pay api error");
-//		}
-//		log.info(" end test pay api");
-//	}
+	@Test
+	public void pay(){
+		log.info(" start test pay api");
+		try {
+			ServerResponse<com.alibaba.fastjson.JSONObject> serverResponse=YunSoaMemberUtil.pay("ffad4737-44ed-4dc7-b2a6-fb61949af805", "TX1515396048970", "814026", "127.0.0.1");
+			log.info(CommonUtil.format("serverResponse:%s", JsonUtil.toJSONString(serverResponse)));
+		} catch (Exception e) {
+			e.printStackTrace();
+			log.error("test pay api error");
+		}
+		log.info(" end test pay api");
+	}
 	
 }

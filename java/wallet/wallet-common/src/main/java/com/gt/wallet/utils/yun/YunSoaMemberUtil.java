@@ -868,14 +868,8 @@ public class YunSoaMemberUtil {
 				log.info("applyWithdraw end");
 				String value = response.getString("signedValue");
 				com.alibaba.fastjson.JSONObject json=	JsonUtil.parseObject(value, com.alibaba.fastjson.JSONObject.class);
-				log.info("payStatus:"+json.getString("payStatus"));
-				if(json.getString("payStatus").equals("success")){//成功
-					return ServerResponse.createBySuccessCodeData(json.getString("orderNo"));
-				}else if(json.getString("payStatus").equals("pending")){//进行时
-					return ServerResponse.createBySuccessCodeData(json.getString("orderNo"));
-				}else{//失败
-					return ServerResponse.createByErrorMessage("提现失败");
-				}
+				log.info("orderNo:"+json.getString("orderNo"));
+				return ServerResponse.createBySuccessCodeData(json.getString("orderNo"));
 			}else{
 				log.info("applyWithdraw end");
 				return ServerResponse.createByErrorMessage(CommonUtil.format("第三方接口异常,错误代码 :%s,描述:%s", response.getString("errorCode"), response.getString("message")));
