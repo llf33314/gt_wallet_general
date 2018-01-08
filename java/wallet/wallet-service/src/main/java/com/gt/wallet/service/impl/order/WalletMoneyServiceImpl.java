@@ -225,7 +225,7 @@ public class WalletMoneyServiceImpl extends BaseServiceImpl<WalletMoneyMapper, W
 		
 		JSONObject rps=JsonUtil.parseObject(CommonUtil.toString(params.get("rps")), JSONObject.class);
 		String status=rps.getString("status");
-		String payfailmessage="提现成功成功";
+		String payfailmessage="提现成功";
 		switch (status) {
 		case "OK"://成功
 			status="success";
