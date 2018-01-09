@@ -801,8 +801,8 @@ public class YunSoaMemberUtil {
 			param.put("accountSetNo", WalletWebConfig.getYunBizUserId());
 			param.put("amount", payOrder.getAmount()*100);
 			param.put("fee", payOrder.getFee()*100);
-//			param.put("frontUrl",  "http://122.227.225.142:23661/service/gateway/frontTrans.do");
-			param.put("backUrl", "http://dfpay.yifriend.net/walletPayOrder/79B4DE7C/paySuccessNotify");
+			param.put("frontUrl", frontUrl);
+			param.put("backUrl", backUrl);
 //			param.put("ordErexpireDatetime", ordErexpireDatetime);
 			param.put("payMethod", payMethod);
 			param.put("industryCode", WalletConstants.INDUSTRYCODE);
@@ -851,8 +851,8 @@ public class YunSoaMemberUtil {
 			param.put("fee", consumeOrder.getFee());
 			param.put("backUrl", backUrl);
 		//	param.put("ordErexpireDatetime", ordErexpireDatetime);
-//			param.put("bankCardNo", YunSoaMemberUtil.rsaEncrypt(consumeOrder.getBankCardNo()));
-			param.put("bankCardNo", consumeOrder.getBankCardNo());
+			param.put("bankCardNo", YunSoaMemberUtil.rsaEncrypt("6228481234567890123"));
+//			param.put("bankCardNo", consumeOrder.getBankCardNo());
 			param.put("industryCode", WalletConstants.INDUSTRYCODE);
 			param.put("industryName",WalletConstants.INDUSTRYNAME);
 			param.put("source", 1);
@@ -868,14 +868,8 @@ public class YunSoaMemberUtil {
 				log.info("applyWithdraw end");
 				String value = response.getString("signedValue");
 				com.alibaba.fastjson.JSONObject json=	JsonUtil.parseObject(value, com.alibaba.fastjson.JSONObject.class);
-				log.info("payStatus:"+json.getString("payStatus"));
-				if(json.getString("payStatus").equals("success")){//成功
-					return ServerResponse.createBySuccessCodeData(json.getString("orderNo"));
-				}else if(json.getString("payStatus").equals("pending")){//进行时
-					return ServerResponse.createBySuccessCodeData(json.getString("orderNo"));
-				}else{//失败
-					return ServerResponse.createByErrorMessage("提现失败");
-				}
+				log.info("orderNo:"+json.getString("orderNo"));
+				return ServerResponse.createBySuccessCodeData(json.getString("orderNo"));
 			}else{
 				log.info("applyWithdraw end");
 				return ServerResponse.createByErrorMessage(CommonUtil.format("第三方接口异常,错误代码 :%s,描述:%s", response.getString("errorCode"), response.getString("message")));

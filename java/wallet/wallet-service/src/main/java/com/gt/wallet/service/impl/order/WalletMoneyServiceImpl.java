@@ -1,5 +1,6 @@
 package com.gt.wallet.service.impl.order;
 
+import java.util.LinkedHashMap;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,11 +20,13 @@ import com.gt.wallet.dto.ServerResponse;
 import com.gt.wallet.entity.WalletBank;
 import com.gt.wallet.entity.WalletMember;
 import com.gt.wallet.entity.WalletMoney;
+import com.gt.wallet.enums.WalletMsgEnums;
 import com.gt.wallet.enums.WalletResponseEnums;
 import com.gt.wallet.exception.BusinessException;
 import com.gt.wallet.mapper.member.WalletMemberMapper;
 import com.gt.wallet.mapper.order.WalletMoneyMapper;
 import com.gt.wallet.service.log.WalletApiLogService;
+import com.gt.wallet.service.log.WalletMessageService;
 import com.gt.wallet.service.member.WalletBankService;
 import com.gt.wallet.service.member.WalletMemberService;
 import com.gt.wallet.service.order.WalletMoneyService;
@@ -61,6 +64,9 @@ public class WalletMoneyServiceImpl extends BaseServiceImpl<WalletMoneyMapper, W
 	
 	@Autowired
 	private WalletMemberMapper walletMemberMapper;
+	
+	@Autowired
+	private WalletMessageService messageService;
 
 	@Override
 	public ServerResponse<MyPageUtil<WalletMoney>> getPage(Page<?> page, SearchPayOrderPage searchPayOrderPage) throws Exception{
@@ -138,7 +144,7 @@ public class WalletMoneyServiceImpl extends BaseServiceImpl<WalletMoneyMapper, W
 		if(walletMember.getMemberType()==3&&(CommonUtil.isEmpty(walletMember.getWalletIndividual())||walletMember.getWalletIndividual().getIdentityChecked()==0)){//个人未实名认证
 			log.error("biz withdrawApply api fail:请先实名认证");
 			throw new BusinessException("请先实名认证");
-		}else if(walletMember.getMemberType()==3&&(CommonUtil.isEmpty(walletMember.getWalletCompany()))){//企业
+		}else if(walletMember.getMemberType()==2&&(CommonUtil.isEmpty(walletMember.getWalletCompany()))){//企业
 			log.error("biz withdrawApply api fail:请先完成企业认证");
 			throw new BusinessException("请先完成企业认证");
 		}
@@ -152,6 +158,13 @@ public class WalletMoneyServiceImpl extends BaseServiceImpl<WalletMoneyMapper, W
 		}else if(walletBank.getStatus()!=1){
 			log.error("biz withdrawApply api fail:此银行卡还没绑定");
 			throw new BusinessException("此银行卡还没绑定");
+		}
+		ServerResponse<IndexStatistics> serverResponseIndexStatistics=	getTotal(walletMember.getId());
+		if(CommonUtil.isEmpty(serverResponseIndexStatistics)||CommonUtil.isEmpty(serverResponseIndexStatistics.getData())){
+			throw new BusinessException("当前账号余额为0,不可提现!");
+		}
+		if(serverResponseIndexStatistics.getData().getBalance()<money){
+			throw new BusinessException("当前账号余额不足,不可提现!");
 		}
 		String bizOrderNo="TX"+System.currentTimeMillis();
 		Integer bankCardPro=0;
@@ -219,11 +232,12 @@ public class WalletMoneyServiceImpl extends BaseServiceImpl<WalletMoneyMapper, W
 	}
 
 	@Override
-	public ServerResponse<?> withdrawSuccessNotify(JSONObject params) throws Exception {
+	public ServerResponse<?> withdrawSuccessNotify(LinkedHashMap<String,Object> params) throws Exception {
 		log.info(CommonUtil.format("start biz withdrawSuccessNotify api params:%s",JsonUtil.toJSONString(params)));
-		JSONObject rps=params.getJSONObject("rps");
+		
+		JSONObject rps=JsonUtil.parseObject(CommonUtil.toString(params.get("rps")), JSONObject.class);
 		String status=rps.getString("status");
-		String payfailmessage="提现成功成功";
+		String payfailmessage="提现成功";
 		switch (status) {
 		case "OK"://成功
 			status="success";
@@ -242,12 +256,22 @@ public class WalletMoneyServiceImpl extends BaseServiceImpl<WalletMoneyMapper, W
 		String orderNo=returnValue.getString("orderNo");
 		ServerResponse<WalletMoney> serverResponse=getInfoBySysOrderNo(bizOrderNo);
 		
+	
 		/*****************************记录回调结果**********************************/
 		try {
-			walletApiLogService.save(JsonUtil.toJSONString(params), null, null, null, bizOrderNo,WalletLogConstants.LOG_PAYNOTITY);
+		
+			walletApiLogService.save(JsonUtil.toJSONString(params), ServerResponse.createBySuccess(), serverResponse.getData().getWMemberId(), null, bizOrderNo,WalletLogConstants.LOG_WITHDRAWSUCCESSNOTIFY);
 		} catch (Exception e) {
 			e.printStackTrace();
 			log.error(" biz withdrawSuccessNotify api fail:write api log error");
+		}
+		try {
+			/**********************消息中心****************************/
+			messageService.add(serverResponse.getData().getWMemberId(), WalletMsgEnums.MSGTYPE_TAKE_MONEY.getCode(), payfailmessage, serverResponse.getData().getId());
+			/**********************消息中心****************************/
+		} catch (Exception e) {
+			log.error(" biz withdrawSuccessNotify api fail:write api message error");
+			e.printStackTrace();
 		}
 		/*****************************记录回调结果**********************************/
 		log.info(CommonUtil.format("WalletPayOrder: %s", JsonUtil.toJSONString(serverResponse)));
@@ -263,7 +287,7 @@ public class WalletMoneyServiceImpl extends BaseServiceImpl<WalletMoneyMapper, W
 				return ServerResponse.createByErrorMessage("更新状态失败");
 			}
 		}else{//订单不存在
-			log.error(" biz withdrawSuccessNotify api fail:订单不存在");
+			log.error("biz withdrawSuccessNotify api fail:订单不存在");
 			return ServerResponse.createByErrorMessage("订单不存在");
 		}
 		

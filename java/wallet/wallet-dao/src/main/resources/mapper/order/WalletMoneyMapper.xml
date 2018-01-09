@@ -36,9 +36,9 @@
     </sql>
 
 	<select id="getStatisticsByWmemberId" resultType="com.gt.wallet.data.wallet.response.IndexStatistics" >
-		SELECT (CASE WHEN (aa.total-bb.total) IS NULL THEN 0 ELSE (aa.total-bb.total) END)   AS total,
-		(CASE WHEN (aa.total-bb.total) - (balance-bb.total) IS NULL THEN 0 ELSE (aa.total-bb.total) - (balance-bb.total) END) AS waitBalance,
-		(CASE WHEN (balance-bb.total) IS NULL THEN 0 ELSE balance-bb.total END) AS balance
+		SELECT aa.total-(CASE WHEN bb.total IS NULL THEN 0 ELSE bb.total END)    AS total,
+		((aa.total-(CASE WHEN bb.total IS NULL THEN 0 ELSE bb.total END)) - (balance-(CASE WHEN bb.total IS NULL THEN 0 ELSE bb.total END))) AS waitBalance,
+		(balance-(CASE WHEN bb.total IS NULL THEN 0 ELSE bb.total END)) AS balance
 		FROM (SELECT w_member_id,SUM(amount)-SUM(fee) AS total  FROM  `t_wallet_pay_order` WHERE STATUS='success' AND w_member_id=#{wmemberId,jdbcType=INTEGER} 
 		) aa LEFT JOIN  (SELECT w_member_id,SUM(amount) as total FROM `t_wallet_money` WHERE  STATUS='success' AND w_member_id=#{wmemberId,jdbcType=INTEGER}  ) bb ON aa.w_member_id=bb.w_member_id
 		LEFT JOIN 

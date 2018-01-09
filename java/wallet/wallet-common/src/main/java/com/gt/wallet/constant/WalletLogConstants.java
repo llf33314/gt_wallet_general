@@ -45,4 +45,11 @@ public class WalletLogConstants {
 	
 	
 	
+	/**
+	 * 支付异步回调通知接收
+	 */
+	public static final Integer LOG_WITHDRAWSUCCESSNOTIFY=1005;
+	
+	
+	
 }
