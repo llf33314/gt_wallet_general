@@ -276,9 +276,7 @@ export default {
     var quotaValueValidator = (rule, value, callback) => {
       if (value == '') {
         callback(new Error('请输入需求额度'));
-      } else if (value > this.withdrawQuota) {
-        callback(new Error('需求额度最大为' + this.withdrawQuota + '元'));
-      } else if (value < 1000 && 1000 < this.withdrawQuota) {
+      }else if (value < 1000) {
         callback(new Error('需求额度最低为1000'));
       } else {
         callback();
