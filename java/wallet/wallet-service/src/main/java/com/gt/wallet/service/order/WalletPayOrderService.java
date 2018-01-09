@@ -68,7 +68,7 @@ public interface WalletPayOrderService extends BaseService<WalletPayOrder> {
 	 * @return
 	 * @throws Exception
 	 */
-	ServerResponse<?>	paySuccessNotify(LinkedHashMap<String,Object> params)throws Exception;
+	ServerResponse<?>	paySuccessNotifyUpdate(LinkedHashMap<String,Object> params)throws Exception;
 	
 	/**
 	 * 分页
