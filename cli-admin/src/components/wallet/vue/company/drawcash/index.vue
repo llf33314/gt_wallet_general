@@ -192,7 +192,7 @@
         <p>提现手续费怎么收取？</p>
         <p>答：每次提现算做一笔，提现手续费按每笔2元收取。</p>
         <p>提现限额为多少？</p>
-        <p>答：单笔最低100元，最高<span v-text="withdrawQuota"></span>元，单日无限制。</p>
+        <p>答：单笔最低1000元，最高<span v-text="withdrawQuota"></span>元，单日无限制。</p>
         <p>提现到账时间？</p>
         <p>答：1-3个工作日。</p>
       </div>
@@ -280,8 +280,8 @@ export default {
     var validateMoney = (rule, value, callback) => {
       if (value === '') {
         callback(new Error('请输入提现金额'));
-      } else if (value < 100) {
-        callback(new Error('提现金额最低100元!'));
+      } else if (value < 1000) {
+        callback(new Error('提现金额最低1000元!'));
       } else if (value > this.withdrawQuota) {
         callback(new Error('提现额度为' + this.withdrawQuota + '元'));
       } else if (value > this.total) {
