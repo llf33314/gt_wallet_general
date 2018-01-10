@@ -43,6 +43,8 @@
               <span class="title-dps ellipsis" v-text="walletIndividual.name" style="vertical-align: top;"></span>
               <span class="title">认证类型：</span>
               <span>个人认证</span>
+              <span class="title" style="margin-left: 110px;">安全手机号码：</span>
+              <span v-text="phone"></span>
             </div>
           </div>
           <div class="public-fr" style="margin-top:0;">
@@ -58,17 +60,17 @@
                 </el-tooltip>
               </p>
               <p>
-                <span class="num" v-text="IndexStatistics.total">0</span>元</p>
+                <span class="num" v-text="IndexStatistics.total||0">0</span>元</p>
             </li>
             <li>
               <p class="name">待结算(未入账)</p>
               <p>
-                <span class="num" v-text="IndexStatistics.waitBalance">0</span>元</p>
+                <span class="num" v-text="IndexStatistics.waitBalance||0">0</span>元</p>
             </li>
             <li>
               <p class="name">可用余额</p>
               <p>
-                <span class="num" v-text="IndexStatistics.balance">0</span>元</p>
+                <span class="num" v-text="IndexStatistics.balance||0">0</span>元</p>
             </li>
           </ul>
           <div class="bts">
@@ -92,38 +94,38 @@
 </template>
 <script>
 export default {
-
   data() {
     return {
-      activeName: 'record',
+      activeName: "record",
       IndexStatistics: {},
       walletIndividual: {},
-      readstate: 0
-    }
+      readstate: 0,
+      phone: ""
+    };
   },
   mounted() {
-    this.findMember()
-    this.getIndexStatistics()
-    console.log(this.$route.name)
-    if (this.$route.name == 'wallet-record') {
-      this.activeName = 'record'
+    this.findMember();
+    this.getIndexStatistics();
+    console.log(this.$route.name);
+    if (this.$route.name == "wallet-record") {
+      this.activeName = "record";
       this.$router.push({
-        path: '/wallet/individual/record'
-      })
+        path: "/wallet/individual/record"
+      });
     } else {
-      this.activeName = 'news'
+      this.activeName = "news";
       this.$router.push({
-        path: '/wallet/individual/news'
-      })
+        path: "/wallet/individual/news"
+      });
     }
-    this.getReadState()
+    this.getReadState();
   },
   watch: {
     activeName() {
       this.$router.push({
-        path: '/wallet/individual/' + this.activeName
-      })
-      this.getReadState()
+        path: "/wallet/individual/" + this.activeName
+      });
+      this.getReadState();
     }
   },
   methods: {
@@ -149,51 +151,50 @@ export default {
     //查询多粉会员信息
     findMember() {
       $.ajax({
-        url: this.DFPAYDOMAIN + '/walletMember/findMember',
-        type: 'GET',
-        dataType: 'JSON',
-        success: (res) => {
-          console.log(res, '查询多粉会员信息')
+        url: this.DFPAYDOMAIN + "/walletMember/findMember",
+        type: "GET",
+        dataType: "JSON",
+        success: res => {
+          console.log(res, "查询多粉会员信息");
           if (res.code == 0) {
-            this.walletIndividual = res.data.walletIndividual
-            window.sessionStorage.walletId = res.data.id
-
-            this.$store.commit('getWalletId', res.data.id)
+            this.walletIndividual = res.data.walletIndividual;
+            window.sessionStorage.walletId = res.data.id;
+            this.phone = res.data.phone;
+            this.$store.commit("getWalletId", res.data.id);
           } else {
-            this.$message.error(res.msg)
+            this.$message.error(res.msg);
           }
         }
-      })
+      });
     },
     //企业信息
     goToMsg() {
       this.$router.push({
-        path: '/wallet/individual/messages'
-      })
+        path: "/wallet/individual/messages"
+      });
     },
     //提现
     goToDrawCash() {
       this.$router.push({
-        path: '/wallet/individual/drawcash'
-      })
+        path: "/wallet/individual/drawcash"
+      });
     },
     //获取首页总计数据
     getIndexStatistics() {
       $.ajax({
-        url: this.DFPAYDOMAIN + '/walletIndexStatistics/getIndexStatistics',
-        type: 'GET',
-        dataType: 'JSON',
-        success: (res) => {
-          console.log(res, "获取首页总计数据")
+        url: this.DFPAYDOMAIN + "/walletIndexStatistics/getIndexStatistics",
+        type: "GET",
+        dataType: "JSON",
+        success: res => {
+          console.log(res, "获取首页总计数据");
           if (res.code == 0) {
             this.IndexStatistics = res.data;
           } else {
             this.$message.error(res.msg);
           }
         }
-      })
-    },
+      });
+    }
   }
-}
-
+};
 </script>
