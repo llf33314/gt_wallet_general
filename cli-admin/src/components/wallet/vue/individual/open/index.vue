@@ -143,165 +143,200 @@
   </section>
 </template>
 <script>
-import {
-  wallet
-} from './../../../api/index'
+import { wallet } from "./../../../api/index";
 export default {
   data() {
     var rulesCardNo = (rule, value, callback) => {
       $.ajax({
-        url: this.DFPAYDOMAIN + '/getBankCardBin',
-        type: 'POST',
-        dataType: 'JSON',
+        url: this.DFPAYDOMAIN + "/getBankCardBin",
+        type: "POST",
+        dataType: "JSON",
         data: { bankCardNo: value },
         success: res => {
           if (res.code == 0) {
             if (res.data.iscreditcard == 2) {
-              this.CardBinInfo = null
-              callback(new Error('法人个人账户不能为信用卡'));
+              this.CardBinInfo = null;
+              callback(new Error("法人个人账户不能为信用卡"));
             } else {
-              this.CardBinInfo = res.data
+              this.CardBinInfo = res.data;
               callback();
             }
           } else {
-            this.CardBinInfo = null
+            this.CardBinInfo = null;
             callback(new Error(res.msg));
           }
         }
-      })
-    }
+      });
+    };
     return {
       CardBinInfo: null,
       ruleForm: {
-        identitycardUrl1File: '',
-        identitycardUrl2File: '',
-        memberId: '',
-        name: '', //注册人姓名
-        identityNo: '', //身份证号码
-        cardNo: '', //银行卡号
-        phone: '', //银行预留手机
-        bankName: '', //银行卡开户人姓名(必须与注册人姓名一致)
-        unionBank: '' //支付行号
+        identitycardUrl1File: "",
+        identitycardUrl2File: "",
+        memberId: "",
+        name: "", //注册人姓名
+        identityNo: "", //身份证号码
+        cardNo: "", //银行卡号
+        phone: "", //银行预留手机
+        bankName: "", //银行卡开户人姓名(必须与注册人姓名一致)
+        unionBank: "" //支付行号
       },
       rules: {
-        name: [{
-          required: true,
-          message: '请输入姓名',
-          trigger: 'blur'
-        },
-        {
-          min: 2,
-          max: 15,
-          message: '长度在2-15个字符以内',
-          trigger: 'blur'
-        }
+        name: [
+          {
+            required: true,
+            message: "请输入姓名",
+            trigger: "blur"
+          },
+          {
+            min: 2,
+            max: 15,
+            message: "长度在2-15个字符以内",
+            trigger: "blur"
+          }
         ],
-        identitycardUrl1File: [{
-          required: true,
-          message: '请上传身份证正面',
-          trigger: 'change'
-        }],
-        identitycardUrl2File: [{
-          required: true,
-          message: '请上传身份证背面',
-          trigger: 'change'
-        }],
-        identityNo: [{
-          required: true,
-          message: '请输入身份证号',
-          trigger: 'change'
-        }],
-        cardNo: [{
-          // required: true,
-          // message: '请输入银行卡号',
-          validator: rulesCardNo,
-          trigger: 'blur'
-        }],
-        phone: [{
-          required: true,
-          message: '请输入银行预留手机',
-          trigger: 'blur'
-        }],
-        bankName: [{
-          required: true,
-          message: '请输入银行卡开户人姓名',
-          trigger: 'change'
-        }],
+        identitycardUrl1File: [
+          {
+            required: true,
+            message: "请上传身份证正面",
+            trigger: "change"
+          }
+        ],
+        identitycardUrl2File: [
+          {
+            required: true,
+            message: "请上传身份证背面",
+            trigger: "change"
+          }
+        ],
+        identityNo: [
+          {
+            required: true,
+            message: "请输入身份证号",
+            trigger: "change"
+          }
+        ],
+        cardNo: [
+          {
+            // required: true,
+            // message: '请输入银行卡号',
+            validator: rulesCardNo,
+            trigger: "blur"
+          }
+        ],
+        phone: [
+          {
+            required: true,
+            message: "请输入银行预留手机",
+            trigger: "blur"
+          }
+        ],
+        bankName: [
+          {
+            required: true,
+            message: "请输入银行卡开户人姓名",
+            trigger: "change"
+          }
+        ]
       },
       loading1: false,
-      wmemberId: '',
+      wmemberId: "",
       dialogVisible: false,
       ruleForm2: {
-        verificationCode: '',
-        id: ''
+        verificationCode: "",
+        id: ""
       },
       rules2: {
-        verificationCode: [{
-          required: true,
-          message: '请输入手机验证码',
-          trigger: 'blur'
-        }],
+        verificationCode: [
+          {
+            required: true,
+            message: "请输入手机验证码",
+            trigger: "blur"
+          }
+        ]
       },
       loading2: false
-    }
+    };
   },
   mounted() {
-    this.resetForm.memberId = this.$route.params.memberId
-    this.ruleForm.memberId = this.$route.params.memberId
+    this.resetForm.memberId = this.$route.params.memberId;
+    this.ruleForm.memberId = this.$route.params.memberId;
+    this.getVipMsg();
   },
   methods: {
+    // 查询会员信息
+    getVipMsg() {
+      $.ajax({
+        url: this.DFPAYDOMAIN + "/walletMember/findMember",
+        type: "GET",
+        dataType: "json",
+        success: res => {
+          console.log(res, "查询会员信息");
+          const individual = res.data.walletIndividual;
+          this.ruleForm = {
+            identitycardUrl1File: individual.identitycardUrl1 || "",
+            identitycardUrl2File: individual.identitycardUrl2 || "",
+            name: individual.name || "", //注册人姓名
+            identityNo: individual.identityCardNo || "", //身份证号码
+            bankName: individual.name || "" //银行卡开户人姓名(必须与注册人姓名一致)
+          };
+        }
+      });
+    },
     // 选择正面
     uploadImg(e) {
       wallet.upload(e.file).then(res => {
-        this.ruleForm.identitycardUrl1File = res.data
-      })
+        this.ruleForm.identitycardUrl1File = res.data;
+      });
     },
     //选择反面
     uploadImg2(e) {
       wallet.upload(e.file).then(res => {
-        this.ruleForm.identitycardUrl2File = res.data
-      })
+        this.ruleForm.identitycardUrl2File = res.data;
+      });
     },
     beforeAvatarUpload(file) {
-      const isJPG = file.type === 'image/jpeg' || file.type === 'image/png';
+      const isJPG = file.type === "image/jpeg" || file.type === "image/png";
       const isLt5M = file.size / 1024 / 1024 < 5;
       if (!isJPG) {
-        this.$message.error('上传图片只能是 JPG/PNG 格式!');
+        this.$message.error("上传图片只能是 JPG/PNG 格式!");
       }
       if (!isLt5M) {
-        this.$message.error('上传图片大小不能超过 5MB!');
+        this.$message.error("上传图片大小不能超过 5MB!");
       }
       return isJPG && isLt5M;
     },
     //绑定银行卡
     addBank(formName) {
-      this.$refs[formName].validate((valid) => {
-        this.loading2 = true
+      this.$refs[formName].validate(valid => {
+        this.loading2 = true;
         if (valid) {
           $.ajax({
-            url: this.DFPAYDOMAIN + '/bindBankCard',
-            type: 'POST',
-            dataType: 'json',
+            url: this.DFPAYDOMAIN + "/bindBankCard",
+            type: "POST",
+            dataType: "json",
             data: this.ruleForm2,
-            success: (res) => {
+            success: res => {
               // res.code = 0
               if (res.code == 0) {
                 this.$message({
                   message: res.msg,
-                  type: 'success',
+                  type: "success",
                   duration: 2000,
                   onClose: () => {
                     this.$router.replace({
-                      path: '/wallet/individual/open/bindPhone/' + this.$route.params.memberId
-                    })
+                      path:
+                        "/wallet/individual/open/bindPhone/" +
+                        this.$route.params.memberId
+                    });
                   }
                 });
               } else {
                 this.$message.error(res.msg);
               }
-              this.loading2 = false
+              this.loading2 = false;
             }
-          })
+          });
         } else {
           return false;
         }
@@ -309,24 +344,24 @@ export default {
     },
     //确认开通
     submitForm(formName) {
-      this.$refs[formName].validate((valid) => {
+      this.$refs[formName].validate(valid => {
         if (valid) {
           $.ajax({
-            url: this.DFPAYDOMAIN + '/walletIndividual/saveIndividual',
-            type: 'POST',
-            dataType: 'json',
+            url: this.DFPAYDOMAIN + "/walletIndividual/saveIndividual",
+            type: "POST",
+            dataType: "json",
             data: this.ruleForm,
-            success: (res) => {
-              console.log(res, 'res')
+            success: res => {
+              console.log(res, "res");
               if (res.code == 0 && res.data) {
-                this.dialogVisible = true
-                this.ruleForm2.id = res.data
+                this.dialogVisible = true;
+                this.ruleForm2.id = res.data;
               } else {
                 this.$message.error(res.msg);
               }
-              this.loading1 = false
+              this.loading1 = false;
             }
-          })
+          });
         } else {
           return false;
         }
@@ -336,6 +371,5 @@ export default {
       this.$refs[formName].resetFields();
     }
   }
-}
-
+};
 </script>

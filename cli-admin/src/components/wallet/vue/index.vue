@@ -26,7 +26,7 @@ export default {
               if (res.data.status == 0 || res.data.status == -1) {
                 //创建
                 const individual = res.data.walletIndividual;
-                if (!individual) {
+                if (!individual || individual.walletBank == '' && individual.name != '') {
                   //步骤1
                   this.$router.push({
                     path: "/wallet/individual/open/" + res.data.id
