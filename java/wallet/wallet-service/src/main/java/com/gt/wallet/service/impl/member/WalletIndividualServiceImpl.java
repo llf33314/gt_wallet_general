@@ -56,6 +56,7 @@ public class WalletIndividualServiceImpl extends BaseServiceImpl<WalletIndividua
 	public ServerResponse<Integer> add(WalletIndividualAdd walletIndividualAdd,BusUser busUser) throws Exception{
 		log.info(CommonUtil.format("start biz add api params:%s", JsonUtil.toJSONString(walletIndividualAdd)));
 		//TODO 调用实名认证api、调用绑定银行卡api
+		walletIndividualAdd.setBankName(walletIndividualAdd.getName());
 		WalletMember walletMember=walletMemberMapper.selectById(walletIndividualAdd.getMemberId());
 		if(CommonUtil.isEmpty(walletMember)){
 			log.error(CommonUtil.format("biz add api fail:%s",WalletResponseEnums.DATA_NULL_ERROR.getDesc()));
