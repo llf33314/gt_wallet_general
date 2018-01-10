@@ -247,6 +247,7 @@ export default {
   },
   mounted() {
     this.resetForm.memberId = this.$route.params.memberId
+    this.ruleForm.memberId = this.$route.params.memberId
   },
   methods: {
     // 选择正面
