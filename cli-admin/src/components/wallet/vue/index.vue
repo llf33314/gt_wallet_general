@@ -23,7 +23,7 @@ export default {
           if (res.code == 0) {
             if (res.data.memberType == 3) { //个人会员
               if (res.data.status == 0 || res.data.status == -1) { //创建
-                if (!(res.data.WalletIndividual) || res.data.WalletIndividual.name == '') { //步骤1
+                if (!(res.data.walletIndividual) || res.data.walletIndividual.name == '') { //步骤1
                   this.$router.push({
                     path: '/wallet/individual/open/' + res.data.id
                   })
