@@ -76,10 +76,8 @@ public class WalletIndividualServiceImpl extends BaseServiceImpl<WalletIndividua
 			walletIndividual=new WalletIndividual();
 			walletIndividual.setIdentityChecked(1);
 		}else{
-			if(!walletIndividual.getIdentityCardNo().equals(indeMi)){//
-				log.error("biz add api fail:非法银行卡，请绑定与会员身份证相关的银行卡");
-				throw new BusinessException("非法银行卡，请绑定与会员身份证相关的银行卡");
-			}
+			log.error("biz add api fail:当前步骤信息禁止修改");
+			throw new BusinessException("当前步骤信息禁止修改");
 		}
 		
 		if(CommonUtil.isNotEmpty(walletIndividualAdd.getIdentitycardUrl1File())){
