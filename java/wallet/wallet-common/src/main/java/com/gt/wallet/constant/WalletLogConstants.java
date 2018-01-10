@@ -51,5 +51,13 @@ public class WalletLogConstants {
 	public static final Integer LOG_WITHDRAWSUCCESSNOTIFY=1005;
 	
 	
+	/**
+	 * 通联退款下单
+	 */
+	public static final Integer LOG_REFUND=1006;
 	
+	/**
+	 * 通联退款异步回调
+	 */
+	public static final Integer LOG_REFUNDNOTIFY=1007;
 }

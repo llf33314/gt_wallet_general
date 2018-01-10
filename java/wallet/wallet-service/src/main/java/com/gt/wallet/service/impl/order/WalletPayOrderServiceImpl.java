@@ -4,6 +4,7 @@ import java.math.BigDecimal;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
+import java.util.List;
 import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -30,12 +31,16 @@ import com.gt.wallet.dto.ServerResponse;
 import com.gt.wallet.entity.WalletApiLog;
 import com.gt.wallet.entity.WalletMember;
 import com.gt.wallet.entity.WalletPayOrder;
+import com.gt.wallet.entity.WalletRefundOrder;
 import com.gt.wallet.enums.WalletResponseEnums;
 import com.gt.wallet.exception.BusinessException;
 import com.gt.wallet.mapper.member.WalletMemberMapper;
 import com.gt.wallet.mapper.order.WalletPayOrderMapper;
+import com.gt.wallet.mapper.order.WalletRefundOrderMapper;
 import com.gt.wallet.service.log.WalletApiLogService;
+import com.gt.wallet.service.member.WalletMemberService;
 import com.gt.wallet.service.order.WalletPayOrderService;
+import com.gt.wallet.service.order.WalletRefundOrderService;
 import com.gt.wallet.utils.CommonUtil;
 import com.gt.wallet.utils.DateTimeKit;
 import com.gt.wallet.utils.MyPageUtil;
@@ -66,6 +71,15 @@ public class WalletPayOrderServiceImpl extends BaseServiceImpl<WalletPayOrderMap
 	
 	@Autowired
 	private WalletPayOrderService walletPayOrderService;
+	
+	@Autowired
+	private WalletMemberService walletMemberService;
+	
+	@Autowired
+	private WalletRefundOrderMapper walletRefundOrderMapper;
+	
+	@Autowired
+	private WalletRefundOrderService walletRefundOrderService;
 	
 
 	@Transactional(propagation = Propagation.REQUIRED,isolation = Isolation.DEFAULT,timeout=36000,rollbackFor=Exception.class)
@@ -126,7 +140,8 @@ public class WalletPayOrderServiceImpl extends BaseServiceImpl<WalletPayOrderMap
 		return serverResponse;
 	}
 
-	
+
+	@Transactional(propagation = Propagation.REQUIRED,isolation = Isolation.DEFAULT,timeout=36000,rollbackFor=Exception.class)
 	@Override
 	public ServerResponse<com.alibaba.fastjson.JSONObject> codepay(PayOrder payOrder)throws Exception {
 		log.info(CommonUtil.format("start biz codepay api params:%s",JsonUtil.toJSONString(payOrder)));
@@ -182,7 +197,6 @@ public class WalletPayOrderServiceImpl extends BaseServiceImpl<WalletPayOrderMap
 		return serverResponse;
 	}
 
-	@Transactional(propagation = Propagation.REQUIRED,isolation = Isolation.DEFAULT,timeout=36000,rollbackFor=Exception.class)
 	@Override
 	public ServerResponse<?> save(PayOrder payOrder) throws Exception {
 		log.info(CommonUtil.format("start biz save api params:%s",JsonUtil.toJSONString(payOrder)));
@@ -272,7 +286,7 @@ public class WalletPayOrderServiceImpl extends BaseServiceImpl<WalletPayOrderMap
 
 	@SuppressWarnings("unchecked")
 	@Override
-	public ServerResponse<?> paySuccessNotify(LinkedHashMap<String,Object> params)throws Exception {
+	public ServerResponse<?> paySuccessNotifyUpdate(LinkedHashMap<String,Object> params)throws Exception {
 		log.info(CommonUtil.format("start biz paySuccessNotify api params:%s",JsonUtil.toJSONString(params)));
 		
 		JSONObject rps=JsonUtil.parseObject(CommonUtil.toString(params.get("rps")), JSONObject.class);
@@ -375,22 +389,67 @@ public class WalletPayOrderServiceImpl extends BaseServiceImpl<WalletPayOrderMap
 		return ServerResponse.createBySuccessCodeData(myPageUtil);
 	}
 
-
+	@Transactional(propagation = Propagation.REQUIRED,isolation = Isolation.DEFAULT,timeout=36000,rollbackFor=Exception.class)
 	@Override
 	public ServerResponse<?> refund(TRefundOrder refundOrder) throws Exception {
 		log.info(CommonUtil.format("start biz refund api params:%s", JsonUtil.toJSONString(refundOrder)));
-		ServerResponse<WalletPayOrder>  serverResponseWalletPayOrder=	walletPayOrderService.findByOrderNo(refundOrder.getBizOrderNo());
+		String oriBizOrderNo=refundOrder.getOriBizOrderNo();
+		ServerResponse<WalletPayOrder>  serverResponseWalletPayOrder=	walletPayOrderService.findByOrderNo(oriBizOrderNo);
 		if(!ServerResponse.judgeSuccess(serverResponseWalletPayOrder)){
-			log.error("异常：订单号不存在!");
+			log.error("biz refund api fail：订单号不存在!");
 			throw new BusinessException("异常：订单号不存在!");
 		}
+		ServerResponse<List<WalletMember>> serverResponse=	walletMemberService.findMember(refundOrder.getBusId());
+		if(serverResponse.getCode()!=0||serverResponse.getData().size()<=0){
+			log.error("biz refund api：user is not exist");
+			throw new BusinessException("fail：user is not exist!");
+		}
 		WalletPayOrder walletPayOrder=serverResponseWalletPayOrder.getData();
+		if(serverResponse.getData().get(0).getId()!=walletPayOrder.getWMemberId()){
+			log.error("biz refund api：user is not exist");
+			throw new BusinessException("fail：user is error!");
+		}
 		WalletMember walletMember=walletMemberMapper.selectById(walletPayOrder.getWMemberId());
 		if(walletMember.getStatus()!=3){
 			log.error("biz refund api fail:会员账号异常("+CommonUtil.getMemberStatusDesc(walletMember.getStatus())+")，退款失败!");
 			throw new BusinessException("会员账号异常("+CommonUtil.getMemberStatusDesc(walletMember.getStatus())+")，退款失败!");
 		}
-		return null;
+		WalletPayOrder payOrder=	serverResponseWalletPayOrder.getData();
+		double  money=walletRefundOrderMapper.getRefundMoney(refundOrder.getBizOrderNo());
+		double total=(payOrder.getFee().doubleValue()+payOrder.getAmount().doubleValue());
+		if(money+refundOrder.getAmount()>total){//金额越界
+			log.error("biz refund api fail：退款金额超出总金额");
+			throw new BusinessException("fail：退款金额超出总金额!");
+		}
+		double fee=walletMember.getFeePercent()/100*refundOrder.getAmount();
+		refundOrder.setFeeAmount(fee);
+		refundOrder.setBizUserId(walletMember.getMemberNum());
+		refundOrder.setOriBizOrderNo(payOrder.getSubmitNo());
+		ServerResponse<String> serverResponse2=	YunSoaMemberUtil.refund(refundOrder);
+		
+		/*********************************接口调用日志**************************************/
+		try {
+			walletApiLogService.save(JsonUtil.toJSONString(refundOrder), serverResponse2, walletMember.getId(), refundOrder.getBackUrl(), refundOrder.getBizOrderNo(), WalletLogConstants.LOG_REFUND);
+		} catch (Exception e) {
+			log.error("biz refund api fail:write log error!");
+			e.printStackTrace();
+		}
+		/*********************************接口调用日志**************************************/
+		
+		if(ServerResponse.judgeSuccess(serverResponse2)){//调用接口成功
+			WalletRefundOrder walletRefundOrder=new WalletRefundOrder();
+			walletRefundOrder.setAmount(BigDecimal.valueOf(refundOrder.getAmount()));
+			walletRefundOrder.setBusId(refundOrder.getBusId());
+			walletRefundOrder.setFee(BigDecimal.valueOf(fee));
+			walletRefundOrder.setRefundExternalNo(serverResponse2.getData());
+			walletRefundOrder.setRefundOrderNo(refundOrder.getBizOrderNo());
+			walletRefundOrder.setSysOrderNo(oriBizOrderNo);
+			walletRefundOrder.setWMemberId(walletMember.getId());
+			ServerResponse<?>  response=walletRefundOrderService.addRecord(walletRefundOrder);
+			return response;
+		}else{
+			return serverResponse2;
+		}
 	}
 	
 	

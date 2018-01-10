@@ -5,6 +5,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 
 import com.alibaba.fastjson.JSONObject;
 import com.gt.api.util.httpclient.JsonUtil;
+import com.gt.wallet.data.api.tonglian.request.TRefundOrder;
 import com.gt.wallet.data.wallet.request.PayOrder;
 import com.gt.wallet.dto.ServerResponse;
 import com.gt.wallet.service.order.WalletMoneyService;
@@ -58,27 +59,38 @@ public class WalletPayOrderServiceTest extends BasicTest {
 //		}
 //		log.info(" end test pay api");
 //	}
+	/**
+	 * 提现
+	 */
+//	@Test
+//	public void withdrawApply(){
+//		log.info(" start test pay api");
+//		try {
+//			//dfw1511408087692
+//			ServerResponse<Integer> serverResponse=	moneyService.withdrawApply(42,1000.0,12);
+//			log.info(CommonUtil.format("serverResponse:%s", JsonUtil.toJSONString(serverResponse)));
+//		} catch (Exception e) {
+//			e.printStackTrace();
+//			log.error("test pay api error");
+//		}
+//		log.info(" end test pay api");
+//	}
 	
+	/**
+	 * 退款
+	 */
 	@Test
-	public void pay(){
+	public void refund(){
 		log.info(" start test pay api");
 		try {
-			PayOrder payOrder=new PayOrder();
-			payOrder.setAcct("");
-			payOrder.setAmount(100.0);
-			payOrder.setBizOrderNo("HY"+System.currentTimeMillis());
-			payOrder.setBusId(42);
-			payOrder.setDesc("会员线下支付");
-			payOrder.setMemberId(9527);
-			payOrder.setModel(39);
-			payOrder.setNotifyUrl("http://dfpay.yifriend.net/walletPayOrder/79B4DE7C/paySuccessNotify1");
-			payOrder.setReturnUrl(null);
-			payOrder.setSendUrl(null);
-			payOrder.setSubmitNo(null);
-			payOrder.setTakeState(1);
-			payOrder.setType(8);
 			//dfw1511408087692
-			ServerResponse<Integer> serverResponse=	moneyService.withdrawApply(42,1000.0,12);
+			TRefundOrder refundOrder=new TRefundOrder();
+			refundOrder.setAmount(100.0);
+			refundOrder.setBackUrl("http://dfpay.yifriend.net/walletPayOrder/79B4DE7C/paySuccessNotify1");
+			refundOrder.setBizOrderNo("TK"+System.currentTimeMillis());
+			refundOrder.setBusId(42);
+			refundOrder.setOriBizOrderNo("HY1515222977661");
+			ServerResponse<?> serverResponse=	walletPayOrderService.refund(refundOrder);
 			log.info(CommonUtil.format("serverResponse:%s", JsonUtil.toJSONString(serverResponse)));
 		} catch (Exception e) {
 			e.printStackTrace();

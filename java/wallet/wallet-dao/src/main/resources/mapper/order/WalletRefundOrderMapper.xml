@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.gt.wallet.mapper.order.WalletRefundOrderMapper">
+
+	<!-- 通用查询映射结果 -->
+	<resultMap id="BaseResultMap" type="com.gt.wallet.entity.WalletRefundOrder">
+		<id column="id" property="id" />
+		<result column="bus_id" property="busId" />
+		<result column="w_member_id" property="wMemberId" />
+		<result column="sys_order_no" property="sysOrderNo" />
+		<result column="amount" property="amount" />
+		<result column="fee" property="fee" />
+		<result column="ctime" property="ctime" />
+		<result column="refund_order_no" property="refundOrderNo" />
+		<result column="refund_external_no" property="refundExternalNo" />
+	</resultMap>
+
+    <!-- 通用查询结果列 -->
+    <sql id="Base_Column_List">
+        id, bus_id AS busId, w_member_id AS wMemberId,sys_order_no AS sysOrderNo, amount, fee, ctime, refund_order_no AS refundOrderNo, refund_external_no AS refundExternalNo
+    </sql>
+	<select id="getRefundMoney" resultType="double"  >
+	   SELECT (CASE WHEN SUM(amount+fee) IS NULL THEN 0 ELSE SUM(amount+fee) END) money FROM `t_wallet_refund_order` WHERE `sys_order_no`=#{sysOrderNo}
+	</select>
+</mapper>

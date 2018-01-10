@@ -165,7 +165,7 @@ public class MemberServiceTest extends BasicTest {
 	public void pay(){
 		log.info(" start test pay api");
 		try {
-			ServerResponse<com.alibaba.fastjson.JSONObject> serverResponse=YunSoaMemberUtil.pay("ffad4737-44ed-4dc7-b2a6-fb61949af805", "TX1515396048970", "814026", "127.0.0.1");
+			ServerResponse<com.alibaba.fastjson.JSONObject> serverResponse=YunSoaMemberUtil.pay("ffad4737-44ed-4dc7-b2a6-fb61949af805", "TX1515403524786", "965020", "127.0.0.1");
 			log.info(CommonUtil.format("serverResponse:%s", JsonUtil.toJSONString(serverResponse)));
 		} catch (Exception e) {
 			e.printStackTrace();

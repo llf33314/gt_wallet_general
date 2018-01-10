@@ -66,7 +66,7 @@ public class WalletPayOrderController extends BaseController {
 	public void paySuccessNotify(HttpServletRequest request,HttpServletResponse response, @RequestParam LinkedHashMap<String,Object> params) throws Exception {
 		log.info(CommonUtil.format("start view paySuccessNotify api params:%s", JsonUtil.toJSONString(params)));
 		try {
-			ServerResponse<?> serverResponse=walletPayOrderService.paySuccessNotify(params);
+			ServerResponse<?> serverResponse=walletPayOrderService.paySuccessNotifyUpdate(params);
 			if(ServerResponse.judgeSuccess(serverResponse)){
 				response.getWriter().print("success");
 			}else{
