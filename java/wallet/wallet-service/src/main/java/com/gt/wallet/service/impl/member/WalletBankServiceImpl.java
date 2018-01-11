@@ -314,7 +314,7 @@ public class WalletBankServiceImpl extends BaseServiceImpl<WalletBankMapper, Wal
 		log.info(CommonUtil.format("start biz getWalletSafeBankByMemberId api params:%s",wmemberId));
 		WalletBank params=new WalletBank();
 		params.setWMemberId(wmemberId);
-		params.setStatus(0);
+		params.setStatus(1);
 		params.setCardClass(1);
 		params.setCardState(1);
 		WalletBank walletBank=walletBankMapper.selectOne(params);
