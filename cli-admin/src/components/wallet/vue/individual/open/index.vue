@@ -144,30 +144,57 @@
 </template>
 <script>
 import { wallet } from "./../../../api/index";
+import { IdentityCodeValid } from '@/assets/js/index'
 export default {
   data() {
     var rulesCardNo = (rule, value, callback) => {
-      $.ajax({
-        url: this.DFPAYDOMAIN + "/getBankCardBin",
-        type: "POST",
-        dataType: "JSON",
-        data: { bankCardNo: value },
-        success: res => {
-          if (res.code == 0) {
-            if (res.data.iscreditcard == 2) {
-              this.CardBinInfo = null;
-              callback(new Error("法人个人账户不能为信用卡"));
+      if (value == '') {
+        callback(new Error('请输入个人账户'))
+      } else if (!this.CheckBankNo(value)) {
+        callback(new Error('请输入正确个人账户'))
+      } else {
+        $.ajax({
+          url: this.DFPAYDOMAIN + "/getBankCardBin",
+          type: "POST",
+          dataType: "JSON",
+          data: { bankCardNo: value },
+          success: res => {
+            if (res.code == 0) {
+              if (res.data.iscreditcard == 2) {
+                this.CardBinInfo = null;
+                callback(new Error("法人个人账户不能为信用卡"));
+              } else {
+                this.CardBinInfo = res.data;
+                callback();
+              }
             } else {
-              this.CardBinInfo = res.data;
-              callback();
+              this.CardBinInfo = null;
+              callback(new Error(res.msg));
             }
-          } else {
-            this.CardBinInfo = null;
-            callback(new Error(res.msg));
           }
-        }
-      });
+        });
+      }
     };
+    var isValitrPhone = (rule, value, callback) => {
+      if (value == '') {
+        callback(new Error('请输入银行预留手机'))
+      } else {
+        if (this.isPhone(value)) {
+          callback();
+        } else {
+          callback(new Error('请输入正确手机号码'))
+        }
+      }
+    }
+    var identityValid = (rule, value, callback) => {
+      if (value == '') {
+        callback(new Error('请输入身份证号'))
+      } else if (!this.IdentityCodeValid(value)) {
+        callback(new Error('请输入正确身份证号'))
+      } else {
+        callback();
+      }
+    }
     return {
       CardBinInfo: null,
       ruleForm: {
@@ -212,14 +239,13 @@ export default {
         identityNo: [
           {
             required: true,
-            message: "请输入身份证号",
-            trigger: "change"
+            validator: identityValid,
+            trigger: "blur"
           }
         ],
         cardNo: [
           {
-            // required: true,
-            // message: '请输入银行卡号',
+            required: true,
             validator: rulesCardNo,
             trigger: "blur"
           }
@@ -227,7 +253,7 @@ export default {
         phone: [
           {
             required: true,
-            message: "请输入银行预留手机",
+            validator: isValitrPhone,
             trigger: "blur"
           }
         ],
@@ -264,6 +290,40 @@ export default {
     this.getVipMsg();
   },
   methods: {
+    IdentityCodeValid(code) {
+      var pass = true;
+      if (!code || !/^\d{6}(18|19|20)?\d{2}(0[1-9]|1[12])(0[1-9]|[12]\d|3[01])\d{3}(\d|X)$/i.test(code)) {
+        pass = false;
+      }
+      return pass;
+    },
+    CheckBankNo(bankno) {
+      var bankno = bankno.replace(/\s/g, '');
+      if (bankno == "") {
+        return false;
+      }
+      if (bankno.length < 16 || bankno.length > 19) {
+        return false;
+      }
+      var num = /^\d*$/;//全数字
+      if (!num.exec(bankno)) {
+        return false;
+      }
+      //开头6位
+      var strBin = "10,18,30,35,37,40,41,42,43,44,45,46,47,48,49,50,51,52,53,54,55,56,58,60,62,65,68,69,84,87,88,94,95,98,99";
+      if (strBin.indexOf(bankno.substring(0, 2)) == -1) {
+        return false;
+      }
+      return true;
+    },
+    isPhone(obj) {
+      var result = true;
+      var isPhone = /^((\+?86)|(\(\+86\)))?(13[0123456789][0-9]{8}|15[0123456789][0-9]{8}|17[0123456789][0-9]{8}|18[0123456789][0-9]{8}|147[0-9]{8}|1349[0-9]{7})$/;
+      if (!isPhone.test(obj)) {
+        result = false;
+      }
+      return result;
+    },
     // 查询会员信息
     getVipMsg() {
       $.ajax({
@@ -326,8 +386,8 @@ export default {
                   onClose: () => {
                     this.$router.replace({
                       path:
-                        "/wallet/individual/open/bindPhone/" +
-                        this.$route.params.memberId
+                      "/wallet/individual/open/bindPhone/" +
+                      this.$route.params.memberId
                     });
                   }
                 });
