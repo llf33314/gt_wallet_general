@@ -233,7 +233,7 @@ public class WalletPayOrderController extends BaseController {
 			ServerResponse<com.alibaba.fastjson.JSONObject> serverResponse=walletPayOrderService.applyDeposit(payOrder);
 			log.info("serverResponse %s",JsonUtil.toJSONString(serverResponse));
 			if(serverResponse.getCode()!=0){//返回异常
-				throw new ResponseEntityException(serverResponse.getCode(),serverResponse.getMsg());
+				throw new BusinessException(serverResponse.getCode(),serverResponse.getMsg());
 			}
 			request.setAttribute("data", serverResponse.getData());
 			request.setAttribute("payOrder", payOrder);
@@ -249,7 +249,7 @@ public class WalletPayOrderController extends BaseController {
 			e.printStackTrace();
 			log.error(CommonUtil.format("view applyDeposit api fail：%s,%s", WalletResponseEnums.SYSTEM_ERROR.getCode(),
 					WalletResponseEnums.SYSTEM_ERROR.getDesc()));
-			throw new ResponseEntityException(WalletResponseEnums.SYSTEM_ERROR);
+			throw new BusinessException(WalletResponseEnums.SYSTEM_ERROR);
 		}
 	}
 	

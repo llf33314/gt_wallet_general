@@ -117,6 +117,7 @@ public class WalletPayOrderServiceImpl extends BaseServiceImpl<WalletPayOrderMap
 		TPayOrder tPayOrder=new TPayOrder(payOrder.getAmount(),submitNo, (walletMember.getFeePercent()*payOrder.getAmount())/100, payOrder.getAcct(), payOrder.getReturnUrl(), payOrder.getType(), payOrder.getDesc(), walletMember.getMemberNum());
 		/************通联下单************/
 		ServerResponse<com.alibaba.fastjson.JSONObject> serverResponse=YunSoaMemberUtil.applyDeposit(tPayOrder);
+		
 		com.alibaba.fastjson.JSONObject payInfo=	serverResponse.getData();
 		/************通联下单************/
 		log.info(CommonUtil.format("biz applyDeposit api serverResponse:%s", JsonUtil.toJSONString(serverResponse)));
@@ -134,6 +135,8 @@ public class WalletPayOrderServiceImpl extends BaseServiceImpl<WalletPayOrderMap
 			if(!ServerResponse.judgeSuccess(response)){
 				return ServerResponse.createByErrorCodeMessage(response.getCode(), response.getMsg());
 			}
+		}else{
+			return ServerResponse.createByErrorCodeMessage(serverResponse.getCode(), serverResponse.getMsg());
 		}
 		serverResponse=ServerResponse.createBySuccessCodeData(payInfo);
 		log.info("end applyDeposit api:%s"+JsonUtil.toJSONString(serverResponse));

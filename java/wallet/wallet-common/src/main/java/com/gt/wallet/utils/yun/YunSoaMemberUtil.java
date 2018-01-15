@@ -801,7 +801,7 @@ public class YunSoaMemberUtil {
 			param.put("bizOrderNo", payOrder.getBizOrderNo());
 			param.put("accountSetNo", WalletWebConfig.getYunBizUserId());
 			param.put("amount", payOrder.getAmount()*100);
-			param.put("fee", payOrder.getFee()*100);
+			param.put("fee", 0);
 			param.put("validateType",0);
 			param.put("frontUrl", frontUrl);
 			param.put("backUrl", backUrl);
