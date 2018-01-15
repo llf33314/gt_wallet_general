@@ -18,6 +18,7 @@ import com.gt.wallet.data.wallet.request.WalletIndividualAdd;
 import com.gt.wallet.dto.ServerResponse;
 import com.gt.wallet.enums.WalletResponseEnums;
 import com.gt.wallet.utils.CommonUtil;
+import com.gt.wallet.utils.DateTimeKit;
 import com.gt.wallet.utils.WalletWebConfig;
 
 import ime.service.client.SOAClient;
@@ -793,7 +794,7 @@ public class YunSoaMemberUtil {
 
 			String backUrl =WalletWebConfig.getYunpaySuccessNotifyUrl();
 
-	//		String extendInfo = "this is extendInfo";
+			String extendInfo = "this is extendInfo";
 
 			JSONObject param = new JSONObject();
 			param.put("bizUserId", payOrder.getBizUserId());
@@ -801,15 +802,17 @@ public class YunSoaMemberUtil {
 			param.put("accountSetNo", WalletWebConfig.getYunBizUserId());
 			param.put("amount", payOrder.getAmount()*100);
 			param.put("fee", payOrder.getFee()*100);
+			param.put("validateType",0);
 			param.put("frontUrl", frontUrl);
 			param.put("backUrl", backUrl);
-//			param.put("ordErexpireDatetime", ordErexpireDatetime);
+			param.put("ordErexpireDatetime", "2018-01-15 23:59:59");
 			param.put("payMethod", payMethod);
+			param.put("goodsName", "测试商品");
 			param.put("industryCode", WalletConstants.INDUSTRYCODE);
 			param.put("industryName",WalletConstants.INDUSTRYNAME);
 			param.put("source", 1);
 			param.put("summary",payOrder.getDesc());
-//			param.put("extendInfo", extendInfo);
+			param.put("extendInfo", extendInfo);
 
 			log.info("request:" + param);
 			JSONObject response = client.request(ordersoaName, "depositApply", param);
