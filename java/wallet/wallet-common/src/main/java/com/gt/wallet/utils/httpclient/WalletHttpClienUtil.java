@@ -1,6 +1,9 @@
 package com.gt.wallet.utils.httpclient;
 
 import java.nio.charset.Charset;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
 
 import org.apache.http.Header;
 import org.apache.http.HttpHeaders;
@@ -13,8 +16,13 @@ import org.apache.http.message.BasicHeader;
 import com.alibaba.fastjson.JSONObject;
 import com.gt.api.bean.sign.SignBean;
 import com.gt.api.util.KeysUtil;
+import com.gt.api.util.httpclient.JsonUtil;
 import com.gt.api.util.httpclient.LocalHttpClient;
+import com.gt.wallet.data.api.tonglian.request.invoice.TH5Invoice;
+import com.gt.wallet.data.api.tonglian.request.invoice.TInvoiceList;
 import com.gt.wallet.data.api.tonglian.response.CardBin;
+import com.gt.wallet.data.api.tonglian.response.invoice.BaseResult;
+import com.gt.wallet.utils.HttpKit;
 
 /** 
 * @author lifengxi(gt_sky@qq.com)
@@ -58,7 +66,21 @@ public class WalletHttpClienUtil {
 										.build();
 		return LocalHttpClient.executeJsonResultUTF8(httpUriRequest,clazz);
 	}
+	/**
+	 * post请求(返回乱码)
+	 * @param messageJson
+	 * @return
+	 */
+	public static  <T> T reqPostUTF81(String messageJson ,String url,Class<T> clazz){
+		HttpUriRequest httpUriRequest = RequestBuilder.post()
+										.setHeader(jsonHeader)
+										.setUri(url)
+										.setEntity(new StringEntity(messageJson,Charset.forName("utf-8")))
+										.build();
+		return LocalHttpClient.executeJsonResultUTF8(httpUriRequest,clazz);
+	}
 	
+
 	/**
 	 * post请求(返回乱码)
 	 * @param messageJson
@@ -140,8 +162,8 @@ public class WalletHttpClienUtil {
 //		ResponseUtils map=reqPostUTF8( ss,"http://127.0.0.1:8440/8A5DA52E/shopapi/6F6D9AD2/79B4DE7C/queryWxShopByBusId.do",ResponseUtils.class,"WXMP2017");
 //		System.out.println(com.alibaba.fastjson.JSONObject.toJSONString(map));
 	//	String url="http://api43.market.alicloudapi.com/api/c43";
-		CardBin map=reqGet("6228481139158261672", CardBin.class);
-		System.out.println(JSONObject.toJSONString(map));
+//		CardBin map=reqGet("6228481139158261672", CardBin.class);
+//		System.out.println(JSONObject.toJSONString(map));
 //		WalletIndividualAdd walletIndividualAdd=new WalletIndividualAdd();
 //		walletIndividualAdd.setBankName("1312");
 //		walletIndividualAdd.setCardNo("12313");
@@ -155,5 +177,11 @@ public class WalletHttpClienUtil {
 //		
 		//Map s=reqPostUTF8(JsonUtil.toJSONString(walletIndividualAdd), url, Map.class);
 //		System.out.println(s);
+		List<com.gt.wallet.data.api.tonglian.request.invoice.TInvoiceList> tInvoiceList	=new ArrayList<>();
+		TInvoiceList invoiceList=new TInvoiceList(1, "1000000000000000000", "货物", "", "", 1.0, 1.0, 1.0, 1.0, 1.0,  "1");
+		tInvoiceList.add(invoiceList);
+		TH5Invoice th5Invoice=new TH5Invoice("dfw1515551136943", "dffp"+System.currentTimeMillis(), 9999.0, 1.0, 1.0, tInvoiceList);
+		BaseResult baseResult=	reqPostUTF8(JsonUtil.toJSONString(tInvoiceList), "http://116.62.115.2/H5Invoice", BaseResult.class);
+		System.out.println(JsonUtil.toJSONString(baseResult));
 		}
 }
