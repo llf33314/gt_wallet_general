@@ -1,6 +1,7 @@
 package com.gt.wallet.web.api.subsystem;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -10,6 +11,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.gt.api.util.RequestUtils;
 import com.gt.api.util.httpclient.JsonUtil;
+import com.gt.wallet.base.BaseController;
 import com.gt.wallet.data.api.tonglian.request.TRefundOrder;
 import com.gt.wallet.data.wallet.request.PayOrder;
 import com.gt.wallet.dto.ServerResponse;
@@ -34,7 +36,7 @@ import lombok.extern.slf4j.Slf4j;
 @Slf4j
 @RestController
 @Api(value = "orderApi",description="订单api")  
-public class OrderAPI {
+public class OrderAPI extends BaseController{
 	
 	private WalletPayOrderService walletPayOrderService;
 	/**
@@ -47,6 +49,7 @@ public class OrderAPI {
 	public ServerResponse<?> refund(HttpServletRequest request,@RequestBody RequestUtils<TRefundOrder> requestUtils ){
 		log.info(CommonUtil.format("start view refund api params:%s",JsonUtil.toJSONString(requestUtils)));
 		try {
+			super.verification(request, requestUtils);
 			ServerResponse<?> serverResponse=walletPayOrderService.refund(requestUtils.getReqdata());
 			return serverResponse;
 			} catch ( BusinessException e) {
@@ -90,16 +93,19 @@ public class OrderAPI {
 //        ,
 //        @ApiImplicitParam(name = "sendUrl",value = "推送路径",paramType = "form",dataType = "string",required=true,defaultValue="1")
        })
-	public ServerResponse<Integer>  codepay(HttpServletRequest request,@RequestBody PayOrder payOrder) {
-		log.info(CommonUtil.format("start view codepay api params:%s", JsonUtil.toJSONString(payOrder)));
+	public ServerResponse<Integer>  codepay(HttpServletRequest request,@RequestBody RequestUtils<PayOrder> requestUtils) {
+		log.info(CommonUtil.format("start view codepay api params:%s", JsonUtil.toJSONString(requestUtils)));
 		try {
-//			PayOrder payOrder=null;
-//			String  json=KeysUtil.getDesString(obj);
-//			payOrder=JsonUtil.parseObject(json, PayOrder.class);
-			ServerResponse<Integer> serverResponse=walletPayOrderService.codepay(payOrder);
+			super.verification(request, requestUtils);
+			ServerResponse<Integer> serverResponse=walletPayOrderService.codepay(requestUtils.getReqdata());
 			log.info("serverResponse %s",JsonUtil.toJSONString(serverResponse));
 			return serverResponse;
-		} catch (Exception e) {
+		} catch (BusinessException e) {
+			e.printStackTrace();
+			log.error(CommonUtil.format("view codepay api fail：%s,%s", WalletResponseEnums.SYSTEM_ERROR.getCode(),
+					WalletResponseEnums.SYSTEM_ERROR.getDesc()));
+			throw new BusinessException(e.getCode(),e.getMessage());
+		}  catch (Exception e) {
 			e.printStackTrace();
 			log.error(CommonUtil.format("view codepay api fail：%s,%s", WalletResponseEnums.SYSTEM_ERROR.getCode(),
 					WalletResponseEnums.SYSTEM_ERROR.getDesc()));

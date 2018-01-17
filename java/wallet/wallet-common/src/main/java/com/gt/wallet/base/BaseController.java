@@ -1,9 +1,6 @@
 package com.gt.wallet.base;
 
-import java.io.IOException;
-
 import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
 
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
@@ -12,7 +9,9 @@ import com.gt.api.bean.sign.SignEnum;
 import com.gt.api.dto.ResponseUtils;
 import com.gt.api.util.KeysUtil;
 import com.gt.api.util.RequestUtils;
+import com.gt.api.util.httpclient.JsonUtil;
 import com.gt.wallet.enums.WalletResponseEnums;
+import com.gt.wallet.exception.BusinessException;
 import com.gt.wallet.utils.CommonUtil;
 import com.gt.wallet.utils.WalletWebConfig;
 
@@ -21,13 +20,14 @@ import lombok.extern.slf4j.Slf4j;
 /**
  * BaseController
  *
- * @author zhangmz
+ * @author lifengxi
  * @create 2017/7/10
  */
 @Slf4j
 public abstract class BaseController {
 	
-	public boolean  verification(HttpServletRequest request,HttpServletResponse response, RequestUtils<?> requestUtils) throws IOException{
+	public void  verification(HttpServletRequest request, RequestUtils<?> requestUtils) throws Exception{
+		log.info("requestUtils:"+JsonUtil.toJSONString(requestUtils));
 		log.info("*******************************************签名验证*******************************************");
 		// 设置返回编码和类型
 		String signKey =WalletWebConfig.getWalletKey();
@@ -39,29 +39,21 @@ public abstract class BaseController {
 		// 返回签名验证信息
 //		String code = SignUtils.decSign(signKey, signBean, JSONObject.toJSONString(requestUtils));
 		String param = JSONObject.toJSONString(requestUtils);
-		boolean result=true;
 		String code = decSign(signKey, signBean, param);
 		if ( SignEnum.TIME_OUT.getCode().equals( code ) ) {
 			// 超过指定时间
-			responseUtils=	ResponseUtils.createByErrorCodeMessage(WalletResponseEnums.TIMEOUT_ERROR.getCode(),WalletResponseEnums.TIMEOUT_ERROR.getDesc());
 			log.error(CommonUtil.format("验证结果:%s", JSONObject.toJSONString(responseUtils)));
-			CommonUtil.write(response, responseUtils);
-			result=false;
+			throw new BusinessException(WalletResponseEnums.TIMEOUT_ERROR);
 		} else if ( SignEnum.SIGN_ERROR.getCode().equals( code ) ) {
-			responseUtils=	ResponseUtils.createByErrorCodeMessage(WalletResponseEnums.SIGN_ERROR.getCode(),WalletResponseEnums.SIGN_ERROR.getDesc());
 			log.error(CommonUtil.format("验证结果:%s", JSONObject.toJSONString(responseUtils)));
+			throw new BusinessException(WalletResponseEnums.SIGN_ERROR);
 			// 签名验证错误
-			CommonUtil.write(response, responseUtils);	
-			result=false;
 		} else if ( SignEnum.SERVER_ERROR.getCode().equals( code ) ) {
-			responseUtils=	ResponseUtils.createByErrorCodeMessage(WalletResponseEnums.ERROR.getCode(),WalletResponseEnums.ERROR.getDesc());
 			log.error(CommonUtil.format("验证结果:%s", JSONObject.toJSONString(responseUtils)));
+			throw new BusinessException(WalletResponseEnums.ERROR);
 			// 签名系统错误
-			CommonUtil.write(response, responseUtils);
-			result=false;
 		}
 		log.info("*******************************************签名验证*******************************************");
-		return result;
 	}
 	
 	
