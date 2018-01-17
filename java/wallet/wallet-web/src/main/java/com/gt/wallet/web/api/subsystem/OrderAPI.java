@@ -87,9 +87,9 @@ public class OrderAPI {
         ,
         @ApiImplicitParam(name = "model",value = "支付模块",paramType = "form",dataType = "string",required=true,defaultValue="1")
         ,
-        @ApiImplicitParam(name = "memberId",value = "会员ID",paramType = "form",dataType = "string",required=true,defaultValue="1")
-        ,
-        @ApiImplicitParam(name = "sendUrl",value = "推送路径",paramType = "form",dataType = "string",required=true,defaultValue="1")
+//        @ApiImplicitParam(name = "memberId",value = "会员ID",paramType = "form",dataType = "string",required=true,defaultValue="1")
+//        ,
+//        @ApiImplicitParam(name = "sendUrl",value = "推送路径",paramType = "form",dataType = "string",required=true,defaultValue="1")
        })
 	public ServerResponse<Integer>  codepay(HttpServletRequest request,@RequestBody PayOrder payOrder) {
 		log.info(CommonUtil.format("start view codepay api params:%s", JsonUtil.toJSONString(payOrder)));

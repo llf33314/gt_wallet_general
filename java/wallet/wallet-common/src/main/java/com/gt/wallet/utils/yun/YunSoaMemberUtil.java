@@ -798,7 +798,7 @@ public class YunSoaMemberUtil {
 
 			JSONObject param = new JSONObject();
 			param.put("bizUserId", payOrder.getBizUserId());
-			param.put("bizOrderNo", "ddf"+System.currentTimeMillis());
+			param.put("bizOrderNo",payOrder.getBizOrderNo());
 			param.put("accountSetNo", WalletWebConfig.getYunBizUserId());
 			param.put("amount",amount);
 			param.put("fee", 0L);
@@ -917,7 +917,7 @@ public class YunSoaMemberUtil {
 
 			JSONObject param = new JSONObject();
 			param.put("bizUserId", payOrder.getBizUserId());
-			param.put("bizOrderNo", "ddf"+System.currentTimeMillis());
+			param.put("bizOrderNo",payOrder.getBizOrderNo());
 			param.put("accountSetNo", WalletWebConfig.getYunBizUserId());
 			param.put("amount",amount);
 			param.put("fee", 0L);
