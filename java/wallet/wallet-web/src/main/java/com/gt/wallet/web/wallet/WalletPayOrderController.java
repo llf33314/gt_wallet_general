@@ -198,6 +198,11 @@ public class WalletPayOrderController extends BaseController {
 			}else{//H5
 				return "page/alipay";
 			}
+		} catch (BusinessException e) {
+			e.printStackTrace();
+			log.error(CommonUtil.format("view applyDeposit api fail：%s,%s", WalletResponseEnums.SYSTEM_ERROR.getCode(),
+					WalletResponseEnums.SYSTEM_ERROR.getDesc()));
+			throw new BusinessException(e.getCode(),e.getMessage());
 		} catch (Exception e) {
 			e.printStackTrace();
 			log.error(CommonUtil.format("view applyDeposit api fail：%s,%s", WalletResponseEnums.SYSTEM_ERROR.getCode(),

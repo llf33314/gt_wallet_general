@@ -72,7 +72,7 @@ public class OrderAPI {
         @ApiImplicitParam(name = "busId",value = "商家id",paramType = "form",dataType = "int",required=true,example="35"),
         @ApiImplicitParam(name = "bizOrderNo",value = "系统订单号",paramType = "form",dataType = "string",required=true,example="cy123456789")
         ,
-        @ApiImplicitParam(name = "acct",value = "支付授权码",paramType = "form",dataType = "string",required=true,example="openid或userid(支付宝)")
+        @ApiImplicitParam(name = "acct",value = "支付授权码",paramType = "form",dataType = "string",required=true)
         ,
 //        @ApiImplicitParam(name = "frontUrl",value = "前台通知地址",paramType = "form",dataType = "string",required=true,defaultValue="http://duofriend.com")
 //        ,
