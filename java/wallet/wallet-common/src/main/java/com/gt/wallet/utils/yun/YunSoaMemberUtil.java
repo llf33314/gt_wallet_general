@@ -803,7 +803,7 @@ public class YunSoaMemberUtil {
 			param.put("amount",amount);
 			param.put("fee", 0L);
 			param.put("validateType",0L);
-			param.put("frontUrl", "");
+			param.put("frontUrl", frontUrl);
 			param.put("backUrl", backUrl);
 			param.put("ordErexpireDatetime", "2018-01-15 23:59:59");
 			param.put("payMethod", payMethod);
@@ -845,7 +845,6 @@ public class YunSoaMemberUtil {
 			log.info("applyDeposit start:"+JsonUtil.toJSONString(payOrder));
 			//支付方式
 			//快捷
-			String frontUrl =payOrder.getFrontUrl();
 			Long amount= (long) (payOrder.getAmount()*100);
 			Integer validateType=1;
 			//组装支付方式
@@ -923,7 +922,7 @@ public class YunSoaMemberUtil {
 			param.put("amount",amount);
 			param.put("fee", 0L);
 			param.put("validateType",validateType);
-			param.put("frontUrl", frontUrl);
+//			param.put("frontUrl", frontUrl);
 			param.put("backUrl", backUrl);
 			param.put("ordErexpireDatetime", "2018-01-15 23:59:59");
 			param.put("payMethod", payMethod);
