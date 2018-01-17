@@ -177,11 +177,11 @@ public class WalletHttpClienUtil {
 //		
 		//Map s=reqPostUTF8(JsonUtil.toJSONString(walletIndividualAdd), url, Map.class);
 //		System.out.println(s);
-		List<com.gt.wallet.data.api.tonglian.request.invoice.TInvoiceList> tInvoiceList	=new ArrayList<>();
-		TInvoiceList invoiceList=new TInvoiceList(1, "1000000000000000000", "货物", "", "", 1.0, 1.0, 1.0, 1.0, 1.0,  "1");
-		tInvoiceList.add(invoiceList);
-		TH5Invoice th5Invoice=new TH5Invoice("dfw1515551136943", "dffp"+System.currentTimeMillis(), 9999.0, 1.0, 1.0, tInvoiceList);
-		BaseResult baseResult=	reqPostUTF8(JsonUtil.toJSONString(tInvoiceList), "http://116.62.115.2/H5Invoice", BaseResult.class);
-		System.out.println(JsonUtil.toJSONString(baseResult));
+//		List<com.gt.wallet.data.api.tonglian.request.invoice.TInvoiceList> tInvoiceList	=new ArrayList<>();
+//		TInvoiceList invoiceList=new TInvoiceList(1, "1000000000000000000", "货物", "", "", 1.0, 1.0, 1.0, 1.0, 1.0,  "1");
+//		tInvoiceList.add(invoiceList);
+//		TH5Invoice th5Invoice=new TH5Invoice("dfw1515551136943", "dffp"+System.currentTimeMillis(), 9999.0, 1.0, 1.0, tInvoiceList);
+		//BaseResult baseResult=	reqPostUTF8(JsonUtil.toJSONString(tInvoiceList), "http://116.62.115.2/H5Invoice", BaseResult.class);
+//		System.out.println(JsonUtil.toJSONString(baseResult));
 		}
 }

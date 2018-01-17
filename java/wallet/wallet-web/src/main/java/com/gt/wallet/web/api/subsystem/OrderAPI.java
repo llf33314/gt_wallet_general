@@ -75,8 +75,8 @@ public class OrderAPI {
         ,
         @ApiImplicitParam(name = "acct",value = "支付授权码",paramType = "form",dataType = "string",required=true,example="openid或userid(支付宝)")
         ,
-        @ApiImplicitParam(name = "frontUrl",value = "前台通知地址",paramType = "form",dataType = "string",required=true,defaultValue="http://duofriend.com")
-        ,
+//        @ApiImplicitParam(name = "frontUrl",value = "前台通知地址",paramType = "form",dataType = "string",required=true,defaultValue="http://duofriend.com")
+//        ,
         @ApiImplicitParam(name = "notifyUrl",value = "后台通知地址",paramType = "form",dataType = "string",required=true,defaultValue="http://duofriend.com")
         ,
         @ApiImplicitParam(name = "type",value = "支付方式 1：微信 2:支付宝",paramType = "form",dataType = "int",required=true,defaultValue="1")
@@ -91,12 +91,12 @@ public class OrderAPI {
         ,
         @ApiImplicitParam(name = "sendUrl",value = "推送路径",paramType = "form",dataType = "string",required=true,defaultValue="1")
        })
-	public ServerResponse<Integer>  codepay(HttpServletRequest request, String  obj) {
-		log.info(CommonUtil.format("start view codepay api params:%s", JsonUtil.toJSONString(obj)));
+	public ServerResponse<Integer>  codepay(HttpServletRequest request,@RequestBody PayOrder payOrder) {
+		log.info(CommonUtil.format("start view codepay api params:%s", JsonUtil.toJSONString(payOrder)));
 		try {
-			PayOrder payOrder=null;
-			String  json=KeysUtil.getDesString(obj);
-			payOrder=JsonUtil.parseObject(json, PayOrder.class);
+//			PayOrder payOrder=null;
+//			String  json=KeysUtil.getDesString(obj);
+//			payOrder=JsonUtil.parseObject(json, PayOrder.class);
 			ServerResponse<Integer> serverResponse=walletPayOrderService.codepay(payOrder);
 			log.info("serverResponse %s",JsonUtil.toJSONString(serverResponse));
 			return serverResponse;
