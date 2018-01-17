@@ -141,53 +141,6 @@ public class WalletPayOrderController extends BaseController {
 	
 	
 
-	/**
-	 * 支付下单
-	 * 
-	 * @return
-	 */
-	@RequestMapping(value = "/79B4DE7C/codepay", method = RequestMethod.POST)
-	@ApiOperation(value = "支付下单", notes = "支付下单")
-	@ApiImplicitParams({
-        @ApiImplicitParam(name = "busId",value = "商家id",paramType = "form",dataType = "int",required=true,example="35"),
-        @ApiImplicitParam(name = "bizOrderNo",value = "系统订单号",paramType = "form",dataType = "string",required=true,example="cy123456789")
-        ,
-        @ApiImplicitParam(name = "acct",value = "支付授权码",paramType = "form",dataType = "string",required=true,example="openid或userid(支付宝)")
-        ,
-        @ApiImplicitParam(name = "frontUrl",value = "前台通知地址",paramType = "form",dataType = "string",required=true,defaultValue="http://duofriend.com")
-        ,
-        @ApiImplicitParam(name = "notifyUrl",value = "后台通知地址",paramType = "form",dataType = "string",required=true,defaultValue="http://duofriend.com")
-        ,
-        @ApiImplicitParam(name = "type",value = "支付方式 1：微信 2:支付宝",paramType = "form",dataType = "int",required=true,defaultValue="1")
-        ,
-        @ApiImplicitParam(name = "desc",value = "描述",paramType = "form",dataType = "string",required=true,defaultValue="描述")
-        ,
-        @ApiImplicitParam(name = "takeState",value = "是否可立即提现(1:可取 2:不可取)",paramType = "form",dataType = "string",required=true,defaultValue="1")
-        ,
-        @ApiImplicitParam(name = "model",value = "支付模块",paramType = "form",dataType = "string",required=true,defaultValue="1")
-        ,
-        @ApiImplicitParam(name = "memberId",value = "会员ID",paramType = "form",dataType = "string",required=true,defaultValue="1")
-        ,
-        @ApiImplicitParam(name = "sendUrl",value = "推送路径",paramType = "form",dataType = "string",required=true,defaultValue="1")
-       })
-	public String codepay(HttpServletRequest request, String  obj) {
-		log.info(CommonUtil.format("start view codepay api params:%s", JsonUtil.toJSONString(obj)));
-		try {
-			PayOrder payOrder=null;
-			String  json=KeysUtil.getDesString(obj);
-			payOrder=JsonUtil.parseObject(json, PayOrder.class);
-			ServerResponse<com.alibaba.fastjson.JSONObject> serverResponse=walletPayOrderService.applyDeposit(payOrder);
-			log.info("serverResponse %s",JsonUtil.toJSONString(serverResponse));
-			request.setAttribute("serverResponse", serverResponse);
-			request.setAttribute("payOrder", payOrder);
-		} catch (Exception e) {
-			e.printStackTrace();
-			log.error(CommonUtil.format("view codepay api fail：%s,%s", WalletResponseEnums.SYSTEM_ERROR.getCode(),
-					WalletResponseEnums.SYSTEM_ERROR.getDesc()));
-			throw new ResponseEntityException(WalletResponseEnums.SYSTEM_ERROR);
-		}
-		return "";
-	}
 	
 	
 	/**
