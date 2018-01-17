@@ -119,6 +119,7 @@ public class WalletPayOrderServiceImpl extends BaseServiceImpl<WalletPayOrderMap
 		ServerResponse<com.alibaba.fastjson.JSONObject> serverResponse=YunSoaMemberUtil.applyDeposit(tPayOrder);
 		
 		com.alibaba.fastjson.JSONObject payInfo=	serverResponse.getData();
+	//	com.alibaba.fastjson.JSONObject payInfo=	signedValue.getJSONObject("payInfo");
 		/************通联下单************/
 		log.info(CommonUtil.format("biz applyDeposit api serverResponse:%s", JsonUtil.toJSONString(serverResponse)));
 		/************记录日志************/

@@ -821,8 +821,8 @@ public class YunSoaMemberUtil {
 				log.info("applyDeposit end");
 				String value = response.getString("signedValue");
 				com.alibaba.fastjson.JSONObject json=	JsonUtil.parseObject(value, com.alibaba.fastjson.JSONObject.class);
-				com.alibaba.fastjson.JSONObject payInfo=	json.getJSONObject("payInfo");
-				return ServerResponse.createBySuccessCodeData(payInfo);
+			//	com.alibaba.fastjson.JSONObject payInfo=	json.getJSONObject("payInfo");
+				return ServerResponse.createBySuccessCodeData(json);
 			}else{
 				log.info("applyDeposit end");
 				return ServerResponse.createByErrorMessage(CommonUtil.format("第三方接口异常,错误代码 :%s,描述:%s", response.getString("errorCode"), response.getString("message")));

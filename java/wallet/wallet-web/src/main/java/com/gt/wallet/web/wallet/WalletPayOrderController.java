@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.servlet.ModelAndView;
 
 import com.baomidou.mybatisplus.plugins.Page;
 import com.gt.api.util.KeysUtil;
@@ -172,8 +173,9 @@ public class WalletPayOrderController extends BaseController {
         ,
         @ApiImplicitParam(name = "sendUrl",value = "推送路径",paramType = "form",dataType = "string",required=false,defaultValue="1")
        })
-	public String applyDeposit(HttpServletRequest request, String  obj,String acct) {
+	public ModelAndView applyDeposit(HttpServletRequest request, String  obj,String acct) {
 		log.info(CommonUtil.format("start view applyDeposit api params:%s", JsonUtil.toJSONString(obj)));
+		ModelAndView modelAndView = new ModelAndView();
 		try {
 			PayOrder payOrder=null;
 			String  json=KeysUtil.getDesString(obj);
@@ -192,12 +194,13 @@ public class WalletPayOrderController extends BaseController {
 			request.setAttribute("payOrder", payOrder);
 			request.setAttribute("homeDomain", WalletWebConfig.getHomeUrl());
 			if(payOrder.getType()==1){
-				return "page/wxpay";
-			}else if(payOrder.getType()==2){
-				return "page/alipay";
+				modelAndView.setViewName("/pay/wxpay");
+			}else if(payOrder.getType()==2){//
+				modelAndView.setViewName("/pay/alipay");
 			}else{//H5
-				return "page/alipay";
+				modelAndView.setViewName("/pay/alipay");
 			}
+			return modelAndView;
 		} catch (BusinessException e) {
 			e.printStackTrace();
 			log.error(CommonUtil.format("view applyDeposit api fail：%s,%s", WalletResponseEnums.SYSTEM_ERROR.getCode(),

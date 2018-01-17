@@ -32,22 +32,21 @@
     <script type="text/javascript" src="../../js/sendMessage.js"></script>
 </head>
 <body style="background-color: #ededed; height: 100%">
-<script type="text/javascript" src="https://res.wx.qq.com/open/js/jweixin-1.0.0.js"></script>
-<div class="con-sure">
-    <p style="text-align: center; font-weight: bolder; font-size: 1.35em; padding-top: 5%;padding-bottom: 2%">${payOrder.desc }</p>
+<%-- <div class="con-sure">
+    <p style="text-align: center; font-weight: bolder; font-size: 1.35em; padding-top: 5%;padding-bottom: 2%">${payOrder.desc } ${data.payinfo}</p>
     <p style="text-align: center; font-weight: bolder; font-size: 1.8em"><b style="font-size: 1.8em">￥</b><span
-            style="font-weight: bolder; font-size: 1.8em"><fmt:formatNumber value="${payOrder.totalTee}"
+            style="font-weight: bolder; font-size: 1.8em"><fmt:formatNumber value="${payOrder.amount}"
                                                                             pattern="##.##"
                                                                             minFractionDigits="2"></fmt:formatNumber></span>
     </p>
     <div style="background-color: #fff; color:#787878; padding: 4% 0px; margin: 10% 0px ">
-        <p style="display: inline-table; font-size: 1.1em; padding-left: 2%">收款方</p>
+        <p style="display: inline-table; font-size: 1.1em; padding-left: 2%">收款方:${data.payinfo}</p>
         <p style="text-align: right; display: inline-table; float: right; font-size: 1.1em; color: #000;padding-right: 2%">多粉科技有限公司</p>
     </div>
     <a id="pay" class="con-pay"
        style="font-size:1.25em; display:block;  margin:0 auto; width:90%; text-align:center;border-radius:5px;padding:10px 0px; background-color: #46c017; color:#fff;">立即支付</a>
-</div>
-<script type="text/javascript">
+</div> --%>
+<!-- <script type="text/javascript">
     $(function () {
         $("#pay").click(function () {
         	AlipayJSBridge.call("tradePay",{
@@ -77,6 +76,53 @@
         });
     });
 
+</script> -->
+<p id="result">result: </p>
+<script type="application/javascript">
+    // 调试时可以通过在页面定义一个元素，打印信息，使用alert方法不够优雅
+    function log(obj) {
+        $("#result").append(obj).append(" ").append("<br />");
+    }
+
+    $(document).ready(function(){
+        // 页面载入完成后即唤起收银台
+        // 此处${tradeNO}为模板语言语法，实际调用样例类似为tradePpay("2016072621001004200000000752")
+        tradePay("${data.payInfo}"); 
+
+        // 点击payButton按钮后唤起收银台
+        $("#payButton").click(function() {
+           tradePay("${tradeNO}");
+        });
+
+        // 通过jsapi关闭当前窗口，仅供参考，更多jsapi请访问
+        // /aod/54/104510
+        $("#closeButton").click(function() {
+           AlipayJSBridge.call('closeWebview');
+        });
+     });
+
+    // 由于js的载入是异步的，所以可以通过该方法，当AlipayJSBridgeReady事件发生后，再执行callback方法
+    function ready(callback) {
+         if (window.AlipayJSBridge) {
+             callback && callback();
+         } else {
+             document.addEventListener('AlipayJSBridgeReady', callback, false);
+         }
+    }
+
+    function tradePay(tradeNO) {
+        ready(function(){
+             // 通过传入交易号唤起快捷调用方式(注意tradeNO大小写严格)
+             AlipayJSBridge.call("tradePay", {
+                  tradeNO: "${data.payInfo}"
+             }, function (data) {
+                 log(JSON.stringify(data));
+                 if ("9000" == data.resultCode) {
+                     log("支付成功");
+                 }
+             });
+        });
+    }
 </script>
 </body>
 </html>
