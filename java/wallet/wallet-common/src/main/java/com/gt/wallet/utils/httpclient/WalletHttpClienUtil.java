@@ -1,9 +1,6 @@
 package com.gt.wallet.utils.httpclient;
 
 import java.nio.charset.Charset;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
 
 import org.apache.http.Header;
 import org.apache.http.HttpHeaders;
@@ -13,16 +10,15 @@ import org.apache.http.entity.ContentType;
 import org.apache.http.entity.StringEntity;
 import org.apache.http.message.BasicHeader;
 
-import com.alibaba.fastjson.JSONObject;
 import com.gt.api.bean.sign.SignBean;
+import com.gt.api.dto.ResponseUtils;
+import com.gt.api.util.HttpClienUtils;
 import com.gt.api.util.KeysUtil;
+import com.gt.api.util.RequestUtils;
 import com.gt.api.util.httpclient.JsonUtil;
 import com.gt.api.util.httpclient.LocalHttpClient;
-import com.gt.wallet.data.api.tonglian.request.invoice.TH5Invoice;
-import com.gt.wallet.data.api.tonglian.request.invoice.TInvoiceList;
-import com.gt.wallet.data.api.tonglian.response.CardBin;
-import com.gt.wallet.data.api.tonglian.response.invoice.BaseResult;
-import com.gt.wallet.utils.HttpKit;
+import com.gt.wallet.data.wallet.request.PayOrder;
+import com.gt.wallet.dto.ServerResponse;
 
 /** 
 * @author lifengxi(gt_sky@qq.com)
@@ -183,5 +179,21 @@ public class WalletHttpClienUtil {
 //		TH5Invoice th5Invoice=new TH5Invoice("dfw1515551136943", "dffp"+System.currentTimeMillis(), 9999.0, 1.0, 1.0, tInvoiceList);
 		//BaseResult baseResult=	reqPostUTF8(JsonUtil.toJSONString(tInvoiceList), "http://116.62.115.2/H5Invoice", BaseResult.class);
 //		System.out.println(JsonUtil.toJSONString(baseResult));
+		
+		RequestUtils<PayOrder>  requestUtils=new RequestUtils<>();
+		PayOrder payOrder=new  PayOrder();
+		payOrder.setAcct("134529642439874448");
+		payOrder.setAmount(0.01);
+		payOrder.setBizOrderNo("HY"+System.currentTimeMillis());
+		payOrder.setNotifyUrl("http://dfpay.yifriend.net/walletPayOrder/79B4DE7C/paySuccessNotify1");
+		payOrder.setType(1);
+		payOrder.setDesc("测试支付");
+		payOrder.setTakeState(1);
+		payOrder.setBusId(43);
+		payOrder.setModel(40);
+		requestUtils.setReqdata(payOrder);
+		ResponseUtils<?>	response= HttpClienUtils.reqPost(JsonUtil.toJSONString(requestUtils), "http://wallet.yifriend.net:8440/8A5DA52E/memberApi/79B4DE7C/codepay", ResponseUtils.class,"WALLET2017");
+		System.out.println(JsonUtil.toJSONString(response));
+	//	payOrder.set
 		}
 }
