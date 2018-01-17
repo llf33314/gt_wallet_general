@@ -889,7 +889,7 @@ public class YunSoaMemberUtil {
 				alipay.put("payType","A01");
 				alipay.put("amount", amount);
 				alipay.put("authcode", payOrder.getAcct());
-				payMethod.put("SCAN_ALIPAY",alipay);
+				payMethod.put("CODEPAY_W",alipay);
 				validateType=0;
 			}else if(payOrder.getType()==7){
 				//支付宝刷卡支付(被扫)
@@ -897,7 +897,7 @@ public class YunSoaMemberUtil {
 				alipay.put("payType","A01");
 				alipay.put("amount", payOrder.getAmount()*100);
 				alipay.put("authcode", payOrder.getAcct());
-				payMethod.put("SCAN_ALIPAY",alipay);
+				payMethod.put("CODEPAY_A",alipay);
 				validateType=0;
 			}else  if(payOrder.getType()==8){
 				validateType=1;
