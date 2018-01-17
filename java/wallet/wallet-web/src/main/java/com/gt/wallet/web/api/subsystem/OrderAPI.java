@@ -91,23 +91,21 @@ public class OrderAPI {
         ,
         @ApiImplicitParam(name = "sendUrl",value = "推送路径",paramType = "form",dataType = "string",required=true,defaultValue="1")
        })
-	public String codepay(HttpServletRequest request, String  obj) {
+	public ServerResponse<Integer>  codepay(HttpServletRequest request, String  obj) {
 		log.info(CommonUtil.format("start view codepay api params:%s", JsonUtil.toJSONString(obj)));
 		try {
 			PayOrder payOrder=null;
 			String  json=KeysUtil.getDesString(obj);
 			payOrder=JsonUtil.parseObject(json, PayOrder.class);
-			ServerResponse<com.alibaba.fastjson.JSONObject> serverResponse=walletPayOrderService.applyDeposit(payOrder);
+			ServerResponse<Integer> serverResponse=walletPayOrderService.codepay(payOrder);
 			log.info("serverResponse %s",JsonUtil.toJSONString(serverResponse));
-			request.setAttribute("serverResponse", serverResponse);
-			request.setAttribute("payOrder", payOrder);
+			return serverResponse;
 		} catch (Exception e) {
 			e.printStackTrace();
 			log.error(CommonUtil.format("view codepay api fail：%s,%s", WalletResponseEnums.SYSTEM_ERROR.getCode(),
 					WalletResponseEnums.SYSTEM_ERROR.getDesc()));
 			throw new ResponseEntityException(WalletResponseEnums.SYSTEM_ERROR);
 		}
-		return "";
 	}
 	
 }

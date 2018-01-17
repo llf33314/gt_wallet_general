@@ -146,7 +146,7 @@ public class WalletPayOrderServiceImpl extends BaseServiceImpl<WalletPayOrderMap
 
 	@Transactional(propagation = Propagation.REQUIRED,isolation = Isolation.DEFAULT,timeout=36000,rollbackFor=Exception.class)
 	@Override
-	public ServerResponse<com.alibaba.fastjson.JSONObject> codepay(PayOrder payOrder)throws Exception {
+	public ServerResponse<Integer> codepay(PayOrder payOrder)throws Exception {
 		log.info(CommonUtil.format("start biz codepay api params:%s",JsonUtil.toJSONString(payOrder)));
 		ServerResponse<WalletPayOrder> serverResponseOrder=findByOrderNo(payOrder.getBizOrderNo());
 		WalletPayOrder walletPayOrder=null;
@@ -178,7 +178,7 @@ public class WalletPayOrderServiceImpl extends BaseServiceImpl<WalletPayOrderMap
 		payOrder.setSubmitNo(submitNo);
 		TPayOrder tPayOrder=new TPayOrder(payOrder.getAmount(),submitNo, (walletMember.getFeePercent()*payOrder.getAmount())/100, payOrder.getAcct(), payOrder.getReturnUrl(), payOrder.getType(), payOrder.getDesc(), walletMember.getMemberNum());
 		/************通联下单************/
-		ServerResponse<com.alibaba.fastjson.JSONObject> serverResponse=YunSoaMemberUtil.applyDeposit(tPayOrder);
+		ServerResponse<Integer> serverResponse=YunSoaMemberUtil.codepay(tPayOrder);
 		/************通联下单************/
 		log.info(CommonUtil.format("serverResponse:%s", JsonUtil.toJSONString(serverResponse)));
 		/************记录日志************/

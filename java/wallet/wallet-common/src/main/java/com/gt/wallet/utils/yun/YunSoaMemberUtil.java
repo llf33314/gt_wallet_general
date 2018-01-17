@@ -722,7 +722,7 @@ public class YunSoaMemberUtil {
 	}
 	
 /***********************************************************************订单类接口********************************************************************************************/
-
+	
 	/**
 	 * 充值申请
 	 * @param payOrder
@@ -823,6 +823,132 @@ public class YunSoaMemberUtil {
 				com.alibaba.fastjson.JSONObject json=	JsonUtil.parseObject(value, com.alibaba.fastjson.JSONObject.class);
 				com.alibaba.fastjson.JSONObject payInfo=	json.getJSONObject("payInfo");
 				return ServerResponse.createBySuccessCodeData(payInfo);
+			}else{
+				log.info("applyDeposit end");
+				return ServerResponse.createByErrorMessage(CommonUtil.format("第三方接口异常,错误代码 :%s,描述:%s", response.getString("errorCode"), response.getString("message")));
+			}
+
+		}catch(Exception e){
+			log.info("applyDeposit error");
+			e.printStackTrace();
+			return ServerResponse.createByErrorCode(WalletResponseEnums.API_ERROR);
+		}
+	}
+
+	/**
+	 * 充值申请
+	 * @param payOrder
+	 * @return
+	 */
+	public static ServerResponse<Integer> codepay(TPayOrder payOrder) {
+		try{
+			log.info("applyDeposit start:"+JsonUtil.toJSONString(payOrder));
+			//支付方式
+			//快捷
+			String frontUrl =payOrder.getFrontUrl();
+			Long amount= (long) (payOrder.getAmount()*100);
+			Integer validateType=1;
+			//组装支付方式
+			JSONObject payMethod = new JSONObject();
+			if(payOrder.getType()==1){
+				//微信js支付
+				JSONObject weixin = new JSONObject();
+				weixin.put("acct", payOrder.getAcct());
+				weixin.put("amount", amount);
+				payMethod.put("WECHAT_PUBLIC",weixin);
+				validateType=1;
+			}else if(payOrder.getType()==2){
+				//支付宝支付
+				JSONObject alipay = new JSONObject();
+				alipay.put("acct", payOrder.getAcct());
+				alipay.put("amount", amount);
+				payMethod.put("ALIPAY_SERVICE",alipay);
+			}else if(payOrder.getType()==3){
+				//微信H5
+				JSONObject alipay = new JSONObject();
+				alipay.put("limitPay","no_credit");
+				alipay.put("amount",amount);
+				payMethod.put("WECHATPAY_H5",alipay);
+				validateType=1;
+			}else if(payOrder.getType()==4){
+				//微信扫码支付(正扫)
+				JSONObject alipay = new JSONObject();
+				alipay.put("payType","W02");
+				alipay.put("amount", amount);
+				payMethod.put("SCAN_WEIXIN",alipay);
+				validateType=1;
+			}else if(payOrder.getType()==5){
+				//支付宝扫码支付(正扫)
+				JSONObject alipay = new JSONObject();
+				alipay.put("payType","A01");
+				alipay.put("amount", amount);
+				payMethod.put("SCAN_ALIPAY",alipay);
+				validateType=1;
+			}else if(payOrder.getType()==6){
+				//微信刷卡支付(被扫)
+				JSONObject alipay = new JSONObject();
+				alipay.put("payType","A01");
+				alipay.put("amount", amount);
+				alipay.put("authcode", payOrder.getAcct());
+				payMethod.put("SCAN_ALIPAY",alipay);
+				validateType=0;
+			}else if(payOrder.getType()==7){
+				//支付宝刷卡支付(被扫)
+				JSONObject alipay = new JSONObject();
+				alipay.put("payType","A01");
+				alipay.put("amount", payOrder.getAmount()*100);
+				alipay.put("authcode", payOrder.getAcct());
+				payMethod.put("SCAN_ALIPAY",alipay);
+				validateType=0;
+			}else  if(payOrder.getType()==8){
+				validateType=1;
+				JSONObject alipay = new JSONObject();
+				alipay.put("bankCardNo",rsaEncrypt("6228481234567890123"));
+				alipay.put("amount",amount);
+//				alipay.put("payType",WalletWebConfig.getYunBizUserId());
+		//		alipay.put("amount", payOrder.getAmount()*100);
+				payMethod.put("REALNAMEPAY",alipay);
+			}
+//			payMethod.put("GATEWAY", gatewayPay);
+//			payMethod.put("DAIKOU", daikouPay);
+
+			String backUrl =WalletWebConfig.getYunpaySuccessNotifyUrl();
+
+			String extendInfo = "this is extendInfo";
+
+			JSONObject param = new JSONObject();
+			param.put("bizUserId", payOrder.getBizUserId());
+			param.put("bizOrderNo", "ddf"+System.currentTimeMillis());
+			param.put("accountSetNo", WalletWebConfig.getYunBizUserId());
+			param.put("amount",amount);
+			param.put("fee", 0L);
+			param.put("validateType",validateType);
+			param.put("frontUrl", frontUrl);
+			param.put("backUrl", backUrl);
+			param.put("ordErexpireDatetime", "2018-01-15 23:59:59");
+			param.put("payMethod", payMethod);
+			param.put("goodsName", "测试商品");
+			param.put("industryCode", WalletConstants.INDUSTRYCODE);
+			param.put("industryName",WalletConstants.INDUSTRYNAME);
+			param.put("source", 1L);
+			param.put("summary",payOrder.getDesc());
+			param.put("extendInfo", extendInfo);
+
+			log.info("request:" + param);
+			JSONObject response = client.request(ordersoaName, "depositApply", param);
+			log.info("response:" + response);
+			if(CommonUtil.isNotEmpty(response)&&response.get("status").equals("OK")){//创建成功
+				log.info("applyDeposit end");
+				String value = response.getString("signedValue");
+				com.alibaba.fastjson.JSONObject json=	JsonUtil.parseObject(value, com.alibaba.fastjson.JSONObject.class);
+				if(json.getString("payStatus").equals("success")){
+					return ServerResponse.createBySuccessCodeData(0);
+				}else if(json.getString("payStatus").equals("pending")){
+					return ServerResponse.createBySuccessCodeData(1);
+				}else{
+					
+					return ServerResponse.createByErrorCodeMessage(WalletResponseEnums.API_ERROR.getCode(), CommonUtil.format("%s",  json.getString("payFailMessage")));
+				}
 			}else{
 				log.info("applyDeposit end");
 				return ServerResponse.createByErrorMessage(CommonUtil.format("第三方接口异常,错误代码 :%s,描述:%s", response.getString("errorCode"), response.getString("message")));
