@@ -87,7 +87,7 @@ public class AuthContrller {
 //				log.info("authCode换取authToken失败");
 //			}
 			String orderKey=params.get("state");
-			String url=WalletWebConfig.getDomain()+"walletPayOrder/79B4DE7C/applyDeposit?obj="+orderKey+"&acct="+oauthTokenResponse.getAlipayUserId();
+			String url=WalletWebConfig.getDomain()+"walletPayOrder/79B4DE7C/applyDeposit?obj="+orderKey+"&acct="+oauthTokenResponse.getUserId();
 			//return "redirect:"+url;
 			response.sendRedirect(url);
 		} catch (AlipayApiException alipayApiException) {
