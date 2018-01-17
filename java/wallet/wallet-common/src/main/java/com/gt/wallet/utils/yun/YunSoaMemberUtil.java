@@ -805,7 +805,7 @@ public class YunSoaMemberUtil {
 			param.put("validateType",0L);
 			param.put("frontUrl", frontUrl);
 			param.put("backUrl", backUrl);
-			param.put("ordErexpireDatetime", "2018-01-15 23:59:59");
+		//	param.put("ordErexpireDatetime", "2018-01-15 23:59:59");
 			param.put("payMethod", payMethod);
 			param.put("goodsName", "测试商品");
 			param.put("industryCode", WalletConstants.INDUSTRYCODE);
