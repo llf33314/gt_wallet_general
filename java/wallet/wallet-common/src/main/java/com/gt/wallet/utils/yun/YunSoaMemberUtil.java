@@ -742,6 +742,7 @@ public class YunSoaMemberUtil {
 				JSONObject weixin = new JSONObject();
 				weixin.put("acct", payOrder.getAcct());
 				weixin.put("amount", amount);
+				weixin.put("payType","no_credit");
 				payMethod.put("WECHAT_PUBLIC",weixin);
 			}else if(payOrder.getType()==2){
 				//支付宝支付

@@ -63,6 +63,7 @@ public class WalletPayOrderController extends BaseController {
 	 * @throws Exception 
 	 */
 	@RequestMapping(value = "/79B4DE7C/paySuccessNotify", method = RequestMethod.POST)
+	//@RequestMapping(value = "/79B4DE7C/paySuccessNotify")
 	@ApiOperation(value = "支付成功异步回调", notes = "支付成功异步回调",hidden=true)
 	public void paySuccessNotify(HttpServletRequest request,HttpServletResponse response, @RequestParam LinkedHashMap<String,Object> params) throws Exception {
 		log.info(CommonUtil.format("start view paySuccessNotify api params:%s", JsonUtil.toJSONString(params)));
@@ -194,7 +195,7 @@ public class WalletPayOrderController extends BaseController {
 			request.setAttribute("payOrder", payOrder);
 			request.setAttribute("homeDomain", WalletWebConfig.getHomeUrl());
 			if(payOrder.getType()==1){
-				modelAndView.setViewName("/pay/wxpay");
+				modelAndView.setViewName("/pay/wx_pay");
 			}else if(payOrder.getType()==2){//
 				modelAndView.setViewName("/pay/alipay");
 			}else{//H5
