@@ -887,7 +887,7 @@ public class YunSoaMemberUtil {
 			}else if(payOrder.getType()==6){
 				//微信刷卡支付(被扫)
 				JSONObject alipay = new JSONObject();
-				alipay.put("payType","A01");
+				alipay.put("payType","no_credit");
 				alipay.put("amount", amount);
 				alipay.put("authcode", payOrder.getAcct());
 				payMethod.put("CODEPAY_W",alipay);
@@ -895,7 +895,7 @@ public class YunSoaMemberUtil {
 			}else if(payOrder.getType()==7){
 				//支付宝刷卡支付(被扫)
 				JSONObject alipay = new JSONObject();
-				alipay.put("payType","A01");
+			//	alipay.put("payType","A01");
 				alipay.put("amount", payOrder.getAmount()*100);
 				alipay.put("authcode", payOrder.getAcct());
 				payMethod.put("CODEPAY_A",alipay);
