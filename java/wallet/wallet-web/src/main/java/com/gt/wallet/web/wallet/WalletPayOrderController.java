@@ -191,12 +191,14 @@ public class WalletPayOrderController extends BaseController {
 			if(serverResponse.getCode()!=0){//返回异常
 				throw new BusinessException(serverResponse.getCode(),serverResponse.getMsg());
 			}
-			request.setAttribute("data", serverResponse.getData());
+			
 			request.setAttribute("payOrder", payOrder);
 			request.setAttribute("homeDomain", WalletWebConfig.getHomeUrl());
 			if(payOrder.getType()==1){
+				request.setAttribute("data", serverResponse.getData().getJSONObject("payInfo"));
 				modelAndView.setViewName("/pay/wx_pay");
 			}else if(payOrder.getType()==2){//
+				request.setAttribute("data", serverResponse.getData());
 				modelAndView.setViewName("/pay/alipay");
 			}else{//H5
 				modelAndView.setViewName("/pay/alipay");
