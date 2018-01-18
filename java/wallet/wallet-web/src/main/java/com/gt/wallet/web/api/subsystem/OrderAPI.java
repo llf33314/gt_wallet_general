@@ -1,7 +1,6 @@
 package com.gt.wallet.web.api.subsystem;
 
 import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -33,7 +32,7 @@ import lombok.extern.slf4j.Slf4j;
 * @version 创建时间：2018年1月8日 上午10:47:39 
 * 类说明 
 */
-@RequestMapping("8A5DA52E/memberApi/")
+@RequestMapping("8A5DA52E/orderApi/")
 @Slf4j
 @RestController
 @Api(value = "orderApi",description="订单api")  
@@ -71,7 +70,7 @@ public class OrderAPI extends BaseController{
 	 * @return
 	 */
 	@RequestMapping(value = "/79B4DE7C/codepay", method = RequestMethod.POST)
-	@ApiOperation(value = "支付下单", notes = "支付下单")
+	@ApiOperation(value = "刷卡支付", notes = "刷卡支付")
 	@ApiImplicitParams({
         @ApiImplicitParam(name = "busId",value = "商家id",paramType = "form",dataType = "int",required=true,example="35"),
         @ApiImplicitParam(name = "bizOrderNo",value = "系统订单号",paramType = "form",dataType = "string",required=true,example="cy123456789")
@@ -82,7 +81,7 @@ public class OrderAPI extends BaseController{
 //        ,
         @ApiImplicitParam(name = "notifyUrl",value = "后台通知地址",paramType = "form",dataType = "string",required=true,defaultValue="http://duofriend.com")
         ,
-        @ApiImplicitParam(name = "type",value = "支付方式 1：微信 2:支付宝",paramType = "form",dataType = "int",required=true,defaultValue="1")
+        @ApiImplicitParam(name = "type",value = "支付方式6：微信 ,7:支付宝",paramType = "form",dataType = "int",required=true,defaultValue="1")
         ,
         @ApiImplicitParam(name = "desc",value = "描述",paramType = "form",dataType = "string",required=true,defaultValue="描述")
         ,
