@@ -77,7 +77,6 @@
     });
 
 </script> -->
-<p id="result">result: </p>
 <script type="application/javascript">
     // 调试时可以通过在页面定义一个元素，打印信息，使用alert方法不够优雅
     function log(obj) {
@@ -117,9 +116,21 @@
                   tradeNO: "${data.payInfo}"
              }, function (data) {
                  log(JSON.stringify(data));
-                 if ("9000" == data.resultCode) {
-                     log("支付成功");
-                 }
+                 if ("9000" == data.resultCode) {//支付成功
+				    	if ("${payOrder.sendUrl}" !="") {//支付成功推送消息
+	                    	 sendMessage("${homeDomain}","${payOrder.sendUrl}");
+	                    }
+		        	    if ("${payOrder.returnUrl}" !="") {//支付成功跳转回调地址
+	                       	location.href ="${payOrder.returnUrl}";
+	                       }else{//不需要回调操作
+	                       	//关闭支付宝浏览器
+	                    	  AlipayJSBridge.call('closeWebview');
+	                       }
+				    	
+	                 }else{
+	                	//关闭支付宝浏览器
+                	 	 AlipayJSBridge.call('closeWebview');
+	                 }
              });
         });
     }
