@@ -1084,7 +1084,7 @@ public class YunSoaMemberUtil {
 
 				JSONObject refund1 = new JSONObject();
 				refund1.put("bizUserId", tRefundOrder.getBizUserId());
-				refund1.put("amount", tRefundOrder.getAmount()-tRefundOrder.getFeeAmount());
+				refund1.put("amount", tRefundOrder.getAmount()*100);
 
 				org.json.JSONArray refundList = new org.json.JSONArray();
 				refundList.put(refund1);
@@ -1094,9 +1094,10 @@ public class YunSoaMemberUtil {
 				param.put("oriBizOrderNo", tRefundOrder.getOriBizOrderNo());
 				param.put("bizUserId", tRefundOrder.getBizUserId());
 				param.put("refundList", refundList);
-				param.put("amount", tRefundOrder.getAmount());
+				param.put("amount", tRefundOrder.getAmount()*100);
 				param.put("couponAmount", 0);
-				param.put("feeAmount", tRefundOrder.getFeeAmount());
+//				param.put("feeAmount", tRefundOrder.getFeeAmount());
+				param.put("feeAmount",0);
 
 				log.info("request:" + param);
 				JSONObject response = client.request(ordersoaName, "refund", param);
