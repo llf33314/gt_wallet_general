@@ -1083,7 +1083,7 @@ public class YunSoaMemberUtil {
 				String bizOrderNo = tRefundOrder.getBizOrderNo();
 
 				JSONObject refund1 = new JSONObject();
-//				refund1.put("bizUserId", tRefundOrder.getBizUserId());
+				refund1.put("bizUserId", tRefundOrder.getBizUserId());
 				refund1.put("amount", tRefundOrder.getAmount()*100);
 
 				org.json.JSONArray refundList = new org.json.JSONArray();
@@ -1092,7 +1092,7 @@ public class YunSoaMemberUtil {
 				JSONObject param = new JSONObject();
 				param.put("bizOrderNo", bizOrderNo);
 				param.put("oriBizOrderNo", tRefundOrder.getOriBizOrderNo());
-				param.put("bizUserId", tRefundOrder.getBizUserId());
+//				param.put("bizUserId", tRefundOrder.getBizUserId());
 				param.put("refundList", refundList);
 				param.put("amount", tRefundOrder.getAmount()*100);
 				param.put("couponAmount", 0);
