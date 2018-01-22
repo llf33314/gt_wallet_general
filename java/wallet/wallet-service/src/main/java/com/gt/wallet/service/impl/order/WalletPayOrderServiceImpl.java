@@ -1,6 +1,7 @@
 package com.gt.wallet.service.impl.order;
 
 import java.math.BigDecimal;
+import java.text.DecimalFormat;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
@@ -426,7 +427,9 @@ public class WalletPayOrderServiceImpl extends BaseServiceImpl<WalletPayOrderMap
 			throw new BusinessException("fail：退款金额超出总金额!");
 		}
 		double fee=walletMember.getFeePercent()/100*refundOrder.getAmount();
-		refundOrder.setFeeAmount(fee);
+		BigDecimal   b   =   new   BigDecimal(fee);  
+		double   f1   =   b.setScale(2,   BigDecimal.ROUND_HALF_UP).doubleValue();  
+		refundOrder.setFeeAmount(f1);
 		refundOrder.setBizUserId(walletMember.getMemberNum());
 		refundOrder.setOriBizOrderNo(payOrder.getSubmitNo());
 		ServerResponse<String> serverResponse2=	YunSoaMemberUtil.refund(refundOrder);
