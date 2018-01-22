@@ -66,4 +66,10 @@ public class WalletLogConstants {
 	 * 退款成功回调各子系统
 	 */
 	public static final Integer LOG_REFUNDNOTIFY=1008;
+	
+	
+	/**
+	 * 设置返现百分比
+	 */
+	public static final Integer LOG_SETCASHBACKPERCENT=1009;
 }

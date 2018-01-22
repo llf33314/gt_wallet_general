@@ -19,6 +19,7 @@ import com.gt.api.bean.session.BusUser;
 import com.gt.api.util.IPOrAddressUtils;
 import com.gt.api.util.httpclient.JsonUtil;
 import com.gt.wallet.base.BaseController;
+import com.gt.wallet.data.wallet.request.SetcashbackPercent;
 import com.gt.wallet.data.wallet.request.WalletSet;
 import com.gt.wallet.dto.ServerResponse;
 import com.gt.wallet.entity.WalletMember;
@@ -359,4 +360,33 @@ public class WalletMemberController extends BaseController {
 				throw new ResponseEntityException(WalletResponseEnums.SYSTEM_ERROR);
 			}
 	}  
+	
+	
+	/**
+	 *  返现百分比设置
+	 * @param request
+	 * @param phone
+	 * @param wmemberId
+	 * @return
+	 */
+	@ResponseBody
+	@RequestMapping(value="79B4DE7C/setcashbackPercent",method=RequestMethod.POST)
+	@ApiOperation(value="返现百分比设置", notes="返现百分比设置")
+	public ServerResponse<?> setcashbackPercent(HttpServletRequest request,@RequestBody SetcashbackPercent params
+			){
+		log.info(CommonUtil.format("start view setcashbackPercent api params:%s",JsonUtil.toJSONString(params)));
+		try {
+			ServerResponse<?> serverResponse=null;
+			serverResponse=walletMemberService.setcashbackPercent(params);
+			log.info(CommonUtil.format("serverResponse:%s",JsonUtil.toJSONString(serverResponse)));
+			return serverResponse;
+		} catch ( BusinessException e) {
+			log.error(CommonUtil.format("view setcashbackPercent api fail：%s,%s",e.getCode(),e.getMessage()));
+			throw new ResponseEntityException(e.getCode(),e.getMessage());
+		} catch ( Exception e) {
+			e.printStackTrace();
+			log.error(CommonUtil.format("view setcashbackPercent api fail：%s,%s",WalletResponseEnums.SYSTEM_ERROR.getCode(),WalletResponseEnums.SYSTEM_ERROR.getDesc()));
+			throw new ResponseEntityException(WalletResponseEnums.SYSTEM_ERROR);
+		}
+	} 
 }

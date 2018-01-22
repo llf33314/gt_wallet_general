@@ -16,6 +16,7 @@ import com.gt.api.bean.session.BusUser;
 import com.gt.api.util.httpclient.JsonUtil;
 import com.gt.wallet.base.BaseServiceImpl;
 import com.gt.wallet.constant.WalletLogConstants;
+import com.gt.wallet.data.wallet.request.SetcashbackPercent;
 import com.gt.wallet.data.wallet.request.WalletSet;
 import com.gt.wallet.dto.ServerResponse;
 import com.gt.wallet.entity.WalletBank;
@@ -72,6 +73,9 @@ public class WalletMemberServiceImpl extends BaseServiceImpl<WalletMemberMapper,
 	
 	@Autowired
 	private WalletBankService walletBankService;
+	
+	@Autowired
+	private WalletMemberService walletMemberService;
 	
 	
 	/**
@@ -416,5 +420,39 @@ public class WalletMemberServiceImpl extends BaseServiceImpl<WalletMemberMapper,
 		}
 	}
 	
+	
+	@Transactional(propagation = Propagation.REQUIRED,isolation = Isolation.DEFAULT,timeout=36000,rollbackFor=Exception.class)
+	@Override
+	public ServerResponse<?> setcashbackPercent(SetcashbackPercent setcashbackPercent) {
+		log.info("start biz setcashbackPercent api prams:"+JsonUtil.toJSONString(setcashbackPercent));
+		Integer wmemberId=setcashbackPercent.getWmemberId();
+		WalletMember walletMember=	walletMemberMapper.selectById(setcashbackPercent.getWmemberId());
+		if(CommonUtil.isEmpty(walletMember)){
+			log.error("biz lockMember api fail:"+WalletResponseEnums.DATA_NULL_ERROR.getDesc());
+			throw new BusinessException(WalletResponseEnums.DATA_NULL_ERROR);
+		}
+		if(setcashbackPercent.getCashbackPercent()>0.4){
+			log.error("biz lockMember api fail:返现比例不超过0.4");
+			throw new BusinessException("返现比例不超过0.4");
+		}
+		walletMember.setCashbackPercent(setcashbackPercent.getCashbackPercent());
+		boolean result=	walletMemberService.updateAllColumnById(walletMember);
+		ServerResponse<?> serverResponse=null;
+		if(result){
+			serverResponse=ServerResponse.createBySuccess();
+		}else{
+			serverResponse=ServerResponse.createByError();
+		}
+		/***********************记录操作日志****************************/
+		try {
+			walletApiLogService.save(JsonUtil.toJSONString(setcashbackPercent), serverResponse, wmemberId, null, null, WalletLogConstants.LOG_SETCASHBACKPERCENT);
+		} catch (Exception e) {
+			e.printStackTrace();
+			log.error("biz lockMember api fail:write log api error");
+		}
+		/***********************记录操作日志****************************/
+		
+		return serverResponse;
+	}
 	
 }

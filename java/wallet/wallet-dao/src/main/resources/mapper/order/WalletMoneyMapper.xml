@@ -39,10 +39,10 @@
 		SELECT aa.total-(CASE WHEN bb.total IS NULL THEN 0 ELSE bb.total END)    AS total,
 		((aa.total-(CASE WHEN bb.total IS NULL THEN 0 ELSE bb.total END)) - (balance-(CASE WHEN bb.total IS NULL THEN 0 ELSE bb.total END))) AS waitBalance,
 		(balance-(CASE WHEN bb.total IS NULL THEN 0 ELSE bb.total END)) AS balance
-		FROM (SELECT w_member_id,SUM(amount)-SUM(fee) AS total  FROM  `t_wallet_pay_order` WHERE STATUS='success' AND w_member_id=#{wmemberId,jdbcType=INTEGER} 
+		FROM (SELECT w_member_id,((SUM(amount)-SUM(fee))-(SUM(refund_amount)-SUM(refund_feeamount))) AS total  FROM  `t_wallet_pay_order` WHERE STATUS='success' AND w_member_id=#{wmemberId,jdbcType=INTEGER} 
 		) aa LEFT JOIN  (SELECT w_member_id,SUM(amount) as total FROM `t_wallet_money` WHERE  STATUS='success' AND w_member_id=#{wmemberId,jdbcType=INTEGER}  ) bb ON aa.w_member_id=bb.w_member_id
 		LEFT JOIN 
-		(SELECT w_member_id,SUM(amount)-SUM(fee) AS balance  FROM  `t_wallet_pay_order` WHERE take_state=1 AND STATUS='success'  AND w_member_id=#{wmemberId,jdbcType=INTEGER} 
+		(SELECT w_member_id,((SUM(amount)-SUM(fee))-(SUM(refund_amount)-SUM(refund_feeamount))) AS balance  FROM  `t_wallet_pay_order` WHERE take_state=1 AND STATUS='success'  AND w_member_id=#{wmemberId,jdbcType=INTEGER} 
 		) cc ON aa.w_member_id=cc.w_member_id
 
 		
