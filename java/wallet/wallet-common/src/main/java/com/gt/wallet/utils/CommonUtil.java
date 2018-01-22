@@ -531,4 +531,14 @@ public class CommonUtil {
 	}
 	
 	
+	/**
+	 * 获取四舍五入保留两位
+	 * @param orbiz
+	 * @return
+	 */
+	public static double getdoubleTwo(double orbiz){
+		BigDecimal   b   =   new   BigDecimal(orbiz);  
+		double   f1   =   b.setScale(2,   BigDecimal.ROUND_HALF_UP).doubleValue();  
+		return f1;
+	}
 }

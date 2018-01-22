@@ -70,6 +70,13 @@ public class WalletRefundOrder extends Model<WalletRefundOrder> {
      */
 	@TableField("refund_external_no")
 	private String refundExternalNo;
+	
+	
+	/**
+	 * 退款状态pending：进行中, success:成功，close:关闭
+	 */
+	@TableField("status")
+	private String status;
 
 
 	@Override

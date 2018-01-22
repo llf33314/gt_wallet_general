@@ -1,7 +1,6 @@
 package com.gt.wallet.service.impl.order;
 
 import java.math.BigDecimal;
-import java.text.DecimalFormat;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
@@ -115,7 +114,8 @@ public class WalletPayOrderServiceImpl extends BaseServiceImpl<WalletPayOrderMap
 		String md5=MD5Utils.getSmallMD5( DateTimeKit.format(currentTime, format));
 		String submitNo=md5+"__"+payOrder.getBizOrderNo();
 		payOrder.setSubmitNo(submitNo);
-		TPayOrder tPayOrder=new TPayOrder(payOrder.getAmount(),submitNo, (walletMember.getFeePercent()*payOrder.getAmount())/100, payOrder.getAcct(), payOrder.getReturnUrl(), payOrder.getType(), payOrder.getDesc(), walletMember.getMemberNum());
+		Double fee=CommonUtil.getdoubleTwo((walletMember.getFeePercent()*payOrder.getAmount())/100);
+		TPayOrder tPayOrder=new TPayOrder(payOrder.getAmount(),submitNo, (fee)/100, payOrder.getAcct(), payOrder.getReturnUrl(), payOrder.getType(), payOrder.getDesc(), walletMember.getMemberNum());
 		/************通联下单************/
 		ServerResponse<com.alibaba.fastjson.JSONObject> serverResponse=YunSoaMemberUtil.applyDeposit(tPayOrder);
 		
@@ -234,7 +234,8 @@ public class WalletPayOrderServiceImpl extends BaseServiceImpl<WalletPayOrderMap
 			walletPayOrder.setAmount(BigDecimal.valueOf(payOrder.getAmount()));
 			walletPayOrder.setBusId(walletMember.getMemberId());
 			walletPayOrder.setSysOrderNo(payOrder.getBizOrderNo());
-			walletPayOrder.setFee(BigDecimal.valueOf(walletMember.getFeePercent()*payOrder.getAmount()/100));
+			Double fee=CommonUtil.getdoubleTwo((walletMember.getFeePercent()*payOrder.getAmount())/100);
+			walletPayOrder.setFee(BigDecimal.valueOf(fee));
 			walletPayOrder.setIndustryCode(CommonUtil.toInteger(WalletConstants.INDUSTRYCODE));
 			walletPayOrder.setIndustryName(WalletConstants.INDUSTRYNAME);
 			walletPayOrder.setVisitSource(1);
@@ -427,9 +428,7 @@ public class WalletPayOrderServiceImpl extends BaseServiceImpl<WalletPayOrderMap
 			throw new BusinessException("fail：退款金额超出总金额!");
 		}
 		double fee=walletMember.getFeePercent()/100*refundOrder.getAmount();
-		BigDecimal   b   =   new   BigDecimal(fee);  
-		double   f1   =   b.setScale(2,   BigDecimal.ROUND_HALF_UP).doubleValue();  
-		refundOrder.setFeeAmount(f1);
+		refundOrder.setFeeAmount(CommonUtil.getdoubleTwo(fee));
 		refundOrder.setBizUserId(walletMember.getMemberNum());
 		refundOrder.setOriBizOrderNo(payOrder.getSubmitNo());
 		ServerResponse<String> serverResponse2=	YunSoaMemberUtil.refund(refundOrder);
@@ -459,6 +458,79 @@ public class WalletPayOrderServiceImpl extends BaseServiceImpl<WalletPayOrderMap
 		}
 	}
 	
-	
+	@SuppressWarnings("unchecked")
+	@Override
+	public ServerResponse<?> refundSuccessNotify(LinkedHashMap<String,Object> params)throws Exception {
+		log.info(CommonUtil.format("start biz refundSuccessNotify api params:%s",JsonUtil.toJSONString(params)));
+		
+		JSONObject rps=JsonUtil.parseObject(CommonUtil.toString(params.get("rps")), JSONObject.class);
+		String status=rps.getString("status");
+		switch (status) {
+		case "OK"://成功
+			status="success";
+			break;
+		default://支付失败
+			status="fail";
+			break;
+		}
+		JSONObject returnValue=rps.getJSONObject("returnValue");
+		String bizOrderNo=returnValue.getString("bizOrderNo");
+		String orderNo=returnValue.getString("orderNo");
+		String sysorderno=bizOrderNo;
+		
+		ServerResponse<WalletRefundOrder> response=	walletRefundOrderService.findRecord(sysorderno);
+		/*****************************记录回调结果**********************************/
+		try {
+			walletApiLogService.save(JsonUtil.toJSONString(params), ServerResponse.createBySuccess(), response.getData().getWMemberId(), null, bizOrderNo,WalletLogConstants.LOG_REFUNDSUCCESSNOTIFY);
+		} catch (Exception e) {
+			e.printStackTrace();
+			log.error("biz refundSuccessNotify api fail:write api log error");
+		}
+		/*****************************记录回调结果**********************************/
+		/***********************************处理退款订单记录表业务*********************************/
+		WalletRefundOrder walletRefundOrder=	response.getData();
+		walletRefundOrder.setStatus(status);
+		walletRefundOrder.setRefundExternalNo(orderNo);
+		boolean resultupdateById=walletRefundOrderService.updateById(walletRefundOrder);
+		log.info("resultupdateById:"+resultupdateById);
+		/***********************************处理退款订单记录表业务*********************************/
+		
+		
+		/***********************************处理订单记录表业务*********************************/
+		ServerResponse<WalletPayOrder> serverResponse=findByOrderNo(response.getData().getSysOrderNo());
+		log.info(CommonUtil.format("WalletPayOrder: %s", JsonUtil.toJSONString(serverResponse)));
+		WalletPayOrder walletPayOrder=serverResponse.getData();
+		walletPayOrder.setRefundAmount(CommonUtil.toBigDecimal(walletPayOrder.getRefundAmount().doubleValue()+walletRefundOrder.getAmount().doubleValue()));
+		walletPayOrder.setRefundFeeamount(CommonUtil.toBigDecimal(walletPayOrder.getRefundFeeamount().doubleValue()+walletRefundOrder.getFee().doubleValue()));
+		walletPayOrder.setRefundExternalNo(orderNo);
+		Integer count=walletPayOrderMapper.updateById(walletPayOrder);
+		
+		Map<String, Object> parms=new HashMap<>();
+		parms.put("out_trade_no",sysorderno);
+		parms.put("payType",0);
+		ServerResponse<WalletApiLog> responseLog=	walletApiLogService.findById(bizOrderNo, WalletLogConstants.LOG_REFUND);
+		/***********************************处理退款订单记录表业务*********************************/
+		if(ServerResponse.judgeSuccess(responseLog)){
+			/*****************************通知子系统**********************************/
+			Map<String,Object> result=	HttpClienUtils.reqPost(JsonUtil.toJSONString(parms), responseLog.getData().getUrl(), Map.class);
+			log.info(CommonUtil.format("result %s", JsonUtil.toJSONString(result)));
+			try {
+				walletApiLogService.save(JsonUtil.toJSONString(parms),ServerResponse.createByErrorCode(result), walletPayOrder.getWMemberId(), responseLog.getData().getUrl(), bizOrderNo,WalletLogConstants.LOG_REFUNDNOTIFY);
+			} catch (Exception e) {
+				e.printStackTrace();
+				log.error("biz refundSuccessNotify api fail:write api log error");
+			}
+			/*****************************通知子系统**********************************/
+		}else{
+			log.error("biz paySuccessNotify api fail:无异步回调通知url");
+		}
+		if(count==1){
+			return ServerResponse.createBySuccess();
+		}else{
+			log.error("biz refundSuccessNotify api fail:更新状态失败");
+			return ServerResponse.createByErrorMessage("更新状态失败");
+		}
+		
+	}
 	
 }
