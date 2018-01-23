@@ -16,6 +16,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.ModelAndView;
 
 import com.baomidou.mybatisplus.plugins.Page;
+import com.gt.api.bean.session.BusUser;
 import com.gt.api.util.KeysUtil;
 import com.gt.api.util.httpclient.JsonUtil;
 import com.gt.wallet.base.BaseController;
@@ -23,6 +24,7 @@ import com.gt.wallet.data.api.tonglian.request.TRefundOrder;
 import com.gt.wallet.data.wallet.request.PayOrder;
 import com.gt.wallet.data.wallet.request.SearchPayOrderPage;
 import com.gt.wallet.dto.ServerResponse;
+import com.gt.wallet.entity.WalletMember;
 import com.gt.wallet.entity.WalletPayOrder;
 import com.gt.wallet.enums.WalletResponseEnums;
 import com.gt.wallet.exception.BusinessException;
@@ -116,20 +118,15 @@ public class WalletPayOrderController extends BaseController {
 	 */
 	@RequestMapping(value = "/79B4DE7C/refundSuccessNotify", method = RequestMethod.POST)
 	@ApiOperation(value = "退款成功异步回调", notes = "退款成功异步回调",hidden=true)
-	public void refundSuccessNotify(HttpServletRequest request, @RequestParam Map<String, Object> params) {
+	public void refundSuccessNotify(HttpServletRequest request,HttpServletResponse response, @RequestParam LinkedHashMap<String, Object> params) {
 		log.info(CommonUtil.format("start view refundSuccessNotify api params:%s", JsonUtil.toJSONString(params)));
 		try {
-			// BusUser busUser=CommonUtil.getLoginUser(request);
-			// ServerResponse<WalletMember> serverResponse=null;
-			// ServerResponse<List<WalletMember>>
-			// temp=walletMemberService.findMember(busUser.getId());
-			// if(CommonUtil.isNotEmpty(temp)&&temp.getCode()==0&&CommonUtil.isNotEmpty(temp.getData())&&temp.getData().size()==1){
-			// serverResponse=ServerResponse.createBySuccessCodeData(temp.getData().get(0));
-			// return serverResponse;
-			// }else{
-			// throw new
-			// ResponseEntityException(WalletResponseEnums.SYSTEM_ERROR);
-			// }
+			ServerResponse<?> serverResponse=walletPayOrderService.refundSuccessNotify(params);
+			if(ServerResponse.judgeSuccess(serverResponse)){
+				response.getWriter().print("success");
+			}else{
+				response.getWriter().print("error");
+			}
 		} catch (BusinessException e) {
 			log.error(CommonUtil.format("view refundSuccessNotify api fail：%s,%s", e.getCode(), e.getMessage()));
 			throw new ResponseEntityException(e.getCode(), e.getMessage());
