@@ -1096,8 +1096,8 @@ public class YunSoaMemberUtil {
 				param.put("refundList", refundList);
 				param.put("amount", tRefundOrder.getAmount()*100);
 				param.put("couponAmount", 0);
-//				param.put("feeAmount", tRefundOrder.getFeeAmount());
-				param.put("feeAmount",0);
+				param.put("feeAmount", tRefundOrder.getFeeAmount());
+				//param.put("feeAmount",0);
 				String backUrl =WalletWebConfig.getYunRefundSuccessNotifyUrl();
 				param.put("backUrl",backUrl);
 				log.info("request:" + param);
