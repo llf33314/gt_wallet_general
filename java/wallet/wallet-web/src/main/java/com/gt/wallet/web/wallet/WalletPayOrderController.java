@@ -16,7 +16,6 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.ModelAndView;
 
 import com.baomidou.mybatisplus.plugins.Page;
-import com.gt.api.bean.session.BusUser;
 import com.gt.api.util.KeysUtil;
 import com.gt.api.util.httpclient.JsonUtil;
 import com.gt.wallet.base.BaseController;
@@ -24,7 +23,6 @@ import com.gt.wallet.data.api.tonglian.request.TRefundOrder;
 import com.gt.wallet.data.wallet.request.PayOrder;
 import com.gt.wallet.data.wallet.request.SearchPayOrderPage;
 import com.gt.wallet.dto.ServerResponse;
-import com.gt.wallet.entity.WalletMember;
 import com.gt.wallet.entity.WalletPayOrder;
 import com.gt.wallet.enums.WalletResponseEnums;
 import com.gt.wallet.exception.BusinessException;
