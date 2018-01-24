@@ -51,13 +51,13 @@ public class PayOrder {
 	/**
 	 * 后台通知地址
 	 */
-	@ApiModelProperty(name="notifyUrl",notes="后台通知地址",required=true)
+	@ApiModelProperty(name="notifyUrl",notes="后台通知地址",required=false)
 	private String notifyUrl;
 	
 	/**
 	 * 支付方式 1：微信 2:支付宝
 	 */
-	@ApiModelProperty(name="type",notes="支付方式 1：微信 2:支付宝",required=true)
+	@ApiModelProperty(name="type",notes="支付方式 1：微信 2:支付宝,6:微信刷卡,7:支付宝刷卡",required=true)
 	private Integer type;
 	
 	/**
