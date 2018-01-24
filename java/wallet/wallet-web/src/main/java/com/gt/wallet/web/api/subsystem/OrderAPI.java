@@ -47,8 +47,19 @@ public class OrderAPI extends BaseController{
 	 * @return
 	 */
 	@ResponseBody
-	@RequestMapping(value="/79B4DE7C/refund",method=RequestMethod.POST)
-	 @ApiOperation(value="退款api", notes="退款api",produces="application/json")
+	@RequestMapping(value="/79B4DE7C/refund", method=RequestMethod.POST,produces= MediaType.APPLICATION_JSON_VALUE, consumes="application/json")
+	 @ApiOperation(value="退款api", notes="退款api",consumes="application/json", httpMethod = "POST", produces = MediaType.APPLICATION_JSON_VALUE,response=ServerResponse.class)
+	@ApiImplicitParams({
+        @ApiImplicitParam(name = "busId",value = "商家id",paramType = "form",dataType = "int",required=true,example="35"),
+        @ApiImplicitParam(name = "bizOrderNo",value = "商户退款订单号",paramType = "form",dataType = "string",required=true,example="cy123456789")
+        ,
+        @ApiImplicitParam(name = "oriBizOrderNo",value = "商户原订单号",paramType = "form",dataType = "string",required=true)
+        ,
+        @ApiImplicitParam(name = "backUrl",value = "后台通知地址",paramType = "form",dataType = "string",required=true,defaultValue="http://duofriend.com")
+        ,
+        @ApiImplicitParam(name = "amount",value = "订单金额",paramType = "form",dataType = "double",required=true,defaultValue="1")
+        ,
+       })
 	public ServerResponse<?> refund(HttpServletRequest request,@RequestBody RequestUtils<TRefundOrder> requestUtils ){
 		log.info(CommonUtil.format("start view refund api params:%s",JsonUtil.toJSONString(requestUtils)));
 		try {
