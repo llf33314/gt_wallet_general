@@ -303,7 +303,7 @@ export default {
       if (bankno == "") {
         return false;
       }
-      if (bankno.length < 16 || bankno.length > 19) {
+      if (bankno.length < 16 || bankno.length > 20) {
         return false;
       }
       var num = /^\d*$/;//全数字
