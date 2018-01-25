@@ -68,10 +68,13 @@
         银行卡信息
       </div>
       <el-form :model="ruleForm3" :rules="rules3" ref="ruleForm3" label-width="150px" style="width:600px;">
+        <el-form-item label="开户银行名称：" prop="parentBankName">
+          <el-input v-model="ruleForm3.parentBankName" placeholder="请输入开户银行名称" class="input-width"></el-input>
+        </el-form-item>
         <el-form-item label="企业对公账户：" prop="accountNo">
           <el-input v-model="ruleForm3.accountNo" placeholder="请输入企业对公账户" class="input-width"></el-input>
         </el-form-item>
-        <el-form-item label="支付行号：" prop="unionBank" v-if="isUnionBankFlag">
+        <el-form-item label="支付行号：" prop="unionBank">
           <el-input v-model="ruleForm3.unionBank" placeholder="请输入支付行号" class="input-width"></el-input>
           <el-tooltip placement="right" effect="light">
             <div slot="content">如非以下银行，则需要填写支付行号。
@@ -96,28 +99,31 @@ export default {
     var validatorAccountNo = (rule, value, callback) => {
       if (value == '') {
         callback(new Error('请输入对公帐号'))
+      } else if (!this.CheckBankNo(value)) {
+        callback(new Error('请输入正确个人账户'))
       } else {
-        $.ajax({
-          url: this.DFPAYDOMAIN + '/getBankCardBin',
-          type: 'POST',
-          dataType: 'json',
-          data: {
-            bankCardNo: this.ruleForm3.accountNo
-          },
-          success: (res) => {
-            console.log(res, '****')
-            if (res.code == 0) {
-              if (res.data.iscreditcard == 2) {
-                callback(new Error('对公帐号不能为信用卡'));
-              } else {
-                this.isUnionBank(res.data.bankname)
-                callback();
-              }
-            } else {
-              callback(new Error(res.msg));
-            }
-          }
-        })
+        callback()
+        // $.ajax({
+        //   url: this.DFPAYDOMAIN + '/getBankCardBin',
+        //   type: 'POST',
+        //   dataType: 'json',
+        //   data: {
+        //     bankCardNo: this.ruleForm3.accountNo
+        //   },
+        //   success: (res) => {
+        //     console.log(res, '****')
+        //     if (res.code == 0) {
+        //       if (res.data.iscreditcard == 2) {
+        //         callback(new Error('对公帐号不能为信用卡'));
+        //       } else {
+        //         this.isUnionBank(res.data.bankname)
+        //         callback();
+        //       }
+        //     } else {
+        //       callback(new Error(res.msg));
+        //     }
+        //   }
+        // })
       }
     }
     var validatorIsPhone = (rule, value, callback) => {
@@ -227,6 +233,7 @@ export default {
       ruleForm3: {
         accountNo: '',
         unionBank: '',
+        parentBankName: ''
       },
       rules3: {
         accountNo: [{
@@ -235,11 +242,11 @@ export default {
           validator: validatorAccountNo,
           trigger: 'blur'
         }],
-        unionBank: [{
-          required: true,
-          message: '请输入支付行号',
-          trigger: 'blur'
-        }],
+        // unionBank: [{
+        //   required: true,
+        //   message: '请输入支付行号',
+        //   trigger: 'blur'
+        // }],
       },
       activeFlag: {},
       isUnionBankFlag: false
@@ -254,6 +261,25 @@ export default {
     this.getProvince()
   },
   methods: {
+    CheckBankNo(bankno) {
+      var bankno = bankno.replace(/\s/g, '');
+      if (bankno == "") {
+        return false;
+      }
+      if (bankno.length < 16 || bankno.length > 19) {
+        return false;
+      }
+      var num = /^\d*$/;//全数字
+      if (!num.exec(bankno)) {
+        return false;
+      }
+      //开头6位
+      var strBin = "10,18,30,35,37,40,41,42,43,44,45,46,47,48,49,50,51,52,53,54,55,56,58,60,62,65,68,69,84,87,88,94,95,98,99";
+      if (strBin.indexOf(bankno.substring(0, 2)) == -1) {
+        return false;
+      }
+      return true;
+    },
     isPhone(obj) {
       var result = true;
       var isPhone = /^((\+?86)|(\(\+86\)))?(13[0123456789][0-9]{8}|15[0123456789][0-9]{8}|17[0123456789][0-9]{8}|18[0123456789][0-9]{8}|147[0-9]{8}|1349[0-9]{7})$/;

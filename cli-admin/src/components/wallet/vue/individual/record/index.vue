@@ -43,6 +43,9 @@
           <template slot-scope="scope">
             <span v-if="scope.row.payType == 1">微信</span>
             <span v-if="scope.row.payType == 2">支付宝</span>
+            <span v-if="scope.row.payType == 3">H5</span>
+            <span v-if="scope.row.payType == 6">微信刷卡</span>
+            <span v-if="scope.row.payType == 7">支付宝刷卡</span>
           </template>
         </el-table-column>
       </el-table>

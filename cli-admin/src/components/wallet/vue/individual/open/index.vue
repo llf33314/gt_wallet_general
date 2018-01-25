@@ -153,26 +153,27 @@ export default {
       } else if (!this.CheckBankNo(value)) {
         callback(new Error('请输入正确个人账户'))
       } else {
-        $.ajax({
-          url: this.DFPAYDOMAIN + "/getBankCardBin",
-          type: "POST",
-          dataType: "JSON",
-          data: { bankCardNo: value },
-          success: res => {
-            if (res.code == 0) {
-              if (res.data.iscreditcard == 2) {
-                this.CardBinInfo = null;
-                callback(new Error("法人个人账户不能为信用卡"));
-              } else {
-                this.CardBinInfo = res.data;
-                callback();
-              }
-            } else {
-              this.CardBinInfo = null;
-              callback(new Error(res.msg));
-            }
-          }
-        });
+        callback()
+        // $.ajax({
+        //   url: this.DFPAYDOMAIN + "/getBankCardBin",
+        //   type: "POST",
+        //   dataType: "JSON",
+        //   data: { bankCardNo: value },
+        //   success: res => {
+        //     if (res.code == 0) {
+        //       if (res.data.iscreditcard == 2) {
+        //         this.CardBinInfo = null;
+        //         callback(new Error("法人个人账户不能为信用卡"));
+        //       } else {
+        //         this.CardBinInfo = res.data;
+        //         callback();
+        //       }
+        //     } else {
+        //       this.CardBinInfo = null;
+        //       callback(new Error(res.msg));
+        //     }
+        //   }
+        // });
       }
     };
     var isValitrPhone = (rule, value, callback) => {
