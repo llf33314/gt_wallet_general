@@ -100,7 +100,7 @@ export default {
       if (value == '') {
         callback(new Error('请输入对公帐号'))
       } else if (!this.CheckBankNo(value)) {
-        callback(new Error('请输入正确个人账户'))
+        callback(new Error('请输入对公帐号'))
       } else {
         callback()
         // $.ajax({
