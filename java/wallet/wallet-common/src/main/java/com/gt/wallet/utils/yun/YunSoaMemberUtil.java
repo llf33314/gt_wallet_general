@@ -284,17 +284,18 @@ public class YunSoaMemberUtil {
 			JSONObject response = client.request(membersoaName, "setCompanyInfo", param);
 			log.info("response:" + response);
 			if(CommonUtil.isNotEmpty(response)&&response.get("status").equals("OK")){
-				String value = response.getString("signedValue");
-				com.alibaba.fastjson.JSONObject json=	JsonUtil.parseObject(value, com.alibaba.fastjson.JSONObject.class);
-				if(json.getLong("result")==2){//审核成功
-					log.info("setCompanyInfo end");
-					return ServerResponse.createBySuccess();
-					
-				}else{
-					log.info("setCompanyInfo end");
-					return ServerResponse.createByErrorMessage(CommonUtil.format("审核失败,失败原因%s,", json.getString("failReason")));
-
-				}
+				return ServerResponse.createBySuccess();
+//				String value = response.getString("signedValue");
+//				com.alibaba.fastjson.JSONObject json=	JsonUtil.parseObject(value, com.alibaba.fastjson.JSONObject.class);
+//				if(json.getLong("result")==2){//审核成功
+//					log.info("setCompanyInfo end");
+//					return ServerResponse.createBySuccess();
+//					
+//				}else{
+//					log.info("setCompanyInfo end");
+//					return ServerResponse.createByErrorMessage(CommonUtil.format("审核失败,失败原因%s,", json.getString("failReason")));
+//
+//				}
 			}else if(CommonUtil.isNotEmpty(response)&&response.get("status").equals("error")&&response.getString("errorCode").equals("30003")){
 				return ServerResponse.createBySuccess();
 			}else{

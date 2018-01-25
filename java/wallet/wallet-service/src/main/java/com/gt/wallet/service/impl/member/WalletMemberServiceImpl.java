@@ -131,7 +131,7 @@ public class WalletMemberServiceImpl extends BaseServiceImpl<WalletMemberMapper,
 					ServerResponse<WalletCompany> serverResponse=walletCompanyService.findByMemberId(walletMembers.get(i).getId());
 					if(CommonUtil.isNotEmpty(serverResponse.getData())){
 						walletMembers.get(i).setWalletCompany(serverResponse.getData());
-						walletMembers.get(i).getWalletCompany().setLegalPhone(PhoneUtil.hide(WalletKeyUtil.getDesString(walletMembers.get(i).getWalletCompany().getLegalPhone())));
+						walletMembers.get(i).getWalletCompany().setLegalPhone(PhoneUtil.hide(YunSoaMemberUtil.rsaDecrypt(walletMembers.get(i).getWalletCompany().getLegalPhone())));
 						walletMembers.get(i).getWalletCompany().setLegalIds(IdCardUtil.hide(YunSoaMemberUtil.rsaDecrypt(walletMembers.get(i).getWalletCompany().getLegalIds())));
 						walletMembers.get(i).getWalletCompany().setAccountNo(BankUtil.hide(YunSoaMemberUtil.rsaDecrypt(walletMembers.get(i).getWalletCompany().getAccountNo())));
 					}
@@ -291,6 +291,10 @@ public class WalletMemberServiceImpl extends BaseServiceImpl<WalletMemberMapper,
 		if(CommonUtil.isEmpty(walletMember)){
 			log.error("biz lockMember api fail:"+WalletResponseEnums.DATA_NULL_ERROR.getDesc());
 			throw new BusinessException(WalletResponseEnums.DATA_NULL_ERROR);
+		}
+		String statusDesc=CommonUtil.getMemberStatusDesc(walletMember.getStatus());
+		if(walletMember.getStatus()!=3){
+			throw new BusinessException(WalletResponseEnums.MEMBER_TYPE_ERROR.getCode(),"当前状态:"+statusDesc+",无法冻结");
 		}
 		ServerResponse<?> serverResponse=YunSoaMemberUtil.lockMember(walletMember.getMemberNum());
 		if(ServerResponse.judgeSuccess(serverResponse)){

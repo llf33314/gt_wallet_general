@@ -158,8 +158,7 @@ public class WalletCompanyServiceImpl extends BaseServiceImpl<WalletCompanyMappe
 		walletCompany.setProvince(walletCompanyAdd.getProvince());
 		walletCompany.setTelephone(walletCompanyAdd.getTelephone());
 		walletCompany.setUnionBank(walletCompanyAdd.getUnionBank());
-		
-		walletCompany.setLegalPhone(WalletKeyUtil.getEncString(walletCompanyAdd.getLegalPhone()));
+		walletCompany.setLegalPhone(YunSoaMemberUtil.rsaEncrypt(walletCompanyAdd.getLegalPhone()));
 		walletCompany.setWMemberId(walletMember.getId());
 		if(CommonUtil.isEmpty(walletCompany.getId())){//新增
 			walletCompanyMapper.insert(walletCompany);
@@ -189,7 +188,6 @@ public class WalletCompanyServiceImpl extends BaseServiceImpl<WalletCompanyMappe
 		walletCompany.setIdentitycardUrl2(companyUploadFile.getIdentitycardUrl2());
 		walletCompany.setLicenseUrl(companyUploadFile.getLicenseUrl());
 		WalletMember walletMember=walletMemberMapper.selectById(walletCompany.getWMemberId());
-		walletMemberMapper.updateById(walletMember);
 		int count=walletCompanyMapper.updateById(walletCompany);
 		if(count<1){
 			log.error("biz uploadFile api fail:db exception");
@@ -208,6 +206,20 @@ public class WalletCompanyServiceImpl extends BaseServiceImpl<WalletCompanyMappe
 		}
 		log.info(CommonUtil.format("biz uploadFile api serverResponse:%s", JsonUtil.toJSONString(mailServerResponse)));
 		/*******************************发送邮件**************************************/
+		
+		/*******************************调用设置企业信息api**************************************/
+		String legalPhone=YunSoaMemberUtil.rsaDecrypt(walletCompany.getLegalPhone());
+		String legalIds=YunSoaMemberUtil.rsaDecrypt(walletCompany.getLegalIds());
+		String accountNo=YunSoaMemberUtil.rsaDecrypt(walletCompany.getAccountNo());
+		WalletCompanyAdd walletCompanyAdd=new WalletCompanyAdd(walletMember.getId(), walletCompany.getCompanyName(), walletCompany.getCompanyAddress(), walletCompany.getBusinessLicense(), walletCompany.getTelephone(), walletCompany.getLegalName(), legalIds, legalPhone, accountNo, walletCompany.getParentBankName(), walletCompany.getBankName(), walletCompany.getUnionBank());
+		ServerResponse<?> response=YunSoaMemberUtil.setCompanyInfo(walletCompanyAdd, walletMember.getMemberNum());
+ 		log.info(CommonUtil.format("biz save api response:%s", JsonUtil.toJSONString(response)));
+		if(!ServerResponse.judgeSuccess(response)){//返回异常
+			throw new BusinessException(WalletResponseEnums.API_ERROR);
+		}
+		walletMember.setStatus(2);
+		walletMemberMapper.updateById(walletMember);
+		/*******************************调用设置企业信息api**************************************/
 		return mailServerResponse;
 	}
 
