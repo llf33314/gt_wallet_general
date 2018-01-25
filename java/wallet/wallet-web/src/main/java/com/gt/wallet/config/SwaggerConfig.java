@@ -21,6 +21,7 @@ import springfox.documentation.swagger2.annotations.EnableSwagger2;
 @Configuration
 @EnableSwagger2
 @Profile({"dev"})
+
 public class SwaggerConfig {
     // 扫描包
     private static final String  BASEPACKAGE         = "com.gt.wallet.web";

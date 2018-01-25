@@ -5,6 +5,7 @@ import java.util.List;
 import com.baomidou.mybatisplus.plugins.Page;
 import com.gt.api.bean.session.BusUser;
 import com.gt.wallet.base.BaseService;
+import com.gt.wallet.data.wallet.request.SetcashbackPercent;
 import com.gt.wallet.data.wallet.request.WalletSet;
 import com.gt.wallet.dto.ServerResponse;
 import com.gt.wallet.entity.WalletMember;
@@ -119,4 +120,20 @@ public interface WalletMemberService extends BaseService<WalletMember> {
 	 * @return
 	 */
 	ServerResponse<?> reset(Integer busId,String newPhone,String verificationCode,Integer wmemberId)throws Exception;
+	
+	
+	/**
+	 * 返现百分比设置
+	 * @param wmemberId
+	 * @return
+	 */
+	public ServerResponse<?> setcashbackPercent(SetcashbackPercent setcashbackPercent)throws Exception;
+	
+	
+	/**
+	 * 获取会员认证类型
+	 * @param budId 商家id
+	 * @return 3 :个人, 1:企业
+	 */
+	public ServerResponse<Integer> getMemberAuth(Integer busId) throws Exception;
 }

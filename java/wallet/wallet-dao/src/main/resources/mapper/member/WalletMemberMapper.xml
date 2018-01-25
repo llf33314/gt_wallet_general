@@ -20,12 +20,14 @@
 		<result column="registerIp" property="registerIp" />
 		<result column="fee_percent" property="feePercent" />
 		<result column="withdraw_quota" property="withdrawQuota" />
+		<result column="cashback_percent" property="cashbackPercent" />
 	</resultMap>
 
     <!-- 通用查询结果列 -->
     <sql id="Base_Column_List">
         id, member_id AS memberId, member_type AS memberType, member_num AS memberNum, external_num AS externalNum,
          pay_pass AS payPass, phone, is_binding_phone AS isBindingPhone, ctime, status, memberinfo_json AS memberinfoJson, 
-         member_class AS memberClass,set_pay_pwd AS setPayPwd,registerIp AS registerIp,fee_percent AS feePercent,withdraw_quota AS withdrawQuota
+         member_class AS memberClass,set_pay_pwd AS setPayPwd,registerIp AS registerIp,fee_percent AS feePercent,withdraw_quota AS withdrawQuota,
+        cashback_percent AS cashbackPercent
     </sql>
 </mapper>

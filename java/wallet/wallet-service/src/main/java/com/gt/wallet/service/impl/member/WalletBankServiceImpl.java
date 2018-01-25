@@ -198,27 +198,26 @@ public class WalletBankServiceImpl extends BaseServiceImpl<WalletBankMapper, Wal
 		/****************************************银行卡操作********************************************/
 		ServerResponse<TCardBin>  serverResponseBin=YunSoaMemberUtil.getBankCardBin(walletCompanyAdd.getAccountNo());
 		log.info(CommonUtil.format("serverResponseBin:%s", JsonUtil.toJSONString(serverResponseBin)));
-		TCardBin tCardBin=serverResponseBin.getData();
-		if(serverResponseBin.getCode()!=0){//
-			throw new BusinessException(serverResponseBin.getCode(),serverResponseBin.getMsg());
-		}
+//		TCardBin tCardBin=serverResponseBin.getData();
+//		if(serverResponseBin.getCode()!=0){//
+//			throw new BusinessException(serverResponseBin.getCode(),serverResponseBin.getMsg());
+//		}
 		WalletMember walletMember=walletMemberMapper.selectById(walletCompanyAdd.getMemberId());
 		
 		
-		CardBin cardBin=WalletHttpClienUtil.reqGet(walletCompanyAdd.getAccountNo(), CardBin.class);
-		log.info("cardBin:"+JsonUtil.toJSONString(cardBin));
-		if(cardBin.getError_code()!=0){
-			throw new BusinessException(cardBin.getError_code(),cardBin.getReason());
-		}
+//		CardBin cardBin=WalletHttpClienUtil.reqGet(walletCompanyAdd.getAccountNo(), CardBin.class);
+//		log.info("cardBin:"+JsonUtil.toJSONString(cardBin));
+//		if(cardBin.getError_code()!=0){
+//			throw new BusinessException(cardBin.getError_code(),cardBin.getReason());
+//		}
 		String bankCode ="";
-		Integer cardType =cardBin.getResult().getIscreditcard();
+		Integer cardType =1;
 		Integer cardLenth =0;
 		Integer cardState =0;
-		bankCode =cardBin.getResult().getBanknum();
+		bankCode ="";
 		cardLenth =walletCompanyAdd.getAccountNo().length();
-		cardState =tCardBin.getCardState().intValue();
-		cardLenth =tCardBin.getCardLenth().intValue();
-		cardState =tCardBin.getCardState().intValue();
+		cardState =1;
+		cardLenth =walletCompanyAdd.getAccountNo().length();
 		if(cardType!=1){//
 			log.error("biz addPublic api fail:请填写借记卡");
 			throw new BusinessException("biz addPublic api fail:请填写借记卡");
@@ -247,9 +246,9 @@ public class WalletBankServiceImpl extends BaseServiceImpl<WalletBankMapper, Wal
 		walletBank.setCardType(1);
 		ServerResponse<WalletCompany> serverResponseWalletCompany=walletCompanyService.findByMemberId(walletMember.getId());
 		log.info("serverResponseWalletCompany:"+JsonUtil.toJSONString(serverResponseWalletCompany));
-		if(cardBin.getError_code()!=0){
-			throw new BusinessException(serverResponseWalletCompany.getCode(),serverResponseWalletCompany.getMsg());
-		}
+//		if(cardBin.getError_code()!=0){
+//			throw new BusinessException(serverResponseWalletCompany.getCode(),serverResponseWalletCompany.getMsg());
+//		}
 		walletBank.setPhone(serverResponseWalletCompany.getData().getLegalPhone());
 		walletBank.setIdentityNo(serverResponseWalletCompany.getData().getLegalIds());
 		walletBank.setIsSafeCard(1);

@@ -176,7 +176,7 @@ public class WalletPayOrder extends Model<WalletPayOrder> {
 	/**
 	 * 支付方式
 	 */
-	@ApiModelProperty(name="payType",notes="支付方式(1:微信，2:支付宝)",required=false)
+	@ApiModelProperty(name="payType",notes="支付方式(支付方式 1：微信 2:支付宝 3:H5,6:微信刷卡 7:支付宝刷卡)",required=false)
 	@TableField("pay_type")
 	private Integer payType;
 	

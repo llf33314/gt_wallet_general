@@ -47,7 +47,7 @@ public class AuthContrller {
 	}
 	
 	@RequestMapping(value="79B4DE7C/redirect_uri",method=RequestMethod.GET)
-	public String  redirect_uri(HttpServletRequest request, HttpServletResponse response)throws Exception {
+	public void  redirect_uri(HttpServletRequest request, HttpServletResponse response)throws Exception {
 		// 1. 解析请求参数
 		log.info(" start view redirect_uri api");
 		Map<String, String> params = RequestUtil.getRequestParams(request);
@@ -87,8 +87,9 @@ public class AuthContrller {
 //				log.info("authCode换取authToken失败");
 //			}
 			String orderKey=params.get("state");
-			String url=WalletWebConfig.getDomain()+"walletPayOrder/79B4DE7C/applyDeposit?obj="+orderKey+"&acct="+oauthTokenResponse.getAlipayUserId();
-			return "redirect:"+url;
+			String url=WalletWebConfig.getDomain()+"walletPayOrder/79B4DE7C/applyDeposit?obj="+orderKey+"&acct="+oauthTokenResponse.getUserId();
+			//return "redirect:"+url;
+			response.sendRedirect(url);
 		} catch (AlipayApiException alipayApiException) {
 			log.error("view redirect_uri fail !");
 			throw new BusinessException("alipay redirect_uri fail ! call admin");

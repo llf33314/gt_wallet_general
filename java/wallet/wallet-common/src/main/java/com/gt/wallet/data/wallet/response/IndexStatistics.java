@@ -19,7 +19,7 @@ public class IndexStatistics {
 	/**
 	 * 资产总额
 	 */
-	@ApiModelProperty(name="id",notes="资产总额",required=true)
+	@ApiModelProperty(name="total",notes="资产总额",required=true)
 	private double total;
 	
 

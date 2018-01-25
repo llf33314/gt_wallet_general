@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.servlet.ModelAndView;
 
 import com.baomidou.mybatisplus.plugins.Page;
 import com.gt.api.util.KeysUtil;
@@ -62,6 +63,7 @@ public class WalletPayOrderController extends BaseController {
 	 * @throws Exception 
 	 */
 	@RequestMapping(value = "/79B4DE7C/paySuccessNotify", method = RequestMethod.POST)
+	//@RequestMapping(value = "/79B4DE7C/paySuccessNotify")
 	@ApiOperation(value = "支付成功异步回调", notes = "支付成功异步回调",hidden=true)
 	public void paySuccessNotify(HttpServletRequest request,HttpServletResponse response, @RequestParam LinkedHashMap<String,Object> params) throws Exception {
 		log.info(CommonUtil.format("start view paySuccessNotify api params:%s", JsonUtil.toJSONString(params)));
@@ -114,20 +116,15 @@ public class WalletPayOrderController extends BaseController {
 	 */
 	@RequestMapping(value = "/79B4DE7C/refundSuccessNotify", method = RequestMethod.POST)
 	@ApiOperation(value = "退款成功异步回调", notes = "退款成功异步回调",hidden=true)
-	public void refundSuccessNotify(HttpServletRequest request, @RequestParam Map<String, Object> params) {
+	public void refundSuccessNotify(HttpServletRequest request,HttpServletResponse response, @RequestParam LinkedHashMap<String, Object> params) {
 		log.info(CommonUtil.format("start view refundSuccessNotify api params:%s", JsonUtil.toJSONString(params)));
 		try {
-			// BusUser busUser=CommonUtil.getLoginUser(request);
-			// ServerResponse<WalletMember> serverResponse=null;
-			// ServerResponse<List<WalletMember>>
-			// temp=walletMemberService.findMember(busUser.getId());
-			// if(CommonUtil.isNotEmpty(temp)&&temp.getCode()==0&&CommonUtil.isNotEmpty(temp.getData())&&temp.getData().size()==1){
-			// serverResponse=ServerResponse.createBySuccessCodeData(temp.getData().get(0));
-			// return serverResponse;
-			// }else{
-			// throw new
-			// ResponseEntityException(WalletResponseEnums.SYSTEM_ERROR);
-			// }
+			ServerResponse<?> serverResponse=walletPayOrderService.refundSuccessNotify(params);
+			if(ServerResponse.judgeSuccess(serverResponse)){
+				response.getWriter().print("success");
+			}else{
+				response.getWriter().print("error");
+			}
 		} catch (BusinessException e) {
 			log.error(CommonUtil.format("view refundSuccessNotify api fail：%s,%s", e.getCode(), e.getMessage()));
 			throw new ResponseEntityException(e.getCode(), e.getMessage());
@@ -141,53 +138,6 @@ public class WalletPayOrderController extends BaseController {
 	
 	
 
-	/**
-	 * 支付下单
-	 * 
-	 * @return
-	 */
-	@RequestMapping(value = "/79B4DE7C/codepay", method = RequestMethod.POST)
-	@ApiOperation(value = "支付下单", notes = "支付下单")
-	@ApiImplicitParams({
-        @ApiImplicitParam(name = "busId",value = "商家id",paramType = "form",dataType = "int",required=true,example="35"),
-        @ApiImplicitParam(name = "bizOrderNo",value = "系统订单号",paramType = "form",dataType = "string",required=true,example="cy123456789")
-        ,
-        @ApiImplicitParam(name = "acct",value = "支付授权码",paramType = "form",dataType = "string",required=true,example="openid或userid(支付宝)")
-        ,
-        @ApiImplicitParam(name = "frontUrl",value = "前台通知地址",paramType = "form",dataType = "string",required=true,defaultValue="http://duofriend.com")
-        ,
-        @ApiImplicitParam(name = "notifyUrl",value = "后台通知地址",paramType = "form",dataType = "string",required=true,defaultValue="http://duofriend.com")
-        ,
-        @ApiImplicitParam(name = "type",value = "支付方式 1：微信 2:支付宝",paramType = "form",dataType = "int",required=true,defaultValue="1")
-        ,
-        @ApiImplicitParam(name = "desc",value = "描述",paramType = "form",dataType = "string",required=true,defaultValue="描述")
-        ,
-        @ApiImplicitParam(name = "takeState",value = "是否可立即提现(1:可取 2:不可取)",paramType = "form",dataType = "string",required=true,defaultValue="1")
-        ,
-        @ApiImplicitParam(name = "model",value = "支付模块",paramType = "form",dataType = "string",required=true,defaultValue="1")
-        ,
-        @ApiImplicitParam(name = "memberId",value = "会员ID",paramType = "form",dataType = "string",required=true,defaultValue="1")
-        ,
-        @ApiImplicitParam(name = "sendUrl",value = "推送路径",paramType = "form",dataType = "string",required=true,defaultValue="1")
-       })
-	public String codepay(HttpServletRequest request, String  obj) {
-		log.info(CommonUtil.format("start view codepay api params:%s", JsonUtil.toJSONString(obj)));
-		try {
-			PayOrder payOrder=null;
-			String  json=KeysUtil.getDesString(obj);
-			payOrder=JsonUtil.parseObject(json, PayOrder.class);
-			ServerResponse<com.alibaba.fastjson.JSONObject> serverResponse=walletPayOrderService.applyDeposit(payOrder);
-			log.info("serverResponse %s",JsonUtil.toJSONString(serverResponse));
-			request.setAttribute("serverResponse", serverResponse);
-			request.setAttribute("payOrder", payOrder);
-		} catch (Exception e) {
-			e.printStackTrace();
-			log.error(CommonUtil.format("view codepay api fail：%s,%s", WalletResponseEnums.SYSTEM_ERROR.getCode(),
-					WalletResponseEnums.SYSTEM_ERROR.getDesc()));
-			throw new ResponseEntityException(WalletResponseEnums.SYSTEM_ERROR);
-		}
-		return "";
-	}
 	
 	
 	/**
@@ -219,8 +169,9 @@ public class WalletPayOrderController extends BaseController {
         ,
         @ApiImplicitParam(name = "sendUrl",value = "推送路径",paramType = "form",dataType = "string",required=false,defaultValue="1")
        })
-	public String applyDeposit(HttpServletRequest request, String  obj,String acct) {
+	public ModelAndView applyDeposit(HttpServletRequest request, String  obj,String acct) {
 		log.info(CommonUtil.format("start view applyDeposit api params:%s", JsonUtil.toJSONString(obj)));
+		ModelAndView modelAndView = new ModelAndView();
 		try {
 			PayOrder payOrder=null;
 			String  json=KeysUtil.getDesString(obj);
@@ -233,23 +184,31 @@ public class WalletPayOrderController extends BaseController {
 			ServerResponse<com.alibaba.fastjson.JSONObject> serverResponse=walletPayOrderService.applyDeposit(payOrder);
 			log.info("serverResponse %s",JsonUtil.toJSONString(serverResponse));
 			if(serverResponse.getCode()!=0){//返回异常
-				throw new ResponseEntityException(serverResponse.getCode(),serverResponse.getMsg());
+				throw new BusinessException(serverResponse.getCode(),serverResponse.getMsg());
 			}
-			request.setAttribute("data", serverResponse.getData());
+			
 			request.setAttribute("payOrder", payOrder);
 			request.setAttribute("homeDomain", WalletWebConfig.getHomeUrl());
 			if(payOrder.getType()==1){
-				return "page/wxpay";
-			}else if(payOrder.getType()==2){
-				return "page/alipay";
+				request.setAttribute("data", serverResponse.getData().getJSONObject("payInfo"));
+				modelAndView.setViewName("/pay/wx_pay");
+			}else if(payOrder.getType()==2){//
+				request.setAttribute("data", serverResponse.getData());
+				modelAndView.setViewName("/pay/alipay");
 			}else{//H5
-				return "page/alipay";
+				modelAndView.setViewName("/pay/alipay");
 			}
+			return modelAndView;
+		} catch (BusinessException e) {
+			e.printStackTrace();
+			log.error(CommonUtil.format("view applyDeposit api fail：%s,%s", WalletResponseEnums.SYSTEM_ERROR.getCode(),
+					WalletResponseEnums.SYSTEM_ERROR.getDesc()));
+			throw new BusinessException(e.getCode(),e.getMessage());
 		} catch (Exception e) {
 			e.printStackTrace();
 			log.error(CommonUtil.format("view applyDeposit api fail：%s,%s", WalletResponseEnums.SYSTEM_ERROR.getCode(),
 					WalletResponseEnums.SYSTEM_ERROR.getDesc()));
-			throw new ResponseEntityException(WalletResponseEnums.SYSTEM_ERROR);
+			throw new BusinessException(WalletResponseEnums.SYSTEM_ERROR);
 		}
 	}
 	

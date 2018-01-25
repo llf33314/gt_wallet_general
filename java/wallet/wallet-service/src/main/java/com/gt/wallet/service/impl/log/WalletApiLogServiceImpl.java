@@ -76,7 +76,12 @@ public class WalletApiLogServiceImpl extends BaseServiceImpl<WalletApiLogMapper,
 		walletApiLog.setType(type);
 		walletApiLog.setUrl(url);
 		walletApiLog.setWMemberId(memberId);
-		walletApiLog.setOrderNo(orderNo);
+		if(CommonUtil.isEmpty(orderNo)){
+			
+			walletApiLog.setOrderNo("temp"+System.currentTimeMillis());
+		}else{
+			walletApiLog.setOrderNo(orderNo);
+		}
 		if(ServerResponse.judgeSuccess(serverResponse)){
 			walletApiLog.setStatus(serverResponse.getCode());
 			

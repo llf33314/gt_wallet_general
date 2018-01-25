@@ -143,6 +143,13 @@ public class WalletMember extends Model<WalletMember> {
 	@TableField("withdraw_quota")
 	private Double withdrawQuota;
 	
+	/**
+	 * 返现百分比
+	 */
+	@ApiModelProperty(name="withdrawQuota",notes="返现百分比")
+	@TableField("cashback_percent")
+	private Double cashbackPercent;
+	
 	
 	
 	@Override

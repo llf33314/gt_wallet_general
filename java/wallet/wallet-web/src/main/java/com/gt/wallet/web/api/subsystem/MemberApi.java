@@ -3,6 +3,7 @@ package com.gt.wallet.web.api.subsystem;
 import javax.servlet.http.HttpServletRequest;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -47,10 +48,8 @@ public class MemberApi extends BaseController{
 	public ServerResponse<?> is0pen(HttpServletRequest request,@RequestBody RequestUtils<Integer> requestUtils ){
 		log.info(CommonUtil.format("start view is0pen api params:%s",JsonUtil.toJSONString(requestUtils)));
 		try {
-			String ua = request.getHeader("user-agent")
-					.toLowerCase();
-			log.info("ua:"+ua);
 			ServerResponse<?> serverResponse=walletMemberService.isOpen(requestUtils.getReqdata());
+			log.info(CommonUtil.format("view is0pen api serverResponse:%s",JsonUtil.toJSONString(requestUtils)));
 			return serverResponse;
 			} catch ( BusinessException e) {
 				log.error(CommonUtil.format("view is0pen api fail ：%s,%s",e.getCode(),e.getMessage()));
@@ -61,4 +60,29 @@ public class MemberApi extends BaseController{
 				throw new ResponseEntityException(WalletResponseEnums.SYSTEM_ERROR);
 			}
 	}
+	
+	/**
+	 * 获取会员认证类型
+	 * @return
+	 */
+	@ResponseBody
+	@RequestMapping(value="/79B4DE7C/getMemberAuth", method=RequestMethod.POST,produces= MediaType.APPLICATION_JSON_VALUE, consumes="application/json")
+	 @ApiOperation(value="获取会员认证类型", notes="reqdata：为商家id",consumes="application/json", httpMethod = "POST", produces = MediaType.APPLICATION_JSON_VALUE,response=ServerResponse.class)
+	public ServerResponse<Integer> getMemberAuth(HttpServletRequest request,@RequestBody RequestUtils<Integer> requestUtils ){
+		log.info(CommonUtil.format("start view is0pen api params:%s",JsonUtil.toJSONString(requestUtils)));
+		try {
+			super.verification(request, requestUtils);
+			ServerResponse<Integer> serverResponse=walletMemberService.getMemberAuth(requestUtils.getReqdata());
+			log.info(CommonUtil.format("view is0pen api serverResponse:%s",JsonUtil.toJSONString(requestUtils)));
+			return serverResponse;
+			} catch ( BusinessException e) {
+				log.error(CommonUtil.format("view is0pen api fail ：%s,%s",e.getCode(),e.getMessage()));
+				throw new ResponseEntityException(e.getCode(),e.getMessage());
+			} catch ( Exception e) {
+				e.printStackTrace();
+				log.error(CommonUtil.format("view is0pen api fail：%s,%s",WalletResponseEnums.SYSTEM_ERROR.getCode(),WalletResponseEnums.SYSTEM_ERROR.getDesc()));
+				throw new ResponseEntityException(WalletResponseEnums.SYSTEM_ERROR);
+			}
+	}
+	
 }

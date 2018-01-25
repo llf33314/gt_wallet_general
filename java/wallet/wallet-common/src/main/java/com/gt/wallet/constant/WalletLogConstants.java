@@ -46,7 +46,7 @@ public class WalletLogConstants {
 	
 	
 	/**
-	 * 支付异步回调通知接收
+	 * 提现异步回调通知接收
 	 */
 	public static final Integer LOG_WITHDRAWSUCCESSNOTIFY=1005;
 	
@@ -59,5 +59,17 @@ public class WalletLogConstants {
 	/**
 	 * 通联退款异步回调
 	 */
-	public static final Integer LOG_REFUNDNOTIFY=1007;
+	public static final Integer LOG_REFUNDSUCCESSNOTIFY=1007;
+	
+	
+	/**
+	 * 退款成功回调各子系统
+	 */
+	public static final Integer LOG_REFUNDNOTIFY=1008;
+	
+	
+	/**
+	 * 设置返现百分比
+	 */
+	public static final Integer LOG_SETCASHBACKPERCENT=1009;
 }

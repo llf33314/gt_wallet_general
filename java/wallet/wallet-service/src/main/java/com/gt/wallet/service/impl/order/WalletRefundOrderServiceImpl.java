@@ -1,5 +1,7 @@
 package com.gt.wallet.service.impl.order;
 
+import java.math.BigDecimal;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -39,9 +41,13 @@ public class WalletRefundOrderServiceImpl extends BaseServiceImpl<WalletRefundOr
 			throw new BusinessException("退款订单号已存在!");
 		}
 		
-		
-		
-		return null;
+		Integer count=walletRefundOrderMapper.insert(walletRefundOrder);
+		if(count==1){
+			return ServerResponse.createBySuccess();
+		}else{
+			
+			return ServerResponse.createByError();
+		}
 	}
 
 	@Override
