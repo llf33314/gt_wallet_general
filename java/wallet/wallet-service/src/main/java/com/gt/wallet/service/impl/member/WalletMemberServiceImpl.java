@@ -1,9 +1,7 @@
 package com.gt.wallet.service.impl.member;
 
-import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.List;
-import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -16,20 +14,16 @@ import com.baomidou.mybatisplus.mapper.EntityWrapper;
 import com.baomidou.mybatisplus.mapper.Wrapper;
 import com.baomidou.mybatisplus.plugins.Page;
 import com.gt.api.bean.session.BusUser;
-import com.gt.api.util.HttpClienUtils;
 import com.gt.api.util.httpclient.JsonUtil;
 import com.gt.wallet.base.BaseServiceImpl;
 import com.gt.wallet.constant.WalletLogConstants;
 import com.gt.wallet.data.wallet.request.SetcashbackPercent;
 import com.gt.wallet.data.wallet.request.WalletSet;
 import com.gt.wallet.dto.ServerResponse;
-import com.gt.wallet.entity.WalletApiLog;
 import com.gt.wallet.entity.WalletBank;
 import com.gt.wallet.entity.WalletCompany;
 import com.gt.wallet.entity.WalletIndividual;
 import com.gt.wallet.entity.WalletMember;
-import com.gt.wallet.entity.WalletPayOrder;
-import com.gt.wallet.entity.WalletRefundOrder;
 import com.gt.wallet.enums.WalletMsgEnums;
 import com.gt.wallet.enums.WalletResponseEnums;
 import com.gt.wallet.exception.BusinessException;
