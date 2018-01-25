@@ -128,4 +128,12 @@ public interface WalletMemberService extends BaseService<WalletMember> {
 	 * @return
 	 */
 	public ServerResponse<?> setcashbackPercent(SetcashbackPercent setcashbackPercent)throws Exception;
+	
+	
+	/**
+	 * 获取会员认证类型
+	 * @param budId 商家id
+	 * @return 3 :个人, 1:企业
+	 */
+	public ServerResponse<Integer> getMemberAuth(Integer busId) throws Exception;
 }

@@ -187,7 +187,7 @@ public class WalletMemberServiceImpl extends BaseServiceImpl<WalletMemberMapper,
 				serverResponse= ServerResponse.createByErrorCode(WalletResponseEnums.MEMBER_STATE_ERROR);
 			}
 		}else{
-			log.error("biz findMember api fail:"+WalletResponseEnums.MEMBER_NULL_ERROR.getDesc());
+			log.error("biz isOpen api fail:"+WalletResponseEnums.MEMBER_NULL_ERROR.getDesc());
 			serverResponse=ServerResponse.createByErrorCode(WalletResponseEnums.MEMBER_NULL_ERROR);
 		}
 		return serverResponse;
@@ -452,6 +452,42 @@ public class WalletMemberServiceImpl extends BaseServiceImpl<WalletMemberMapper,
 		}
 		/***********************记录操作日志****************************/
 		
+		return serverResponse;
+	}
+	
+	
+	
+	@Override
+	public ServerResponse<Integer> getMemberAuth(Integer busId) throws Exception {
+		log.info(CommonUtil.format("start biz getMemberAuth api params:%s", JsonUtil.toJSONString(busId)));
+		Wrapper<WalletMember> wrapper=new EntityWrapper<WalletMember>() ;
+		wrapper.where("member_id={0}",busId).and("member_class={0}", 1);
+		List<WalletMember> walletMembers=walletMemberMapper.selectList(wrapper);
+		ServerResponse<Integer> serverResponse=null;
+		if(CommonUtil.isNotEmpty(walletMembers)&&walletMembers.size()>0){
+			WalletMember walletMember=walletMembers.get(0);
+			
+			if(walletMember.getStatus()==3){
+				ServerResponse<WalletBank> bankServerResponse=	null;
+				if(walletMember.getMemberType()==2){//企业
+					bankServerResponse=	walletBankService.getWalletPublicBankByMemberId(walletMember.getId());
+				}else{//个人
+					bankServerResponse=	walletBankService.getWalletSafeBankByMemberId(walletMember.getId());
+				}
+				log.error(CommonUtil.format("biz isOpen api bankServerResponse ：%s", JsonUtil.toJSONString(bankServerResponse)));
+				if(!ServerResponse.judgeSuccess(bankServerResponse)||CommonUtil.isEmpty(bankServerResponse.getData())){
+					serverResponse= ServerResponse.createByErrorCode(WalletResponseEnums.MEMBER_BANK_ERROR);
+				}else{
+					serverResponse=ServerResponse.createBySuccessCodeData(2);
+				}
+			}else{//会员状态(-2:删除,-1:锁定用户,0:创建,1:审核中,3:正常使用)
+				log.error(CommonUtil.format("biz getMemberAuth api serverResponse ：%s", JsonUtil.toJSONString(serverResponse)));
+				serverResponse= ServerResponse.createByErrorCodeMessage(WalletResponseEnums.MEMBER_STATE_ERROR.getCode(), CommonUtil.format("账号状态异常,当前状态为:%s", CommonUtil.getMemberStatusDesc(walletMember.getStatus())));
+			}
+		}else{
+			log.error("biz getMemberAuth api fail:"+WalletResponseEnums.MEMBER_NULL_ERROR.getDesc());
+			serverResponse=ServerResponse.createByErrorCode(WalletResponseEnums.MEMBER_NULL_ERROR);
+		}
 		return serverResponse;
 	}
 	
