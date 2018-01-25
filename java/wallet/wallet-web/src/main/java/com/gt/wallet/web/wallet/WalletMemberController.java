@@ -1,10 +1,12 @@
 package com.gt.wallet.web.wallet;
 
 
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -388,5 +390,33 @@ public class WalletMemberController extends BaseController {
 			log.error(CommonUtil.format("view setcashbackPercent api fail：%s,%s",WalletResponseEnums.SYSTEM_ERROR.getCode(),WalletResponseEnums.SYSTEM_ERROR.getDesc()));
 			throw new ResponseEntityException(WalletResponseEnums.SYSTEM_ERROR);
 		}
-	} 
+	}
+	
+	
+	/**
+	 * 退款成功异步回调
+	 * 
+	 * @return
+	 */
+	@RequestMapping(value = "/79B4DE7C/auditingSuccessNotify", method = RequestMethod.POST)
+	@ApiOperation(value = "退款成功异步回调", notes = "退款成功异步回调",hidden=true)
+	public void auditingSuccessNotify(HttpServletRequest request,HttpServletResponse response, @RequestParam LinkedHashMap<String, Object> params) {
+		log.info(CommonUtil.format("start view refundSuccessNotify api params:%s", JsonUtil.toJSONString(params)));
+		try {
+			ServerResponse<?> serverResponse=walletMemberService.auditingSuccessNotify(params);
+			if(ServerResponse.judgeSuccess(serverResponse)){
+				response.getWriter().print("success");
+			}else{
+				response.getWriter().print("error");
+			}
+		} catch (BusinessException e) {
+			log.error(CommonUtil.format("view refundSuccessNotify api fail：%s,%s", e.getCode(), e.getMessage()));
+			throw new ResponseEntityException(e.getCode(), e.getMessage());
+		} catch (Exception e) {
+			e.printStackTrace();
+			log.error(CommonUtil.format("view refundSuccessNotify api fail：%s,%s", WalletResponseEnums.SYSTEM_ERROR.getCode(),
+					WalletResponseEnums.SYSTEM_ERROR.getDesc()));
+			throw new ResponseEntityException(WalletResponseEnums.SYSTEM_ERROR);
+		}
+	}
 }

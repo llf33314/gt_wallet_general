@@ -1,6 +1,9 @@
 package com.gt.wallet.service.impl.member;
 
+import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -13,16 +16,20 @@ import com.baomidou.mybatisplus.mapper.EntityWrapper;
 import com.baomidou.mybatisplus.mapper.Wrapper;
 import com.baomidou.mybatisplus.plugins.Page;
 import com.gt.api.bean.session.BusUser;
+import com.gt.api.util.HttpClienUtils;
 import com.gt.api.util.httpclient.JsonUtil;
 import com.gt.wallet.base.BaseServiceImpl;
 import com.gt.wallet.constant.WalletLogConstants;
 import com.gt.wallet.data.wallet.request.SetcashbackPercent;
 import com.gt.wallet.data.wallet.request.WalletSet;
 import com.gt.wallet.dto.ServerResponse;
+import com.gt.wallet.entity.WalletApiLog;
 import com.gt.wallet.entity.WalletBank;
 import com.gt.wallet.entity.WalletCompany;
 import com.gt.wallet.entity.WalletIndividual;
 import com.gt.wallet.entity.WalletMember;
+import com.gt.wallet.entity.WalletPayOrder;
+import com.gt.wallet.entity.WalletRefundOrder;
 import com.gt.wallet.enums.WalletMsgEnums;
 import com.gt.wallet.enums.WalletResponseEnums;
 import com.gt.wallet.exception.BusinessException;
@@ -495,4 +502,44 @@ public class WalletMemberServiceImpl extends BaseServiceImpl<WalletMemberMapper,
 		return serverResponse;
 	}
 	
+	
+	
+	@Override
+	public ServerResponse<?> auditingSuccessNotify(LinkedHashMap<String,Object> params)throws Exception {
+		log.info(CommonUtil.format("start biz auditingSuccessNotify api params:%s",JsonUtil.toJSONString(params)));
+		
+		JSONObject rps=JsonUtil.parseObject(CommonUtil.toString(params.get("rps")), JSONObject.class);
+		String status=rps.getString("status");
+		switch (status) {
+		case "OK"://成功
+			status="success";
+			break;
+		default://支付失败
+			status="fail";
+			break;
+		}
+		JSONObject returnValue=rps.getJSONObject("returnValue");
+		Long result=returnValue.getLong("result");
+		String bizUserId=returnValue.getString("bizUserId");
+		WalletMember entity=new WalletMember();
+		entity.setMemberNum(bizUserId);
+		
+		/*****************************记录回调结果**********************************/
+		try {
+			walletApiLogService.save(JsonUtil.toJSONString(params), ServerResponse.createBySuccess(),null, null, "temp_"+bizUserId,WalletLogConstants.LOG_REFUNDSUCCESSNOTIFY);
+		} catch (Exception e) {
+			e.printStackTrace();
+			log.error("biz refundSuccessNotify api fail:write api log error");
+		}
+		WalletMember walletMember=	walletMemberMapper.selectOne(entity);
+		if(result==2){//审核通过
+			walletMember.setStatus(2);
+		}else{//审核不通过
+			walletMember.setStatus(-3);
+		}
+		walletMemberMapper.updateById(walletMember);
+		return ServerResponse.createBySuccess();
+		/*****************************记录回调结果**********************************/
+		
+	}
 }
