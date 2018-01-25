@@ -133,6 +133,11 @@ public class WalletWebConfig {
 	 */
 	private static String walletKey;
 	
+	/**
+	 * 企业信息审核结果通知
+	 */
+	private static String yunAuditingNotifyUrl;
+	
 	
 //	 // 注入配置属性 根据环境配置切换
 	public static String getDomain() {
@@ -309,6 +314,14 @@ public class WalletWebConfig {
 
 	public static void setWalletKey(String walletKey) {
 		WalletWebConfig.walletKey = walletKey;
+	}
+
+	public static String getYunAuditingNotifyUrl() {
+		return yunAuditingNotifyUrl;
+	}
+
+	public static void setYunAuditingNotifyUrl(String yunAuditingNotifyUrl) {
+		WalletWebConfig.yunAuditingNotifyUrl = yunAuditingNotifyUrl;
 	}
 
 
