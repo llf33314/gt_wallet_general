@@ -78,7 +78,8 @@ public class WalletIndividualServiceImpl extends BaseServiceImpl<WalletIndividua
 			walletIndividual.setIdentityChecked(1);
 		}else{
 			log.error("biz add api fail:当前步骤信息禁止修改");
-			throw new BusinessException("当前步骤信息禁止修改");
+		//	throw new BusinessException("当前步骤信息禁止修改");
+			return ServerResponse.createByErrorMessage("当前步骤信息禁止修改");
 		}
 		
 		if(CommonUtil.isNotEmpty(walletIndividualAdd.getIdentitycardUrl1File())){

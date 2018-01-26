@@ -78,7 +78,7 @@ public class WalletIndividualController extends BaseController {
 		try {
 			ServerResponse<Integer> serverResponse=null;
 			serverResponse=walletIndividualService.add(walletIndividualAdd,CommonUtil.getLoginUser(request));
-			if(serverResponse.getCode()==0){
+			if(serverResponse.getCode()==0||serverResponse.getMsg().equals("当前步骤信息禁止修改")){
 				
 				serverResponse=walletBankService.add(walletIndividualAdd,0);
 			}

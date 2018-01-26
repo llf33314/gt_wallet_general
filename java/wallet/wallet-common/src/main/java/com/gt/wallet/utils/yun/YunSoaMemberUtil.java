@@ -426,7 +426,7 @@ public class YunSoaMemberUtil {
 			param.put("cardType", cardType);
 //			param.put("bankCode",bankCode);
 			param.put("identityType", 1);
-//			param.put("isSafeCard", isSafeCard);
+			param.put("isSafeCard", isSafeCard);
 			param.put("identityNo", rsaEncrypt(walletIndividualAdd.getIdentityNo()));
 			if(CommonUtil.isNotEmpty(walletIndividualAdd.getUnionBank())){
 				param.put("unionBank",walletIndividualAdd.getUnionBank());
