@@ -85,6 +85,16 @@ public class WalletBankServiceImpl extends BaseServiceImpl<WalletBankMapper, Wal
 	public ServerResponse<Integer> add(WalletIndividualAdd walletIndividualAdd,Integer isSafeCard)throws Exception {
 		log.info(CommonUtil.format("start biz add api params:%s", JsonUtil.toJSONString(walletIndividualAdd)));
 		/****************************************银行卡操作********************************************/
+		EntityWrapper<WalletBank> wrapper=new EntityWrapper<WalletBank>();
+		wrapper.where("w_member_id={0}", walletIndividualAdd.getMemberId());
+		wrapper.where("status={0}", 1);
+		wrapper.where("card_class={0}", 1);
+		List<WalletBank> list=	walletBankMapper.selectList(wrapper);
+		if(list.size()>0){
+			log.error(CommonUtil.format("biz add api fail:已添加安全卡"));
+			throw new BusinessException("biz add api fail:已添加安全卡");
+		}
+		
 		WalletMember walletMember=walletMemberMapper.selectById(walletIndividualAdd.getMemberId());
 		String carNoMi=YunSoaMemberUtil.rsaEncrypt(walletIndividualAdd.getCardNo());
 		if(isSafeCard==0){//设置为安全卡
