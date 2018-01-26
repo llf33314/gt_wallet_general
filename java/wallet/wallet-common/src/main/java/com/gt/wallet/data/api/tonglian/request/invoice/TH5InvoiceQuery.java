@@ -1,7 +1,5 @@
 package com.gt.wallet.data.api.tonglian.request.invoice;
 
-import java.util.List;
-
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
