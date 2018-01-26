@@ -136,6 +136,7 @@ export default {
                                     type: 'success',
                                     duration: 1500,
                                     onClose: () => {
+                                        parent.window.postMessage('closeMask()', '*');
                                         this.$router.replace({
                                             path: '/wallet/company/index'
                                         })
