@@ -54,36 +54,36 @@ export default {
               }
             } else {
               //企业会员
-              if (res.data.status == 0 || res.data.status == -1) {
-                //创建
+              if (res.data.status == 0 || res.data.status == -1 || res.data.status == 1) {
+                //步骤1--基本资料
                 if (
                   !res.data.walletCompany ||
                   res.data.walletCompany.companyName == ""
                 ) {
-                  //步骤1
                   this.$router.push({
                     path: "/wallet/company/open/base/" + res.data.id
                   });
                 }
+                //步骤2 -- 上传图片
                 if (res.data.walletCompany.doBusinessUrl == "") {
-                  //步骤2
                   this.$router.push({
                     path: "/wallet/company/open/uploadFil/" + res.data.id
                   });
                 }
-                if (res.data.isBindingPhone == 0) {
-                  if (res.data.status == 1) {  //审核中
-                    this.$router.push({
-                      path: "/wallet/company/open/auditing"
-                    });
-                  } else { //绑定手机
-                    this.$router.push({
-                      path: "/wallet/company/open/bindPhone/" + res.data.id
-                    });
-                  }
+                //审核中
+                if (res.data.isBindingPhone == 0 && res.data.status == 1) {
+                  this.$router.push({
+                    path: "/wallet/company/open/auditing"
+                  });
                 }
+                //绑定手机
+                if (res.data.isBindingPhone == 0 && res.data.status == 2) {
+                  this.$router.push({
+                    path: "/wallet/company/open/bindPhone/" + res.data.id
+                  });
+                }
+                //正常使用
                 if (res.data.isBindingPhone == 1 && res.data.status == -1) {
-                  //正常使用
                   window.sessionStorage.walletId = res.data.id;
                   this.$router.push({
                     path: "/wallet/company/index"
