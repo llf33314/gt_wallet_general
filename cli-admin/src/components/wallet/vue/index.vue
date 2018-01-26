@@ -54,41 +54,39 @@ export default {
               }
             } else {
               //企业会员
-              if (res.data.status == 0 || res.data.status == -1 || res.data.status == 1) {
-                //步骤1--基本资料
-                if (
-                  !res.data.walletCompany ||
-                  res.data.walletCompany.companyName == ""
-                ) {
-                  this.$router.push({
-                    path: "/wallet/company/open/base/" + res.data.id
-                  });
-                }
-                //步骤2 -- 上传图片
-                if (res.data.walletCompany.doBusinessUrl == "") {
-                  this.$router.push({
-                    path: "/wallet/company/open/uploadFil/" + res.data.id
-                  });
-                }
-                //审核中
-                if (res.data.isBindingPhone == 0 && res.data.status == 1) {
-                  this.$router.push({
-                    path: "/wallet/company/open/auditing"
-                  });
-                }
-                //绑定手机
-                if (res.data.isBindingPhone == 0 && res.data.status == 2) {
-                  this.$router.push({
-                    path: "/wallet/company/open/bindPhone/" + res.data.id
-                  });
-                }
-                //正常使用
-                if (res.data.isBindingPhone == 1 && res.data.status == -1) {
-                  window.sessionStorage.walletId = res.data.id;
-                  this.$router.push({
-                    path: "/wallet/company/index"
-                  });
-                }
+              //步骤1--基本资料
+              if (
+                !res.data.walletCompany ||
+                res.data.walletCompany.companyName == ""
+              ) {
+                this.$router.push({
+                  path: "/wallet/company/open/base/" + res.data.id
+                });
+              }
+              //步骤2 -- 上传图片
+              if (res.data.walletCompany.doBusinessUrl == "") {
+                this.$router.push({
+                  path: "/wallet/company/open/uploadFil/" + res.data.id
+                });
+              }
+              //审核中
+              if (res.data.isBindingPhone == 0 && res.data.status == 1) {
+                this.$router.push({
+                  path: "/wallet/company/open/auditing"
+                });
+              }
+              //绑定手机
+              if (res.data.isBindingPhone == 0 && res.data.status == 2) {
+                this.$router.push({
+                  path: "/wallet/company/open/bindPhone/" + res.data.id
+                });
+              }
+              //正常使用
+              if (res.data.isBindingPhone == 1 && res.data.status == -1) {
+                window.sessionStorage.walletId = res.data.id;
+                this.$router.push({
+                  path: "/wallet/company/index"
+                });
               }
               if (res.data.status == 3) {
                 //正常使用
