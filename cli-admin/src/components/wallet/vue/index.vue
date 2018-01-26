@@ -32,7 +32,6 @@ export default {
                     path: "/wallet/individual/open/" + res.data.id
                   });
                 } else if (res.data.isBindingPhone == 0 && individual) {
-                  //步骤2
                   this.$router.push({
                     path: "/wallet/individual/open/bindPhone/" + res.data.id
                   });
@@ -73,10 +72,15 @@ export default {
                   });
                 }
                 if (res.data.isBindingPhone == 0) {
-                  //步骤3
-                  this.$router.push({
-                    path: "/wallet/company/open/bindPhone/" + res.data.id
-                  });
+                  if (res.data.status == 1) {  //审核中
+                    this.$router.push({
+                      path: "/wallet/company/open/auditing"
+                    });
+                  } else { //绑定手机
+                    this.$router.push({
+                      path: "/wallet/company/open/bindPhone/" + res.data.id
+                    });
+                  }
                 }
                 if (res.data.isBindingPhone == 1 && res.data.status == -1) {
                   //正常使用

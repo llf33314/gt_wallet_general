@@ -90,6 +90,14 @@ export const company = [{
     }
   },
   {
+    path: '/wallet/company/open/auditing',
+    name: 'company_open_auditing',
+    title: '企业开通-审核中',
+    component: resolve => {
+      require(['@/components/wallet/vue/company/open/auditing'], resolve)
+    }
+  },
+  {
     path: '/wallet/company/open/bindPhone/:memberId',
     name: 'company_open_bindPhone',
     title: '企业开通-绑定手机',
