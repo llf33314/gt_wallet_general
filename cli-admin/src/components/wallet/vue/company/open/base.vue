@@ -86,11 +86,12 @@
           </el-tooltip>
         </el-form-item>
       </el-form>
+      <div class="public-bottom-btns">
+        <el-button type="primary" style="margin-left: 210px;" @click="avtive1">下一步</el-button>
+      </div>
     </div>
-    <div class="public-bottom-btns">
-      <el-button type="primary" style="margin-left: 210px;" @click="avtive1">下一步</el-button>
-    </div>
-  </div>
+    <el-alert v-if="failReason" :title="failReason" type="error">
+    </el-alert>
   </div>
 </template>
 <script>
@@ -249,7 +250,8 @@ export default {
         // }],
       },
       activeFlag: {},
-      isUnionBankFlag: false
+      isUnionBankFlag: false,
+      failReason: '13131'
     }
   },
   watch: {
@@ -259,6 +261,23 @@ export default {
   },
   mounted() {
     this.getProvince()
+    $.ajax({
+      url: this.DFPAYDOMAIN + "/walletMember/findMember",
+      type: "GET",
+      dataType: "json",
+      success: res => {
+        if (res.code === 0) {
+          if (res.data.failReason) {
+            this.$message({
+              showClose: true,
+              message: res.data.failReason,
+              type: 'error',
+              duration: 0
+            });
+          }
+        }
+      }
+    })
   },
   methods: {
     CheckBankNo(bankno) {

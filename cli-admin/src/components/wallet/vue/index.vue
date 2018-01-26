@@ -55,6 +55,22 @@ export default {
             } else {
               //企业会员
               //步骤1--基本资料
+              if (res.data.status == -3) {
+                if (
+                  !res.data.walletCompany ||
+                  res.data.walletCompany.companyName == ""
+                ) {
+                  this.$router.push({
+                    path: "/wallet/company/open/base/" + res.data.id
+                  });
+                }
+                //步骤2 -- 上传图片
+                if (res.data.walletCompany.doBusinessUrl == "") {
+                  this.$router.push({
+                    path: "/wallet/company/open/uploadFil/" + res.data.id
+                  });
+                }
+              }
               if (
                 !res.data.walletCompany ||
                 res.data.walletCompany.companyName == ""
