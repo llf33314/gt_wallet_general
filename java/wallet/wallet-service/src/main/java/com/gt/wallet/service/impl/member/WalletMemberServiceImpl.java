@@ -530,6 +530,7 @@ public class WalletMemberServiceImpl extends BaseServiceImpl<WalletMemberMapper,
 			walletMember.setStatus(2);
 		}else{//审核不通过
 			walletMember.setStatus(-3);
+			walletMember.setFailReason(returnValue.getString("failReason"));
 		}
 		walletMemberMapper.updateById(walletMember);
 		return ServerResponse.createBySuccess();
