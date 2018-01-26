@@ -1,5 +1,6 @@
 package com.gt.wallet.service.member;
 
+import java.util.LinkedHashMap;
 import java.util.List;
 
 import com.baomidou.mybatisplus.plugins.Page;
@@ -136,4 +137,13 @@ public interface WalletMemberService extends BaseService<WalletMember> {
 	 * @return 3 :个人, 1:企业
 	 */
 	public ServerResponse<Integer> getMemberAuth(Integer busId) throws Exception;
+	
+	
+	 /**
+	  * 退款成功异步回调
+	  * @param params
+	  * @return
+	  * @throws Exception
+	  */
+	 ServerResponse<?>	auditingSuccessNotify(LinkedHashMap<String,Object> params)throws Exception;
 }

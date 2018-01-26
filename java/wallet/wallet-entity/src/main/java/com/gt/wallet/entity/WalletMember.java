@@ -151,6 +151,14 @@ public class WalletMember extends Model<WalletMember> {
 	private Double cashbackPercent;
 	
 	
+	/**
+	 * 失败原因
+	 */
+	@ApiModelProperty(name="failReason",notes="失败原因")
+	@TableField("fail_reason")
+	private String failReason;
+	
+	
 	
 	@Override
 	protected Serializable pkVal() {

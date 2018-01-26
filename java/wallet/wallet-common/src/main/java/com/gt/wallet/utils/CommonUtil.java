@@ -474,6 +474,12 @@ public class CommonUtil {
 		case 1:
 			desc="审核中";
 			break;
+		case 2:
+			desc="审核通过";
+			break;
+		case -3:
+			desc="审核不通过";
+			break;
 
 		default:
 			desc="正常使用";

@@ -18,7 +18,6 @@ import com.gt.api.util.HttpClienUtils;
 import com.gt.api.util.RequestUtils;
 import com.gt.api.util.httpclient.JsonUtil;
 import com.gt.wallet.base.BaseServiceImpl;
-import com.gt.wallet.data.api.tonglian.response.CardBin;
 import com.gt.wallet.data.wallet.request.CompanyUploadFile;
 import com.gt.wallet.data.wallet.request.SendMail;
 import com.gt.wallet.data.wallet.request.WalletCompanyAdd;
@@ -34,9 +33,7 @@ import com.gt.wallet.service.mail.MailService;
 import com.gt.wallet.service.member.WalletCompanyService;
 import com.gt.wallet.service.member.WalletMemberService;
 import com.gt.wallet.utils.CommonUtil;
-import com.gt.wallet.utils.WalletKeyUtil;
 import com.gt.wallet.utils.WalletWebConfig;
-import com.gt.wallet.utils.httpclient.WalletHttpClienUtil;
 import com.gt.wallet.utils.yun.YunSoaMemberUtil;
 
 import lombok.extern.slf4j.Slf4j;
@@ -87,7 +84,6 @@ public class WalletCompanyServiceImpl extends BaseServiceImpl<WalletCompanyMappe
 		/*******************************拼接地址**************************************/
 		Wrapper<WalletCompany> wrapper=new EntityWrapper<>();
 		wrapper.where("w_member_id={0}", walletCompanyAdd.getMemberId());
-		String address="";
 		RequestUtils<String> requestUtils=new RequestUtils<>();
 		requestUtils.setReqdata(walletCompanyAdd.getProvince());
 		String path=WalletWebConfig.getHomeUrl()+"8A5DA52E/shopapi/6F6D9AD2/79B4DE7C/queryBasisByCodes.do";
@@ -108,7 +104,6 @@ public class WalletCompanyServiceImpl extends BaseServiceImpl<WalletCompanyMappe
 			log.error("biz save api fail");
 			throw new BusinessException("获取地址api异常,请联系管理员");
 		}
-		address=CommonUtil.toString(province.getData().get(0).get("city_name"))+CommonUtil.toString(city.getData().get(0).get("city_name"))+walletCompanyAdd.getCompanyAddress();
 		/*******************************拼接地址**************************************/
 		/*******************************判断db记录是否异常**************************************/
 		List<WalletCompany> walletCompanies=walletCompanyMapper.selectList(wrapper);
@@ -124,20 +119,6 @@ public class WalletCompanyServiceImpl extends BaseServiceImpl<WalletCompanyMappe
 		}
 		WalletMember walletMember=walletMemberService.selectById(walletCompanyAdd.getMemberId());
 		/*******************************判断db记录是否异常**************************************/
-		
-		/*******************************调用设置企业信息api**************************************/
-//		CardBin cardBin=WalletHttpClienUtil.reqGet(walletCompanyAdd.getAccountNo(), CardBin.class);
-//		log.info(CommonUtil.format("biz save api cardBin:%s", JsonUtil.toJSONString(cardBin)));
-//		if(cardBin.getError_code()!=0){
-//			throw new BusinessException(cardBin.getError_code(),cardBin.getReason());
-//		}
-	//	walletCompanyAdd.setParentBankName(cardBin.getResult().getBankname());
-		ServerResponse<?> response=YunSoaMemberUtil.setCompanyInfo(walletCompanyAdd, walletMember.getMemberNum());
- 		log.info(CommonUtil.format("biz save api response:%s", JsonUtil.toJSONString(response)));
-		if(!ServerResponse.judgeSuccess(response)){//返回异常
-			throw new BusinessException(WalletResponseEnums.API_ERROR);
-		}
-		/*******************************调用设置企业信息api**************************************/
 		walletCompany.setAccountNo(YunSoaMemberUtil.rsaEncrypt(walletCompanyAdd.getAccountNo()));
 		walletCompany.setCompanyAddress(walletCompanyAdd.getCompanyAddress());
 		walletCompany.setArea(walletCompanyAdd.getArea());
@@ -158,8 +139,7 @@ public class WalletCompanyServiceImpl extends BaseServiceImpl<WalletCompanyMappe
 		walletCompany.setProvince(walletCompanyAdd.getProvince());
 		walletCompany.setTelephone(walletCompanyAdd.getTelephone());
 		walletCompany.setUnionBank(walletCompanyAdd.getUnionBank());
-		
-		walletCompany.setLegalPhone(WalletKeyUtil.getEncString(walletCompanyAdd.getLegalPhone()));
+		walletCompany.setLegalPhone(YunSoaMemberUtil.rsaEncrypt(walletCompanyAdd.getLegalPhone()));
 		walletCompany.setWMemberId(walletMember.getId());
 		if(CommonUtil.isEmpty(walletCompany.getId())){//新增
 			walletCompanyMapper.insert(walletCompany);
@@ -189,7 +169,6 @@ public class WalletCompanyServiceImpl extends BaseServiceImpl<WalletCompanyMappe
 		walletCompany.setIdentitycardUrl2(companyUploadFile.getIdentitycardUrl2());
 		walletCompany.setLicenseUrl(companyUploadFile.getLicenseUrl());
 		WalletMember walletMember=walletMemberMapper.selectById(walletCompany.getWMemberId());
-		walletMemberMapper.updateById(walletMember);
 		int count=walletCompanyMapper.updateById(walletCompany);
 		if(count<1){
 			log.error("biz uploadFile api fail:db exception");
@@ -208,6 +187,20 @@ public class WalletCompanyServiceImpl extends BaseServiceImpl<WalletCompanyMappe
 		}
 		log.info(CommonUtil.format("biz uploadFile api serverResponse:%s", JsonUtil.toJSONString(mailServerResponse)));
 		/*******************************发送邮件**************************************/
+		
+		/*******************************调用设置企业信息api**************************************/
+		String legalPhone=YunSoaMemberUtil.rsaDecrypt(walletCompany.getLegalPhone());
+		String legalIds=YunSoaMemberUtil.rsaDecrypt(walletCompany.getLegalIds());
+		String accountNo=YunSoaMemberUtil.rsaDecrypt(walletCompany.getAccountNo());
+		WalletCompanyAdd walletCompanyAdd=new WalletCompanyAdd(walletMember.getId(), walletCompany.getCompanyName(), walletCompany.getCompanyAddress(), walletCompany.getBusinessLicense(), walletCompany.getTelephone(), walletCompany.getLegalName(), legalIds, legalPhone, accountNo, walletCompany.getParentBankName(), walletCompany.getBankName(), walletCompany.getUnionBank());
+		ServerResponse<?> response=YunSoaMemberUtil.setCompanyInfo(walletCompanyAdd, walletMember.getMemberNum());
+ 		log.info(CommonUtil.format("biz save api response:%s", JsonUtil.toJSONString(response)));
+		if(!ServerResponse.judgeSuccess(response)){//返回异常
+			throw new BusinessException(WalletResponseEnums.API_ERROR);
+		}
+		walletMember.setStatus(2);
+		walletMemberMapper.updateById(walletMember);
+		/*******************************调用设置企业信息api**************************************/
 		return mailServerResponse;
 	}
 
@@ -242,7 +235,6 @@ public class WalletCompanyServiceImpl extends BaseServiceImpl<WalletCompanyMappe
 		/*******************************拼接地址**************************************/
 		Wrapper<WalletCompany> wrapper=new EntityWrapper<>();
 		wrapper.where("w_member_id={0}", companyAddress.getMemberId());
-		String address="";
 		RequestUtils<String> requestUtils=new RequestUtils<>();
 		requestUtils.setReqdata(companyAddress.getProvince());
 		String path=WalletWebConfig.getHomeUrl()+"8A5DA52E/shopapi/6F6D9AD2/79B4DE7C/queryBasisByCodes.do";
@@ -261,7 +253,7 @@ public class WalletCompanyServiceImpl extends BaseServiceImpl<WalletCompanyMappe
 			log.error("biz updateAddress api fail");
 			throw new BusinessException("获取地址api异常,请联系管理员");
 		}
-		address=CommonUtil.toString(province.getData().get(0).get("city_name"))+CommonUtil.toString(city.getData().get(0).get("city_name"))+companyAddress.getCompanyAddress();
+	//	address=CommonUtil.toString(province.getData().get(0).get("city_name"))+CommonUtil.toString(city.getData().get(0).get("city_name"))+companyAddress.getCompanyAddress();
 		/*******************************拼接地址**************************************/
 		/*******************************判断db记录是否异常**************************************/
 		List<WalletCompany> walletCompanies=walletCompanyMapper.selectList(wrapper);

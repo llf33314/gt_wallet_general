@@ -17,8 +17,9 @@ import com.gt.api.util.KeysUtil;
 import com.gt.api.util.RequestUtils;
 import com.gt.api.util.httpclient.JsonUtil;
 import com.gt.api.util.httpclient.LocalHttpClient;
+import com.gt.wallet.data.api.tonglian.request.TRefundOrder;
+import com.gt.wallet.data.api.tonglian.response.CardBin;
 import com.gt.wallet.data.wallet.request.PayOrder;
-import com.gt.wallet.dto.ServerResponse;
 
 /** 
 * @author lifengxi(gt_sky@qq.com)
@@ -180,20 +181,40 @@ public class WalletHttpClienUtil {
 		//BaseResult baseResult=	reqPostUTF8(JsonUtil.toJSONString(tInvoiceList), "http://116.62.115.2/H5Invoice", BaseResult.class);
 //		System.out.println(JsonUtil.toJSONString(baseResult));
 		
-		RequestUtils<PayOrder>  requestUtils=new RequestUtils<>();
-		PayOrder payOrder=new  PayOrder();
-		payOrder.setAcct("134529642439874448");
-		payOrder.setAmount(0.01);
-		payOrder.setBizOrderNo("HY"+System.currentTimeMillis());
-		payOrder.setNotifyUrl("http://dfpay.yifriend.net/walletPayOrder/79B4DE7C/paySuccessNotify1");
-		payOrder.setType(1);
-		payOrder.setDesc("测试支付");
-		payOrder.setTakeState(1);
-		payOrder.setBusId(43);
-		payOrder.setModel(40);
-		requestUtils.setReqdata(payOrder);
-		ResponseUtils<?>	response= HttpClienUtils.reqPost(JsonUtil.toJSONString(requestUtils), "http://wallet.yifriend.net:8440/8A5DA52E/memberApi/79B4DE7C/codepay", ResponseUtils.class,"WALLET2017");
-		System.out.println(JsonUtil.toJSONString(response));
+//		RequestUtils<PayOrder>  requestUtils=new RequestUtils<PayOrder>();
+//		PayOrder payOrder=new PayOrder();
+//		payOrder.setAcct("288654159063905866");
+//		payOrder.setNotifyUrl("http://dfpay.yifriend.net/walletPayOrder/79B4DE7C/paySuccessNotify1");
+//		payOrder.setBizOrderNo("TK"+System.currentTimeMillis());
+//		payOrder.setBusId(43);
+//		payOrder.setAmount(0.01);
+//		payOrder.setBizOrderNo("SC"+System.currentTimeMillis());
+//		payOrder.setDesc("测试刷卡支付");
+//		payOrder.setMemberId(null);
+//		payOrder.setModel(40);
+//		payOrder.setReturnUrl(null);
+//		payOrder.setSendUrl(null);
+//		payOrder.setTakeState(1);
+//		payOrder.setType(7);
+//		requestUtils.setReqdata(payOrder);
+//		ResponseUtils<?>	response= HttpClienUtils.reqPost(JsonUtil.toJSONString(requestUtils), "http://dfpay.yifriend.net/8A5DA52E/orderApi/79B4DE7C/codepay", ResponseUtils.class,"WALLET2017");
+//		System.out.println(JsonUtil.toJSONString(response));
+		
+		
+		
+//		RequestUtils<TRefundOrder>  requestUtils=new RequestUtils<TRefundOrder>();
+//		TRefundOrder refundOrder=new TRefundOrder();
+//		refundOrder.setAmount(0.01);
+//		refundOrder.setBackUrl("http://dfpay.yifriend.net/walletPayOrder/79B4DE7C/paySuccessNotify1");
+//		refundOrder.setBizOrderNo("TK"+System.currentTimeMillis());
+//		refundOrder.setBusId(43);
+//		refundOrder.setOriBizOrderNo("SC1516780466367");
+//		requestUtils.setReqdata(refundOrder);
+//		ResponseUtils<?>	response= HttpClienUtils.reqPost(JsonUtil.toJSONString(requestUtils), "http://dfpay.yifriend.net/8A5DA52E/orderApi/79B4DE7C/refund", ResponseUtils.class,"WALLET2017");
+//		System.out.println(JsonUtil.toJSONString(response));
+		//44001717251053017345
+		CardBin bin=	WalletHttpClienUtil.reqGet("44001717251053017345", CardBin.class);
+		System.out.println(JsonUtil.toJSONString(bin));
 	//	payOrder.set
 		}
 }

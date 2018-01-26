@@ -1,5 +1,6 @@
 package com.gt.wallet.service.impl.member;
 
+import java.util.LinkedHashMap;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -131,7 +132,7 @@ public class WalletMemberServiceImpl extends BaseServiceImpl<WalletMemberMapper,
 					ServerResponse<WalletCompany> serverResponse=walletCompanyService.findByMemberId(walletMembers.get(i).getId());
 					if(CommonUtil.isNotEmpty(serverResponse.getData())){
 						walletMembers.get(i).setWalletCompany(serverResponse.getData());
-						walletMembers.get(i).getWalletCompany().setLegalPhone(PhoneUtil.hide(WalletKeyUtil.getDesString(walletMembers.get(i).getWalletCompany().getLegalPhone())));
+						walletMembers.get(i).getWalletCompany().setLegalPhone(PhoneUtil.hide(YunSoaMemberUtil.rsaDecrypt(walletMembers.get(i).getWalletCompany().getLegalPhone())));
 						walletMembers.get(i).getWalletCompany().setLegalIds(IdCardUtil.hide(YunSoaMemberUtil.rsaDecrypt(walletMembers.get(i).getWalletCompany().getLegalIds())));
 						walletMembers.get(i).getWalletCompany().setAccountNo(BankUtil.hide(YunSoaMemberUtil.rsaDecrypt(walletMembers.get(i).getWalletCompany().getAccountNo())));
 					}
@@ -291,6 +292,10 @@ public class WalletMemberServiceImpl extends BaseServiceImpl<WalletMemberMapper,
 		if(CommonUtil.isEmpty(walletMember)){
 			log.error("biz lockMember api fail:"+WalletResponseEnums.DATA_NULL_ERROR.getDesc());
 			throw new BusinessException(WalletResponseEnums.DATA_NULL_ERROR);
+		}
+		String statusDesc=CommonUtil.getMemberStatusDesc(walletMember.getStatus());
+		if(walletMember.getStatus()!=3){
+			throw new BusinessException(WalletResponseEnums.MEMBER_TYPE_ERROR.getCode(),"当前状态:"+statusDesc+",无法冻结");
 		}
 		ServerResponse<?> serverResponse=YunSoaMemberUtil.lockMember(walletMember.getMemberNum());
 		if(ServerResponse.judgeSuccess(serverResponse)){
@@ -491,4 +496,45 @@ public class WalletMemberServiceImpl extends BaseServiceImpl<WalletMemberMapper,
 		return serverResponse;
 	}
 	
+	
+	
+	@Override
+	public ServerResponse<?> auditingSuccessNotify(LinkedHashMap<String,Object> params)throws Exception {
+		log.info(CommonUtil.format("start biz auditingSuccessNotify api params:%s",JsonUtil.toJSONString(params)));
+		
+		JSONObject rps=JsonUtil.parseObject(CommonUtil.toString(params.get("rps")), JSONObject.class);
+		String status=rps.getString("status");
+		switch (status) {
+		case "OK"://成功
+			status="success";
+			break;
+		default://支付失败
+			status="fail";
+			break;
+		}
+		JSONObject returnValue=rps.getJSONObject("returnValue");
+		Long result=returnValue.getLong("result");
+		String bizUserId=returnValue.getString("bizUserId");
+		WalletMember entity=new WalletMember();
+		entity.setMemberNum(bizUserId);
+		
+		/*****************************记录回调结果**********************************/
+		try {
+			walletApiLogService.save(JsonUtil.toJSONString(params), ServerResponse.createBySuccess(),null, null, "temp_"+bizUserId,WalletLogConstants.LOG_REFUNDSUCCESSNOTIFY);
+		} catch (Exception e) {
+			e.printStackTrace();
+			log.error("biz refundSuccessNotify api fail:write api log error");
+		}
+		WalletMember walletMember=	walletMemberMapper.selectOne(entity);
+		if(result==2){//审核通过
+			walletMember.setStatus(2);
+		}else{//审核不通过
+			walletMember.setStatus(-3);
+			walletMember.setFailReason(returnValue.getString("failReason"));
+		}
+		walletMemberMapper.updateById(walletMember);
+		return ServerResponse.createBySuccess();
+		/*****************************记录回调结果**********************************/
+		
+	}
 }

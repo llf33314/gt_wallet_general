@@ -72,4 +72,12 @@ public class WalletLogConstants {
 	 * 设置返现百分比
 	 */
 	public static final Integer LOG_SETCASHBACKPERCENT=1009;
+	
+	
+	
+	
+	/**
+	 * 企业信息审核结果通知
+	 */
+	public static final Integer LOG_AUDITINGNOTIFY=1010;
 }
