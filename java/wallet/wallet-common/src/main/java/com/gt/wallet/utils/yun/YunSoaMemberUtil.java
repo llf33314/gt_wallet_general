@@ -279,6 +279,7 @@ public class YunSoaMemberUtil {
 
 			param.put("bizUserId", bizUserId);
 			param.put("companyBasicInfo", companyBasicInfo);
+			param.put("backUrl", WalletWebConfig.getYunAuditingNotifyUrl());
 
 			log.info("request:" + param);
 			JSONObject response = client.request(membersoaName, "setCompanyInfo", param);
