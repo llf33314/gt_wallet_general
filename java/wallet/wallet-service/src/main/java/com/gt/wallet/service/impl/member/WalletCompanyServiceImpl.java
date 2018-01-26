@@ -198,7 +198,7 @@ public class WalletCompanyServiceImpl extends BaseServiceImpl<WalletCompanyMappe
 		if(!ServerResponse.judgeSuccess(response)){//返回异常
 			throw new BusinessException(WalletResponseEnums.API_ERROR);
 		}
-		walletMember.setStatus(2);
+		walletMember.setStatus(1);
 		walletMemberMapper.updateById(walletMember);
 		/*******************************调用设置企业信息api**************************************/
 		return mailServerResponse;

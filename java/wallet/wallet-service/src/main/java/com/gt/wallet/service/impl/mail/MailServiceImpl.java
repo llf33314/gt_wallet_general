@@ -51,7 +51,7 @@ public class MailServiceImpl implements MailService {
 		message = mailSender.createMimeMessage();
 		MimeMessageHelper helper = new MimeMessageHelper(message, true);
 		helper.setFrom(Sender);
-		helper.setTo(Sender);
+		helper.setTo(receiver);
 		helper.setSubject(sendMail.getTitle());
 		helper.setText(sendMail.getContent());
 		if(CommonUtil.isNotEmpty(sendMail.getFiles())&&sendMail.getFiles().size()>0){//当附件为空时，发送文本邮件

@@ -255,6 +255,7 @@ public class WalletMemberServiceImpl extends BaseServiceImpl<WalletMemberMapper,
 			if(ServerResponse.judgeSuccess(serverResponse)){
 				walletMember.setPhone(WalletKeyUtil.getEncString(walletSet.getPhone()));
 				walletMember.setStatus(3);
+				walletMember.setIsBindingPhone(1);
 				walletMemberMapper.updateById(walletMember);
 				return ServerResponse.createBySuccess();
 
