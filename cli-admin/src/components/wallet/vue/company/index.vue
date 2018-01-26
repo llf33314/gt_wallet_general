@@ -60,17 +60,17 @@
                 </el-tooltip>
               </p>
               <p>
-                <span class="num" v-text="IndexStatistics.total">0</span>元</p>
+                <span class="num" v-text="IndexStatistics.total || 0">0</span>元</p>
             </li>
             <li>
               <p class="name">待结算(未入账)</p>
               <p>
-                <span class="num" v-text="IndexStatistics.waitBalance">0</span>元</p>
+                <span class="num" v-text="IndexStatistics.waitBalance || 0">0</span>元</p>
             </li>
             <li>
               <p class="name">可用余额</p>
               <p>
-                <span class="num" v-text="IndexStatistics.balance">0</span>元</p>
+                <span class="num" v-text="IndexStatistics.balance || 0">0</span>元</p>
             </li>
           </ul>
           <div class="bts">
