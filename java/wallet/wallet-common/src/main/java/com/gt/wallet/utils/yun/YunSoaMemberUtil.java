@@ -6,6 +6,7 @@ import java.security.interfaces.RSAPrivateKey;
 import java.security.interfaces.RSAPublicKey;
 
 import org.json.JSONObject;
+import org.junit.Test;
 
 import com.gt.api.util.httpclient.JsonUtil;
 import com.gt.wallet.constant.WalletConstants;
@@ -804,7 +805,7 @@ public class YunSoaMemberUtil {
 			param.put("bizOrderNo",payOrder.getBizOrderNo());
 			param.put("accountSetNo", WalletWebConfig.getYunBizUserId());
 			param.put("amount",amount);
-			param.put("fee",payOrder.getFee()*100);
+			param.put("fee",0);
 			param.put("validateType",1L);
 			param.put("frontUrl", frontUrl);
 			param.put("backUrl", backUrl);
@@ -979,7 +980,7 @@ public class YunSoaMemberUtil {
 			param.put("bizOrderNo", consumeOrder.getBizOrderNo());
 			param.put("accountSetNo", WalletWebConfig.getYunBizUserId());
 			param.put("amount", consumeOrder.getAmount()*100);
-			param.put("fee", consumeOrder.getFee());
+//			param.put("fee", consumeOrder.getFee());
 			param.put("backUrl", backUrl);
 		//	param.put("ordErexpireDatetime", ordErexpireDatetime);
 			param.put("bankCardNo", YunSoaMemberUtil.rsaEncrypt("6228481234567890123"));
@@ -1018,7 +1019,7 @@ public class YunSoaMemberUtil {
 	 * 查询余额
 	 * @param bizUserId 会员账号
 	 */
-	public ServerResponse<com.alibaba.fastjson.JSONObject> queryBalance(String bizUserId){
+	public static ServerResponse<com.alibaba.fastjson.JSONObject> queryBalance(String bizUserId){
 		try{
 			log.info("queryBalance start");
 
@@ -1098,8 +1099,8 @@ public class YunSoaMemberUtil {
 				param.put("refundList", refundList);
 				param.put("amount", tRefundOrder.getAmount()*100);
 				param.put("couponAmount", 0);
-				param.put("feeAmount", tRefundOrder.getFeeAmount());
-				//param.put("feeAmount",0);
+		//		param.put("feeAmount", tRefundOrder.getFeeAmount());
+				param.put("feeAmount",0);
 				String backUrl =WalletWebConfig.getYunRefundSuccessNotifyUrl();
 				param.put("backUrl",backUrl);
 				log.info("request:" + param);
@@ -1163,5 +1164,31 @@ public class YunSoaMemberUtil {
 			}
 		}
 		
+//		//平台转账
+//		@Test
+//		public void testApplicationTransfer(){
+//			try{
+//				log.info("testApplicationTransfer start");
+//
+//				JSONObject param = new JSONObject();
+//				param.put("bizTransferNo", "");
+//				param.put("sourceAccountSetNo", "");
+//				param.put("targetBizUserId", bizUserId);
+//				param.put("targetAccountSetNo", accountSetNo);
+//				param.put("amount", 1);
+//				param.put("remark", "平台转账");
+////				param.put("extendInfo", "");
+//
+//				log.info("request:" + param);
+//				JSONObject response = client.request(soaName, "applicationTransfer", param);
+//				log.info("response:" + response);
+//
+//				log.info("testApplicationTransfer end");
+//			}catch(Exception e){
+//				log.info("testApplicationTransfer error");
+//				e.printStackTrace();
+//			}
+//		}
+
 	/***********************************************************************订单类接口********************************************************************************************/
 }
