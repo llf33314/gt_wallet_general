@@ -70,12 +70,13 @@
       </div> -->
       <el-form :model="ruleForm" :rules="rules" ref="ruleForm" label-width="170px" class="demo-ruleForm">
         <el-form-item label="姓名：" prop="name">
-          <el-input v-model="ruleForm.name" placeholder="请输入姓名" class="input-width"></el-input>
+          <el-input v-model="ruleForm.name" placeholder="请输入姓名" :disabled="ruleForm.name!==''" class="input-width"></el-input>
         </el-form-item>
         <el-form-item label="身份证号：" prop="identityNo">
-          <el-input v-model="ruleForm.identityNo" placeholder="请输入身份证号" class="input-width"></el-input>
+          <el-input v-model="ruleForm.identityNo" placeholder="请输入身份证号" :disabled="ruleForm.identityNo!==''" class="input-width"></el-input>
         </el-form-item>
         <el-form-item label="身份证正面：" prop="identitycardUrl1File">
+          <!-- <img :src="ruleForm.identitycardUrl1File" v-if="ruleForm.identitycardUrl1File!==''&&id!==''" alt="" style="width: 220px; height: 137px;display: block;  float: left;border:1px solid red; "> -->
           <el-upload class="avatar-uploader" ref="identitycardUrl1File" action="" :multiple="true" :show-file-list="false" :http-request="uploadImg" :before-upload="beforeAvatarUpload">
             <img v-if="ruleForm.identitycardUrl1File" :src="ruleForm.identitycardUrl1File" class="avatar">
             <i v-else class="el-icon-plus avatar-uploader-icon"></i>
@@ -86,6 +87,7 @@
           </div>
         </el-form-item>
         <el-form-item label="身份证反面：" prop="identitycardUrl2File">
+          <!-- <img :src="ruleForm.identitycardUrl2File" v-if="ruleForm.identitycardUrl2File!==''&&id!==''" alt="" style="width: 220px; height: 137px;display: block;  float: left;border:1px solid red; "> -->
           <el-upload class="avatar-uploader" ref="identitycardUrl2File" action="" :show-file-list="false" :http-request="uploadImg2" :before-upload="beforeAvatarUpload">
             <img v-if="ruleForm.identitycardUrl2File" :src="ruleForm.identitycardUrl2File" class="avatar">
             <i v-else class="el-icon-plus avatar-uploader-icon"></i>
@@ -100,7 +102,7 @@
           <el-button type="primary" @click="sendVerificationCode">获取验证码</el-button>
         </el-form-item> -->
         <el-form-item label="个人账户：" prop="cardNo">
-          <el-input v-model="ruleForm.cardNo" placeholder="请输入个人账户" class="input-width"></el-input>
+          <el-input v-model="ruleForm.cardNo" placeholder="请输入个人账户" :disabled="ruleForm.cardNo!==''" class="input-width"></el-input>
         </el-form-item>
         <el-form-item v-if="CardBinInfo">
           <p style="line-height:30px;">
@@ -120,7 +122,7 @@
           <div>{{ruleForm.name}}</div>
         </el-form-item>
         <el-form-item label="银行卡预留手机号：" prop="phone">
-          <el-input v-model="ruleForm.phone" type="number" placeholder="请输入银行卡预留手机号" class="input-width"></el-input>
+          <el-input v-model="ruleForm.phone" type="number" :disabled="ruleForm.phone!==''" placeholder="请输入银行卡预留手机号" class="input-width"></el-input>
         </el-form-item>
         <el-form-item>
           <el-button type="primary" @click="submitForm('ruleForm')" :loading="loading1">下一步</el-button>
@@ -154,26 +156,6 @@ export default {
         callback(new Error('请输入正确个人账户'))
       } else {
         callback()
-        // $.ajax({
-        //   url: this.DFPAYDOMAIN + "/getBankCardBin",
-        //   type: "POST",
-        //   dataType: "JSON",
-        //   data: { bankCardNo: value },
-        //   success: res => {
-        //     if (res.code == 0) {
-        //       if (res.data.iscreditcard == 2) {
-        //         this.CardBinInfo = null;
-        //         callback(new Error("法人个人账户不能为信用卡"));
-        //       } else {
-        //         this.CardBinInfo = res.data;
-        //         callback();
-        //       }
-        //     } else {
-        //       this.CardBinInfo = null;
-        //       callback(new Error(res.msg));
-        //     }
-        //   }
-        // });
       }
     };
     var isValitrPhone = (rule, value, callback) => {
@@ -188,7 +170,9 @@ export default {
       }
     }
     var identityValid = (rule, value, callback) => {
-      if (value == '') {
+      if (this.id) {
+        callback();
+      } else if (value == '') {
         callback(new Error('请输入身份证号'))
       } else if (!this.IdentityCodeValid(value)) {
         callback(new Error('请输入正确身份证号'))
@@ -282,12 +266,15 @@ export default {
           }
         ]
       },
-      loading2: false
+      loading2: false,
+      id: ''
     };
   },
   mounted() {
     this.resetForm.memberId = this.$route.params.memberId;
     this.ruleForm.memberId = this.$route.params.memberId;
+  },
+  created() {
     this.getVipMsg();
   },
   methods: {
@@ -333,14 +320,17 @@ export default {
         dataType: "json",
         success: res => {
           console.log(res, "查询会员信息");
-          const individual = res.data.walletIndividual;
-          this.ruleForm = {
-            identitycardUrl1File: individual.identitycardUrl1 || "",
-            identitycardUrl2File: individual.identitycardUrl2 || "",
-            name: individual.name || "", //注册人姓名
-            identityNo: individual.identityCardNo || "", //身份证号码
-            bankName: individual.name || "" //银行卡开户人姓名(必须与注册人姓名一致)
-          };
+          if (res.code === 0) {
+            this.id = res.data.id
+            if (res.data.walletIndividual) {
+              const individual = res.data.walletIndividual;
+              this.ruleForm.identitycardUrl1File = individual.identitycardUrl1File || ""
+              this.ruleForm.identitycardUrl2File = individual.identitycardUrl2File || ""
+              this.ruleForm.name = individual.name || ""
+              this.ruleForm.identityNo = individual.identityCardNo || ""
+              this.ruleForm.bankName = individual.bankName || ""
+            }
+          }
         }
       });
     },
@@ -387,8 +377,8 @@ export default {
                   onClose: () => {
                     this.$router.replace({
                       path:
-                      "/wallet/individual/open/bindPhone/" +
-                      this.$route.params.memberId
+                        "/wallet/individual/open/bindPhone/" +
+                        this.$route.params.memberId
                     });
                   }
                 });
