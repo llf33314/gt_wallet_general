@@ -1164,31 +1164,39 @@ public class YunSoaMemberUtil {
 			}
 		}
 		
-//		//平台转账
-//		@Test
-//		public void testApplicationTransfer(){
-//			try{
-//				log.info("testApplicationTransfer start");
-//
-//				JSONObject param = new JSONObject();
-//				param.put("bizTransferNo", "");
-//				param.put("sourceAccountSetNo", "");
-//				param.put("targetBizUserId", bizUserId);
-//				param.put("targetAccountSetNo", accountSetNo);
-//				param.put("amount", 1);
-//				param.put("remark", "平台转账");
-////				param.put("extendInfo", "");
-//
-//				log.info("request:" + param);
-//				JSONObject response = client.request(soaName, "applicationTransfer", param);
-//				log.info("response:" + response);
-//
-//				log.info("testApplicationTransfer end");
-//			}catch(Exception e){
-//				log.info("testApplicationTransfer error");
-//				e.printStackTrace();
-//			}
-//		}
+		//平台转账
+		@Test
+		public static ServerResponse<com.alibaba.fastjson.JSONObject> applicationTransfer(){
+			try{
+				log.info("applicationTransfer start");
+
+				JSONObject param = new JSONObject();
+				param.put("bizTransferNo", "zz"+System.currentTimeMillis());
+				param.put("sourceAccountSetNo", "100002");
+				param.put("targetBizUserId", "dfw1515551136943");
+				param.put("targetAccountSetNo", "200139");
+				param.put("amount", 1);
+				param.put("remark", "平台转账");
+//				param.put("extendInfo", "");
+
+				log.info("request:" + param);
+				JSONObject response = client.request(ordersoaName, "applicationTransfer", param);
+				log.info("response:" + response);
+				if(CommonUtil.isNotEmpty(response)&&response.get("status").equals("OK")){//查询成功
+					log.info("applicationTransfer end");
+					String value = response.getString("signedValue");
+					com.alibaba.fastjson.JSONObject json=	JsonUtil.parseObject(value, com.alibaba.fastjson.JSONObject.class);
+					return ServerResponse.createBySuccessCodeData(json);
+				}else{//接口异常
+					log.info("applicationTransfer end");
+					return ServerResponse.createByErrorMessage(CommonUtil.format("第三方接口异常,错误代码 :%s,描述:%s", response.getString("errorCode"), response.getString("message")));
+				}
+			}catch(Exception e){
+				log.info("applicationTransfer error");
+				e.printStackTrace();
+				return ServerResponse.createByErrorCode(WalletResponseEnums.API_ERROR);
+			}
+		}
 
 	/***********************************************************************订单类接口********************************************************************************************/
 }
