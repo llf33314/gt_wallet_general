@@ -333,14 +333,17 @@ export default {
         dataType: "json",
         success: res => {
           console.log(res, "查询会员信息");
+          if(res.data.walletIndividual){
           const individual = res.data.walletIndividual;
           this.ruleForm = {
-            identitycardUrl1File: individual.identitycardUrl1 || "",
-            identitycardUrl2File: individual.identitycardUrl2 || "",
-            name: individual.name || "", //注册人姓名
-            identityNo: individual.identityCardNo || "", //身份证号码
-            bankName: individual.name || "" //银行卡开户人姓名(必须与注册人姓名一致)
-          };
+                      identitycardUrl1File: individual.identitycardUrl1 || "",
+                      identitycardUrl2File: individual.identitycardUrl2 || "",
+                      name: individual.name || "", //注册人姓名
+                      identityNo: individual.identityCardNo || "", //身份证号码
+                      bankName: individual.name || "" //银行卡开户人姓名(必须与注册人姓名一致)
+                    };
+          }
+         
         }
       });
     },
