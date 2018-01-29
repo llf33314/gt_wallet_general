@@ -154,26 +154,6 @@ export default {
         callback(new Error('请输入正确个人账户'))
       } else {
         callback()
-        // $.ajax({
-        //   url: this.DFPAYDOMAIN + "/getBankCardBin",
-        //   type: "POST",
-        //   dataType: "JSON",
-        //   data: { bankCardNo: value },
-        //   success: res => {
-        //     if (res.code == 0) {
-        //       if (res.data.iscreditcard == 2) {
-        //         this.CardBinInfo = null;
-        //         callback(new Error("法人个人账户不能为信用卡"));
-        //       } else {
-        //         this.CardBinInfo = res.data;
-        //         callback();
-        //       }
-        //     } else {
-        //       this.CardBinInfo = null;
-        //       callback(new Error(res.msg));
-        //     }
-        //   }
-        // });
       }
     };
     var isValitrPhone = (rule, value, callback) => {
@@ -188,7 +168,9 @@ export default {
       }
     }
     var identityValid = (rule, value, callback) => {
-      if (value == '') {
+      if (this.id) {
+        callback();
+      } else if (value == '') {
         callback(new Error('请输入身份证号'))
       } else if (!this.IdentityCodeValid(value)) {
         callback(new Error('请输入正确身份证号'))
@@ -282,12 +264,15 @@ export default {
           }
         ]
       },
-      loading2: false
+      loading2: false,
+      id: ''
     };
   },
   mounted() {
     this.resetForm.memberId = this.$route.params.memberId;
     this.ruleForm.memberId = this.$route.params.memberId;
+  },
+  created() {
     this.getVipMsg();
   },
   methods: {
@@ -333,17 +318,17 @@ export default {
         dataType: "json",
         success: res => {
           console.log(res, "查询会员信息");
-          if(res.data.walletIndividual){
-          const individual = res.data.walletIndividual;
-          this.ruleForm = {
-                      identitycardUrl1File: individual.identitycardUrl1 || "",
-                      identitycardUrl2File: individual.identitycardUrl2 || "",
-                      name: individual.name || "", //注册人姓名
-                      identityNo: individual.identityCardNo || "", //身份证号码
-                      bankName: individual.name || "" //银行卡开户人姓名(必须与注册人姓名一致)
-                    };
+          if (res.code === 0) {
+            this.id = res.data.id
+            if (res.data.walletIndividual) {
+              const individual = res.data.walletIndividual;
+              this.ruleForm.identitycardUrl1File = individual.identitycardUrl1File || ""
+              this.ruleForm.identitycardUrl2File = individual.identitycardUrl2File || ""
+              this.ruleForm.name = individual.name || ""
+              this.ruleForm.identityNo = individual.identityCardNo || ""
+              this.ruleForm.bankName = individual.bankName || ""
+            }
           }
-         
         }
       });
     },
@@ -390,8 +375,8 @@ export default {
                   onClose: () => {
                     this.$router.replace({
                       path:
-                      "/wallet/individual/open/bindPhone/" +
-                      this.$route.params.memberId
+                        "/wallet/individual/open/bindPhone/" +
+                        this.$route.params.memberId
                     });
                   }
                 });
