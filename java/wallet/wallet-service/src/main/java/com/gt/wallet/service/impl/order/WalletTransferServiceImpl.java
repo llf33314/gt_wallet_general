@@ -8,7 +8,9 @@ import org.springframework.stereotype.Service;
 import com.alibaba.fastjson.JSONObject;
 import com.baomidou.mybatisplus.mapper.EntityWrapper;
 import com.baomidou.mybatisplus.mapper.Wrapper;
+import com.gt.api.util.httpclient.JsonUtil;
 import com.gt.wallet.base.BaseServiceImpl;
+import com.gt.wallet.constant.WalletLogConstants;
 import com.gt.wallet.data.api.tonglian.request.ApplicationTransfer;
 import com.gt.wallet.dto.ServerResponse;
 import com.gt.wallet.entity.WalletMember;
@@ -17,6 +19,7 @@ import com.gt.wallet.entity.WalletTransfer;
 import com.gt.wallet.enums.WalletResponseEnums;
 import com.gt.wallet.exception.BusinessException;
 import com.gt.wallet.mapper.order.WalletTransferMapper;
+import com.gt.wallet.service.log.WalletApiLogService;
 import com.gt.wallet.service.member.WalletMemberService;
 import com.gt.wallet.service.order.WalletPayOrderService;
 import com.gt.wallet.service.order.WalletTransferService;
@@ -47,16 +50,19 @@ public class WalletTransferServiceImpl extends BaseServiceImpl<WalletTransferMap
 	@Autowired
 	private WalletPayOrderService walletPayOrderService;
 	
+	@Autowired
+	private WalletApiLogService walletApiLogService;
+	
 	@Override
 	public ServerResponse<?> addDebit(Integer busId) throws Exception {
 		ServerResponse<List<WalletMember>> serverResponse=	walletMemberService.findMember(busId);
 		if(serverResponse.getCode()!=0||serverResponse.getData().size()<=0){
-			log.error("biz refund api：user is not exist");
+			log.error("biz addDebit api：user is not exist");
 			throw new BusinessException("fail：user is not exist!");
 		}
 		WalletMember walletMember=serverResponse.getData().get(0);
 		if(walletMember.getStatus()!=3){
-			log.error("biz refund api fail:会员账号异常("+CommonUtil.getMemberStatusDesc(walletMember.getStatus())+")，退款失败!");
+			log.error("biz addDebit api fail:会员账号异常("+CommonUtil.getMemberStatusDesc(walletMember.getStatus())+")，退款失败!");
 			throw new BusinessException("会员账号异常("+CommonUtil.getMemberStatusDesc(walletMember.getStatus())+")，退款失败!");
 		}
 		
@@ -83,6 +89,15 @@ public class WalletTransferServiceImpl extends BaseServiceImpl<WalletTransferMap
 			ApplicationTransfer applicationTransfer=new ApplicationTransfer(waitBalance,sysOrderNo,desc, walletMember.getExternalNum());
 			
 			ServerResponse<JSONObject> response=YunSoaMemberUtil.applicationTransfer(applicationTransfer);
+			/************记录日志************/
+			try {
+				walletApiLogService.save(JsonUtil.toJSONString(applicationTransfer), response, walletMember.getId(), null,sysOrderNo,WalletLogConstants.LOG_TRANSFER);
+			} catch (Exception e) {
+				log.error("biz addDebit save log fail!!!");
+				e.printStackTrace();
+				
+			}
+			/************记录日志************/
 			if(ServerResponse.judgeSuccess(response)){
 				WalletTransfer walletTransfer=new WalletTransfer();
 				walletTransfer.setAmount(CommonUtil.toBigDecimal(waitBalance));
@@ -91,13 +106,16 @@ public class WalletTransferServiceImpl extends BaseServiceImpl<WalletTransferMap
 				walletTransfer.setSysOrderNo(sysOrderNo);
 				walletTransfer.setWDesc(desc);
 				walletTransfer.setWMemberId(walletMember.getId());
-				walletTransfer.set
+				walletTransfer.setTransferNo(response.getData().getString("transferNo"));
+				walletTransferMapper.insert(walletTransfer);
+				return ServerResponse.createBySuccess();
 			}
+			return response;
 		}else{
-			ServerResponse.createByErrorCode(WalletResponseEnums.TRANSFER_ERROR);
+			
+			return ServerResponse.createByErrorCode(WalletResponseEnums.TRANSFER_ERROR);
 		}
 		
-		return null;
 	}
 	
 	

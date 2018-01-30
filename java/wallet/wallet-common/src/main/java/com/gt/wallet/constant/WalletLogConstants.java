@@ -73,11 +73,14 @@ public class WalletLogConstants {
 	 */
 	public static final Integer LOG_SETCASHBACKPERCENT=1009;
 	
-	
-	
-	
 	/**
 	 * 企业信息审核结果通知
 	 */
 	public static final Integer LOG_AUDITINGNOTIFY=1010;
+	
+	
+	/**
+	 * 调用转账api返回结果
+	 */
+	public static final Integer LOG_TRANSFER=1011;
 }
