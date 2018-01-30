@@ -68,11 +68,11 @@ public class WalletIndexStatisticsServiceImpl extends BaseServiceImpl<WalletInde
 						}
 					}
 				}
-				indexStatistics.setWaitBalance(waitBalance);
+				indexStatistics.setWaitBalance(CommonUtil.getdoubleTwo(waitBalance));
 			}else{
 				indexStatistics.setWaitBalance(0.00);
 			}
-			indexStatistics.setTotal(indexStatistics.getBalance()+indexStatistics.getWaitBalance());
+			indexStatistics.setTotal(CommonUtil.getdoubleTwo(indexStatistics.getBalance()+indexStatistics.getWaitBalance()));
 			return ServerResponse.createBySuccessCodeData(indexStatistics);
 		}else{
 			log.error("biz getIndexStatistics api fail:请先注册多粉会员");

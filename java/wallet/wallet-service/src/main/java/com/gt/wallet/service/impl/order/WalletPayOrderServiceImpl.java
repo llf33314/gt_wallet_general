@@ -75,8 +75,6 @@ public class WalletPayOrderServiceImpl extends BaseServiceImpl<WalletPayOrderMap
 	@Autowired
 	private WalletMemberService walletMemberService;
 	
-	@Autowired
-	private WalletRefundOrderMapper walletRefundOrderMapper;
 	
 	@Autowired
 	private WalletRefundOrderService walletRefundOrderService;
