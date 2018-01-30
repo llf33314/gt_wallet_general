@@ -6,6 +6,7 @@ import java.security.interfaces.RSAPrivateKey;
 import java.security.interfaces.RSAPublicKey;
 
 import org.json.JSONObject;
+import org.junit.Test;
 
 import com.gt.api.util.httpclient.JsonUtil;
 import com.gt.wallet.constant.WalletConstants;
@@ -800,11 +801,13 @@ public class YunSoaMemberUtil {
 			String extendInfo = "this is extendInfo";
 
 			JSONObject param = new JSONObject();
-			param.put("bizUserId", payOrder.getBizUserId());
+			//200139
+			param.put("bizUserId",WalletWebConfig.getMachid());
+//			param.put("bizUserId","001101260");
 			param.put("bizOrderNo",payOrder.getBizOrderNo());
 			param.put("accountSetNo", WalletWebConfig.getYunBizUserId());
 			param.put("amount",amount);
-			param.put("fee",payOrder.getFee()*100);
+			param.put("fee",0);
 			param.put("validateType",1L);
 			param.put("frontUrl", frontUrl);
 			param.put("backUrl", backUrl);
@@ -919,7 +922,7 @@ public class YunSoaMemberUtil {
 			String extendInfo = "this is extendInfo";
 
 			JSONObject param = new JSONObject();
-			param.put("bizUserId", payOrder.getBizUserId());
+			param.put("bizUserId", WalletWebConfig.getMachid());
 			param.put("bizOrderNo",payOrder.getBizOrderNo());
 			param.put("accountSetNo", WalletWebConfig.getYunBizUserId());
 			param.put("amount",amount);
@@ -979,7 +982,7 @@ public class YunSoaMemberUtil {
 			param.put("bizOrderNo", consumeOrder.getBizOrderNo());
 			param.put("accountSetNo", WalletWebConfig.getYunBizUserId());
 			param.put("amount", consumeOrder.getAmount()*100);
-			param.put("fee", consumeOrder.getFee());
+//			param.put("fee", consumeOrder.getFee());
 			param.put("backUrl", backUrl);
 		//	param.put("ordErexpireDatetime", ordErexpireDatetime);
 			param.put("bankCardNo", YunSoaMemberUtil.rsaEncrypt("6228481234567890123"));
@@ -1018,7 +1021,7 @@ public class YunSoaMemberUtil {
 	 * 查询余额
 	 * @param bizUserId 会员账号
 	 */
-	public ServerResponse<com.alibaba.fastjson.JSONObject> queryBalance(String bizUserId){
+	public static ServerResponse<com.alibaba.fastjson.JSONObject> queryBalance(String bizUserId){
 		try{
 			log.info("queryBalance start");
 
@@ -1094,12 +1097,12 @@ public class YunSoaMemberUtil {
 				JSONObject param = new JSONObject();
 				param.put("bizOrderNo", bizOrderNo);
 				param.put("oriBizOrderNo", tRefundOrder.getOriBizOrderNo());
-				param.put("bizUserId", tRefundOrder.getBizUserId());
+				param.put("bizUserId", WalletWebConfig.getMachid());
 				param.put("refundList", refundList);
 				param.put("amount", tRefundOrder.getAmount()*100);
 				param.put("couponAmount", 0);
-				param.put("feeAmount", tRefundOrder.getFeeAmount());
-				//param.put("feeAmount",0);
+		//		param.put("feeAmount", tRefundOrder.getFeeAmount());
+				param.put("feeAmount",0);
 				String backUrl =WalletWebConfig.getYunRefundSuccessNotifyUrl();
 				param.put("backUrl",backUrl);
 				log.info("request:" + param);
@@ -1163,5 +1166,39 @@ public class YunSoaMemberUtil {
 			}
 		}
 		
+		//平台转账
+		@Test
+		public static ServerResponse<com.alibaba.fastjson.JSONObject> applicationTransfer(){
+			try{
+				log.info("applicationTransfer start");
+
+				JSONObject param = new JSONObject();
+				param.put("bizTransferNo", "zz"+System.currentTimeMillis());
+				param.put("sourceAccountSetNo", "100002");
+				param.put("targetBizUserId", "dfw1515551136943");
+				param.put("targetAccountSetNo", "200139");
+				param.put("amount", 1);
+				param.put("remark", "平台转账");
+//				param.put("extendInfo", "");
+
+				log.info("request:" + param);
+				JSONObject response = client.request(ordersoaName, "applicationTransfer", param);
+				log.info("response:" + response);
+				if(CommonUtil.isNotEmpty(response)&&response.get("status").equals("OK")){//查询成功
+					log.info("applicationTransfer end");
+					String value = response.getString("signedValue");
+					com.alibaba.fastjson.JSONObject json=	JsonUtil.parseObject(value, com.alibaba.fastjson.JSONObject.class);
+					return ServerResponse.createBySuccessCodeData(json);
+				}else{//接口异常
+					log.info("applicationTransfer end");
+					return ServerResponse.createByErrorMessage(CommonUtil.format("第三方接口异常,错误代码 :%s,描述:%s", response.getString("errorCode"), response.getString("message")));
+				}
+			}catch(Exception e){
+				log.info("applicationTransfer error");
+				e.printStackTrace();
+				return ServerResponse.createByErrorCode(WalletResponseEnums.API_ERROR);
+			}
+		}
+
 	/***********************************************************************订单类接口********************************************************************************************/
 }
