@@ -127,6 +127,7 @@ public class WalletMemberServiceImpl extends BaseServiceImpl<WalletMemberMapper,
 						walletMembers.get(i).getWalletIndividual().setIdentityCardNo(IdCardUtil.hide(YunSoaMemberUtil.rsaDecrypt(walletMembers.get(i).getWalletIndividual().getIdentityCardNo())));
 						walletMembers.get(i).getWalletIndividual().setIdentitycardUrl1(null);
 						walletMembers.get(i).getWalletIndividual().setIdentitycardUrl2(null);
+						walletMembers.get(i).getWalletIndividual().setName(walletMembers.get(i).getWalletIndividual().getName().substring(0, 1)+"**");
 					}
 				}else if(walletMembers.get(i).getMemberType()==2){//企业会员
 					ServerResponse<WalletCompany> serverResponse=walletCompanyService.findByMemberId(walletMembers.get(i).getId());

@@ -134,6 +134,12 @@ public enum WalletResponseEnums {
 	 */
 	SENSITIVE_ERROR(1023, "数据异常，敏感关键词" ),
 	
+
+	/**
+	 * 敏感关键词
+	 */
+	TRANSFER_ERROR(1024, "待结算金额为0，无法划账" ),
+	
 	
 	;
 

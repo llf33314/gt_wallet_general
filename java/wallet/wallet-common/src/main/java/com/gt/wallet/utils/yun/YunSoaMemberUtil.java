@@ -10,6 +10,7 @@ import org.junit.Test;
 
 import com.gt.api.util.httpclient.JsonUtil;
 import com.gt.wallet.constant.WalletConstants;
+import com.gt.wallet.data.api.tonglian.request.ApplicationTransfer;
 import com.gt.wallet.data.api.tonglian.request.TCardBin;
 import com.gt.wallet.data.api.tonglian.request.TPayOrder;
 import com.gt.wallet.data.api.tonglian.request.TRefundOrder;
@@ -1167,17 +1168,17 @@ public class YunSoaMemberUtil {
 		
 		//平台转账
 		@Test
-		public static ServerResponse<com.alibaba.fastjson.JSONObject> applicationTransfer(){
+		public static ServerResponse<com.alibaba.fastjson.JSONObject> applicationTransfer(ApplicationTransfer applicationTransfer){
 			try{
 				log.info("applicationTransfer start");
 
 				JSONObject param = new JSONObject();
-				param.put("bizTransferNo", "zz"+System.currentTimeMillis());
+				param.put("bizTransferNo",applicationTransfer.getBizOrderNo());
 				param.put("sourceAccountSetNo", "100002");
-				param.put("targetBizUserId", "dfw1515551136943");
+				param.put("targetBizUserId",applicationTransfer.getBizUserId());
 				param.put("targetAccountSetNo", "200139");
-				param.put("amount", 1);
-				param.put("remark", "平台转账");
+				param.put("amount",applicationTransfer.getAmount());
+				param.put("remark",applicationTransfer.getDesc());
 //				param.put("extendInfo", "");
 
 				log.info("request:" + param);
