@@ -24,6 +24,7 @@ import com.gt.wallet.entity.WalletMoney;
 import com.gt.wallet.enums.WalletResponseEnums;
 import com.gt.wallet.exception.BusinessException;
 import com.gt.wallet.exception.ResponseEntityException;
+import com.gt.wallet.service.order.WalletIndexStatisticsService;
 import com.gt.wallet.service.order.WalletMoneyService;
 import com.gt.wallet.utils.CommonUtil;
 import com.gt.wallet.utils.MyPageUtil;
@@ -53,6 +54,9 @@ public class WalletMoneyController extends BaseController {
 	
 	@Autowired
 	private WalletMoneyService walletMoneyService;
+	
+	@Autowired
+	private WalletIndexStatisticsService walletIndexStatisticsService;
 	
 	/**
 	 * 分页查询
@@ -156,7 +160,8 @@ public class WalletMoneyController extends BaseController {
 	public ServerResponse<Double> getTotal(HttpServletRequest request,@ApiParam(required=true,name="wMemberId" ,value="钱包会员id")Integer wMemberId){
 		log.info(CommonUtil.format("start  view getTotal api params: %s",JsonUtil.toJSONString(wMemberId)));
 		try {
-			ServerResponse<IndexStatistics> serverResponse=walletMoneyService.getTotal(wMemberId);
+			BusUser busUser=CommonUtil.getLoginUser(request);
+			ServerResponse<IndexStatistics> serverResponse=walletIndexStatisticsService.getIndexStatistics(busUser.getId());
 			log.info(CommonUtil.format("serverResponse:%s", JsonUtil.toJSONString(serverResponse)));
 			Double yue=0.0;
 			if(CommonUtil.isNotEmpty(serverResponse.getData())){

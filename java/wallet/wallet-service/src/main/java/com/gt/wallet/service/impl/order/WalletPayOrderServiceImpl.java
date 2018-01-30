@@ -7,6 +7,7 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
+import org.apache.hadoop.mapred.gethistory_jsp;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Isolation;
@@ -405,12 +406,16 @@ public class WalletPayOrderServiceImpl extends BaseServiceImpl<WalletPayOrderMap
 			log.error("biz refund api fail：订单号不存在!");
 			throw new BusinessException("异常：订单号不存在!");
 		}
+		WalletPayOrder walletPayOrder=serverResponseWalletPayOrder.getData();
+		if(walletPayOrder.getTakeState()==3){//已转账
+			log.error("biz refund api fail：order is  finish");
+			throw new BusinessException("订单号已完成，不可退款");
+		}
 		ServerResponse<List<WalletMember>> serverResponse=	walletMemberService.findMember(refundOrder.getBusId());
 		if(serverResponse.getCode()!=0||serverResponse.getData().size()<=0){
 			log.error("biz refund api：user is not exist");
 			throw new BusinessException("fail：user is not exist!");
 		}
-		WalletPayOrder walletPayOrder=serverResponseWalletPayOrder.getData();
 		if(serverResponse.getData().get(0).getId()!=walletPayOrder.getWMemberId()){
 			log.error("biz refund api：user is not exist");
 			throw new BusinessException("fail：user is error!");
@@ -421,14 +426,11 @@ public class WalletPayOrderServiceImpl extends BaseServiceImpl<WalletPayOrderMap
 			throw new BusinessException("会员账号异常("+CommonUtil.getMemberStatusDesc(walletMember.getStatus())+")，退款失败!");
 		}
 		WalletPayOrder payOrder=	serverResponseWalletPayOrder.getData();
-		double  money=walletRefundOrderMapper.getRefundMoney(refundOrder.getBizOrderNo());
-		double total=(payOrder.getFee().doubleValue()+payOrder.getAmount().doubleValue());
-		if(money+refundOrder.getAmount()>total){//金额越界
+		if(walletPayOrder.getAmount().doubleValue()<walletPayOrder.getRefundAmount().doubleValue()+refundOrder.getAmount()){//金额越界
 			log.error("biz refund api fail：退款金额超出总金额");
 			throw new BusinessException("fail：退款金额超出总金额!");
 		}
 		double fee=walletMember.getFeePercent()/100*refundOrder.getAmount();
-		refundOrder.setFeeAmount(CommonUtil.getdoubleTwo(fee));
 		refundOrder.setBizUserId(walletMember.getMemberNum());
 		refundOrder.setOriBizOrderNo(payOrder.getSubmitNo());
 		ServerResponse<String> serverResponse2=	YunSoaMemberUtil.refund(refundOrder);
@@ -501,7 +503,6 @@ public class WalletPayOrderServiceImpl extends BaseServiceImpl<WalletPayOrderMap
 		log.info(CommonUtil.format("WalletPayOrder: %s", JsonUtil.toJSONString(serverResponse)));
 		WalletPayOrder walletPayOrder=serverResponse.getData();
 		walletPayOrder.setRefundAmount(CommonUtil.toBigDecimal(walletPayOrder.getRefundAmount().doubleValue()+walletRefundOrder.getAmount().doubleValue()));
-		walletPayOrder.setRefundFeeamount(CommonUtil.toBigDecimal(walletPayOrder.getRefundFeeamount().doubleValue()+walletRefundOrder.getFee().doubleValue()));
 		walletPayOrder.setRefundExternalNo(orderNo);
 		Integer count=walletPayOrderMapper.updateById(walletPayOrder);
 		

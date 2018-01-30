@@ -19,7 +19,6 @@ import com.gt.wallet.data.wallet.request.WalletIndividualAdd;
 import com.gt.wallet.dto.ServerResponse;
 import com.gt.wallet.enums.WalletResponseEnums;
 import com.gt.wallet.utils.CommonUtil;
-import com.gt.wallet.utils.DateTimeKit;
 import com.gt.wallet.utils.WalletWebConfig;
 
 import ime.service.client.SOAClient;
