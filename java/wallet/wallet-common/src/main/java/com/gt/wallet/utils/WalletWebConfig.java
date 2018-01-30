@@ -138,6 +138,11 @@ public class WalletWebConfig {
 	 */
 	private static String yunAuditingNotifyUrl;
 	
+	/**
+	 * 收款账号
+	 */
+	private static String machid;
+	
 	
 //	 // 注入配置属性 根据环境配置切换
 	public static String getDomain() {
@@ -322,6 +327,14 @@ public class WalletWebConfig {
 
 	public static void setYunAuditingNotifyUrl(String yunAuditingNotifyUrl) {
 		WalletWebConfig.yunAuditingNotifyUrl = yunAuditingNotifyUrl;
+	}
+
+	public static String getMachid() {
+		return machid;
+	}
+
+	public static void setMachid(String machid) {
+		WalletWebConfig.machid = machid;
 	}
 
 
