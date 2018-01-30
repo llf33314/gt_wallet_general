@@ -266,6 +266,7 @@ export default {
       this.$refs[formName].validate((valid) => {
         if (valid) {
           this.loading22 = true
+          console.log(this.walletIndividual.wmemberId,'this.walletCompany.wmemberId')
           $.ajax({
             url: this.DFPAYDOMAIN + '/walletMember/reset',
             type: 'POST',
@@ -273,7 +274,7 @@ export default {
             data: {
               newPhone: this.ruleForm2.phone,
               verificationCode: this.ruleForm2.code,
-              wmemberId: this.walletCompany.wmemberId
+              wmemberId: this.walletIndividual.wmemberId
             },
             success: (res) => {
               console.log(res, '确认重置手机')

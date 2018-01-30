@@ -102,7 +102,7 @@
           <el-button type="primary" @click="sendVerificationCode">获取验证码</el-button>
         </el-form-item> -->
         <el-form-item label="个人账户：" prop="cardNo">
-          <el-input v-model="ruleForm.cardNo" placeholder="请输入个人账户" :disabled="ruleForm.cardNo!==''" class="input-width"></el-input>
+          <el-input v-model="ruleForm.cardNo" placeholder="请输入个人账户" class="input-width"></el-input>
         </el-form-item>
         <el-form-item v-if="CardBinInfo">
           <p style="line-height:30px;">
@@ -122,7 +122,7 @@
           <div>{{ruleForm.name}}</div>
         </el-form-item>
         <el-form-item label="银行卡预留手机号：" prop="phone">
-          <el-input v-model="ruleForm.phone" type="number" :disabled="ruleForm.phone!==''" placeholder="请输入银行卡预留手机号" class="input-width"></el-input>
+          <el-input v-model="ruleForm.phone" type="number" placeholder="请输入银行卡预留手机号" class="input-width"></el-input>
         </el-form-item>
         <el-form-item>
           <el-button type="primary" @click="submitForm('ruleForm')" :loading="loading1">下一步</el-button>

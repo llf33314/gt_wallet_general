@@ -188,7 +188,9 @@ export default {
         success: res => {
           console.log(res, "获取首页总计数据");
           if (res.code == 0) {
-            this.IndexStatistics = res.data;
+            if (res.data) {
+              this.IndexStatistics = res.data;
+            }
           } else {
             this.$message.error(res.msg);
           }
