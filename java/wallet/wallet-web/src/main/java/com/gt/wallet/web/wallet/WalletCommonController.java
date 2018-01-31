@@ -139,13 +139,12 @@ public class WalletCommonController {
 	 * @return
 	 */
 	@ResponseBody
-	@RequestMapping(value="/sendMessage",method=RequestMethod.POST)
-	 @ApiOperation(value="消息推送", notes="消息推送",produces="application/json")
+	@RequestMapping(value="/79B4DE7C/sendMessage",method=RequestMethod.POST)
 	@ApiIgnore
-	public ServerResponse<?> sendMessage(HttpServletRequest request,@RequestBody SendSocket sendSocket ){
+	public ServerResponse<?> sendMessage(HttpServletRequest request, SendSocket sendSocket ){
 		log.info(CommonUtil.format("start sendMessage debit api"));
 		try {
-				ServerResponse<?>	 serverResponse=SocketUtil.sendMsg("36", null, "https://deeptel.com.cn/restaurant/res_start.do");
+				ServerResponse<?>	 serverResponse=SocketUtil.sendMsg(""+sendSocket.getBusId(), null, sendSocket.getSendUrl());
 				return serverResponse;
 			} catch ( BusinessException e) {
 				log.error(CommonUtil.format("view sendMessage api fail ：%s,%s",e.getCode(),e.getMessage()));

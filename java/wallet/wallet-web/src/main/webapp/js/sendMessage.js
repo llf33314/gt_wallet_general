@@ -5,11 +5,12 @@
 
 /**发送消息**/
 function sendMessage(busId,url){
-	var sendSocket={busId : busId,sendUrl:url};
+	var sendSocket={busId :busId,sendUrl:url};
 	$.ajax({
-		url : "/wcommon/sendMessage",
-		data : JSON.stringify(sendSocket),
+		url : "/wcommon/79B4DE7C/sendMessage",
+		data :sendSocket,
 		dataType : "json",
+		type:"POST",
 		async : false,
 		success : function(data){
 			
