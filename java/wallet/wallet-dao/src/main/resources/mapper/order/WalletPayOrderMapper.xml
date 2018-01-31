@@ -66,7 +66,7 @@
 	</select>
 	
 	
-	<select id="getWithBalance" resultType="com.gt.wallet.data.wallet.response.GroupStatistics" >
+	<select id="getGroupStatistics" resultType="com.gt.wallet.data.wallet.response.GroupStatistics" >
 		SELECT  w_member_id as wMemberId, SUM(CASE WHEN  o.amount-o.`refund_amount` >o.`fee` THEN o.amount-o.`refund_amount`-o.`fee`  ELSE o.amount-o.`refund_amount` END) AS waitBalance 
 FROM `t_wallet_pay_order` o WHERE  STATUS='success' AND <![CDATA[ ctime<#{ctime} ]]> AND <![CDATA[ take_state <> 3 ]]>  GROUP BY w_member_id
 	</select>

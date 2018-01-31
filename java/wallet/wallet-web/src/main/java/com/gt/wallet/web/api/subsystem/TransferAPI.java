@@ -71,7 +71,7 @@ public class TransferAPI extends BaseController{
 	 * @return
 	 */
 	@ResponseBody
-	@RequestMapping(value="/79B4DE7C/debit",method=RequestMethod.GET)
+	@RequestMapping(value="/79B4DE7C/taskDebit",method=RequestMethod.GET)
 	 @ApiOperation(value="划账api(定时)", notes="reqdata：为商家id",produces="application/json")
 	@ApiIgnore
 	public void taskDebit(HttpServletRequest request ){

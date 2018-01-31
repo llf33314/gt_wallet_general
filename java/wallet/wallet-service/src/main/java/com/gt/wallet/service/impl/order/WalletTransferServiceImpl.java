@@ -77,7 +77,7 @@ public class WalletTransferServiceImpl extends BaseServiceImpl<WalletTransferMap
 			waitBalance=CommonUtil.getdoubleTwo(waitBalance);
 			String sysOrderNo="HZ"+System.currentTimeMillis();
 			String desc="平台划账";
-			ApplicationTransfer applicationTransfer=new ApplicationTransfer(waitBalance,sysOrderNo,desc, walletMember.getExternalNum());
+			ApplicationTransfer applicationTransfer=new ApplicationTransfer(waitBalance,sysOrderNo,desc, walletMember.getMemberNum());
 			
 			ServerResponse<JSONObject> response=YunSoaMemberUtil.applicationTransfer(applicationTransfer);
 			/************记录日志************/
@@ -109,7 +109,7 @@ public class WalletTransferServiceImpl extends BaseServiceImpl<WalletTransferMap
 
 	@Override
 	public ServerResponse<?> taskAddDebit() throws Exception {
-		List<GroupStatistics> groupStatisticsList=walletPayOrderMapper.getWithBalance(DateTimeKit.getDateTime(DateTimeKit.DEFAULT_DATE_FORMAT));
+		List<GroupStatistics> groupStatisticsList=walletPayOrderMapper.getGroupStatistics(DateTimeKit.getDateTime(DateTimeKit.DEFAULT_DATE_FORMAT));
 		for (GroupStatistics groupStatistics : groupStatisticsList) {
 			Integer wmemberId=groupStatistics.getWMemberId();
 			WalletMember walletMember=walletMemberMapper.selectById(wmemberId);
@@ -124,7 +124,7 @@ public class WalletTransferServiceImpl extends BaseServiceImpl<WalletTransferMap
 						waitBalance=CommonUtil.getdoubleTwo(waitBalance);
 						String sysOrderNo="HZ"+System.currentTimeMillis();
 						String desc="平台划账";
-						ApplicationTransfer applicationTransfer=new ApplicationTransfer(waitBalance,sysOrderNo,desc, walletMember.getExternalNum());
+						ApplicationTransfer applicationTransfer=new ApplicationTransfer(waitBalance,sysOrderNo,desc, walletMember.getMemberNum());
 						
 						//调用通联转账接口
 						ServerResponse<JSONObject> response=YunSoaMemberUtil.applicationTransfer(applicationTransfer);

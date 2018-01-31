@@ -35,7 +35,7 @@ public interface WalletPayOrderMapper extends BaseMapper<WalletPayOrder> {
 	 * @param cime
 	 * @return
 	 */
-	List<GroupStatistics> getWithBalance(@Param("ctime") String ctime);
+	List<GroupStatistics> getGroupStatistics(@Param("ctime") String ctime);
 	
 	
 }
