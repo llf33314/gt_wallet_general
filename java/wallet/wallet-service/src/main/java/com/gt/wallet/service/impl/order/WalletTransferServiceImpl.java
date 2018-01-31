@@ -95,7 +95,6 @@ public class WalletTransferServiceImpl extends BaseServiceImpl<WalletTransferMap
 			} catch (Exception e) {
 				log.error("biz addDebit save log fail!!!");
 				e.printStackTrace();
-				
 			}
 			/************记录日志************/
 			if(ServerResponse.judgeSuccess(response)){
@@ -112,7 +111,6 @@ public class WalletTransferServiceImpl extends BaseServiceImpl<WalletTransferMap
 			}
 			return response;
 		}else{
-			
 			return ServerResponse.createByErrorCode(WalletResponseEnums.TRANSFER_ERROR);
 		}
 		
