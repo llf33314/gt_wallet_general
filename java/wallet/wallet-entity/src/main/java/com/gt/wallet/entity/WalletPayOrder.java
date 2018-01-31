@@ -227,4 +227,41 @@ public class WalletPayOrder extends Model<WalletPayOrder> {
 			", refundExternalNo=" + refundExternalNo +
 			"}";
 	}
+
+	public WalletPayOrder(Integer busId, Integer wMemberId, Integer memberId, String sysOrderNo, BigDecimal amount,
+			BigDecimal fee, Date ctime, Integer industryCode, String industryName, Integer visitSource,
+			String goodsSummary, String status, String payFailMessage, String externalNo, String tradeNo,
+			String payCode, String sysRefundNo, BigDecimal refundAmount, BigDecimal refundFeeamount,
+			String refundExternalNo, String acct, String submitNo, Integer payType, Integer takeState, Integer model) {
+		super();
+		this.busId = busId;
+		this.wMemberId = wMemberId;
+		this.memberId = memberId;
+		this.sysOrderNo = sysOrderNo;
+		this.amount = amount;
+		this.fee = fee;
+		this.ctime = ctime;
+		this.industryCode = industryCode;
+		this.industryName = industryName;
+		this.visitSource = visitSource;
+		this.goodsSummary = goodsSummary;
+		this.status = status;
+		this.payFailMessage = payFailMessage;
+		this.externalNo = externalNo;
+		this.tradeNo = tradeNo;
+		this.payCode = payCode;
+		this.sysRefundNo = sysRefundNo;
+		this.refundAmount = refundAmount;
+		this.refundFeeamount = refundFeeamount;
+		this.refundExternalNo = refundExternalNo;
+		this.acct = acct;
+		this.submitNo = submitNo;
+		this.payType = payType;
+		this.takeState = takeState;
+		this.model = model;
+	}
+	
+	public WalletPayOrder() {
+		super();
+	}
 }
