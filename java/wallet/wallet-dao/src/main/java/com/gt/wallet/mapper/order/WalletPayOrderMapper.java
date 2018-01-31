@@ -22,6 +22,6 @@ public interface WalletPayOrderMapper extends BaseMapper<WalletPayOrder> {
 	 * @param cime
 	 * @return
 	 */
-	Double getWithBalance(@Param("wmemberId") Integer wmemberId,@Param("cime") String cime);
+	Double getWithBalance(@Param("wmemberId") Integer wmemberId,@Param("ctime") String ctime);
 
 }
