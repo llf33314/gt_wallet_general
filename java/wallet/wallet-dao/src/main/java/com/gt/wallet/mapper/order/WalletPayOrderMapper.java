@@ -1,6 +1,9 @@
 package com.gt.wallet.mapper.order;
 
+import com.gt.wallet.data.wallet.response.GroupStatistics;
 import com.gt.wallet.entity.WalletPayOrder;
+
+import java.util.List;
 
 import org.apache.ibatis.annotations.Param;
 
@@ -23,5 +26,16 @@ public interface WalletPayOrderMapper extends BaseMapper<WalletPayOrder> {
 	 * @return
 	 */
 	Double getWithBalance(@Param("wmemberId") Integer wmemberId,@Param("ctime") String ctime);
-
+	
+	
+	
+	/**
+	 * 获取待结算金额(分组)
+	 * @param wmemberId
+	 * @param cime
+	 * @return
+	 */
+	List<GroupStatistics> getWithBalance(@Param("ctime") String ctime);
+	
+	
 }

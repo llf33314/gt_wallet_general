@@ -15,10 +15,17 @@ import com.gt.wallet.entity.WalletTransfer;
 public interface WalletTransferService extends BaseService<WalletTransfer> {
 	
 	 /**
-	  * 划账
+	  * 划账(手动)
 	  * @param busId  商家id
 	  * @return
 	  */
 	 ServerResponse<?> addDebit(Integer busId)throws Exception;
+	 
+	 /**
+	  * 划账(系统定时)
+	  * @param busId  商家id
+	  * @return
+	  */
+	 ServerResponse<?> taskAddDebit()throws Exception;
 	
 }
