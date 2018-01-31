@@ -22,6 +22,7 @@ import com.gt.wallet.service.order.WalletIndexStatisticsService;
 import com.gt.wallet.service.order.WalletMoneyService;
 import com.gt.wallet.service.order.WalletPayOrderService;
 import com.gt.wallet.utils.CommonUtil;
+import com.gt.wallet.utils.DateTimeKit;
 
 import lombok.extern.slf4j.Slf4j;
 
@@ -44,6 +45,9 @@ public class WalletIndexStatisticsServiceImpl extends BaseServiceImpl<WalletInde
 	@Autowired
 	WalletPayOrderService walletPayOrderService;
 	
+	@Autowired
+	private WalletPayOrderMapper walletPayOrderMapper;
+	
 	@Override
 	public ServerResponse<IndexStatistics> getIndexStatistics(Integer busId) throws Exception {
 		log.info(CommonUtil.format("start biz getIndexStatistics api params:%s",JsonUtil.toJSONString(busId)));
@@ -54,20 +58,8 @@ public class WalletIndexStatisticsServiceImpl extends BaseServiceImpl<WalletInde
 			Wrapper<WalletPayOrder> wrapper=new EntityWrapper<WalletPayOrder>() ;
 			indexStatistics.setBalance(walletMember.getWBalance());
 			wrapper.where("w_member_id={0}",walletMember.getId()).and("status={0}", "success");
-			List<WalletPayOrder> walletPayOrders=walletPayOrderService.selectList(wrapper);
-			if(walletPayOrders.size()>0){
-				Double waitBalance=0.00;
-				for (WalletPayOrder walletPayOrder : walletPayOrders) {
-					if(CommonUtil.isEmpty(walletPayOrder.getSysRefundNo())){//没有退款过
-						waitBalance=waitBalance+(walletPayOrder.getAmount().doubleValue()-walletPayOrder.getFee().doubleValue());
-					}else {
-						if(walletPayOrder.getAmount()==walletPayOrder.getRefundAmount()){//全额退款
-							waitBalance=waitBalance+(walletPayOrder.getAmount().doubleValue()-walletPayOrder.getRefundAmount().doubleValue());
-						}else{//多次退款
-							waitBalance=waitBalance+(walletPayOrder.getAmount().doubleValue()-walletPayOrder.getFee().doubleValue()-walletPayOrder.getRefundAmount().doubleValue());
-						}
-					}
-				}
+			Double waitBalance=walletPayOrderMapper.getWithBalance(walletMember.getId(), DateTimeKit.getDateTime(DateTimeKit.DEFAULT_DATE_FORMAT));
+			if(CommonUtil.isNotEmpty(waitBalance)&&waitBalance>0){
 				indexStatistics.setWaitBalance(CommonUtil.getdoubleTwo(waitBalance));
 			}else{
 				indexStatistics.setWaitBalance(0.00);

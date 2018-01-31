@@ -18,6 +18,7 @@ import com.gt.wallet.entity.WalletPayOrder;
 import com.gt.wallet.entity.WalletTransfer;
 import com.gt.wallet.enums.WalletResponseEnums;
 import com.gt.wallet.exception.BusinessException;
+import com.gt.wallet.mapper.order.WalletPayOrderMapper;
 import com.gt.wallet.mapper.order.WalletTransferMapper;
 import com.gt.wallet.service.log.WalletApiLogService;
 import com.gt.wallet.service.member.WalletMemberService;
@@ -48,10 +49,10 @@ public class WalletTransferServiceImpl extends BaseServiceImpl<WalletTransferMap
 	private WalletMemberService walletMemberService;
 	
 	@Autowired
-	private WalletPayOrderService walletPayOrderService;
+	private WalletApiLogService walletApiLogService;
 	
 	@Autowired
-	private WalletApiLogService walletApiLogService;
+	private WalletPayOrderMapper walletPayOrderMapper;
 	
 	@Override
 	public ServerResponse<?> addDebit(Integer busId) throws Exception {
@@ -69,20 +70,9 @@ public class WalletTransferServiceImpl extends BaseServiceImpl<WalletTransferMap
 		Wrapper<WalletPayOrder> wrapper=new EntityWrapper<WalletPayOrder>() ;
 		wrapper.where("w_member_id={0}",walletMember.getId()).and("status={0}", "success")
 		.and("ctime<{0}",DateTimeKit.getDateTime(DateTimeKit.DEFAULT_DATE_FORMAT));
-		List<WalletPayOrder> walletPayOrders=walletPayOrderService.selectList(wrapper);
-		if(walletPayOrders.size()>0){
-			Double waitBalance=0.00;
-			for (WalletPayOrder walletPayOrder : walletPayOrders) {
-				if(CommonUtil.isEmpty(walletPayOrder.getSysRefundNo())){//没有退款过
-					waitBalance=waitBalance+(walletPayOrder.getAmount().doubleValue()-walletPayOrder.getFee().doubleValue());
-				}else {
-					if(walletPayOrder.getAmount()==walletPayOrder.getRefundAmount()){//全额退款
-						waitBalance=waitBalance+(walletPayOrder.getAmount().doubleValue()-walletPayOrder.getRefundAmount().doubleValue());
-					}else{//多次退款
-						waitBalance=waitBalance+(walletPayOrder.getAmount().doubleValue()-walletPayOrder.getFee().doubleValue()-walletPayOrder.getRefundAmount().doubleValue());
-					}
-				}
-			}
+		Double waitBalance=	walletPayOrderMapper.getWithBalance(walletMember.getId(), DateTimeKit.getDateTime(DateTimeKit.DEFAULT_DATE_FORMAT));
+		if(CommonUtil.isNotEmpty(waitBalance)&&waitBalance>0){
+			waitBalance=CommonUtil.getdoubleTwo(waitBalance);
 			waitBalance=CommonUtil.getdoubleTwo(waitBalance);
 			String sysOrderNo="HZ"+System.currentTimeMillis();
 			String desc="平台划账";

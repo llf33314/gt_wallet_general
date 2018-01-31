@@ -136,7 +136,7 @@ public enum WalletResponseEnums {
 	
 
 	/**
-	 * 敏感关键词
+	 * 待结算金额为0，无法划账
 	 */
 	TRANSFER_ERROR(1024, "待结算金额为0，无法划账" ),
 	
