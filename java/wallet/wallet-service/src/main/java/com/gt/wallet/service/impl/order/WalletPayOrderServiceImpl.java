@@ -113,7 +113,7 @@ public class WalletPayOrderServiceImpl extends BaseServiceImpl<WalletPayOrderMap
 		String submitNo=md5+"__"+payOrder.getBizOrderNo();
 		payOrder.setSubmitNo(submitNo);
 		Double fee=CommonUtil.getdoubleTwo((walletMember.getFeePercent()*payOrder.getAmount())/100);
-		TPayOrder tPayOrder=new TPayOrder(payOrder.getAmount(),submitNo, (fee)/100, payOrder.getAcct(), payOrder.getReturnUrl(), payOrder.getType(), payOrder.getDesc(), walletMember.getMemberNum());
+		TPayOrder tPayOrder=new TPayOrder(payOrder.getAmount(),submitNo, (fee)/100, payOrder.getAcct(), payOrder.getFrontUrl(), payOrder.getType(), payOrder.getDesc(), walletMember.getMemberNum());
 		/************通联下单************/
 		ServerResponse<com.alibaba.fastjson.JSONObject> serverResponse=YunSoaMemberUtil.applyDeposit(tPayOrder);
 		
@@ -123,7 +123,7 @@ public class WalletPayOrderServiceImpl extends BaseServiceImpl<WalletPayOrderMap
 		log.info(CommonUtil.format("biz applyDeposit api serverResponse:%s", JsonUtil.toJSONString(serverResponse)));
 		/************记录日志************/
 		try {
-			walletApiLogService.save(JsonUtil.toJSONString(tPayOrder), serverResponse, walletMember.getId(), payOrder.getNotifyUrl(),submitNo,WalletLogConstants.LOG_PAY);
+			walletApiLogService.save(JsonUtil.toJSONString(tPayOrder), serverResponse, walletMember.getId(), payOrder.getBackUrl(),submitNo,WalletLogConstants.LOG_PAY);
 		} catch (Exception e) {
 			log.error("biz applyDeposit save log fail!!!");
 			e.printStackTrace();
@@ -176,14 +176,14 @@ public class WalletPayOrderServiceImpl extends BaseServiceImpl<WalletPayOrderMap
 		String md5=MD5Utils.getSmallMD5( DateTimeKit.format(currentTime, format));
 		String submitNo=md5+"__"+payOrder.getBizOrderNo();
 		payOrder.setSubmitNo(submitNo);
-		TPayOrder tPayOrder=new TPayOrder(payOrder.getAmount(),submitNo, (walletMember.getFeePercent()*payOrder.getAmount())/100, payOrder.getAcct(), payOrder.getReturnUrl(), payOrder.getType(), payOrder.getDesc(), walletMember.getMemberNum());
+		TPayOrder tPayOrder=new TPayOrder(payOrder.getAmount(),submitNo, (walletMember.getFeePercent()*payOrder.getAmount())/100, payOrder.getAcct(), payOrder.getFrontUrl(), payOrder.getType(), payOrder.getDesc(), walletMember.getMemberNum());
 		/************通联下单************/
 		ServerResponse<Integer> serverResponse=YunSoaMemberUtil.codepay(tPayOrder);
 		/************通联下单************/
 		log.info(CommonUtil.format("serverResponse:%s", JsonUtil.toJSONString(serverResponse)));
 		/************记录日志************/
 		try {
-			walletApiLogService.save(JsonUtil.toJSONString(tPayOrder), serverResponse, walletMember.getId(), payOrder.getNotifyUrl(),submitNo,WalletLogConstants.LOG_PAY);
+			walletApiLogService.save(JsonUtil.toJSONString(tPayOrder), serverResponse, walletMember.getId(), payOrder.getBackUrl(),submitNo,WalletLogConstants.LOG_PAY);
 		} catch (Exception e) {
 			log.error("biz applyDeposit save log fail!!!");
 			e.printStackTrace();
