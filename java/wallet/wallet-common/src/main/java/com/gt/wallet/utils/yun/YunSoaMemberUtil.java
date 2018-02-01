@@ -802,7 +802,7 @@ public class YunSoaMemberUtil {
 
 			JSONObject param = new JSONObject();
 			//200139
-			param.put("bizUserId",WalletWebConfig.getMachid());
+			param.put("bizUserId",payOrder.getBizUserId());
 //			param.put("bizUserId","001101260");
 			param.put("bizOrderNo",payOrder.getBizOrderNo());
 			param.put("accountSetNo", WalletWebConfig.getYunBizUserId());
@@ -922,7 +922,7 @@ public class YunSoaMemberUtil {
 			String extendInfo = "this is extendInfo";
 
 			JSONObject param = new JSONObject();
-			param.put("bizUserId", WalletWebConfig.getMachid());
+			param.put("bizUserId", payOrder.getBizUserId());
 			param.put("bizOrderNo",payOrder.getBizOrderNo());
 			param.put("accountSetNo", WalletWebConfig.getYunBizUserId());
 			param.put("amount",amount);
