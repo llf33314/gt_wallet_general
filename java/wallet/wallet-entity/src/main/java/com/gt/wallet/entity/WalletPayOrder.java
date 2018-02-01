@@ -200,8 +200,8 @@ public class WalletPayOrder extends Model<WalletPayOrder> {
 	/**
 	 *  1:退款中 2：退款成功 3：退款关闭 4：退款失败
 	 */
-	@ApiModelProperty(name="refund_status",notes="退款状态",required=false,hidden=true)
-	@TableField("refundStatus")
+	@ApiModelProperty(name="refundStatus",notes="退款状态",required=false,hidden=true)
+	@TableField("refund_status")
 	private Integer refundStatus;
 
 	@Override
