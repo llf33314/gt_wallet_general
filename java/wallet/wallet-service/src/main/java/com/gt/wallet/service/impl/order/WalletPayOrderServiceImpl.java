@@ -422,14 +422,13 @@ public class WalletPayOrderServiceImpl extends BaseServiceImpl<WalletPayOrderMap
 			log.error("biz refund api fail:会员账号异常("+CommonUtil.getMemberStatusDesc(walletMember.getStatus())+")，退款失败!");
 			throw new BusinessException("会员账号异常("+CommonUtil.getMemberStatusDesc(walletMember.getStatus())+")，退款失败!");
 		}
-		WalletPayOrder payOrder=	serverResponseWalletPayOrder.getData();
 		if(walletPayOrder.getAmount().doubleValue()<walletPayOrder.getRefundAmount().doubleValue()+refundOrder.getAmount()){//金额越界
 			log.error("biz refund api fail：退款金额超出总金额");
 			throw new BusinessException("fail：退款金额超出总金额!");
 		}
 		double fee=walletMember.getFeePercent()/100*refundOrder.getAmount();
 		refundOrder.setBizUserId(walletMember.getMemberNum());
-		refundOrder.setOriBizOrderNo(payOrder.getSubmitNo());
+		refundOrder.setOriBizOrderNo(walletPayOrder.getSubmitNo());
 		ServerResponse<String> serverResponse2=	YunSoaMemberUtil.refund(refundOrder);
 		
 		/*********************************接口调用日志**************************************/
@@ -442,6 +441,8 @@ public class WalletPayOrderServiceImpl extends BaseServiceImpl<WalletPayOrderMap
 		/*********************************接口调用日志**************************************/
 		
 		if(ServerResponse.judgeSuccess(serverResponse2)){//调用接口成功
+			walletPayOrder.setRefundStatus(1);
+			walletPayOrderService.updateAllColumnById(walletPayOrder);
 			WalletRefundOrder walletRefundOrder=new WalletRefundOrder();
 			walletRefundOrder.setAmount(BigDecimal.valueOf(refundOrder.getAmount()));
 			walletRefundOrder.setBusId(refundOrder.getBusId());
@@ -501,6 +502,9 @@ public class WalletPayOrderServiceImpl extends BaseServiceImpl<WalletPayOrderMap
 		WalletPayOrder walletPayOrder=serverResponse.getData();
 		walletPayOrder.setRefundAmount(CommonUtil.toBigDecimal(walletPayOrder.getRefundAmount().doubleValue()+walletRefundOrder.getAmount().doubleValue()));
 		walletPayOrder.setRefundExternalNo(orderNo);
+		if(status.equals("success")){//退款成功
+			walletPayOrder.setRefundStatus(2);
+		}
 		Integer count=walletPayOrderMapper.updateById(walletPayOrder);
 		
 		Map<String, Object> parms=new HashMap<>();

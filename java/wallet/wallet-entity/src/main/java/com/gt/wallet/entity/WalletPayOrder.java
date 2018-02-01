@@ -192,9 +192,17 @@ public class WalletPayOrder extends Model<WalletPayOrder> {
 	/**
 	 * 支付模块
 	 */
-	@ApiModelProperty(name="model",notes="支付模块",required=false,hidden=true)
+	@ApiModelProperty(name="model",notes="支付模块",required=false)
 	@TableField("model")
 	private Integer model;
+	
+	
+	/**
+	 *  1:退款中 2：退款成功 3：退款关闭 4：退款失败
+	 */
+	@ApiModelProperty(name="refund_status",notes="退款状态",required=false,hidden=true)
+	@TableField("refundStatus")
+	private Integer refundStatus;
 
 	@Override
 	protected Serializable pkVal() {
