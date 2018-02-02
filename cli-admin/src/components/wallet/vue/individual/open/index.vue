@@ -70,10 +70,10 @@
       </div> -->
       <el-form :model="ruleForm" :rules="rules" ref="ruleForm" label-width="170px" class="demo-ruleForm">
         <el-form-item label="姓名：" prop="name">
-          <el-input v-model="ruleForm.name" placeholder="请输入姓名" :disabled="ruleForm.name!==''" class="input-width"></el-input>
+          <el-input v-model="ruleForm.name" placeholder="请输入姓名"  class="input-width"></el-input>
         </el-form-item>
         <el-form-item label="身份证号：" prop="identityNo">
-          <el-input v-model="ruleForm.identityNo" placeholder="请输入身份证号" :disabled="ruleForm.identityNo!==''" class="input-width"></el-input>
+          <el-input v-model="ruleForm.identityNo" placeholder="请输入身份证号" class="input-width"></el-input>
         </el-form-item>
         <el-form-item label="身份证正面：" prop="identitycardUrl1File">
           <!-- <img :src="ruleForm.identitycardUrl1File" v-if="ruleForm.identitycardUrl1File!==''&&id!==''" alt="" style="width: 220px; height: 137px;display: block;  float: left;border:1px solid red; "> -->
