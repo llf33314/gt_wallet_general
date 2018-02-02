@@ -8,9 +8,11 @@ import javax.servlet.http.HttpServletRequest;
 import org.apache.tomcat.util.http.fileupload.servlet.ServletFileUpload;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -18,18 +20,21 @@ import com.gt.api.dto.ResponseUtils;
 import com.gt.api.util.HttpClienUtils;
 import com.gt.api.util.RequestUtils;
 import com.gt.api.util.httpclient.JsonUtil;
+import com.gt.wallet.data.wallet.request.SendSocket;
 import com.gt.wallet.dto.ServerResponse;
 import com.gt.wallet.enums.WalletResponseEnums;
 import com.gt.wallet.exception.BusinessException;
 import com.gt.wallet.exception.ResponseEntityException;
 import com.gt.wallet.service.common.FileService;
 import com.gt.wallet.utils.CommonUtil;
+import com.gt.wallet.utils.SocketUtil;
 import com.gt.wallet.utils.WalletWebConfig;
 
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
 import lombok.extern.slf4j.Slf4j;
+import springfox.documentation.annotations.ApiIgnore;
 
 /** 
 * @author lifengxi(gt_sky@qq.com)
@@ -126,5 +131,28 @@ public class WalletCommonController {
 			log.error(CommonUtil.format("view queryCityByParentId api fail：%s,%s",WalletResponseEnums.SYSTEM_ERROR.getCode(),WalletResponseEnums.SYSTEM_ERROR.getDesc()));
 			throw new ResponseEntityException(WalletResponseEnums.SYSTEM_ERROR);
 		}
+	}
+	
+	
+	/**
+	 * 消息推送
+	 * @return
+	 */
+	@ResponseBody
+	@RequestMapping(value="/79B4DE7C/sendMessage",method=RequestMethod.POST)
+	@ApiIgnore
+	public ServerResponse<?> sendMessage(HttpServletRequest request, SendSocket sendSocket ){
+		log.info(CommonUtil.format("start sendMessage debit api"));
+		try {
+				ServerResponse<?>	 serverResponse=SocketUtil.sendMsg(""+sendSocket.getBusId(), null, sendSocket.getSendUrl());
+				return serverResponse;
+			} catch ( BusinessException e) {
+				log.error(CommonUtil.format("view sendMessage api fail ：%s,%s",e.getCode(),e.getMessage()));
+				throw new ResponseEntityException(e.getCode(),e.getMessage());
+			} catch ( Exception e) {
+				e.printStackTrace();
+				log.error(CommonUtil.format("view sendMessage api fail：%s,%s",WalletResponseEnums.SYSTEM_ERROR.getCode(),WalletResponseEnums.SYSTEM_ERROR.getDesc()));
+				throw new ResponseEntityException(WalletResponseEnums.SYSTEM_ERROR);
+			}
 	}
 }

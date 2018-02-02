@@ -45,14 +45,14 @@ public class PayOrder {
 	/**
 	 * 前台通知地址
 	 */
-	@ApiModelProperty(name="returnUrl",notes="前台通知地址",required=true)
-	private String returnUrl;
+	@ApiModelProperty(name="frontUrl",notes="前台通知地址",required=true)
+	private String frontUrl;
 	
 	/**
 	 * 后台通知地址
 	 */
-	@ApiModelProperty(name="notifyUrl",notes="后台通知地址",required=false)
-	private String notifyUrl;
+	@ApiModelProperty(name="backUrl",notes="后台通知地址",required=false)
+	private String backUrl;
 	
 	/**
 	 * 支付方式 1：微信 2:支付宝

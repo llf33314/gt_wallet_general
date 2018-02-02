@@ -75,8 +75,6 @@ public class WalletPayOrderServiceImpl extends BaseServiceImpl<WalletPayOrderMap
 	@Autowired
 	private WalletMemberService walletMemberService;
 	
-	@Autowired
-	private WalletRefundOrderMapper walletRefundOrderMapper;
 	
 	@Autowired
 	private WalletRefundOrderService walletRefundOrderService;
@@ -115,7 +113,7 @@ public class WalletPayOrderServiceImpl extends BaseServiceImpl<WalletPayOrderMap
 		String submitNo=md5+"__"+payOrder.getBizOrderNo();
 		payOrder.setSubmitNo(submitNo);
 		Double fee=CommonUtil.getdoubleTwo((walletMember.getFeePercent()*payOrder.getAmount())/100);
-		TPayOrder tPayOrder=new TPayOrder(payOrder.getAmount(),submitNo, (fee)/100, payOrder.getAcct(), payOrder.getReturnUrl(), payOrder.getType(), payOrder.getDesc(), walletMember.getMemberNum());
+		TPayOrder tPayOrder=new TPayOrder(payOrder.getAmount(),submitNo, (fee)/100, payOrder.getAcct(), payOrder.getFrontUrl(), payOrder.getType(), payOrder.getDesc(), walletMember.getMemberNum());
 		/************通联下单************/
 		ServerResponse<com.alibaba.fastjson.JSONObject> serverResponse=YunSoaMemberUtil.applyDeposit(tPayOrder);
 		
@@ -125,7 +123,7 @@ public class WalletPayOrderServiceImpl extends BaseServiceImpl<WalletPayOrderMap
 		log.info(CommonUtil.format("biz applyDeposit api serverResponse:%s", JsonUtil.toJSONString(serverResponse)));
 		/************记录日志************/
 		try {
-			walletApiLogService.save(JsonUtil.toJSONString(tPayOrder), serverResponse, walletMember.getId(), payOrder.getNotifyUrl(),submitNo,WalletLogConstants.LOG_PAY);
+			walletApiLogService.save(JsonUtil.toJSONString(tPayOrder), serverResponse, walletMember.getId(), payOrder.getBackUrl(),submitNo,WalletLogConstants.LOG_PAY);
 		} catch (Exception e) {
 			log.error("biz applyDeposit save log fail!!!");
 			e.printStackTrace();
@@ -178,14 +176,14 @@ public class WalletPayOrderServiceImpl extends BaseServiceImpl<WalletPayOrderMap
 		String md5=MD5Utils.getSmallMD5( DateTimeKit.format(currentTime, format));
 		String submitNo=md5+"__"+payOrder.getBizOrderNo();
 		payOrder.setSubmitNo(submitNo);
-		TPayOrder tPayOrder=new TPayOrder(payOrder.getAmount(),submitNo, (walletMember.getFeePercent()*payOrder.getAmount())/100, payOrder.getAcct(), payOrder.getReturnUrl(), payOrder.getType(), payOrder.getDesc(), walletMember.getMemberNum());
+		TPayOrder tPayOrder=new TPayOrder(payOrder.getAmount(),submitNo, (walletMember.getFeePercent()*payOrder.getAmount())/100, payOrder.getAcct(), payOrder.getFrontUrl(), payOrder.getType(), payOrder.getDesc(), walletMember.getMemberNum());
 		/************通联下单************/
 		ServerResponse<Integer> serverResponse=YunSoaMemberUtil.codepay(tPayOrder);
 		/************通联下单************/
 		log.info(CommonUtil.format("serverResponse:%s", JsonUtil.toJSONString(serverResponse)));
 		/************记录日志************/
 		try {
-			walletApiLogService.save(JsonUtil.toJSONString(tPayOrder), serverResponse, walletMember.getId(), payOrder.getNotifyUrl(),submitNo,WalletLogConstants.LOG_PAY);
+			walletApiLogService.save(JsonUtil.toJSONString(tPayOrder), serverResponse, walletMember.getId(), payOrder.getBackUrl(),submitNo,WalletLogConstants.LOG_PAY);
 		} catch (Exception e) {
 			log.error("biz applyDeposit save log fail!!!");
 			e.printStackTrace();
@@ -249,6 +247,11 @@ public class WalletPayOrderServiceImpl extends BaseServiceImpl<WalletPayOrderMap
 			walletPayOrder.setSubmitNo(payOrder.getSubmitNo());
 			walletPayOrder.setTakeState(payOrder.getTakeState());
 			walletPayOrder.setModel(payOrder.getModel());
+			if(walletMember.getCashbackPercent()>0){//有佣金返现商家
+				walletPayOrder.setReturnStatus(0);
+			}else{//无佣金返现商家，直接更改返现状态为已返现成功
+				walletPayOrder.setReturnStatus(2);
+			}
 			count=walletPayOrderMapper.insert(walletPayOrder);
 		}else{//修改
 			walletPayOrder.setSubmitNo(payOrder.getSubmitNo());
@@ -405,12 +408,16 @@ public class WalletPayOrderServiceImpl extends BaseServiceImpl<WalletPayOrderMap
 			log.error("biz refund api fail：订单号不存在!");
 			throw new BusinessException("异常：订单号不存在!");
 		}
+		WalletPayOrder walletPayOrder=serverResponseWalletPayOrder.getData();
+		if(walletPayOrder.getTakeState()==3||walletPayOrder.getReturnStatus()==2){//金额已划入商检余额或手续费已返佣
+			log.error("biz refund api fail：order is  finish");
+			throw new BusinessException("订单号已完成，不可退款");
+		}
 		ServerResponse<List<WalletMember>> serverResponse=	walletMemberService.findMember(refundOrder.getBusId());
 		if(serverResponse.getCode()!=0||serverResponse.getData().size()<=0){
 			log.error("biz refund api：user is not exist");
 			throw new BusinessException("fail：user is not exist!");
 		}
-		WalletPayOrder walletPayOrder=serverResponseWalletPayOrder.getData();
 		if(serverResponse.getData().get(0).getId()!=walletPayOrder.getWMemberId()){
 			log.error("biz refund api：user is not exist");
 			throw new BusinessException("fail：user is error!");
@@ -420,17 +427,13 @@ public class WalletPayOrderServiceImpl extends BaseServiceImpl<WalletPayOrderMap
 			log.error("biz refund api fail:会员账号异常("+CommonUtil.getMemberStatusDesc(walletMember.getStatus())+")，退款失败!");
 			throw new BusinessException("会员账号异常("+CommonUtil.getMemberStatusDesc(walletMember.getStatus())+")，退款失败!");
 		}
-		WalletPayOrder payOrder=	serverResponseWalletPayOrder.getData();
-		double  money=walletRefundOrderMapper.getRefundMoney(refundOrder.getBizOrderNo());
-		double total=(payOrder.getFee().doubleValue()+payOrder.getAmount().doubleValue());
-		if(money+refundOrder.getAmount()>total){//金额越界
+		if(walletPayOrder.getAmount().doubleValue()<walletPayOrder.getRefundAmount().doubleValue()+refundOrder.getAmount()){//金额越界
 			log.error("biz refund api fail：退款金额超出总金额");
 			throw new BusinessException("fail：退款金额超出总金额!");
 		}
 		double fee=walletMember.getFeePercent()/100*refundOrder.getAmount();
-		refundOrder.setFeeAmount(CommonUtil.getdoubleTwo(fee));
 		refundOrder.setBizUserId(walletMember.getMemberNum());
-		refundOrder.setOriBizOrderNo(payOrder.getSubmitNo());
+		refundOrder.setOriBizOrderNo(walletPayOrder.getSubmitNo());
 		ServerResponse<String> serverResponse2=	YunSoaMemberUtil.refund(refundOrder);
 		
 		/*********************************接口调用日志**************************************/
@@ -443,6 +446,8 @@ public class WalletPayOrderServiceImpl extends BaseServiceImpl<WalletPayOrderMap
 		/*********************************接口调用日志**************************************/
 		
 		if(ServerResponse.judgeSuccess(serverResponse2)){//调用接口成功
+			walletPayOrder.setRefundStatus(1);
+			walletPayOrderService.updateAllColumnById(walletPayOrder);
 			WalletRefundOrder walletRefundOrder=new WalletRefundOrder();
 			walletRefundOrder.setAmount(BigDecimal.valueOf(refundOrder.getAmount()));
 			walletRefundOrder.setBusId(refundOrder.getBusId());
@@ -501,8 +506,10 @@ public class WalletPayOrderServiceImpl extends BaseServiceImpl<WalletPayOrderMap
 		log.info(CommonUtil.format("WalletPayOrder: %s", JsonUtil.toJSONString(serverResponse)));
 		WalletPayOrder walletPayOrder=serverResponse.getData();
 		walletPayOrder.setRefundAmount(CommonUtil.toBigDecimal(walletPayOrder.getRefundAmount().doubleValue()+walletRefundOrder.getAmount().doubleValue()));
-		walletPayOrder.setRefundFeeamount(CommonUtil.toBigDecimal(walletPayOrder.getRefundFeeamount().doubleValue()+walletRefundOrder.getFee().doubleValue()));
 		walletPayOrder.setRefundExternalNo(orderNo);
+		if(status.equals("success")){//退款成功
+			walletPayOrder.setRefundStatus(2);
+		}
 		Integer count=walletPayOrderMapper.updateById(walletPayOrder);
 		
 		Map<String, Object> parms=new HashMap<>();

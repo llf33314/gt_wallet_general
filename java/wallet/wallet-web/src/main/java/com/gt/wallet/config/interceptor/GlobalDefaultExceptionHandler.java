@@ -35,7 +35,7 @@ public class GlobalDefaultExceptionHandler {
     @ExceptionHandler( value = Exception.class )
     public ModelAndView defaultErrorHandlerModel( HttpServletRequest request, Exception e ) {
 	ModelAndView modelAndView = new ModelAndView();
-	modelAndView.addObject( "ex", e );
+	modelAndView.addObject( "msg", e.getMessage() );
 	modelAndView.addObject( "url", request.getRequestURL() );
 	modelAndView.setViewName( DEFAULT_ERROR_VIEW );
 	log.error( e.getMessage() );

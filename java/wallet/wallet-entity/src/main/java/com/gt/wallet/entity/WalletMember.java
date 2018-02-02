@@ -159,6 +159,14 @@ public class WalletMember extends Model<WalletMember> {
 	private String failReason;
 	
 	
+	/**
+	 * 余额
+	 */
+	@ApiModelProperty(name="wBalance",notes="余额")
+	@TableField("w_balance")
+	private Double wBalance;
+	
+	
 	
 	@Override
 	protected Serializable pkVal() {

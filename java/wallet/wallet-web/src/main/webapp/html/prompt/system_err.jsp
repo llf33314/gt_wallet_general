@@ -11,6 +11,18 @@
     %>
     <base href="<%=basePath%>"/>
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <meta id="meta" name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+    <meta name="apple-mobile-web-app-capable" content="yes"/>
+    <meta name="format-detection" content="telephone=no"/>
+    <meta name="renderer" content="webkit">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="HandheldFriendly" content="true">
+    <meta name="MobileOptimized" content="320">
+    <meta name="screen-orientation" content="portrait">
+    <meta name="x5-orientation" content="portrait">
+    <meta name="browsermode" content="application">
+    <meta name="x5-page-mode" content="app">
+    <meta name="msapplication-tap-highlight" content="no">
     <title>系统异常</title>
     <script type="text/javascript">
         $(function () {
@@ -42,7 +54,7 @@
 <body>
 <div class="bg">
 
-    ${ex.getMessage()==null?" ☹☹☹系统罢工了,请联系管理员":ex.getMessage()}
+    ${msg==null?" ☹☹☹系统罢工了,请联系管理员":msg}
 </div>
 </body>
 </html>

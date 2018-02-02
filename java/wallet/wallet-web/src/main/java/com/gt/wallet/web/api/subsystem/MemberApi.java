@@ -10,14 +10,17 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.gt.api.bean.session.BusUser;
 import com.gt.api.util.RequestUtils;
 import com.gt.api.util.httpclient.JsonUtil;
 import com.gt.wallet.base.BaseController;
+import com.gt.wallet.data.wallet.response.IndexStatistics;
 import com.gt.wallet.dto.ServerResponse;
 import com.gt.wallet.enums.WalletResponseEnums;
 import com.gt.wallet.exception.BusinessException;
 import com.gt.wallet.exception.ResponseEntityException;
 import com.gt.wallet.service.member.WalletMemberService;
+import com.gt.wallet.service.order.WalletIndexStatisticsService;
 import com.gt.wallet.utils.CommonUtil;
 
 import io.swagger.annotations.Api;
@@ -37,6 +40,9 @@ public class MemberApi extends BaseController{
 
 	@Autowired
 	private WalletMemberService walletMemberService; 
+	
+	@Autowired
+	private WalletIndexStatisticsService walletIndexStatisticsService;
 	
 	/**
 	 * 判断商家是否开通多粉钱包(提供给各erp系统调用)
@@ -85,4 +91,27 @@ public class MemberApi extends BaseController{
 			}
 	}
 	
+	
+	/**
+	 * 获取统计数据
+	 * @return
+	 */
+	@ResponseBody
+	@RequestMapping(value="/79B4DE7C/getIndexStatistics", method=RequestMethod.POST,produces= MediaType.APPLICATION_JSON_VALUE, consumes="application/json")
+	 @ApiOperation(value="获取会员认证类型", notes="reqdata：为商家id",consumes="application/json", httpMethod = "POST", produces = MediaType.APPLICATION_JSON_VALUE,response=ServerResponse.class)
+	public ServerResponse<IndexStatistics> getIndexStatistics(HttpServletRequest request){
+		log.info(CommonUtil.format("start view getIndexStatistics api"));
+		try {
+			BusUser busUser=CommonUtil.getLoginUser(request);
+			ServerResponse<IndexStatistics> serverResponse2=walletIndexStatisticsService.getIndexStatistics(busUser.getId());
+			return serverResponse2;
+			} catch ( BusinessException e) {
+				log.error(CommonUtil.format("view getIndexStatistics api fail ：%s,%s",e.getCode(),e.getMessage()));
+				throw new ResponseEntityException(e.getCode(),e.getMessage());
+			} catch ( Exception e) {
+				e.printStackTrace();
+				log.error(CommonUtil.format("view getIndexStatistics api fail：%s,%s",WalletResponseEnums.SYSTEM_ERROR.getCode(),WalletResponseEnums.SYSTEM_ERROR.getDesc()));
+				throw new ResponseEntityException(WalletResponseEnums.SYSTEM_ERROR);
+			}
+	}
 }

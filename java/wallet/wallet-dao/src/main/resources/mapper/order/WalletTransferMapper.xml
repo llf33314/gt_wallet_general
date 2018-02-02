@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.gt.wallet.order.mapper.WalletTransferMapper">
+
+	<!-- 通用查询映射结果 -->
+	<resultMap id="BaseResultMap" type="com.gt.wallet.entity.WalletTransfer">
+		<id column="id" property="id" />
+		<result column="bus_id" property="busId" />
+		<result column="w_member_id" property="wMemberId" />
+		<result column="sys_order_no" property="sysOrderNo" />
+		<result column="w_desc" property="wDesc" />
+		<result column="amount" property="amount" />
+		<result column="ctime" property="ctime" />
+		<result column="status" property="status" />
+		<result column="transfer_no" property="transferNo" />
+	</resultMap>
+
+    <!-- 通用查询结果列 -->
+    <sql id="Base_Column_List">
+        id, bus_id AS busId, w_member_id AS wMemberId, sys_order_no AS sysOrderNo, w_desc AS wDesc, amount, ctime, status,
+        transfer_no AS  transferNo
+    </sql>
+
+</mapper>

@@ -10,6 +10,7 @@ import org.junit.Test;
 
 import com.gt.api.util.httpclient.JsonUtil;
 import com.gt.wallet.constant.WalletConstants;
+import com.gt.wallet.data.api.tonglian.request.ApplicationTransfer;
 import com.gt.wallet.data.api.tonglian.request.TCardBin;
 import com.gt.wallet.data.api.tonglian.request.TPayOrder;
 import com.gt.wallet.data.api.tonglian.request.TRefundOrder;
@@ -19,7 +20,6 @@ import com.gt.wallet.data.wallet.request.WalletIndividualAdd;
 import com.gt.wallet.dto.ServerResponse;
 import com.gt.wallet.enums.WalletResponseEnums;
 import com.gt.wallet.utils.CommonUtil;
-import com.gt.wallet.utils.DateTimeKit;
 import com.gt.wallet.utils.WalletWebConfig;
 
 import ime.service.client.SOAClient;
@@ -802,7 +802,7 @@ public class YunSoaMemberUtil {
 
 			JSONObject param = new JSONObject();
 			//200139
-			param.put("bizUserId",WalletWebConfig.getMachid());
+			param.put("bizUserId",payOrder.getBizUserId());
 //			param.put("bizUserId","001101260");
 			param.put("bizOrderNo",payOrder.getBizOrderNo());
 			param.put("accountSetNo", WalletWebConfig.getYunBizUserId());
@@ -813,7 +813,7 @@ public class YunSoaMemberUtil {
 			param.put("backUrl", backUrl);
 		//	param.put("ordErexpireDatetime", "2018-01-15 23:59:59");
 			param.put("payMethod", payMethod);
-			param.put("goodsName", "测试商品");
+			param.put("goodsName",payOrder.getDesc());
 			param.put("industryCode", WalletConstants.INDUSTRYCODE);
 			param.put("industryName",WalletConstants.INDUSTRYNAME);
 			param.put("source", 1L);
@@ -922,7 +922,7 @@ public class YunSoaMemberUtil {
 			String extendInfo = "this is extendInfo";
 
 			JSONObject param = new JSONObject();
-			param.put("bizUserId", WalletWebConfig.getMachid());
+			param.put("bizUserId", payOrder.getBizUserId());
 			param.put("bizOrderNo",payOrder.getBizOrderNo());
 			param.put("accountSetNo", WalletWebConfig.getYunBizUserId());
 			param.put("amount",amount);
@@ -1168,17 +1168,17 @@ public class YunSoaMemberUtil {
 		
 		//平台转账
 		@Test
-		public static ServerResponse<com.alibaba.fastjson.JSONObject> applicationTransfer(){
+		public static ServerResponse<com.alibaba.fastjson.JSONObject> applicationTransfer(ApplicationTransfer applicationTransfer){
 			try{
 				log.info("applicationTransfer start");
 
 				JSONObject param = new JSONObject();
-				param.put("bizTransferNo", "zz"+System.currentTimeMillis());
+				param.put("bizTransferNo",applicationTransfer.getBizOrderNo());
 				param.put("sourceAccountSetNo", "100002");
-				param.put("targetBizUserId", "dfw1515551136943");
+				param.put("targetBizUserId",applicationTransfer.getBizUserId());
 				param.put("targetAccountSetNo", "200139");
-				param.put("amount", 1);
-				param.put("remark", "平台转账");
+				param.put("amount",applicationTransfer.getAmount());
+				param.put("remark",applicationTransfer.getDesc());
 //				param.put("extendInfo", "");
 
 				log.info("request:" + param);

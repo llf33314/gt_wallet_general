@@ -118,7 +118,7 @@
                  log(JSON.stringify(data));
                  if ("9000" == data.resultCode) {//支付成功
 				    	if ("${payOrder.sendUrl}" !="") {//支付成功推送消息
-	                    	 sendMessage("${homeDomain}","${payOrder.sendUrl}");
+	                    	 sendMessage("${payOrder.busId}","${payOrder.sendUrl}");
 	                    }
 		        	    if ("${payOrder.returnUrl}" !="") {//支付成功跳转回调地址
 	                       	location.href ="${payOrder.returnUrl}";

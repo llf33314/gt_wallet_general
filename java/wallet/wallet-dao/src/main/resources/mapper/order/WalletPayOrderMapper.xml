@@ -28,6 +28,10 @@
 		<result column="acct" property="acct" />
 		<result column="submit_no" property="submitNo" />
 		<result column="pay_type" property="payType" />
+		<result column="take_state" property="takeState" />
+		<result column="model" property="model" />
+		<result column="refund_status" property="refundStatus" />
+		<result column="return_status" property="returnStatus" />
 	</resultMap>
 
     <!-- 通用查询结果列 -->
@@ -54,7 +58,26 @@
         refund_external_no AS refundExternalNo,
         acct,
         submit_no AS submitNo,
-        pay_type AS payType
+        pay_type AS payType,
+        take_state AS takeState,
+        model ,
+        refund_status AS refundStatus,
+        return_status AS returnStatus,
     </sql>
 
+
+	<select id="getWithBalance" resultType="Double" >
+		SELECT SUM(CASE WHEN  o.amount-o.`refund_amount` >o.`fee` THEN o.amount-o.`refund_amount`-o.`fee`  ELSE o.amount-o.`refund_amount` END) AS withBalance FROM `t_wallet_pay_order` o
+	
+		WHERE `w_member_id`=#{wmemberId,jdbcType=INTEGER}
+		AND STATUS='success' and refund_status=2 AND <![CDATA[ ctime<#{ctime} ]]>       and   <![CDATA[ take_state <> 3 ]]>  
+	</select>
+	
+	
+	<select id="getGroupStatistics" resultType="com.gt.wallet.data.wallet.response.GroupStatistics" >
+		SELECT  w_member_id as wMemberId, SUM(CASE WHEN  o.amount-o.`refund_amount` >o.`fee` THEN o.amount-o.`refund_amount`-o.`fee`  ELSE o.amount-o.`refund_amount` END) AS waitBalance 
+FROM `t_wallet_pay_order` o WHERE  STATUS='success' and refund_status=2 AND <![CDATA[ ctime<#{ctime} ]]> AND <![CDATA[ take_state <> 3 ]]>  GROUP BY w_member_id
+	</select>
+	
+	
 </mapper>

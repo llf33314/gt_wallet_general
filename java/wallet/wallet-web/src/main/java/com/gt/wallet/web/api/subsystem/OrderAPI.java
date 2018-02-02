@@ -91,7 +91,7 @@ public class OrderAPI extends BaseController{
         ,
         @ApiImplicitParam(name = "acct",value = "支付授权码",paramType = "form",dataType = "string",required=true)
         ,
-        @ApiImplicitParam(name = "notifyUrl",value = "后台通知地址",paramType = "form",dataType = "string",required=true,defaultValue="http://duofriend.com")
+        @ApiImplicitParam(name = "backUrl",value = "后台通知地址",paramType = "form",dataType = "string",required=true,defaultValue="http://duofriend.com")
         ,
         @ApiImplicitParam(name = "type",value = "支付方式6：微信 ,7:支付宝",paramType = "form",dataType = "int",required=true,defaultValue="1")
         ,

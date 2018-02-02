@@ -192,9 +192,26 @@ public class WalletPayOrder extends Model<WalletPayOrder> {
 	/**
 	 * 支付模块
 	 */
-	@ApiModelProperty(name="model",notes="支付模块",required=false,hidden=true)
+	@ApiModelProperty(name="model",notes="支付模块",required=false)
 	@TableField("model")
 	private Integer model;
+	
+	
+	/**
+	 *  1:退款中 2：退款成功 3：退款关闭 4：退款失败
+	 */
+	@ApiModelProperty(name="refundStatus",notes="退款状态",required=false,hidden=true)
+	@TableField("refund_status")
+	private Integer refundStatus;
+	
+	
+	
+	/**
+	 * 0:待转账, 1:拨款中  2：已转账  3：拨款失败
+	 */
+	@ApiModelProperty(name="returnStatus",notes="退款状态",required=false,hidden=true)
+	@TableField("return_status")
+	private Integer returnStatus;
 
 	@Override
 	protected Serializable pkVal() {
@@ -226,5 +243,42 @@ public class WalletPayOrder extends Model<WalletPayOrder> {
 			", refundFeeamount=" + refundFeeamount +
 			", refundExternalNo=" + refundExternalNo +
 			"}";
+	}
+
+	public WalletPayOrder(Integer busId, Integer wMemberId, Integer memberId, String sysOrderNo, BigDecimal amount,
+			BigDecimal fee, Date ctime, Integer industryCode, String industryName, Integer visitSource,
+			String goodsSummary, String status, String payFailMessage, String externalNo, String tradeNo,
+			String payCode, String sysRefundNo, BigDecimal refundAmount, BigDecimal refundFeeamount,
+			String refundExternalNo, String acct, String submitNo, Integer payType, Integer takeState, Integer model) {
+		super();
+		this.busId = busId;
+		this.wMemberId = wMemberId;
+		this.memberId = memberId;
+		this.sysOrderNo = sysOrderNo;
+		this.amount = amount;
+		this.fee = fee;
+		this.ctime = ctime;
+		this.industryCode = industryCode;
+		this.industryName = industryName;
+		this.visitSource = visitSource;
+		this.goodsSummary = goodsSummary;
+		this.status = status;
+		this.payFailMessage = payFailMessage;
+		this.externalNo = externalNo;
+		this.tradeNo = tradeNo;
+		this.payCode = payCode;
+		this.sysRefundNo = sysRefundNo;
+		this.refundAmount = refundAmount;
+		this.refundFeeamount = refundFeeamount;
+		this.refundExternalNo = refundExternalNo;
+		this.acct = acct;
+		this.submitNo = submitNo;
+		this.payType = payType;
+		this.takeState = takeState;
+		this.model = model;
+	}
+	
+	public WalletPayOrder() {
+		super();
 	}
 }
