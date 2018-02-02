@@ -31,6 +31,7 @@
 		<result column="take_state" property="takeState" />
 		<result column="model" property="model" />
 		<result column="refund_status" property="refundStatus" />
+		<result column="return_status" property="returnStatus" />
 	</resultMap>
 
     <!-- 通用查询结果列 -->
@@ -60,7 +61,8 @@
         pay_type AS payType,
         take_state AS takeState,
         model ,
-        refund_status AS refundStatus
+        refund_status AS refundStatus,
+        return_status AS returnStatus,
     </sql>
 
 
@@ -68,7 +70,7 @@
 		SELECT SUM(CASE WHEN  o.amount-o.`refund_amount` >o.`fee` THEN o.amount-o.`refund_amount`-o.`fee`  ELSE o.amount-o.`refund_amount` END) AS withBalance FROM `t_wallet_pay_order` o
 	
 		WHERE `w_member_id`=#{wmemberId,jdbcType=INTEGER}
-		AND STATUS='success' and refund_status=2 AND <![CDATA[ ctime<#{ctime} ]]>       and   <![CDATA[ take_state <> 3 ]]> 
+		AND STATUS='success' and refund_status=2 AND <![CDATA[ ctime<#{ctime} ]]>       and   <![CDATA[ take_state <> 3 ]]>  
 	</select>
 	
 	

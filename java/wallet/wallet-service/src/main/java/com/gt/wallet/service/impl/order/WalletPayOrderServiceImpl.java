@@ -247,6 +247,11 @@ public class WalletPayOrderServiceImpl extends BaseServiceImpl<WalletPayOrderMap
 			walletPayOrder.setSubmitNo(payOrder.getSubmitNo());
 			walletPayOrder.setTakeState(payOrder.getTakeState());
 			walletPayOrder.setModel(payOrder.getModel());
+			if(walletMember.getCashbackPercent()>0){//有佣金返现商家
+				walletPayOrder.setReturnStatus(0);
+			}else{//无佣金返现商家，直接更改返现状态为已返现成功
+				walletPayOrder.setReturnStatus(2);
+			}
 			count=walletPayOrderMapper.insert(walletPayOrder);
 		}else{//修改
 			walletPayOrder.setSubmitNo(payOrder.getSubmitNo());
@@ -404,7 +409,7 @@ public class WalletPayOrderServiceImpl extends BaseServiceImpl<WalletPayOrderMap
 			throw new BusinessException("异常：订单号不存在!");
 		}
 		WalletPayOrder walletPayOrder=serverResponseWalletPayOrder.getData();
-		if(walletPayOrder.getTakeState()==3){//已转账
+		if(walletPayOrder.getTakeState()==3||walletPayOrder.getReturnStatus()==2){//金额已划入商检余额或手续费已返佣
 			log.error("biz refund api fail：order is  finish");
 			throw new BusinessException("订单号已完成，不可退款");
 		}

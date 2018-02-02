@@ -203,6 +203,15 @@ public class WalletPayOrder extends Model<WalletPayOrder> {
 	@ApiModelProperty(name="refundStatus",notes="退款状态",required=false,hidden=true)
 	@TableField("refund_status")
 	private Integer refundStatus;
+	
+	
+	
+	/**
+	 * 0:待转账, 1:拨款中  2：已转账  3：拨款失败
+	 */
+	@ApiModelProperty(name="returnStatus",notes="退款状态",required=false,hidden=true)
+	@TableField("return_status")
+	private Integer returnStatus;
 
 	@Override
 	protected Serializable pkVal() {
