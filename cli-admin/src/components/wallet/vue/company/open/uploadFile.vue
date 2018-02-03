@@ -195,7 +195,7 @@ export default {
                   duration: 1500,
                   onClose: () => {
                     this.$router.replace({
-                      path: '/wallet/company/open/bindPhone/' + this.$route.params.memberId
+                      path: '/wallet/company/open/auditing'
                     })
                   }
                 });
