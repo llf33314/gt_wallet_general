@@ -117,11 +117,11 @@ public class WalletCompanyAdd {
 	
 	
 	
-//	/**
-//	 * 开户行地区代码
-//	 */
-//	@ApiModelProperty(name="开户行地区代码",notes="开户行地区代码",required=true)
-//	private String bankCityNo;
+	/**
+	 * 开户行地区代码
+	 */
+	@ApiModelProperty(name="开户行地区代码",notes="开户行地区代码",required=true)
+	private String bankCityNo;
 	
 	
 	
@@ -130,8 +130,6 @@ public class WalletCompanyAdd {
 	 */
 	@ApiModelProperty(name="开户行支行名称",notes="开户行支行名称",required=true)
 	private String bankName;
-	
-	
 	
 	
 	
