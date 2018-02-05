@@ -514,7 +514,7 @@ public class WalletPayOrderServiceImpl extends BaseServiceImpl<WalletPayOrderMap
 		
 		Map<String, Object> parms=new HashMap<>();
 		parms.put("out_trade_no",sysorderno);
-		parms.put("payType",0);
+		parms.put("payType",3);
 		ServerResponse<WalletApiLog> responseLog=	walletApiLogService.findById(bizOrderNo, WalletLogConstants.LOG_REFUND);
 		/***********************************处理退款订单记录表业务*********************************/
 		if(ServerResponse.judgeSuccess(responseLog)){

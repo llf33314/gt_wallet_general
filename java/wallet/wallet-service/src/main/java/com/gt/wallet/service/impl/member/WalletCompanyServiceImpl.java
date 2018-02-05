@@ -140,6 +140,8 @@ public class WalletCompanyServiceImpl extends BaseServiceImpl<WalletCompanyMappe
 		walletCompany.setTelephone(walletCompanyAdd.getTelephone());
 		walletCompany.setUnionBank(walletCompanyAdd.getUnionBank());
 		walletCompany.setLegalPhone(YunSoaMemberUtil.rsaEncrypt(walletCompanyAdd.getLegalPhone()));
+		walletCompany.setBankCtiyNo(walletCompanyAdd.getBankCityNo());
+		walletCompany.setBankName(walletCompanyAdd.getBankName());
 		walletCompany.setWMemberId(walletMember.getId());
 		if(CommonUtil.isEmpty(walletCompany.getId())){//新增
 			walletCompanyMapper.insert(walletCompany);

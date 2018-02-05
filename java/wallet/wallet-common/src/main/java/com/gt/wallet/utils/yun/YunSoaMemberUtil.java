@@ -6,7 +6,6 @@ import java.security.interfaces.RSAPrivateKey;
 import java.security.interfaces.RSAPublicKey;
 
 import org.json.JSONObject;
-import org.junit.Test;
 
 import com.gt.api.util.httpclient.JsonUtil;
 import com.gt.wallet.constant.WalletConstants;
@@ -15,6 +14,7 @@ import com.gt.wallet.data.api.tonglian.request.TCardBin;
 import com.gt.wallet.data.api.tonglian.request.TPayOrder;
 import com.gt.wallet.data.api.tonglian.request.TRefundOrder;
 import com.gt.wallet.data.api.tonglian.request.TWithdrawOrder;
+import com.gt.wallet.data.api.tonglian.request.TsignalAgentPaySimplify;
 import com.gt.wallet.data.wallet.request.WalletCompanyAdd;
 import com.gt.wallet.data.wallet.request.WalletIndividualAdd;
 import com.gt.wallet.dto.ServerResponse;
@@ -1167,7 +1167,6 @@ public class YunSoaMemberUtil {
 		}
 		
 		//平台转账
-		@Test
 		public static ServerResponse<com.alibaba.fastjson.JSONObject> applicationTransfer(ApplicationTransfer applicationTransfer){
 			try{
 				log.info("applicationTransfer start");
@@ -1200,5 +1199,42 @@ public class YunSoaMemberUtil {
 			}
 		}
 
+		//代付
+		public static ServerResponse<com.alibaba.fastjson.JSONObject> signalAgentPaySimplify(TsignalAgentPaySimplify tsignalAgentPaySimplify){
+			try{
+				log.info("applicationTransfer start");
+				//3001
+				JSONObject param = new JSONObject();
+				param.put("bizOrderNo",tsignalAgentPaySimplify.getBizOrderNo());
+				param.put("accountSetNo",WalletWebConfig.getYunBizUserId());
+				param.put("bizUserId",tsignalAgentPaySimplify.getBizUserId());
+				param.put("backUrl", WalletWebConfig.getSignalAgentPaySimplifyNotifyUrl());
+				param.put("amount",tsignalAgentPaySimplify.getAmount());
+				param.put("fee",0);
+				param.put("goodsType",0);
+				param.put("tradeCode",3001);
+				param.put("summary","平台转账");
+				
+				log.info("request:" + param);
+				JSONObject response = client.request(ordersoaName, "applicationTransfer", param);
+				log.info("response:" + response);
+				if(CommonUtil.isNotEmpty(response)&&response.get("status").equals("OK")){//查询成功
+					log.info("applicationTransfer end");
+					String value = response.getString("signedValue");
+					com.alibaba.fastjson.JSONObject json=	JsonUtil.parseObject(value, com.alibaba.fastjson.JSONObject.class);
+					return ServerResponse.createBySuccessCodeData(json);
+				}else{//接口异常
+					log.info("applicationTransfer end");
+					return ServerResponse.createByErrorMessage(CommonUtil.format("第三方接口异常,错误代码 :%s,描述:%s", response.getString("errorCode"), response.getString("message")));
+				}
+			}catch(Exception e){
+				log.info("applicationTransfer error");
+				e.printStackTrace();
+				return ServerResponse.createByErrorCode(WalletResponseEnums.API_ERROR);
+			}
+		}
+
+		
+		
 	/***********************************************************************订单类接口********************************************************************************************/
 }

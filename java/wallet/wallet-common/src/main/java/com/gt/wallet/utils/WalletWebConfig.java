@@ -143,6 +143,11 @@ public class WalletWebConfig {
 	 */
 	private static String machid;
 	
+	/**
+	 * 代付异步回调
+	 */
+	private static String signalAgentPaySimplifyNotifyUrl;
+	
 	
 //	 // 注入配置属性 根据环境配置切换
 	public static String getDomain() {
@@ -335,6 +340,14 @@ public class WalletWebConfig {
 
 	public static void setMachid(String machid) {
 		WalletWebConfig.machid = machid;
+	}
+
+	public static String getSignalAgentPaySimplifyNotifyUrl() {
+		return signalAgentPaySimplifyNotifyUrl;
+	}
+
+	public static void setSignalAgentPaySimplifyNotifyUrl(String signalAgentPaySimplifyNotifyUrl) {
+		WalletWebConfig.signalAgentPaySimplifyNotifyUrl = signalAgentPaySimplifyNotifyUrl;
 	}
 
 
