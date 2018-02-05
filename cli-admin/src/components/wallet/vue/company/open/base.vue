@@ -3,6 +3,8 @@
   .demo-ruleForm {
     width: 500px;
   }
+  .search-bank {
+  }
 }
 </style>
 <template>
@@ -76,14 +78,19 @@
         </el-form-item>
         <el-form-item label="支付行号：" prop="unionBank">
           <el-input v-model="ruleForm3.unionBank" placeholder="请输入支付行号" class="input-width"></el-input>
+
+        </el-form-item>
+        <el-form-item label="开户行地区代码：" prop="bankCityNo">
+          <el-input v-model="ruleForm3.bankCityNo" placeholder="请输入开户行地区代码" class="input-width"></el-input>
           <el-tooltip placement="right" effect="light">
-            <div slot="content">如非以下银行，则需要填写支付行号。
-              <br/> （中国工商银行、中国农业银行、中国建设银行、中信银行、
-              <br/> 平安银行、招商银行、兴业银行、南京银行、
-              <br/> 农信银行）
+            <div slot="content" @click="linkBlank" style="cursor:pointer">点击查询开户行地区代码
             </div>
             <i class="el-icon-question" style="position: absolute; color: #666; right: -20px;top: 13px;"></i>
           </el-tooltip>
+          <!-- <a class="search-bank" target="_blank" href="http://www.lianhanghao.com/index.php/Index/index/bank/4/province/19/city/243/p/5.html" style="position: absolute; right: -140px; top: 0;color:#409EFF">查询开户行地区代码</a> -->
+        </el-form-item>
+        <el-form-item label="开户行支行名称：" prop="backName">
+          <el-input v-model="ruleForm3.backName" placeholder="请输入开户行支行名称" class="input-width"></el-input>
         </el-form-item>
       </el-form>
       <div class="public-bottom-btns">
@@ -234,7 +241,9 @@ export default {
       ruleForm3: {
         accountNo: '',
         unionBank: '',
-        parentBankName: ''
+        parentBankName: '',
+        bankCityNo: '', //开户行地区代码
+        backName: '', //开户行支行名称
       },
       rules3: {
         accountNo: [{
@@ -243,11 +252,21 @@ export default {
           validator: validatorAccountNo,
           trigger: 'blur'
         }],
-        // unionBank: [{
-        //   required: true,
-        //   message: '请输入支付行号',
-        //   trigger: 'blur'
-        // }],
+        unionBank: [{
+          required: true,
+          message: '请输入支付行号',
+          trigger: 'blur'
+        }],
+        bankCityNo: [{
+          required: true,
+          message: '请输入开户行地区代码',
+          trigger: 'blur'
+        }],
+        backName: [{
+          required: true,
+          message: '请输入开户行支行名称',
+          trigger: 'blur'
+        }],
       },
       activeFlag: {},
       isUnionBankFlag: false,
@@ -280,6 +299,10 @@ export default {
     })
   },
   methods: {
+    //打开查询页面
+    linkBlank() {
+      window.open('http://www.lianhanghao.com/index.php/Index/index/bank/4/province/19/city/243/p/5.html')
+    },
     CheckBankNo(bankno) {
       var bankno = bankno.replace(/\s/g, '');
       if (bankno == "") {
@@ -307,7 +330,7 @@ export default {
       }
       return result;
     },
-    isChina(s) {  //判断字符是否是中文字符 
+    isChina(s) {  //判断字符是否是中文字符
       var patrn = /[\u4E00-\u9FA5]|[\uFE30-\uFFA0]/gi;
       if (!patrn.exec(s)) {
         return false;
