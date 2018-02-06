@@ -181,7 +181,7 @@ public class WalletCompanyServiceImpl extends BaseServiceImpl<WalletCompanyMappe
 		files.add(WalletWebConfig.getPathImage()+companyUploadFile.getIdentitycardUrl1().split("image/")[1]);
 		files.add(WalletWebConfig.getPathImage()+companyUploadFile.getIdentitycardUrl2().split("image/")[1]);
 		files.add(WalletWebConfig.getPathImage()+companyUploadFile.getLicenseUrl().split("image/")[1]);
-		SendMail sendMail=new SendMail("企业信息设置:"+busUser.getName(),"企业信息设置",files);
+		SendMail sendMail=new SendMail("企业信息设置:"+busUser.getName(),busUser.getName()+",麻烦审核"+busUser.getName()+"的企业信息",files);
 		ServerResponse<?>	mailServerResponse=mailService.sendAttachmentsMail(sendMail);
 		log.info(CommonUtil.format("mailServerResponse:%s", JsonUtil.toJSONString(mailServerResponse)));
 		if(!ServerResponse.judgeSuccess(mailServerResponse)){

@@ -288,8 +288,11 @@ public class WalletBankServiceImpl extends BaseServiceImpl<WalletBankMapper, Wal
 			log.error(CommonUtil.format("biz bindBankCard api fail:请先填写银行卡信息"));
 			throw new BusinessException("请先填写银行卡信息");
 		}
+		if(CommonUtil.isEmpty(busId)){
+			throw new BusinessException("商家id为空");
+		}
 		WalletMember walletMember=walletMemberMapper.selectById(walletBank.getWMemberId());
-		if(walletMember.getMemberClass()==1&&walletMember.getMemberId()!=busId){
+		if(CommonUtil.isNotEmpty(walletMember)&&walletMember.getMemberClass()==1&&walletMember.getMemberId()!=busId){
 			log.error("biz bindBankCard api fail:此钱包会员不属于当前登录商家");
 			throw new BusinessException("biz bindBankCard api fail:此钱包会员不属于当前登录商家");
 		}

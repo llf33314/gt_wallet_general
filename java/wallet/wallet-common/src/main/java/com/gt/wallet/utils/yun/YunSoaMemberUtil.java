@@ -275,8 +275,9 @@ public class YunSoaMemberUtil {
 			companyBasicInfo.put("accountNo", rsaEncrypt(walletCompany.getAccountNo()));
 			
 			companyBasicInfo.put("parentBankName", walletCompany.getParentBankName());
-//			companyBasicInfo.put("bankCityNo", walletCompany.getBankCityNo());
+			companyBasicInfo.put("bankCityNo", walletCompany.getBankCityNo());
 			companyBasicInfo.put("bankName",walletCompany.getBankName());
+			companyBasicInfo.put("unionBank",walletCompany.getUnionBank());
 
 			param.put("bizUserId", bizUserId);
 			param.put("companyBasicInfo", companyBasicInfo);
