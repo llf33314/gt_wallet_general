@@ -118,9 +118,10 @@ public class WalletPayOrderServiceImpl extends BaseServiceImpl<WalletPayOrderMap
 		Double fee=CommonUtil.getdoubleTwo((walletMember.getFeePercent()*payOrder.getAmount())/100);
 		TPayOrder tPayOrder=new TPayOrder(payOrder.getAmount(),submitNo, (fee)/100, payOrder.getAcct(), payOrder.getFrontUrl(), payOrder.getType(), payOrder.getDesc(), walletMember.getMemberNum());
 		/************通联下单************/
-		ServerResponse<com.alibaba.fastjson.JSONObject> serverResponse=YunSoaMemberUtil.applyDeposit(tPayOrder);
+		//ServerResponse<com.alibaba.fastjson.JSONObject> serverResponse=YunSoaMemberUtil.applyDeposit(tPayOrder);
 		
 		UnitorderPayResponse unitorderPayResponse=	SybPayUtil.pay(tPayOrder);
+		log.info(CommonUtil.format("biz applyDeposit api serverResponse:%s", JsonUtil.toJSONString(unitorderPayResponse)));
 		if(CommonUtil.isNotEmpty(unitorderPayResponse)&&unitorderPayResponse.getRetcode().equals("SUCCESS")){
 			
 		}else if(CommonUtil.isEmpty(unitorderPayResponse)){
@@ -134,25 +135,25 @@ public class WalletPayOrderServiceImpl extends BaseServiceImpl<WalletPayOrderMap
 //		com.alibaba.fastjson.JSONObject payInfo=	serverResponse.getData();
 	//	com.alibaba.fastjson.JSONObject payInfo=	signedValue.getJSONObject("payInfo");
 		/************通联下单************/
-		log.info(CommonUtil.format("biz applyDeposit api serverResponse:%s", JsonUtil.toJSONString(serverResponse)));
+//		log.info(CommonUtil.format("biz applyDeposit api serverResponse:%s", JsonUtil.toJSONString(serverResponse)));
 		/************记录日志************/
 		try {
-			walletApiLogService.save(JsonUtil.toJSONString(tPayOrder), serverResponse, walletMember.getId(), payOrder.getBackUrl(),submitNo,WalletLogConstants.LOG_PAY);
+			walletApiLogService.save(JsonUtil.toJSONString(tPayOrder), ServerResponse.createBySuccess(), walletMember.getId(), payOrder.getBackUrl(),submitNo,WalletLogConstants.LOG_PAY);
 		} catch (Exception e) {
 			log.error("biz applyDeposit save log fail!!!");
 			e.printStackTrace();
 			
 		}
 		/************记录日志************/
-		if(ServerResponse.judgeSuccess(serverResponse)){//临时订单入库
-			ServerResponse<?> response=save(payOrder);
-			if(!ServerResponse.judgeSuccess(response)){
-				return ServerResponse.createByErrorCodeMessage(response.getCode(), response.getMsg());
-			}
-		}else{
-			return ServerResponse.createByErrorCodeMessage(serverResponse.getCode(), serverResponse.getMsg());
-		}
-		serverResponse=ServerResponse.createBySuccessCodeData(payInfo);
+		ServerResponse<?> response=save(payOrder);
+//		if(ServerResponse.judgeSuccess(serverResponse)){//临时订单入库
+//			if(!ServerResponse.judgeSuccess(response)){
+//				return ServerResponse.createByErrorCodeMessage(response.getCode(), response.getMsg());
+//			}
+//		}else{
+//			return ServerResponse.createByErrorCodeMessage(serverResponse.getCode(), serverResponse.getMsg());
+//		}
+		ServerResponse	serverResponse=ServerResponse.createBySuccessCodeData(payInfo);
 		log.info("end applyDeposit api:%s"+JsonUtil.toJSONString(serverResponse));
 		return serverResponse;
 	}
