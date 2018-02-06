@@ -149,7 +149,7 @@ public class WalletWebConfig {
 	/**
 	 * 支付网关
 	 */
-	private static String apiurl;
+	private static String payApiurl;
 	
 	
 	
@@ -362,13 +362,14 @@ public class WalletWebConfig {
 		WalletWebConfig.appkey = appkey;
 	}
 
-	public static String getApiurl() {
-		return apiurl;
+	public static String getPayApiurl() {
+		return payApiurl;
 	}
 
-	public static void setApiurl(String apiurl) {
-		WalletWebConfig.apiurl = apiurl;
+	public static void setPayApiurl(String payApiurl) {
+		WalletWebConfig.payApiurl = payApiurl;
 	}
+
 
 
 
