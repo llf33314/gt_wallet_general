@@ -1098,7 +1098,7 @@ public class YunSoaMemberUtil {
 				JSONObject param = new JSONObject();
 				param.put("bizOrderNo", bizOrderNo);
 				param.put("oriBizOrderNo", tRefundOrder.getOriBizOrderNo());
-				param.put("bizUserId", WalletWebConfig.getMachid());
+			//	param.put("bizUserId", WalletWebConfig.getMachid());
 				param.put("refundList", refundList);
 				param.put("amount", tRefundOrder.getAmount()*100);
 				param.put("couponAmount", 0);
@@ -1210,14 +1210,14 @@ public class YunSoaMemberUtil {
 				param.put("accountSetNo",WalletWebConfig.getYunBizUserId());
 				param.put("bizUserId",tsignalAgentPaySimplify.getBizUserId());
 				param.put("backUrl", WalletWebConfig.getSignalAgentPaySimplifyNotifyUrl());
-				param.put("amount",tsignalAgentPaySimplify.getAmount());
+				param.put("amount",tsignalAgentPaySimplify.getAmount()*100);
 				param.put("fee",0);
 				param.put("goodsType",0);
-				param.put("tradeCode",3001);
+				param.put("tradeCode","3001");
 				param.put("summary","平台转账");
 				
 				log.info("request:" + param);
-				JSONObject response = client.request(ordersoaName, "applicationTransfer", param);
+				JSONObject response = client.request(ordersoaName, "signalAgentPaySimplify", param);
 				log.info("response:" + response);
 				if(CommonUtil.isNotEmpty(response)&&response.get("status").equals("OK")){//查询成功
 					log.info("applicationTransfer end");

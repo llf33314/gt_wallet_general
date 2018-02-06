@@ -118,15 +118,6 @@ public class WalletWebConfig {
 	private static String yunRefundSuccessNotifyUrl;
 	
 	
-	/**
-	 * 网站应用appid
-	 */
-	private static String appid;
-	
-	/**
-	 * 网站应用密钥
-	 */
-	private static String appSecret;
 	
 	/**
 	 * 请求签名
@@ -139,9 +130,28 @@ public class WalletWebConfig {
 	private static String yunAuditingNotifyUrl;
 	
 	/**
-	 * 收款账号
+	 * 商户号
 	 */
-	private static String machid;
+	private static String cusid;
+	
+	
+	/**
+	 * 平台分配的 APPID
+	 */
+	private static String appid;
+	
+	/**
+	 * 平台分配的应用密钥
+	 */
+	private static String appkey;
+	
+	
+	/**
+	 * 支付网关
+	 */
+	private static String apiurl;
+	
+	
 	
 	/**
 	 * 代付异步回调
@@ -310,13 +320,6 @@ public class WalletWebConfig {
 		WalletWebConfig.appid = appid;
 	}
 
-	public static String getAppSecret() {
-		return appSecret;
-	}
-
-	public static void setAppSecret(String appSecret) {
-		WalletWebConfig.appSecret = appSecret;
-	}
 
 	public static String getWalletKey() {
 		return walletKey;
@@ -334,13 +337,6 @@ public class WalletWebConfig {
 		WalletWebConfig.yunAuditingNotifyUrl = yunAuditingNotifyUrl;
 	}
 
-	public static String getMachid() {
-		return machid;
-	}
-
-	public static void setMachid(String machid) {
-		WalletWebConfig.machid = machid;
-	}
 
 	public static String getSignalAgentPaySimplifyNotifyUrl() {
 		return signalAgentPaySimplifyNotifyUrl;
@@ -348,6 +344,30 @@ public class WalletWebConfig {
 
 	public static void setSignalAgentPaySimplifyNotifyUrl(String signalAgentPaySimplifyNotifyUrl) {
 		WalletWebConfig.signalAgentPaySimplifyNotifyUrl = signalAgentPaySimplifyNotifyUrl;
+	}
+
+	public static String getCusid() {
+		return cusid;
+	}
+
+	public static void setCusid(String cusid) {
+		WalletWebConfig.cusid = cusid;
+	}
+
+	public static String getAppkey() {
+		return appkey;
+	}
+
+	public static void setAppkey(String appkey) {
+		WalletWebConfig.appkey = appkey;
+	}
+
+	public static String getApiurl() {
+		return apiurl;
+	}
+
+	public static void setApiurl(String apiurl) {
+		WalletWebConfig.apiurl = apiurl;
 	}
 
 
