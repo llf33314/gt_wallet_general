@@ -409,7 +409,7 @@ public class WalletPayOrderServiceImpl extends BaseServiceImpl<WalletPayOrderMap
 			throw new BusinessException("异常：订单号不存在!");
 		}
 		WalletPayOrder walletPayOrder=serverResponseWalletPayOrder.getData();
-		if(walletPayOrder.getTakeState()==3||walletPayOrder.getReturnStatus()==2){//金额已划入商检余额或手续费已返佣
+		if(walletPayOrder.getTakeState()==3){//金额已划入商检余额或手续费已返佣
 			log.error("biz refund api fail：order is  finish");
 			throw new BusinessException("订单号已完成，不可退款");
 		}
