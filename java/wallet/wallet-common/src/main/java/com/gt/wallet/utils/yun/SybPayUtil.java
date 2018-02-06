@@ -15,7 +15,7 @@ import lombok.extern.slf4j.Slf4j;
 public class SybPayUtil {
 	public static UnitorderPayResponse pay(TPayOrder tPayOrder) throws Exception{
 		//payOrder.getAmount()*100, tPayOrder.getBizOrderNo(), payOrder.getType()==1?"W01":"A01", tPayOrder.getDesc(), tPayOrder.getDesc(), payOrder.getAcct(), "", WalletWebConfig.getYunpaySuccessNotifyUrl(), "no_credit"
-		HttpConnectionUtil http = new HttpConnectionUtil(WalletWebConfig.getApiUrl()+"/pay");
+		HttpConnectionUtil http = new HttpConnectionUtil(WalletWebConfig.getPayApiurl()+"/pay");
 		http.init();
 		TreeMap<String,String> params = new TreeMap<String,String>();
 		params.put("cusid", WalletWebConfig.getCusid());
@@ -45,7 +45,7 @@ public class SybPayUtil {
 	}
 	
 	public static CancelResponse cancel(long trxamt,String reqsn,String oldtrxid,String oldreqsn) throws Exception{
-		HttpConnectionUtil http = new HttpConnectionUtil(WalletWebConfig.getApiUrl()+"/cancel");
+		HttpConnectionUtil http = new HttpConnectionUtil(WalletWebConfig.getPayApiurl()+"/cancel");
 		http.init();
 		TreeMap<String,String> params = new TreeMap<String,String>();
 		params.put("cusid", WalletWebConfig.getCusid());
@@ -65,7 +65,7 @@ public class SybPayUtil {
 	}
 	
 	public static CancelResponse refund(long trxamt,String reqsn,String oldtrxid,String oldreqsn) throws Exception{
-		HttpConnectionUtil http = new HttpConnectionUtil(WalletWebConfig.getApiUrl()+"/refund");
+		HttpConnectionUtil http = new HttpConnectionUtil(WalletWebConfig.getPayApiurl()+"/refund");
 		http.init();
 		TreeMap<String,String> params = new TreeMap<String,String>();
 		params.put("cusid", WalletWebConfig.getCusid());
@@ -85,7 +85,7 @@ public class SybPayUtil {
 	}
 	
 	public static UnitorderQueryResponse query(String reqsn,String trxid) throws Exception{
-		HttpConnectionUtil http = new HttpConnectionUtil(WalletWebConfig.getApiUrl()+"/query");
+		HttpConnectionUtil http = new HttpConnectionUtil(WalletWebConfig.getPayApiurl()+"/query");
 		http.init();
 		TreeMap<String,String> params = new TreeMap<String,String>();
 		params.put("cusid", WalletWebConfig.getCusid());
